@@ -1,0 +1,11 @@
+#ifndef EMBER_ENGINE_H
+#define EMBER_ENGINE_H
+
+// Runs the engine on the main thread until the game ends.
+//
+// Call it from RunLoop.main.perform, never from a main-queue block:
+// it holds the main thread for the whole session, and a blocked main
+// queue deadlocks the engine (see mkxp_run_app in app_bridge.h).
+int EmberRunEngine(void);
+
+#endif

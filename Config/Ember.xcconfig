@@ -1,0 +1,12 @@
+// Shared build settings for the Ember target.
+//
+// Signing for a real iPhone needs your Apple Team ID. Put it in
+// Config/Signing.local.xcconfig (ignored by git), one line:
+//
+//   DEVELOPMENT_TEAM = ABCDE12345
+//
+// The simulator needs no team.
+
+CODE_SIGN_STYLE = Automatic
+
+#include? "Signing.local.xcconfig"

@@ -1,0 +1,111 @@
+name: Ember
+
+options:
+  bundleIdPrefix: com.alexandrethadeu
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    # The engine lives outside this folder: its makefiles break on the
+    # space in "Repositorios - Pessoal". See CLAUDE.md.
+    EMBER_ENGINE: $(HOME)/Developer/ember-engine
+    EMBER_DEPS: $(EMBER_ENGINE)/deps/build-$(PLATFORM_NAME)-arm64
+    EMBER_ANGLE: $(EMBER_ENGINE)/deps/ANGLE/$(PLATFORM_NAME)
+
+packages:
+  ZIPFoundation:
+    url: https://github.com/weichsel/ZIPFoundation
+    from: "0.9.19"
+
+targets:
+  Ember:
+    type: application
+    platform: iOS
+    sources:
+      - path: Ember
+    dependencies:
+      - package: ZIPFoundation
+    configFiles:
+      Debug: Config/Ember.xcconfig
+      Release: Config/Ember.xcconfig
+    settings:
+      base:
+        PRODUCT_NAME: Ember
+        PRODUCT_BUNDLE_IDENTIFIER: com.alexandrethadeu.ember
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        INFOPLIST_FILE: Ember/Resources/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: NO
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.0"
+        SWIFT_OBJC_BRIDGING_HEADER: Ember/App/Ember-Bridging-Header.h
+        CLANG_ENABLE_OBJC_ARC: YES
+        ARCHS: arm64
+        ONLY_ACTIVE_ARCH: YES
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+        DEAD_CODE_STRIPPING: YES
+        HEADER_SEARCH_PATHS: $(EMBER_ENGINE)/src
+        LIBRARY_SEARCH_PATHS: $(EMBER_DEPS)/lib $(EMBER_ANGLE)/lib
+        # Same link line as the fork's tools/build-test-host-ios.sh,
+        # minus libSDL2main: Ember owns main() and starts the engine
+        # with mkxp_run_app when a game is picked.
+        OTHER_LDFLAGS:
+          - -Wl,-force_load,$(EMBER_DEPS)/lib/libmkxpz-core.a
+          - $(EMBER_DEPS)/lib/mkxp18-merged.o
+          - $(EMBER_DEPS)/lib/mkxp19-merged.o
+          - $(EMBER_DEPS)/lib/mkxp31-merged.o
+          - -lSDL2
+          - -lSDL2_image
+          - -lSDL2_sound
+          - -lSDL2_ttf
+          - -lfreetype
+          - -lpixman-1
+          - -lpng16
+          - -logg
+          - -lvorbis
+          - -lvorbisfile
+          - -ltheora
+          - -ltheoradec
+          - -lphysfs
+          - -luchardet
+          - -lopenal
+          - -lssl
+          - -lcrypto
+          - -lz
+          - -lbz2
+          - -liconv
+          - -lc++
+          - -lANGLE_static
+          - -lEGL_static
+          - -lGLESv2_static
+          - -framework
+          - CoreVideo
+          - -framework
+          - CoreAudio
+          - -framework
+          - AudioToolbox
+          - -framework
+          - AVFoundation
+          - -framework
+          - Metal
+          - -framework
+          - QuartzCore
+          - -framework
+          - GameController
+          - -framework
+          - CoreMotion
+          - -framework
+          - IOSurface
+          - -weak_framework
+          - CoreBluetooth
+          - -weak_framework
+          - CoreHaptics
+          - -weak_framework
+          - OpenGLES
+    postBuildScripts:
+      - name: Embed engine assets and games
+        script: '"$SRCROOT/scripts/embed-engine.sh"'
+        basedOnDependencyAnalysis: false
