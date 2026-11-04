@@ -25,7 +25,10 @@ enum BuiltInSkins {
         artwork: nil,
         items: [
             button(.key(.l), 0, 404, 112, 44),
-            button(.menu, 187, 406, 40, 40),
+            // Gear and keyboard side by side; the keyboard shows only for
+            // games that poll a PC keyboard, else the gear sits alone.
+            button(.menu, 161, 406, 40, 40),
+            button(.keyboard, 213, 406, 40, 40),
             button(.key(.r), 302, 404, 112, 44),
             SkinItem(kind: .dpad, inputs: directions, frame: CGRect(x: 30, y: 520, width: 156, height: 156),
                      extendedEdges: UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)),
@@ -51,10 +54,24 @@ enum BuiltInSkins {
             button(.key(.select), 44, 342, 66, 26),
             button(.key(.start), 120, 342, 66, 26),
             button(.menu, 790, 334, 40, 40),
+            button(.keyboard, 738, 334, 40, 40),
         ],
         screen: CGRect(x: 208, y: 27, width: 480, height: 360),
         extendedEdges: UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8),
         translucent: true)
+
+    /// A built-in layout for one game: without the keyboard button, the
+    /// portrait gear moves back to the middle.
+    static func adapted(_ layout: SkinLayout, keyboard: Bool) -> SkinLayout {
+        guard !keyboard else { return layout }
+        var copy = layout
+        copy.items.removeAll { $0.inputs.contains(.keyboard) }
+        if copy.mappingSize.height > copy.mappingSize.width,
+           let index = copy.items.firstIndex(where: { $0.inputs.contains(.menu) }) {
+            copy.items[index].frame.origin.x = (copy.mappingSize.width - copy.items[index].frame.width) / 2
+        }
+        return copy
+    }
 
     private static let directions: [SkinInput] = [.key(.up), .key(.down), .key(.left), .key(.right)]
 
@@ -180,6 +197,7 @@ struct BuiltInSkinArt: View {
             case .key(.start): pill("START", pressed: isPressed)
             case .key(.select): pill("SELECT", pressed: isPressed)
             case .menu: gear(pressed: isPressed)
+            case .keyboard: keyboardKey(pressed: isPressed)
             default: EmptyView()
             }
         }
@@ -242,6 +260,15 @@ struct BuiltInSkinArt: View {
             surface(Circle(), pressed: pressed, fill: Color(hex: 0x2B211C))
             Image(systemName: "gearshape.fill")
                 .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(label)
+        }
+    }
+
+    private func keyboardKey(pressed: Bool) -> some View {
+        ZStack {
+            surface(Circle(), pressed: pressed, fill: Color(hex: 0x2B211C))
+            Image(systemName: "keyboard.fill")
+                .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(label)
         }
     }

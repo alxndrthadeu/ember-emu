@@ -18,7 +18,10 @@ struct SkinControllerView: View {
     /// a hole there, because the game draws below the controls.
     let pictureRect: CGRect
     let opacity: Double
+    /// Old games: a keyboard button next to the menu button.
+    var showKeyboard = false
     let onMenu: () -> Void
+    var onKeyboard: () -> Void = {}
 
     @StateObject private var touches = SkinTouchState()
 
@@ -31,7 +34,19 @@ struct SkinControllerView: View {
                         HoleShape(hole: pictureRect)
                             .fill(style: FillStyle(eoFill: true))
                     }
-                SkinTouchLayer(layout: layout, state: touches, onMenu: onMenu)
+                SkinTouchLayer(layout: layout, state: touches, onMenu: onMenu, onKeyboard: onKeyboard)
+
+                // An imported skin has no keyboard button: put one next
+                // to its menu button.
+                if showKeyboard, !layout.hasKeyboardButton, let menu = layout.menuFrame {
+                    let sx = geo.size.width / layout.mappingSize.width
+                    let sy = geo.size.height / layout.mappingSize.height
+                    let rect = menu.applying(.init(scaleX: sx, y: sy))
+                    let size: CGFloat = 38
+                    let x = rect.minX - size / 2 - 10 < size ? rect.maxX + size / 2 + 10 : rect.minX - size / 2 - 10
+                    KeyboardButton(action: onKeyboard)
+                        .position(x: x, y: rect.midY)
+                }
             }
         }
         .ignoresSafeArea()
@@ -83,12 +98,14 @@ private struct SkinTouchLayer: UIViewRepresentable {
     let layout: SkinLayout
     let state: SkinTouchState
     let onMenu: () -> Void
+    let onKeyboard: () -> Void
 
     func makeUIView(context: Context) -> SkinTouchView {
         let view = SkinTouchView()
         view.state = state
         view.layout = layout
         view.onMenu = onMenu
+        view.onKeyboard = onKeyboard
         return view
     }
 
@@ -98,6 +115,7 @@ private struct SkinTouchLayer: UIViewRepresentable {
             view.layout = layout
         }
         view.onMenu = onMenu
+        view.onKeyboard = onKeyboard
     }
 
     static func dismantleUIView(_ view: SkinTouchView, coordinator: ()) {
@@ -111,6 +129,7 @@ final class SkinTouchView: UIView {
     var layout: SkinLayout?
     weak var state: SkinTouchState?
     var onMenu: (() -> Void)?
+    var onKeyboard: (() -> Void)?
 
     private struct Hit: Hashable {
         let index: Int
@@ -231,8 +250,15 @@ final class SkinTouchView: UIView {
         guard count == 0 else { return }
         if AppSettings.haptics { Haptics.tap() }
         switch hit.input {
-        case .key(let key): key.press()
+        case .key(let key):
+            // Buttons follow the game's control profile; directions walk.
+            if let button = ControlButton(skinKey: key) {
+                ControlMapper.shared.press(button)
+            } else {
+                key.press()
+            }
         case .menu: onMenu?()
+        case .keyboard: onKeyboard?()
         case .fastForward: mkxp_setFastForwardMultiplier(Int32(AppSettings.fastForwardSpeed))
         case .toggleFastForward:
             let on = mkxp_getFastForwardMultiplier() > 1
@@ -247,7 +273,12 @@ final class SkinTouchView: UIView {
         counts[hit.input] = count - 1
         guard count == 1 else { return }
         switch hit.input {
-        case .key(let key): key.release()
+        case .key(let key):
+            if let button = ControlButton(skinKey: key) {
+                ControlMapper.shared.release(button)
+            } else {
+                key.release()
+            }
         case .fastForward: GameSettings.apply()
         default: break
         }
@@ -292,5 +323,25 @@ final class ControllerMonitor: ObservableObject {
                 }
             }
         }
+    }
+}
+
+/// The keyboard button outside a skin's own art.
+struct KeyboardButton: View {
+    let action: () -> Void
+
+    var body: some View {
+        Button {
+            Haptics.tap()
+            action()
+        } label: {
+            Image(systemName: "keyboard.fill")
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(Theme.controlLabel)
+                .frame(width: 38, height: 38)
+        }
+        .buttonStyle(.plain)
+        .glassEffect(Theme.controlGlass.interactive(), in: Circle())
+        .accessibilityLabel("Teclado")
     }
 }

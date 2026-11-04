@@ -87,6 +87,10 @@ final class EngineSession: ObservableObject {
 
         mkxp_setActiveRubyVersion(game.rubyVersion)
         EngineConfig.apply(for: game)
+        // Buttons, on screen and on controllers, follow the game's profile.
+        ControlMapper.shared.profile = ProfileStore.shared.profile(for: game)
+        PhysicalControllerInput.shared.start()
+        ResourceMonitor.startIfRequested()
         // The game's own on-screen keyboard for name entry, when the
         // player turned it on for this game.
         mkxp_setUseInGameKeyboard(InGameKeyboard.isOn(for: game.id))
@@ -137,6 +141,7 @@ final class EngineSession: ObservableObject {
     }
 
     private func engineDidEnd() {
+        PhysicalControllerInput.shared.stop()
         touchSession()
         historyTimer?.invalidate()
         historyTimer = nil

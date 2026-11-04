@@ -35,6 +35,13 @@ struct GameEntry: Identifiable, Hashable {
         RubyChoice.saved(for: id)?.version ?? detectedRubyVersion
     }
 
+    /// Old games (Ruby 1.8 / 1.9) read a PC keyboard key by key in
+    /// their text scenes and never ask for the system keyboard, so the
+    /// skin shows a keyboard button next to the gear.
+    var wantsKeyboardButton: Bool {
+        rubyVersion != MKXP_RUBY_31
+    }
+
     /// The Ruby the game was made for:
     /// - a ruby3*.dll in the folder: a game built for mkxp-z on Ruby 3
     ///   (Pokémon Essentials v19+, Pokémon Flux) → 3.1;

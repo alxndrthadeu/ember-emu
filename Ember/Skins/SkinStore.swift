@@ -21,10 +21,13 @@ final class SkinStore: ObservableObject {
     }
 
     /// The layout for an orientation. A skin without that orientation
-    /// falls back to Ember Laranja's.
-    func layout(portrait: Bool) -> SkinLayout {
-        current.layout(portrait: portrait)
-            ?? BuiltInSkins.ember.layout(portrait: portrait)!
+    /// falls back to Ember Laranja's. `keyboard`: the game needs the
+    /// keyboard button (built-in skins draw it next to the gear).
+    func layout(portrait: Bool, keyboard: Bool = false) -> SkinLayout {
+        let own = current.layout(portrait: portrait)
+        let layout = own ?? BuiltInSkins.ember.layout(portrait: portrait)!
+        let builtIn = own == nil || current.isBuiltIn
+        return builtIn ? BuiltInSkins.adapted(layout, keyboard: keyboard) : layout
     }
 
     private init() {

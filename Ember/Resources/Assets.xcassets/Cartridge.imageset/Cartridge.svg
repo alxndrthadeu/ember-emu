@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+  <!-- A generic 16-bit console cartridge: grip ridges on top, a label
+       window, a tapered connector edge. Template image: the tab bar
+       tints it. Even-odd fill cuts the label and pins out of the body. -->
+  <path fill="#000" fill-rule="evenodd" d="
+    M5 3.5 H21 A2 2 0 0 1 23 5.5 V17.5 L20.5 21 V23 H5.5 V21 L3 17.5 V5.5 A2 2 0 0 1 5 3.5 Z
+    M7 5.6 H19 V6.6 H7 Z
+    M7 7.6 H19 V8.6 H7 Z
+    M7.5 10 H18.5 A1.2 1.2 0 0 1 19.7 11.2 V16.3 A1.2 1.2 0 0 1 18.5 17.5 H7.5 A1.2 1.2 0 0 1 6.3 16.3 V11.2 A1.2 1.2 0 0 1 7.5 10 Z
+    M8 20 H9.4 V22 H8 Z
+    M10.6 20 H12 V22 H10.6 Z
+    M14 20 H15.4 V22 H14 Z
+    M16.6 20 H18 V22 H16.6 Z"/>
+</svg>

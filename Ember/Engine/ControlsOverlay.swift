@@ -15,7 +15,9 @@ struct ControlsOverlay: View {
         GeometryReader { geo in
             let size = geo.size
             let portrait = size.height >= size.width
-            let skinLayout = skins.layout(portrait: portrait)
+            // Old games poll a PC keyboard: a keyboard button by the gear.
+            let wantsKeyboard = session.currentGame?.wantsKeyboardButton ?? false
+            let skinLayout = skins.layout(portrait: portrait, keyboard: wantsKeyboard)
             // Landscape with a controller in hand: the buttons step away.
             let hideButtons = !portrait && controllers.connected && AppSettings.hideControlsWithController
             let opacity = (!portrait && skinLayout.translucent) ? AppSettings.landscapeOpacity : 1
@@ -24,13 +26,19 @@ struct ControlsOverlay: View {
                 if !hideButtons {
                     SkinControllerView(skin: skins.current, layout: skinLayout,
                                        pictureRect: layout.pictureRect,
-                                       opacity: opacity, onMenu: openMenu)
+                                       opacity: opacity, showKeyboard: wantsKeyboard,
+                                       onMenu: openMenu, onKeyboard: session.openKeyboard)
                 }
                 // Every skin needs a way to the menu.
                 if hideButtons || !skinLayout.hasMenuButton {
-                    FloatingMenuButton(action: openMenu)
-                        .padding(.top, geo.safeAreaInsets.top + 8)
-                        .padding(.leading, geo.safeAreaInsets.leading + 12)
+                    HStack(spacing: 10) {
+                        FloatingMenuButton(action: openMenu)
+                        if wantsKeyboard {
+                            KeyboardButton(action: session.openKeyboard)
+                        }
+                    }
+                    .padding(.top, geo.safeAreaInsets.top + 8)
+                    .padding(.leading, geo.safeAreaInsets.leading + 12)
                 }
             }
             .ignoresSafeArea()
@@ -51,7 +59,11 @@ struct ControlsOverlay: View {
             }
             .presentationDetents([.height(350)])
         }
-        .onAppear(perform: autoMenuForDevelopment)
+        .onAppear {
+            // A profile can put Ember's menu on any button.
+            ControlMapper.shared.onMenu = { openMenu() }
+            autoMenuForDevelopment()
+        }
     }
 
     private func openMenu() {

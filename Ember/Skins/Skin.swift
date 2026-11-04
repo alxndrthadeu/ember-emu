@@ -51,6 +51,14 @@ struct SkinLayout: Equatable {
     var hasMenuButton: Bool {
         items.contains { $0.inputs.contains(.menu) }
     }
+
+    var hasKeyboardButton: Bool {
+        items.contains { $0.inputs.contains(.keyboard) }
+    }
+
+    var menuFrame: CGRect? {
+        items.first { $0.inputs.contains(.menu) }?.frame
+    }
 }
 
 struct SkinItem: Equatable {
@@ -74,6 +82,9 @@ enum SkinInput: Hashable {
     case key(GameKey)
     /// Ember's in-game menu.
     case menu
+    /// Opens the system keyboard, for games that poll a PC keyboard.
+    /// Shown only for those games (GameEntry.wantsKeyboardButton).
+    case keyboard
     /// Fast forward while held.
     case fastForward
     /// Fast forward on until pressed again.
@@ -94,6 +105,7 @@ enum SkinInput: Hashable {
         case "left": self = .key(.left)
         case "right": self = .key(.right)
         case "menu": self = .menu
+        case "keyboard": self = .keyboard
         case "fastforward": self = .fastForward
         case "togglefastforward": self = .toggleFastForward
         default: self = .unsupported(name)

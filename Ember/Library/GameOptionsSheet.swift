@@ -82,6 +82,26 @@ struct GameOptionsSheet: View {
                             show(on ? "O jogo vai usar o próprio teclado na próxima vez que abrir"
                                     : "O Ember volta a usar o teclado do iPhone")
                         }
+                        Menu {
+                            Picker("Controles", selection: Binding(
+                                get: { ProfileStore.shared.isAutomatic(current) ? nil : ProfileStore.shared.profile(for: current).id },
+                                set: { id in
+                                    ProfileStore.shared.assign(ProfileStore.shared.all.first { $0.id == id }, to: current)
+                                    library.reload()
+                                    show("Vale na próxima vez que o jogo abrir")
+                                })) {
+                                Text("Automático (\(ProfileStore.shared.automaticProfile(for: current).name))")
+                                    .tag(String?.none)
+                                ForEach(ProfileStore.shared.all) { profile in
+                                    Text(profile.name).tag(String?.some(profile.id))
+                                }
+                            }
+                        } label: {
+                            OptionTileLabel(icon: "gamecontroller",
+                                            title: "Controles: \(ProfileStore.shared.profile(for: current).name)")
+                        }
+                        .buttonStyle(.plain)
+                        .glassEffect(.regular.interactive(), in: tileShape)
                         OptionTile(icon: "square.and.arrow.up", title: "Exportar saves") {
                             exportSaves()
                         }

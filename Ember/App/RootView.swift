@@ -21,10 +21,10 @@ struct RootView: View {
 
     var body: some View {
         TabView(selection: $router.tab) {
-            Tab("Biblioteca", systemImage: "square.grid.2x2.fill", value: AppTab.library) {
+            Tab("Biblioteca", image: "Cartridge", value: AppTab.library) {
                 LibraryView()
             }
-            Tab("Importar", systemImage: "plus", value: AppTab.importGames) {
+            Tab("Importar", systemImage: "folder.badge.plus", value: AppTab.importGames) {
                 ImportView()
             }
             Tab("Ajustes", systemImage: "gearshape", value: AppTab.settings) {

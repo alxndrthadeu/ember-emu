@@ -22,6 +22,11 @@ struct SettingsView: View {
             Form {
                 skinsSection
                 Section {
+                    NavigationLink {
+                        ProfilesView()
+                    } label: {
+                        Label("Perfis de controle", systemImage: "gamecontroller")
+                    }
                     Toggle("Vibração ao tocar", isOn: $haptics)
                     VStack(alignment: .leading, spacing: 6) {
                         HStack {
