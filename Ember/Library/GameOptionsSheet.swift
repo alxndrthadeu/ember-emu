@@ -19,6 +19,7 @@ struct GameOptionsSheet: View {
     @State private var confirmingDelete = false
     @State private var toast: String?
     @State private var working = false
+    @State private var showingLogs = false
 
     private let columns = [GridItem(.adaptive(minimum: 100), spacing: 12)]
 
@@ -108,6 +109,9 @@ struct GameOptionsSheet: View {
                         OptionTile(icon: "square.and.arrow.down", title: "Importar saves") {
                             importingSaves = true
                         }
+                        OptionTile(icon: "doc.text.magnifyingglass", title: "Registros") {
+                            showingLogs = true
+                        }
                         OptionTile(icon: "trash", title: "Apagar", destructive: true) {
                             confirmingDelete = true
                         }
@@ -143,6 +147,9 @@ struct GameOptionsSheet: View {
                       allowsMultipleSelection: true) { result in
             guard case .success(let urls) = result, !urls.isEmpty else { return }
             importSaves(urls)
+        }
+        .sheet(isPresented: $showingLogs) {
+            LogsView(game: current)
         }
         .sheet(item: $exportFile) { file in
             ShareSheet(url: file.url)

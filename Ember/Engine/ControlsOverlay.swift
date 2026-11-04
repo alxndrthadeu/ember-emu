@@ -31,6 +31,11 @@ struct ControlsOverlay: View {
                                        opacity: opacity, showKeyboard: wantsKeyboard,
                                        onMenu: openMenu, onKeyboard: session.openKeyboard)
                 }
+                // PC-style readout in the picture's corner (this stack fills
+                // the screen from its top-left, like pictureRect).
+                PerformanceHUD()
+                    .offset(x: layout.pictureRect.minX + 6, y: layout.pictureRect.minY + 6)
+
                 // Every skin needs a way to the menu.
                 if hideButtons || !skinLayout.hasMenuButton {
                     HStack(spacing: 10) {

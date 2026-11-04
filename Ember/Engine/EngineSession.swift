@@ -46,6 +46,7 @@ final class EngineSession: ObservableObject {
     // MARK: - History
 
     private var sessionID: UUID?
+    private var resumeSlotForLog: String?
     private var historyTimer: Timer?
 
     private func touchSession() {
@@ -64,6 +65,7 @@ final class EngineSession: ObservableObject {
         touchSession()
         guard state == .running, let game = currentGame,
               !mkxp_isPaused(), !mkxp_isPauseRequested() else { return }
+        GameLog.shared.note("o app saiu da tela")
         pausedForBackground = AppSettings.pauseOnBackground
         let task = UIApplication.shared.beginBackgroundTask(withName: "ember.autostate")
         Task { @MainActor in
@@ -79,11 +81,14 @@ final class EngineSession: ObservableObject {
     /// paused: callers close the menu first.
     func requestState(_ verb: String, slot: String) async -> StateStore.Outcome {
         guard state == .running, let game = currentGame else { return .noAnswer }
-        return await StateStore.request(verb, slot: slot, gameID: game.id)
+        let outcome = await StateStore.request(verb, slot: slot, gameID: game.id)
+        GameLog.shared.note("estado \(verb == "save" ? "salvo" : "carregado") (\(slot)): \(outcome)")
+        return outcome
     }
 
     private func appDidBecomeActive() {
         guard pausedForBackground else { return }
+        GameLog.shared.note("o app voltou")
         pausedForBackground = false
         mkxp_requestResume()
     }
@@ -92,6 +97,7 @@ final class EngineSession: ObservableObject {
     /// (StateStore), skipping its title screen when the game allows.
     func launch(_ game: GameEntry, resumeSlot: String? = nil) {
         guard state == .idle else { return }
+        resumeSlotForLog = resumeSlot
         state = .preparing(game.title)
         StateStore.prepareEnvironment(gameID: game.id, resumeSlot: resumeSlot)
         // Games live in Documents/Games, which is writable: the engine
@@ -111,6 +117,12 @@ final class EngineSession: ObservableObject {
         ControlMapper.shared.profile = ProfileStore.shared.profile(for: game)
         PhysicalControllerInput.shared.start()
         ResourceMonitor.startIfRequested()
+        PerformanceModel.shared.start()
+        GameLog.shared.begin(game: game, details: [
+            "Ruby: \(RubyChoice.label(for: game.rubyVersion))\(RubyChoice.saved(for: game.id) == nil ? " (automático)" : "")",
+            "Skin: \(SkinStore.shared.current.name) · Controles: \(ControlMapper.shared.profile.name)",
+            "Retomar: \(resumeSlotForLog ?? "não")",
+        ])
         // The game's own on-screen keyboard for name entry, when the
         // player turned it on for this game.
         mkxp_setUseInGameKeyboard(InGameKeyboard.isOn(for: game.id))
@@ -161,6 +173,9 @@ final class EngineSession: ObservableObject {
     }
 
     private func engineDidEnd() {
+        GameLog.shared.note("o jogo terminou")
+        GameLog.shared.end()
+        PerformanceModel.shared.stop()
         PhysicalControllerInput.shared.stop()
         touchSession()
         historyTimer?.invalidate()
@@ -217,6 +232,11 @@ final class EngineSession: ObservableObject {
         guard let screen = gameScreen, !text.isEmpty else {
             isError ? mkxp_signalErrorDismissed() : mkxp_signalInfoDismissed()
             return
+        }
+        if isError {
+            GameLog.shared.error(text)
+        } else {
+            GameLog.shared.note("aviso do jogo: \(text)")
         }
         let shown = text.count > 900 ? String(text.prefix(900)) + "…" : text
         let alert: UIAlertController

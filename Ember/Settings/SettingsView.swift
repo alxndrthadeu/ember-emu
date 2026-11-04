@@ -5,6 +5,7 @@ import UniformTypeIdentifiers
 struct SettingsView: View {
     @ObservedObject private var skins = SkinStore.shared
     @ObservedObject private var library = LibraryStore.shared
+    @ObservedObject private var performance = PerformanceModel.shared
 
     @State private var haptics = AppSettings.haptics
     @State private var landscapeOpacity = AppSettings.landscapeOpacity
@@ -52,6 +53,7 @@ struct SettingsView: View {
                         Text("5x").tag(5)
                     }
                     Toggle("Pausar ao sair do app", isOn: $pauseOnBackground)
+                    Toggle("Mostrar desempenho (FPS, CPU, memória)", isOn: $performance.enabled)
                 } header: {
                     Text("Jogo")
                 } footer: {

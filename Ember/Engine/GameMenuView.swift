@@ -29,6 +29,7 @@ struct GameMenuView: View {
 
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var pause = PauseSnapshot.shared
+    @ObservedObject private var performance = PerformanceModel.shared
     @State private var speed = GameSettings.speed
     @State private var confirmingQuit = false
     @State private var toast: String?
@@ -58,6 +59,10 @@ struct GameMenuView: View {
                 }
                 MenuTile(icon: "camera.fill", title: "Captura") {
                     saveScreenshot()
+                }
+                MenuTile(icon: "gauge.with.dots.needle.67percent", title: "Desempenho",
+                         value: performance.enabled ? "Ligado" : "Desligado", highlighted: performance.enabled) {
+                    performance.enabled.toggle()
                 }
                 MenuTile(icon: "keyboard", title: "Teclado") {
                     dismiss()

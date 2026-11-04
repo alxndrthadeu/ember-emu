@@ -148,6 +148,12 @@ enum AppSettings {
         set { defaults.set(newValue, forKey: "settings.deleteArchive") }
     }
 
+    /// The FPS / CPU / memory readout during games.
+    static var showPerformance: Bool {
+        get { defaults.object(forKey: "settings.showPerformance") as? Bool ?? false }
+        set { defaults.set(newValue, forKey: "settings.showPerformance") }
+    }
+
     /// Pause when the app leaves the screen.
     static var pauseOnBackground: Bool {
         get { defaults.object(forKey: "settings.pauseOnBackground") as? Bool ?? true }
