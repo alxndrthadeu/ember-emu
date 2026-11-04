@@ -56,6 +56,12 @@ final class GameViewController: UIViewController {
         textField.setActive(active)
     }
 
+    /// The menu's "Teclado": the system keyboard on demand, for games
+    /// that never ask for text input (they poll a PC keyboard).
+    func openKeyboard() {
+        textField.openManually()
+    }
+
     override var prefersStatusBarHidden: Bool { true }
     override var prefersHomeIndicatorAutoHidden: Bool { true }
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .all }
@@ -63,6 +69,9 @@ final class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
+        // The game screen is dark in both modes (CLAUDE.md), and so is
+        // everything it presents: the menu sheet's glass, dialogs.
+        overrideUserInterfaceStyle = .dark
 
         controls.view.backgroundColor = .clear
         controls.view.frame = view.bounds
@@ -92,6 +101,14 @@ final class GameViewController: UIViewController {
         window.isHidden = true
         self.view.window?.makeKeyAndVisible()
         updateViewport()
+        #if DEBUG
+        // Development aid: EMBER_ORIENTATION=landscape turns the screen,
+        // so landscape can be checked in the simulator.
+        if ProcessInfo.processInfo.environment["EMBER_ORIENTATION"] == "landscape",
+           let scene = view.window?.windowScene {
+            scene.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
+        }
+        #endif
         return true
     }
 
@@ -107,7 +124,22 @@ final class GameViewController: UIViewController {
         let size = view.bounds.size
         guard size.width > 0, size.height > 0 else { return }
 
-        guard size.height >= size.width else {
+        let portrait = size.height >= size.width
+
+        // The skin says where the game goes, in its own point space,
+        // stretched to the screen like the artwork.
+        let layout = SkinStore.shared.layout(portrait: portrait)
+        if let screen = layout.screen {
+            let mapping = layout.mappingSize
+            mkxp_setHostViewportRegion(Float(screen.minX / mapping.width),
+                                       Float(screen.minY / mapping.height),
+                                       Float(screen.width / mapping.width),
+                                       Float(screen.height / mapping.height),
+                                       portrait)
+            return
+        }
+
+        guard portrait else {
             mkxp_clearHostViewportRegion()
             return
         }

@@ -35,5 +35,8 @@ rsync -a --delete --include='*.rb' --exclude='*' "$ENGINE/scripts/postload/" "$A
 
 rsync -a --delete "$TREE/ruby-stdlib/" "$APP/Ruby/"
 
+# The engine's license notices, for Ajustes > Licenças.
+rsync -a "$TREE/licenses.json" "$APP/EngineLicenses.json"
+
 # Builds from before the import flow bundled games/ here.
 rm -rf "$APP/Games"

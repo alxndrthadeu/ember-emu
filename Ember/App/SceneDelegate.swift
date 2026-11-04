@@ -9,9 +9,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = scene as? UIWindowScene else { return }
 
-        Theme.styleNavigationBars()
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = UIHostingController(rootView: LibraryView().fontDesign(.rounded))
+        window.rootViewController = UIHostingController(rootView: RootView().fontDesign(.rounded))
         window.tintColor = UIColor(Theme.accent)
         window.makeKeyAndVisible()
         self.window = window

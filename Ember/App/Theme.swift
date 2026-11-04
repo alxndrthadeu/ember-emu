@@ -1,9 +1,9 @@
 import SwiftUI
 import UIKit
 
-/// The "Lanterna" identity (CLAUDE.md): warm pixel art on cream, the
-/// feel of a cartridge manual. Every color and font the app uses comes
-/// from here.
+/// The Ember identity (CLAUDE.md): the warm "Lanterna" palette on a
+/// modern Liquid Glass interface. Pixel art lives only in the app icon.
+/// Every color the app uses comes from here.
 enum Theme {
     // MARK: Palette (light / dark)
 
@@ -26,62 +26,19 @@ enum Theme {
     // MARK: Game screen (dark in both modes)
 
     static let controllerBackground = Color(hex: 0x17120F)
-    static let controlFill = Color(hex: 0xF4E9D8).opacity(0.10)
-    static let controlFillPressed = Color(hex: 0xF4E9D8).opacity(0.28)
-    static let controlStroke = Color(hex: 0xF4E9D8).opacity(0.22)
-    static let controlLabel = Color(hex: 0xF4E9D8).opacity(0.88)
+    static let controlLabel = Color(hex: 0xF4E9D8).opacity(0.9)
+    /// Glass over the dark controller area, warmed with the cream.
+    static let controlGlass = Glass.regular.tint(Color(hex: 0xF4E9D8).opacity(0.08))
+    static let controlGlassPressed = Glass.regular.tint(Color(hex: 0xF4E9D8).opacity(0.30))
 
     // MARK: Shapes
 
-    static let cardRadius: CGFloat = 18
-
-    // MARK: Type
-
-    /// Pixelify Sans: the logotype and big titles only, never body text.
-    /// Use through `.pixelFont(_:)`, which also clears the rounded
-    /// design the app sets at the root.
-    static func pixel(_ size: CGFloat) -> Font {
-        .custom(pixelFamily, size: size)
-    }
-
-    static func pixelUIFont(_ size: CGFloat) -> UIFont {
-        UIFont(name: pixelFamily, size: size) ?? .systemFont(ofSize: size, weight: .bold)
-    }
-
-    private static let pixelFamily = "Pixelify Sans"
-
-    /// Large navigation titles in Pixelify, inline ones in SF Rounded.
-    static func styleNavigationBars() {
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithTransparentBackground()
-        appearance.backgroundColor = UIColor(background)
-        appearance.largeTitleTextAttributes = [
-            .font: pixelUIFont(36),
-            .foregroundColor: UIColor(primaryText),
-        ]
-        let rounded = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        appearance.titleTextAttributes = [
-            .font: UIFont(descriptor: rounded.fontDescriptor.withDesign(.rounded) ?? rounded.fontDescriptor,
-                          size: 17),
-            .foregroundColor: UIColor(primaryText),
-        ]
-        UINavigationBar.appearance().standardAppearance = appearance
-        UINavigationBar.appearance().scrollEdgeAppearance = appearance
-    }
+    static let cardRadius: CGFloat = 22
 
     private static func dynamic(light: UInt32, dark: UInt32) -> Color {
         Color(uiColor: UIColor { traits in
             UIColor(hex: traits.userInterfaceStyle == .dark ? dark : light)
         })
-    }
-}
-
-extension View {
-    /// Pixelify Sans at this size. The app applies
-    /// `.fontDesign(.rounded)` at the root, and SwiftUI then swaps any
-    /// custom font for the rounded system font; this clears it again.
-    func pixelFont(_ size: CGFloat) -> some View {
-        font(Theme.pixel(size)).fontDesign(nil)
     }
 }
 
@@ -100,47 +57,16 @@ extension UIColor {
     }
 }
 
-/// The Ember flame, drawn from the same 9x10 map as the app icon.
-struct PixelFlame: View {
-    var cell: CGFloat = 8
-
-    private static let map = [
-        "....1....",
-        "...111...",
-        "...1211..",
-        "..12211..",
-        "..122211.",
-        ".1223221.",
-        ".1233321.",
-        ".1233321.",
-        "..12321..",
-        "...111...",
-    ]
-
-    @Environment(\.colorScheme) private var scheme
+/// The Ember flame inside the app: the system symbol, brasa to âmbar.
+struct EmberFlame: View {
+    var size: CGFloat = 44
 
     var body: some View {
-        Canvas { context, _ in
-            for (y, row) in Self.map.enumerated() {
-                for (x, character) in row.enumerated() {
-                    guard let color = color(for: character) else { continue }
-                    let rect = CGRect(x: CGFloat(x) * cell, y: CGFloat(y) * cell,
-                                      width: cell, height: cell)
-                    context.fill(Path(rect), with: .color(color))
-                }
-            }
-        }
-        .frame(width: cell * 9, height: cell * 10)
-        .accessibilityHidden(true)
-    }
-
-    private func color(for character: Character) -> Color? {
-        let dark = scheme == .dark
-        switch character {
-        case "1": return Color(hex: dark ? 0xEE6A2A : 0xC83A1E)
-        case "2": return Color(hex: dark ? 0xF48A3A : 0xEE6A2A)
-        case "3": return Color(hex: 0xF7B538)
-        default: return nil
-        }
+        Image(systemName: "flame.fill")
+            .font(.system(size: size, weight: .semibold))
+            .foregroundStyle(
+                LinearGradient(colors: [Theme.highlight, Color(hex: 0xEE6A2A), Color(hex: 0xC83A1E)],
+                               startPoint: .bottom, endPoint: .top))
+            .accessibilityHidden(true)
     }
 }

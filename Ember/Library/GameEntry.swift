@@ -5,28 +5,52 @@ struct GameEntry: Identifiable, Hashable {
     /// The folder name under Documents/Games. Stable: saves are kept
     /// under the same id.
     let id: String
+    /// The name shown: the player's, or the game's own.
     let title: String
+    /// The name in the game's .ini.
+    let originalTitle: String
     /// The game's root (the folder with Game.ini, Data/, ...).
     let folder: URL
     let addedAt: Date
+    /// The cover image, when there is one (see GameCovers).
+    let coverURL: URL?
+    let lastPlayed: Date?
 
     init?(folder: URL) {
         guard GameFolder.looksLikeGame(folder) else { return nil }
         self.id = folder.lastPathComponent
         self.folder = folder
-        self.title = GameFolder.title(in: folder) ?? folder.lastPathComponent
+        self.originalTitle = GameFolder.title(in: folder) ?? folder.lastPathComponent
+        self.title = TitleOverrides.title(for: folder.lastPathComponent) ?? originalTitle
+        GameCovers.migrateLegacyCover(forGameID: folder.lastPathComponent)
         let values = try? folder.resourceValues(forKeys: [.creationDateKey])
         self.addedAt = values?.creationDate ?? .distantPast
+        self.coverURL = GameCovers.url(forGameID: id, folder: folder)
+        self.lastPlayed = PlayHistory.lastPlayed(id)
     }
 
-    /// The Ruby the game was made for, when the folder gives it away.
-    /// Phase 2 replaces this guess with a real version detector.
-    var rubyVersion: MKXPRubyVersion? {
+    /// The Ruby to run the game on: the player's choice for this game,
+    /// or the detected one.
+    var rubyVersion: MKXPRubyVersion {
+        RubyChoice.saved(for: id)?.version ?? detectedRubyVersion
+    }
+
+    /// The Ruby the game was made for:
+    /// - a ruby3*.dll in the folder: a game built for mkxp-z on Ruby 3
+    ///   (Pokémon Essentials v19+, Pokémon Flux) → 3.1;
+    /// - otherwise the RPG Maker it targets, from the .ini Library line:
+    ///   XP (RGSS1) and VX (RGSS2) ran Ruby 1.8, VX Ace (RGSS3) Ruby 1.9.
+    ///   Fan games like Pokémon Ópalo still use 1.8-only syntax.
+    var detectedRubyVersion: MKXPRubyVersion {
         let names = (try? FileManager.default.contentsOfDirectory(atPath: folder.path)) ?? []
         if names.contains(where: { $0.lowercased().contains("ruby3") }) {
             return MKXP_RUBY_31
         }
-        return nil
+        switch GameFolder.rgssVersion(in: folder) {
+        case 3: return MKXP_RUBY_19
+        case 1, 2: return MKXP_RUBY_18
+        default: return MKXP_RUBY_31
+        }
     }
 }
 
@@ -61,6 +85,29 @@ enum GameFolder {
         for child in children {
             if let root = findRoot(in: child, depth: depth - 1) { return root }
         }
+        return nil
+    }
+
+    /// 1, 2 or 3 from the .ini's Library= line (RGSS102E.dll, RGSS202E.dll,
+    /// RGSS301.dll), or the kind of packed archive. Nil when unknown.
+    static func rgssVersion(in folder: URL) -> Int? {
+        if let ini = iniFile(in: folder) {
+            for line in iniLines(ini) {
+                let parts = line.split(separator: "=", maxSplits: 1)
+                guard parts.count == 2,
+                      parts[0].trimmingCharacters(in: .whitespaces).lowercased() == "library"
+                else { continue }
+                let value = parts[1].lowercased()
+                if let range = value.range(of: #"rgss(\d)"#, options: .regularExpression),
+                   let digit = Int(value[range].dropFirst(4)) {
+                    return digit
+                }
+            }
+        }
+        let names = contents(of: folder).map { $0.lowercased() }
+        if names.contains(where: { $0.hasSuffix(".rgss3a") }) { return 3 }
+        if names.contains(where: { $0.hasSuffix(".rgss2a") }) { return 2 }
+        if names.contains(where: { $0.hasSuffix(".rgssad") }) { return 1 }
         return nil
     }
 

@@ -48,22 +48,65 @@ enum GameKey: Hashable {
 /// frames and is lost. That is why Enter did nothing on the keyboard.
 @MainActor
 enum KeyTapper {
-    private static var queue: [GameKey] = []
+    private struct Tap {
+        let scancode: Int32
+        let shifted: Bool
+    }
+
+    private static var queue: [Tap] = []
     private static var running = false
 
     static func tap(_ key: GameKey) {
-        queue.append(key)
+        enqueue(Tap(scancode: key.scancode, shifted: false))
+    }
+
+    /// Types one character as the key that makes it on a US keyboard,
+    /// for games that read the keyboard key by key (old Essentials name
+    /// entry). Characters with no key are skipped.
+    static func type(_ character: Character) {
+        guard let (scancode, shifted) = scancode(for: character) else { return }
+        enqueue(Tap(scancode: scancode, shifted: shifted))
+    }
+
+    private static func enqueue(_ tap: Tap) {
+        queue.append(tap)
         guard !running else { return }
         running = true
         Task { @MainActor in
+            let shift = Int32(MKXP_SCANCODE_LSHIFT)
             while !queue.isEmpty {
-                let key = queue.removeFirst()
-                key.press()
+                let tap = queue.removeFirst()
+                if tap.shifted { mkxp_injectKeyEvent(shift, 1) }
+                mkxp_injectKeyEvent(tap.scancode, 1)
                 try? await Task.sleep(for: .milliseconds(70))
-                key.release()
+                mkxp_injectKeyEvent(tap.scancode, 0)
+                if tap.shifted { mkxp_injectKeyEvent(shift, 0) }
                 try? await Task.sleep(for: .milliseconds(40))
             }
             running = false
+        }
+    }
+
+    private static func scancode(for character: Character) -> (Int32, Bool)? {
+        // Accents fold to their base letter (é → e): RGSS keyboards
+        // only know the US layout.
+        let folded = String(character).folding(options: .diacriticInsensitive, locale: nil)
+        guard let c = folded.unicodeScalars.first, folded.unicodeScalars.count == 1 else { return nil }
+        let a = Int32(MKXP_SCANCODE_A)
+        switch c {
+        case "a"..."z": return (a + Int32(c.value - 97), false)
+        case "A"..."Z": return (a + Int32(c.value - 65), true)
+        case "1"..."9": return (Int32(MKXP_SCANCODE_1) + Int32(c.value - 49), false)
+        case "0": return (Int32(MKXP_SCANCODE_0), false)
+        case " ": return (Int32(MKXP_SCANCODE_SPACE), false)
+        case "-": return (Int32(MKXP_SCANCODE_MINUS), false)
+        case "_": return (Int32(MKXP_SCANCODE_MINUS), true)
+        case ".": return (Int32(MKXP_SCANCODE_PERIOD), false)
+        case ",": return (Int32(MKXP_SCANCODE_COMMA), false)
+        case "!": return (Int32(MKXP_SCANCODE_1), true)
+        case "?": return (Int32(MKXP_SCANCODE_SLASH), true)
+        case "'": return (Int32(MKXP_SCANCODE_APOSTROPHE), false)
+        default: return nil
         }
     }
 }
@@ -73,5 +116,8 @@ enum KeyTapper {
 enum Haptics {
     private static let generator = UIImpactFeedbackGenerator(style: .light)
 
-    static func tap() { generator.impactOccurred() }
+    static func tap() {
+        guard AppSettings.haptics else { return }
+        generator.impactOccurred()
+    }
 }

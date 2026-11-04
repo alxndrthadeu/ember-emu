@@ -1,8 +1,8 @@
 import Foundation
 import ZIPFoundation
 
-/// Turns a .zip or a folder from the Files app into a game folder
-/// under Documents/Games.
+/// Turns a .zip, .rar, .7z or a folder from the Files app into a game
+/// folder under Documents/Games.
 enum GameImporter {
     enum ImportError: LocalizedError {
         case notAGame(String)
@@ -13,7 +13,7 @@ enum GameImporter {
             case .notAGame(let name):
                 "“\(name)” não parece um jogo de RPG Maker XP, VX ou VX Ace."
             case .unsupported(let name):
-                "Ainda não dá para importar “\(name)”. Use um .zip ou uma pasta."
+                "Ainda não dá para importar “\(name)”. Use .zip, .rar, .7z ou uma pasta."
             }
         }
     }
@@ -23,12 +23,19 @@ enum GameImporter {
         return documents.appendingPathComponent("Games", isDirectory: true)
     }
 
+    /// Archive types the importer unpacks.
+    static let archiveExtensions: Set<String> = ArchiveExtractor.extensions.union(["zip"])
+
     /// Imports one item. Returns the new game's id.
     ///
     /// Work happens in a scratch folder, and the game moves into
     /// Documents/Games only once it is complete, so a failed import
-    /// never leaves half a game in the library.
-    static func importItem(at url: URL) throws -> String {
+    /// never leaves half a game in the library. Archives are read where
+    /// they are, without a copy first: games are big.
+    ///
+    /// `discardArchive` sends an imported .zip/.rar/.7z to the trash
+    /// (Recently Deleted in the Files app) to free the space it takes.
+    static func importItem(at url: URL, discardArchive: Bool = false) throws -> String {
         let scoped = url.startAccessingSecurityScopedResource()
         defer { if scoped { url.stopAccessingSecurityScopedResource() } }
 
@@ -45,12 +52,16 @@ enum GameImporter {
         if isFolder {
             unpacked = scratch.appendingPathComponent(name, isDirectory: true)
             try coordinatedCopy(from: url, to: unpacked)
-        } else if url.pathExtension.lowercased() == "zip" {
-            let archive = scratch.appendingPathComponent(name)
-            try coordinatedCopy(from: url, to: archive)
-            unpacked = scratch.appendingPathComponent("unzipped", isDirectory: true)
-            try fm.unzipItem(at: archive, to: unpacked)
-            try? fm.removeItem(at: archive)
+        } else if archiveExtensions.contains(url.pathExtension.lowercased()) {
+            unpacked = scratch.appendingPathComponent("unpacked", isDirectory: true)
+            let isZip = url.pathExtension.lowercased() == "zip"
+            try coordinatedRead(url) { readable in
+                if isZip {
+                    try fm.unzipItem(at: readable, to: unpacked)
+                } else {
+                    try ArchiveExtractor.extract(readable, to: unpacked)
+                }
+            }
         } else {
             throw ImportError.unsupported(name)
         }
@@ -66,7 +77,35 @@ enum GameImporter {
         try fm.createDirectory(at: gamesFolder, withIntermediateDirectories: true)
         let id = uniqueID(for: title)
         try fm.moveItem(at: root, to: gamesFolder.appendingPathComponent(id, isDirectory: true))
+
+        if discardArchive, !isFolder {
+            trash(url)
+        }
         return id
+    }
+
+    /// Moves an imported archive to the trash, so it can still be
+    /// recovered from Recently Deleted. Falls back to deleting it.
+    private static func trash(_ url: URL) {
+        var coordinatorError: NSError?
+        NSFileCoordinator().coordinate(writingItemAt: url, options: .forDeleting, error: &coordinatorError) { writable in
+            do {
+                try FileManager.default.trashItem(at: writable, resultingItemURL: nil)
+            } catch {
+                try? FileManager.default.removeItem(at: writable)
+            }
+        }
+    }
+
+    /// Reads a file from iCloud Drive or another app, which may still
+    /// be downloading, through NSFileCoordinator.
+    private static func coordinatedRead(_ source: URL, _ body: (URL) throws -> Void) throws {
+        var coordinatorError: NSError?
+        var bodyError: Error?
+        NSFileCoordinator().coordinate(readingItemAt: source, options: [], error: &coordinatorError) { readable in
+            do { try body(readable) } catch { bodyError = error }
+        }
+        if let error = coordinatorError ?? bodyError { throw error }
     }
 
     /// Zips made on a Mac carry metadata the game must never see:
@@ -77,7 +116,7 @@ enum GameImporter {
     /// FileManager hides "._" files from every listing it offers, but
     /// the engine lists folders with POSIX calls and sees them. So
     /// this walks the tree with readdir.
-    private static func removeMacMetadata(in folder: URL) {
+    static func removeMacMetadata(in folder: URL) {
         let fm = FileManager.default
         var pending = [folder.path]
         while let path = pending.popLast() {

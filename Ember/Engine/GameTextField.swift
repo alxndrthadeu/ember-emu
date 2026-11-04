@@ -34,7 +34,17 @@ final class GameTextField: UITextField, UITextFieldDelegate {
 
     required init?(coder: NSCoder) { fatalError("init(coder:) is not used") }
 
+    /// Opened by the player from the menu, not by the game: stays up
+    /// until Return, whatever the game's text mode says.
+    private(set) var isManual = false
+
+    func openManually() {
+        isManual = true
+        setActive(true)
+    }
+
     func setActive(_ active: Bool) {
+        if !active, isManual { return }
         if active, !isFirstResponder {
             text = Self.placeholderText
             becomeFirstResponder()
@@ -50,8 +60,15 @@ final class GameTextField: UITextField, UITextFieldDelegate {
             if string.isEmpty, range.length > 0 {
                 KeyTapper.tap(.backspace)
             } else if mkxp_isTextInputActive() != 0 {
+                // The game reads text (Input.gets): newer Essentials.
                 for character in string {
                     mkxp_pushTextInput(String(character))
+                }
+            } else {
+                // The game polls the keyboard key by key: older Essentials
+                // name entry, and other scenes built for a PC keyboard.
+                for character in string {
+                    KeyTapper.type(character)
                 }
             }
         }
@@ -61,6 +78,10 @@ final class GameTextField: UITextField, UITextFieldDelegate {
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         MainActor.assumeIsolated { KeyTapper.tap(.enter) }
+        if isManual {
+            isManual = false
+            resignFirstResponder()
+        }
         return false
     }
 }

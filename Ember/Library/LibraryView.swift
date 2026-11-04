@@ -1,49 +1,43 @@
 import SwiftUI
-import UniformTypeIdentifiers
 
 struct LibraryView: View {
     @ObservedObject private var session = EngineSession.shared
     @ObservedObject private var library = LibraryStore.shared
-    @State private var showingImporter = false
-    @State private var pendingDelete: GameEntry?
+    @State private var optionsFor: GameEntry?
+    @State private var showingHistory = false
+    @State private var showingControls = false
     /// A game tapped after another one ended: the app must reopen.
     @State private var reopenFor: GameEntry?
 
-    private let columns = [GridItem(.adaptive(minimum: 150), spacing: 16)]
+    private let columns = [GridItem(.adaptive(minimum: 160), spacing: 16)]
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                header
+            Group {
                 if library.games.isEmpty && library.importing.isEmpty {
                     emptyState
-                        .frame(maxHeight: .infinity)
                 } else {
                     grid
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Theme.background.ignoresSafeArea())
-            .toolbar(.hidden, for: .navigationBar)
+            .navigationTitle("Biblioteca")
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button { showingControls = true } label: {
+                        Image(systemName: "gamecontroller")
+                    }
+                    .accessibilityLabel("Controles")
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button { showingHistory = true } label: {
+                        Image(systemName: "clock.arrow.circlepath")
+                    }
+                    .accessibilityLabel("Histórico")
+                }
+            }
             .safeAreaInset(edge: .bottom) { statusBanner }
-        }
-        .fileImporter(isPresented: $showingImporter,
-                      allowedContentTypes: [.zip, .folder],
-                      allowsMultipleSelection: true) { result in
-            if case .success(let urls) = result {
-                library.importItems(urls)
-            }
-        }
-        .confirmationDialog(
-            "Apagar “\(pendingDelete?.title ?? "")”?",
-            isPresented: Binding(get: { pendingDelete != nil }, set: { if !$0 { pendingDelete = nil } }),
-            titleVisibility: .visible
-        ) {
-            Button("Apagar jogo", role: .destructive) {
-                if let game = pendingDelete { library.delete(game) }
-            }
-        } message: {
-            Text("Os saves continuam guardados. Se importar o jogo de novo, eles voltam.")
         }
         .alert("Não deu certo",
                isPresented: Binding(get: { library.lastError != nil }, set: { if !$0 { library.lastError = nil } })) {
@@ -51,61 +45,58 @@ struct LibraryView: View {
         } message: {
             Text(library.lastError ?? "")
         }
+        .sheet(item: $optionsFor) { game in
+            GameOptionsSheet(game: game) { open(game) }
+                .presentationDetents([.medium, .large])
+        }
+        .sheet(isPresented: $showingHistory) {
+            HistoryView { open($0) }
+        }
+        .sheet(isPresented: $showingControls) {
+            ControlsGuideView()
+        }
         .sheet(item: $reopenFor) { game in
             ReopenSheet(title: game.title)
-                .presentationDetents([.height(340)])
-                .presentationDragIndicator(.visible)
+                .presentationDetents([.height(320)])
         }
-        .onAppear(perform: autoLaunchForDevelopment)
-    }
-
-    /// The library's own header, as in Manic EMU: the title in
-    /// Pixelify on the left, actions on the right.
-    private var header: some View {
-        HStack(alignment: .center) {
-            Text("Biblioteca")
-                .pixelFont(34)
-                .foregroundStyle(Theme.primaryText)
-                .accessibilityAddTraits(.isHeader)
-            Spacer()
-            Button { showingImporter = true } label: {
-                Image(systemName: "plus")
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(Theme.primaryText)
-                    .frame(width: 40, height: 40)
-                    .background(Circle().fill(Theme.surface2))
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Importar jogo")
-        }
-        .padding(.horizontal, 20)
-        .padding(.top, 12)
-        .padding(.bottom, 4)
+        .onAppear(perform: developmentHooks)
     }
 
     private var grid: some View {
         ScrollView {
-            LazyVGrid(columns: columns, spacing: 20) {
+            if let recent = library.recent {
+                ContinueCard(game: recent)
+                    .onTapGesture { open(recent) }
+                    .onLongPressGesture { showOptions(recent) }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 8)
+                    .padding(.bottom, 20)
+                Text("Todos os jogos")
+                    .font(.title3.weight(.semibold))
+                    .foregroundStyle(Theme.primaryText)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 4)
+            }
+            LazyVGrid(columns: columns, spacing: 22) {
                 ForEach(library.games) { game in
-                    Button { open(game) } label: {
-                        GameCard(game: game)
-                    }
-                    .buttonStyle(.plain)
-                    .contextMenu {
-                        Button(role: .destructive) { pendingDelete = game } label: {
-                            Label("Apagar", systemImage: "trash")
-                        }
-                    }
+                    GameCard(game: game)
+                        .onTapGesture { open(game) }
+                        .onLongPressGesture { showOptions(game) }
+                        .accessibilityAddTraits(.isButton)
+                        .accessibilityAction(named: "Opções") { showOptions(game) }
                 }
             }
-            .padding(20)
+            .padding(.horizontal, 20)
+            .padding(.top, 8)
+            .padding(.bottom, 24)
         }
     }
 
     private var emptyState: some View {
-        VStack(spacing: 14) {
-            PixelFlame(cell: 9)
-                .padding(.bottom, 10)
+        VStack(spacing: 12) {
+            EmberFlame(size: 52)
+                .padding(.bottom, 8)
             Text("Sua estante está vazia")
                 .font(.title3.weight(.semibold))
                 .foregroundStyle(Theme.primaryText)
@@ -113,16 +104,11 @@ struct LibraryView: View {
                 .font(.subheadline)
                 .foregroundStyle(Theme.secondaryText)
                 .multilineTextAlignment(.center)
-            Button { showingImporter = true } label: {
-                Text("Importar jogo")
-                    .font(.body.weight(.semibold))
-                    .foregroundStyle(Theme.onAccent)
-                    .padding(.horizontal, 22)
-                    .padding(.vertical, 12)
-                    .background(Capsule().fill(Theme.accent))
-            }
-            .buttonStyle(.plain)
-            .padding(.top, 8)
+            Button("Importar jogo") { AppRouter.shared.tab = .importGames }
+                .buttonStyle(.glassProminent)
+                .tint(Theme.accent)
+                .controlSize(.large)
+                .padding(.top, 10)
         }
         .padding(32)
     }
@@ -144,6 +130,11 @@ struct LibraryView: View {
         }
     }
 
+    private func showOptions(_ game: GameEntry) {
+        Haptics.tap()
+        optionsFor = game
+    }
+
     /// One game per app launch: after a game ended, the next one
     /// needs the app reopened (see CLAUDE.md, "Limite atual").
     private func open(_ game: GameEntry) {
@@ -163,11 +154,32 @@ struct LibraryView: View {
     ///   EMBER_AUTOLAUNCH=<id>     starts that game ("first" = any)
     ///   EMBER_AUTOQUIT=<seconds>  then quits it, as the menu's Sair does
     ///   EMBER_AUTOREOPEN=1        then taps the game again
-    private func autoLaunchForDevelopment() {
+    ///   EMBER_AUTOMENU=<seconds>  opens the in-game menu (ControlsOverlay)
+    ///   EMBER_SHOW=history|controls|options|import  opens that screen
+    ///   EMBER_IMPORT_SAVES=<path>[:<path>…]  imports saves into the first game
+    ///   EMBER_EXPORT_SAVES=1      exports the first game's saves (logs the .zip)
+    private func developmentHooks() {
         #if DEBUG
         let environment = ProcessInfo.processInfo.environment
-        if let path = environment["EMBER_IMPORT"] {
-            library.importItems([URL(fileURLWithPath: path)])
+        if let paths = environment["EMBER_IMPORT"] {
+            library.importItems(paths.split(separator: ":").map { URL(fileURLWithPath: String($0)) })
+        }
+        if let game = library.games.first {
+            if let paths = environment["EMBER_IMPORT_SAVES"] {
+                let urls = paths.split(separator: ":").map { URL(fileURLWithPath: String($0)) }
+                print("[ember-saves] import:", Result { try SaveManager.importSaves(from: urls, into: game) })
+            }
+            if environment["EMBER_EXPORT_SAVES"] != nil {
+                print("[ember-saves] export:", Result { try SaveManager.export(game) })
+            }
+        }
+        switch environment["EMBER_SHOW"] {
+        case "history": showingHistory = true
+        case "controls": showingControls = true
+        case "options": optionsFor = library.games.first
+        case "import": AppRouter.shared.tab = .importGames
+        case "settings": AppRouter.shared.tab = .settings
+        default: break
         }
         guard let id = environment["EMBER_AUTOLAUNCH"],
               let game = library.games.first(where: { $0.id == id || id == "first" })
@@ -193,9 +205,9 @@ private struct ReopenSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        VStack(spacing: 14) {
-            PixelFlame(cell: 6)
-                .padding(.top, 8)
+        VStack(spacing: 12) {
+            EmberFlame(size: 40)
+                .padding(.top, 12)
             Text("Feche o Ember para abrir \(title)")
                 .font(.title3.weight(.semibold))
                 .foregroundStyle(Theme.primaryText)
@@ -205,20 +217,58 @@ private struct ReopenSheet: View {
                 .foregroundStyle(Theme.secondaryText)
                 .multilineTextAlignment(.center)
             Button { dismiss() } label: {
-                Text("Entendi")
-                    .font(.body.weight(.semibold))
-                    .foregroundStyle(Theme.onAccent)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 13)
-                    .background(Capsule().fill(Theme.accent))
+                Text("Entendi").frame(maxWidth: .infinity)
             }
-            .buttonStyle(.plain)
-            .padding(.top, 6)
+            .buttonStyle(.glassProminent)
+            .tint(Theme.accent)
+            .controlSize(.large)
+            .padding(.top, 8)
         }
         .padding(.horizontal, 24)
-        .padding(.bottom, 16)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Theme.background.ignoresSafeArea())
+        .padding(.bottom, 12)
+    }
+}
+
+/// The last game played, big, with "Continuar" in âmbar.
+private struct ContinueCard: View {
+    let game: GameEntry
+
+    var body: some View {
+        CoverFrame(game: game, ratio: 16 / 10, initialSize: 64)
+            .overlay(alignment: .bottom) {
+                HStack(alignment: .center, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(game.title)
+                            .font(.headline)
+                            .foregroundStyle(.white)
+                            .lineLimit(1)
+                        if let lastPlayed = game.lastPlayed {
+                            Text("Jogado \(lastPlayed.formatted(.relative(presentation: .named)))")
+                                .font(.caption.weight(.medium))
+                                .foregroundStyle(.white.opacity(0.8))
+                        }
+                    }
+                    Spacer()
+                    Label("Continuar", systemImage: "play.fill")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.onHighlight)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .glassEffect(.regular.tint(Theme.highlight), in: Capsule())
+                }
+                .padding(14)
+                .background(
+                    LinearGradient(colors: [.clear, .black.opacity(0.55)],
+                                   startPoint: .top, endPoint: .bottom))
+                .clipShape(UnevenRoundedRectangle(bottomLeadingRadius: Theme.cardRadius,
+                                                  bottomTrailingRadius: Theme.cardRadius,
+                                                  style: .continuous))
+            }
+            .shadow(color: .black.opacity(0.12), radius: 14, y: 6)
+            .contentShape(RoundedRectangle(cornerRadius: Theme.cardRadius, style: .continuous))
+            .accessibilityElement(children: .combine)
+            .accessibilityAddTraits(.isButton)
+            .accessibilityLabel("Continuar \(game.title)")
     }
 }
 
@@ -227,16 +277,8 @@ private struct GameCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            RoundedRectangle(cornerRadius: Theme.cardRadius, style: .continuous)
-                .fill(Theme.surface)
-                .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius, style: .continuous)
-                    .stroke(Theme.surface2, lineWidth: 1))
-                .aspectRatio(1, contentMode: .fit)
-                .overlay {
-                    Text(String(game.title.prefix(1)).uppercased())
-                        .pixelFont(48)
-                        .foregroundStyle(Theme.secondaryText)
-                }
+            CoverFrame(game: game)
+                .shadow(color: .black.opacity(0.08), radius: 10, y: 4)
             Text(game.title)
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(Theme.primaryText)
@@ -253,9 +295,9 @@ private struct Banner<Content: View>: View {
         HStack(spacing: 10) { content }
             .font(.footnote.weight(.semibold))
             .foregroundStyle(Theme.primaryText)
-            .padding(.horizontal, 16)
+            .padding(.horizontal, 18)
             .padding(.vertical, 12)
-            .background(Capsule().fill(Theme.surface2))
+            .glassEffect(.regular, in: Capsule())
             .padding(.bottom, 8)
     }
 }

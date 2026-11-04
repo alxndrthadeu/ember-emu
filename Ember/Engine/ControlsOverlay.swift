@@ -1,43 +1,41 @@
 import SwiftUI
 import UIKit
 
-/// The on-screen controller, a Game Boy Advance layout: D-pad, A, B,
-/// L, R, Start and Select, plus a gear for the game settings.
-///
-/// Portrait: the game sits at the top and the controller fills the
-/// space under it. Landscape: the game fills the screen and the
-/// controls float over it. Phase 3 turns this into skins.
+/// Everything on top of the game: the skin (artwork and touch), the
+/// loading screen, and the in-game menu.
 struct ControlsOverlay: View {
     @ObservedObject private var layout = GameLayout.shared
     @ObservedObject private var session = EngineSession.shared
+    @ObservedObject private var skins = SkinStore.shared
+    @ObservedObject private var controllers = ControllerMonitor.shared
     @State private var showingMenu = false
     @State private var quitting = false
 
     var body: some View {
         GeometryReader { geo in
-            let full = geo.frame(in: .global)
-            let portrait = full.height >= full.width
-            // The controller starts right under the picture.
-            // GameViewController sizes the picture to the full width,
-            // so there is no gap between them.
-            let pictureBottom = layout.pictureRect.maxY > 0
-                ? layout.pictureRect.maxY : full.minY + full.width * 0.75
-            let controllerHeight = max(0, full.maxY + geo.safeAreaInsets.bottom - pictureBottom)
+            let size = geo.size
+            let portrait = size.height >= size.width
+            let skinLayout = skins.layout(portrait: portrait)
+            // Landscape with a controller in hand: the buttons step away.
+            let hideButtons = !portrait && controllers.connected && AppSettings.hideControlsWithController
+            let opacity = (!portrait && skinLayout.translucent) ? AppSettings.landscapeOpacity : 1
 
-            ZStack(alignment: .bottom) {
-                Color.clear
-
-                if portrait {
-                    Theme.controllerBackground
-                        .frame(height: controllerHeight)
-                        .ignoresSafeArea(edges: .bottom)
+            ZStack(alignment: .topLeading) {
+                if !hideButtons {
+                    SkinControllerView(skin: skins.current, layout: skinLayout,
+                                       pictureRect: layout.pictureRect,
+                                       opacity: opacity, onMenu: openMenu)
                 }
-
-                controller(portrait: portrait)
-                    .frame(height: portrait ? controllerHeight - geo.safeAreaInsets.bottom : nil)
-                    .frame(maxHeight: portrait ? nil : .infinity)
+                // Every skin needs a way to the menu.
+                if hideButtons || !skinLayout.hasMenuButton {
+                    FloatingMenuButton(action: openMenu)
+                        .padding(.top, geo.safeAreaInsets.top + 8)
+                        .padding(.leading, geo.safeAreaInsets.leading + 12)
+                }
             }
+            .ignoresSafeArea()
         }
+        .environment(\.colorScheme, .dark)
         .overlay {
             // Until the engine draws its first frame.
             if layout.pictureRect == .zero {
@@ -51,9 +49,15 @@ struct ControlsOverlay: View {
                 quitting = true
                 session.quit()
             }
-            .presentationDetents([.height(260)])
-            .presentationDragIndicator(.visible)
+            .presentationDetents([.height(350)])
         }
+        .onAppear(perform: autoMenuForDevelopment)
+    }
+
+    private func openMenu() {
+        guard !showingMenu else { return }
+        mkxp_requestPause()
+        showingMenu = true
     }
 
     /// Closing the menu resumes the game, unless the player quit:
@@ -63,125 +67,21 @@ struct ControlsOverlay: View {
         if !quitting { mkxp_requestResume() }
     }
 
-    private func controller(portrait: Bool) -> some View {
-        VStack(spacing: 0) {
-            HStack {
-                ShoulderButton(title: "L", key: .l)
-                Spacer()
-                GearButton {
-                    mkxp_requestPause()
-                    showingMenu = true
-                }
-                Spacer()
-                ShoulderButton(title: "R", key: .r)
-            }
-            Spacer(minLength: 12)
-            HStack(alignment: .center) {
-                DPad()
-                Spacer()
-                FaceButtons()
-            }
-            Spacer(minLength: 12)
-            HStack(spacing: 18) {
-                PillButton(title: "Select", key: .select)
-                PillButton(title: "Start", key: .start)
-            }
+    /// Development aid: EMBER_AUTOMENU=<seconds> opens the menu.
+    private func autoMenuForDevelopment() {
+        #if DEBUG
+        guard let seconds = ProcessInfo.processInfo.environment["EMBER_AUTOMENU"].flatMap(Double.init)
+        else { return }
+        Task {
+            try? await Task.sleep(for: .seconds(seconds))
+            openMenu()
         }
-        .padding(.horizontal, portrait ? 20 : 32)
-        .padding(.top, portrait ? 16 : 12)
-        .padding(.bottom, portrait ? 12 : 16)
+        #endif
     }
 }
 
-// MARK: - Buttons
-
-/// Holds a key down while the finger is on the control.
-private struct HoldGesture: ViewModifier {
-    let key: GameKey
-    @Binding var pressed: Bool
-
-    func body(content: Content) -> some View {
-        content.gesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { _ in
-                    guard !pressed else { return }
-                    pressed = true
-                    Haptics.tap()
-                    key.press()
-                }
-                .onEnded { _ in
-                    pressed = false
-                    key.release()
-                })
-    }
-}
-
-/// A sits up and to the right of B, as on a GBA.
-private struct FaceButtons: View {
-    var body: some View {
-        ZStack {
-            RoundButton(title: "B", key: .back).offset(x: -38, y: 22)
-            RoundButton(title: "A", key: .confirm).offset(x: 38, y: -22)
-        }
-        .frame(width: 156, height: 124)
-    }
-}
-
-private struct RoundButton: View {
-    let title: String
-    let key: GameKey
-    @State private var pressed = false
-
-    var body: some View {
-        Text(title)
-            .font(.system(size: 22, weight: .semibold, design: .rounded))
-            .foregroundStyle(Theme.controlLabel)
-            .frame(width: 68, height: 68)
-            .background(Circle().fill(pressed ? Theme.controlFillPressed : Theme.controlFill))
-            .overlay(Circle().stroke(Theme.controlStroke, lineWidth: 1))
-            .contentShape(Circle().inset(by: -8))
-            .modifier(HoldGesture(key: key, pressed: $pressed))
-    }
-}
-
-private struct ShoulderButton: View {
-    let title: String
-    let key: GameKey
-    @State private var pressed = false
-
-    var body: some View {
-        Text(title)
-            .font(.system(size: 17, weight: .semibold, design: .rounded))
-            .foregroundStyle(Theme.controlLabel)
-            .frame(width: 92, height: 38)
-            .background(RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(pressed ? Theme.controlFillPressed : Theme.controlFill))
-            .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .stroke(Theme.controlStroke, lineWidth: 1))
-            .contentShape(Rectangle().inset(by: -8))
-            .modifier(HoldGesture(key: key, pressed: $pressed))
-    }
-}
-
-private struct PillButton: View {
-    let title: String
-    let key: GameKey
-    @State private var pressed = false
-
-    var body: some View {
-        Text(title)
-            .font(.caption.weight(.semibold))
-            .textCase(.uppercase)
-            .foregroundStyle(Theme.controlLabel)
-            .frame(width: 72, height: 26)
-            .background(Capsule().fill(pressed ? Theme.controlFillPressed : Theme.controlFill))
-            .overlay(Capsule().stroke(Theme.controlStroke, lineWidth: 1))
-            .contentShape(Capsule().inset(by: -10))
-            .modifier(HoldGesture(key: key, pressed: $pressed))
-    }
-}
-
-private struct GearButton: View {
+/// The menu button for skins that have none, or when the buttons hide.
+private struct FloatingMenuButton: View {
     let action: () -> Void
 
     var body: some View {
@@ -190,13 +90,12 @@ private struct GearButton: View {
             action()
         } label: {
             Image(systemName: "gearshape.fill")
-                .font(.system(size: 17))
+                .font(.system(size: 16, weight: .semibold))
                 .foregroundStyle(Theme.controlLabel)
                 .frame(width: 38, height: 38)
-                .background(Circle().fill(Theme.controlFill))
-                .overlay(Circle().stroke(Theme.controlStroke, lineWidth: 1))
         }
         .buttonStyle(.plain)
+        .glassEffect(Theme.controlGlass.interactive(), in: Circle())
         .accessibilityLabel("Menu")
     }
 }
@@ -208,15 +107,15 @@ private struct LoadingScreen: View {
     var body: some View {
         ZStack {
             Theme.controllerBackground.ignoresSafeArea()
-            VStack(spacing: 18) {
-                PixelFlame(cell: 8)
-                    .environment(\.colorScheme, .dark)
+            VStack(spacing: 14) {
+                EmberFlame(size: 54)
+                    .symbolEffect(.pulse)
                 Text("Acendendo…")
-                    .pixelFont(26)
+                    .font(.system(.title2, design: .rounded).weight(.semibold))
                     .foregroundStyle(Color(hex: 0xF4E9D8))
                 if !title.isEmpty {
                     Text(title)
-                        .font(.subheadline.weight(.medium))
+                        .font(.system(.subheadline, design: .rounded).weight(.medium))
                         .foregroundStyle(Color(hex: 0xB9A794))
                 }
             }

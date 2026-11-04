@@ -31,7 +31,45 @@ final class EngineSession: ObservableObject {
     private var libraryRoot: UIViewController?
     private var windowWatcher: Timer?
 
-    private init() {}
+    private init() {
+        let center = NotificationCenter.default
+        center.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main) { _ in
+            MainActor.assumeIsolated { EngineSession.shared.appWillResignActive() }
+        }
+        center.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { _ in
+            MainActor.assumeIsolated { EngineSession.shared.appDidBecomeActive() }
+        }
+    }
+
+    // MARK: - Background
+
+    // MARK: - History
+
+    private var sessionID: UUID?
+    private var historyTimer: Timer?
+
+    private func touchSession() {
+        if let sessionID { PlayHistory.touch(sessionID) }
+    }
+
+    /// True while the game is paused because the app left the screen.
+    private var pausedForBackground = false
+
+    /// The game pauses when the app leaves the screen, as in Manic EMU.
+    /// The pause also captures the frame that becomes the cover.
+    private func appWillResignActive() {
+        touchSession()
+        guard state == .running, AppSettings.pauseOnBackground,
+              !mkxp_isPaused(), !mkxp_isPauseRequested() else { return }
+        mkxp_requestPause()
+        pausedForBackground = true
+    }
+
+    private func appDidBecomeActive() {
+        guard pausedForBackground else { return }
+        pausedForBackground = false
+        mkxp_requestResume()
+    }
 
     func launch(_ game: GameEntry) {
         guard state == .idle else { return }
@@ -47,9 +85,11 @@ final class EngineSession: ObservableObject {
         let resources = Bundle.main.resourceURL!
         let userData = GameStorage.userDataFolder(for: game)
 
-        if let ruby = game.rubyVersion {
-            mkxp_setActiveRubyVersion(ruby)
-        }
+        mkxp_setActiveRubyVersion(game.rubyVersion)
+        EngineConfig.apply(for: game)
+        // The game's own on-screen keyboard for name entry, when the
+        // player turned it on for this game.
+        mkxp_setUseInGameKeyboard(InGameKeyboard.isOn(for: game.id))
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         mkxp_setLauncherIdentity("Ember", version)
         mkxp_setUserDataDirectory(userData.path)
@@ -71,9 +111,17 @@ final class EngineSession: ObservableObject {
         self.gameScreen = gameScreen
         libraryRoot = launcherWindow?.rootViewController
         launcherWindow?.rootViewController = gameScreen
+        // The game screen is dark in both modes, sheets included, and
+        // sheets take their style from the window.
+        launcherWindow?.overrideUserInterfaceStyle = .dark
 
         currentGame = game
+        sessionID = PlayHistory.begin(gameID: game.id, title: game.title)
+        historyTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { _ in
+            MainActor.assumeIsolated { EngineSession.shared.touchSession() }
+        }
         GameLayout.shared.observeEngine()
+        observeMessages()
         PauseSnapshot.shared.observeEngine()
         observeTextInput()
         GameSettings.apply()
@@ -89,6 +137,10 @@ final class EngineSession: ObservableObject {
     }
 
     private func engineDidEnd() {
+        touchSession()
+        historyTimer?.invalidate()
+        historyTimer = nil
+        sessionID = nil
         windowWatcher?.invalidate()
         windowWatcher = nil
         gameScreen = nil
@@ -96,7 +148,10 @@ final class EngineSession: ObservableObject {
             launcherWindow?.rootViewController = libraryRoot
         }
         libraryRoot = nil
+        launcherWindow?.overrideUserInterfaceStyle = .unspecified
         currentGame = nil
+        // New cover and "Continuar".
+        LibraryStore.shared.reload()
         state = .finished
         launcherWindow?.makeKeyAndVisible()
     }
@@ -104,9 +159,62 @@ final class EngineSession: ObservableObject {
     /// Ends the game. The engine stops at its next frame (also when
     /// paused), mkxp_run_app returns, and engineDidEnd brings the
     /// library back.
+    func openKeyboard() {
+        gameScreen?.openKeyboard()
+    }
+
     func quit() {
         guard state == .running else { return }
         mkxp_requestTerminate()
+    }
+
+    // MARK: - Errors and notices
+
+    /// The engine reports a script error, or a game's own msgbox, and
+    /// blocks its thread until the player dismisses it. Without these
+    /// handlers the game freezes on its first error.
+    private func observeMessages() {
+        mkxp_setErrorMessageCallback({ message, _ in
+            let text = message.map { String(cString: $0) } ?? ""
+            DispatchQueue.main.async {
+                MainActor.assumeIsolated { EngineSession.shared.presentEngineMessage(text, isError: true) }
+            }
+        }, nil)
+        mkxp_setInfoMessageCallback({ message, _ in
+            let text = message.map { String(cString: $0) } ?? ""
+            DispatchQueue.main.async {
+                MainActor.assumeIsolated { EngineSession.shared.presentEngineMessage(text, isError: false) }
+            }
+        }, nil)
+    }
+
+    private func presentEngineMessage(_ text: String, isError: Bool) {
+        guard let screen = gameScreen, !text.isEmpty else {
+            isError ? mkxp_signalErrorDismissed() : mkxp_signalInfoDismissed()
+            return
+        }
+        let shown = text.count > 900 ? String(text.prefix(900)) + "…" : text
+        let alert: UIAlertController
+        if isError {
+            let title = currentGame.map { "\($0.title) encontrou um erro" } ?? "O jogo encontrou um erro"
+            let hint = "\n\nSe o jogo não abre, tente outra versão do Ruby: segure o jogo na biblioteca e toque em Ruby."
+            alert = UIAlertController(title: title, message: shown + hint, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Copiar erro", style: .default) { _ in
+                UIPasteboard.general.string = text
+                mkxp_signalErrorDismissed()
+            })
+            alert.addAction(UIAlertAction(title: "Fechar", style: .cancel) { _ in
+                mkxp_signalErrorDismissed()
+            })
+        } else {
+            alert = UIAlertController(title: currentGame?.title, message: shown, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+                mkxp_signalInfoDismissed()
+            })
+        }
+        var top: UIViewController = screen
+        while let presented = top.presentedViewController { top = presented }
+        top.present(alert, animated: true)
     }
 
     // MARK: - Text input

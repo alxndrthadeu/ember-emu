@@ -36,6 +36,7 @@ struct GameMenuView: View {
         VStack(alignment: .leading, spacing: 20) {
             header
 
+            GlassEffectContainer(spacing: 12) {
             LazyVGrid(columns: columns, spacing: 12) {
                 MenuTile(icon: "forward.fill", title: "Velocidade",
                          value: "\(speed)x", highlighted: speed > 1) {
@@ -47,16 +48,24 @@ struct GameMenuView: View {
                 MenuTile(icon: "camera.fill", title: "Captura") {
                     saveScreenshot()
                 }
+                MenuTile(icon: "keyboard", title: "Teclado") {
+                    dismiss()
+                    // After the sheet is gone, so the keyboard has a window.
+                    Task {
+                        try? await Task.sleep(for: .milliseconds(450))
+                        EngineSession.shared.openKeyboard()
+                    }
+                }
                 MenuTile(icon: "xmark.circle.fill", title: "Sair", destructive: true) {
                     confirmingQuit = true
                 }
+            }
             }
 
             Spacer(minLength: 0)
         }
         .padding(20)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .background(Theme.background.ignoresSafeArea())
         .overlay(alignment: .bottom) {
             if let toast {
                 Text(toast)
@@ -64,7 +73,7 @@ struct GameMenuView: View {
                     .padding(.horizontal, 16)
                     .padding(.vertical, 10)
                     .foregroundStyle(Theme.onHighlight)
-                    .background(Capsule().fill(Theme.highlight))
+                    .glassEffect(.regular.tint(Theme.highlight), in: Capsule())
                     .transition(.opacity)
                     .padding(.bottom, 12)
             }
@@ -96,9 +105,10 @@ struct GameMenuView: View {
                 Image(systemName: "xmark")
                     .font(.system(size: 14, weight: .bold))
                     .foregroundStyle(Theme.secondaryText)
-                    .frame(width: 32, height: 32)
-                    .background(Circle().fill(Theme.surface2))
+                    .frame(width: 34, height: 34)
             }
+            .buttonStyle(.plain)
+            .glassEffect(.regular.interactive(), in: Circle())
             .accessibilityLabel("Voltar ao jogo")
         }
     }
@@ -157,12 +167,11 @@ private struct MenuTile: View {
                         .foregroundStyle(foreground(Theme.secondaryText))
                 }
             }
-            .frame(maxWidth: .infinity, minHeight: 96)
-            .background(RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(highlighted ? Theme.highlight : Theme.surface))
-            .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(highlighted ? Color.clear : Theme.surface2, lineWidth: 1))
+            .frame(maxWidth: .infinity, minHeight: 92)
+            .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         }
+        .glassEffect(highlighted ? .regular.tint(Theme.highlight).interactive() : .regular.interactive(),
+                     in: RoundedRectangle(cornerRadius: 20, style: .continuous))
         .buttonStyle(.plain)
     }
 
@@ -211,5 +220,8 @@ final class PauseSnapshot: ObservableObject {
                                     shouldInterpolate: false, intent: .defaultIntent)
         else { return }
         image = UIImage(cgImage: cgImage)
+        if let id = EngineSession.shared.currentGame?.id, let image {
+            GameCovers.saveSnapshot(image, forGameID: id)
+        }
     }
 }

@@ -25,6 +25,8 @@ targets:
     platform: iOS
     sources:
       - path: Ember
+        excludes:
+          - "Vendor/**/*.md"
     dependencies:
       - package: ZIPFoundation
     configFiles:
@@ -47,7 +49,7 @@ targets:
         ONLY_ACTIVE_ARCH: YES
         ENABLE_USER_SCRIPT_SANDBOXING: NO
         DEAD_CODE_STRIPPING: YES
-        HEADER_SEARCH_PATHS: $(EMBER_ENGINE)/src
+        HEADER_SEARCH_PATHS: $(EMBER_ENGINE)/src $(SRCROOT)/Ember/Vendor/libarchive
         LIBRARY_SEARCH_PATHS: $(EMBER_DEPS)/lib $(EMBER_ANGLE)/lib
         # Same link line as the fork's tools/build-test-host-ios.sh,
         # minus libSDL2main: Ember owns main() and starts the engine
@@ -78,6 +80,8 @@ targets:
           - -lbz2
           - -liconv
           - -lc++
+          # .rar and .7z import: the system libarchive (see Ember/Vendor/libarchive).
+          - -larchive
           - -lANGLE_static
           - -lEGL_static
           - -lGLESv2_static
