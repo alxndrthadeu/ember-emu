@@ -21,6 +21,9 @@ enum GameSettings {
 /// game, as in Manic EMU.
 struct GameMenuView: View {
     let title: String
+    /// Run after the menu closed and the game resumed.
+    var onSaveState: () -> Void = {}
+    var onShowStates: () -> Void = {}
     /// Ends the game. The caller dismisses the menu first.
     let onQuit: () -> Void
 
@@ -44,6 +47,14 @@ struct GameMenuView: View {
                     speed = steps[((steps.firstIndex(of: speed) ?? 0) + 1) % steps.count]
                     GameSettings.speed = speed
                     GameSettings.apply()
+                }
+                MenuTile(icon: "square.and.arrow.down.on.square.fill", title: "Salvar estado") {
+                    dismiss()
+                    onSaveState()
+                }
+                MenuTile(icon: "clock.arrow.trianglehead.counterclockwise.rotate.90", title: "Estados") {
+                    dismiss()
+                    onShowStates()
                 }
                 MenuTile(icon: "camera.fill", title: "Captura") {
                     saveScreenshot()

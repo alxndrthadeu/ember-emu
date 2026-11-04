@@ -5,16 +5,23 @@ import Foundation
 /// keys, so a key the game also sets is merged here first.
 enum EngineConfig {
     /// Ember's own preload scripts, run before the game's scripts.
-    private static var emberPreloads: [String] {
-        ["ember_quiet_warnings"].compactMap {
-            Bundle.main.url(forResource: $0, withExtension: "rb")?.path
-        }
+    ///
+    /// ember_quicksave is a preload, not a postload: the engine runs a
+    /// config postloadScript only from rgss_main, which only VX Ace games
+    /// call. The script hooks game classes lazily, once they exist.
+    private static var emberPreloads: [String] { scripts(["ember_quiet_warnings", "ember_quicksave"]) }
+    private static var emberPostloads: [String] { [] }
+
+    private static func scripts(_ names: [String]) -> [String] {
+        names.compactMap { Bundle.main.url(forResource: $0, withExtension: "rb")?.path }
     }
 
     static func apply(for game: GameEntry) {
         let gameConfig = readGameConfig(in: game.folder)
         let gamePreloads = gameConfig["preloadScript"] as? [String] ?? []
-        let overlay: [String: Any] = ["preloadScript": gamePreloads + emberPreloads]
+        let gamePostloads = gameConfig["postloadScript"] as? [String] ?? []
+        let overlay: [String: Any] = ["preloadScript": gamePreloads + emberPreloads,
+                                      "postloadScript": gamePostloads + emberPostloads]
         guard let data = try? JSONSerialization.data(withJSONObject: overlay),
               let json = String(data: data, encoding: .utf8)
         else { return }

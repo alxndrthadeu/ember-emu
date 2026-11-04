@@ -65,8 +65,8 @@ struct LibraryView: View {
     private var grid: some View {
         ScrollView {
             if let recent = library.recent {
-                ContinueCard(game: recent)
-                    .onTapGesture { open(recent) }
+                ContinueCard(game: recent, resumes: StateStore.autoState(for: recent.id) != nil)
+                    .onTapGesture { open(recent, resume: true) }
                     .onLongPressGesture { showOptions(recent) }
                     .padding(.horizontal, 20)
                     .padding(.top, 8)
@@ -137,10 +137,12 @@ struct LibraryView: View {
 
     /// One game per app launch: after a game ended, the next one
     /// needs the app reopened (see CLAUDE.md, "Limite atual").
-    private func open(_ game: GameEntry) {
+    /// `resume`: start from the automatic save state when there is one.
+    private func open(_ game: GameEntry, resume: Bool = false) {
         switch session.state {
         case .idle:
-            session.launch(game)
+            let slot = resume && StateStore.autoState(for: game.id) != nil ? StateStore.autoSlot : nil
+            session.launch(game, resumeSlot: slot)
         case .finished:
             reopenFor = game
         case .preparing, .running, .failed:
@@ -156,6 +158,9 @@ struct LibraryView: View {
     ///   EMBER_AUTOREOPEN=1        then taps the game again
     ///   EMBER_AUTOMENU=<seconds>  opens the in-game menu (ControlsOverlay)
     ///   EMBER_SHOW=history|controls|options|import  opens that screen
+    ///   EMBER_KEYS="3:enter,1:down,2:save:t1,2:load:t1,1:snap"  drives the
+    ///   game: wait N seconds, then press a key / save or load a state
+    ///   EMBER_RESUME=1            starts from the auto state
     ///   EMBER_IMPORT_SAVES=<path>[:<path>…]  imports saves into the first game
     ///   EMBER_EXPORT_SAVES=1      exports the first game's saves (logs the .zip)
     private func developmentHooks() {
@@ -184,7 +189,11 @@ struct LibraryView: View {
         guard let id = environment["EMBER_AUTOLAUNCH"],
               let game = library.games.first(where: { $0.id == id || id == "first" })
         else { return }
-        session.launch(game)
+        let resume = environment["EMBER_RESUME"] != nil ? StateStore.autoSlot : nil
+        session.launch(game, resumeSlot: resume)
+        if let script = environment["EMBER_KEYS"] {
+            Task { await runKeyScript(script) }
+        }
         if let seconds = environment["EMBER_AUTOQUIT"].flatMap(Double.init) {
             Task {
                 try? await Task.sleep(for: .seconds(seconds))
@@ -198,6 +207,35 @@ struct LibraryView: View {
         #endif
     }
 }
+
+#if DEBUG
+/// Development aid behind EMBER_KEYS: steps of "seconds:action".
+@MainActor
+private func runKeyScript(_ script: String) async {
+    let keys: [String: GameKey] = ["enter": .confirm, "esc": .back, "shift": .start, "up": .up,
+                                   "down": .down, "left": .left, "right": .right]
+    for step in script.split(separator: ",") {
+        let parts = step.split(separator: ":").map(String.init)
+        guard let seconds = Double(parts.first ?? "") , parts.count >= 2 else { continue }
+        try? await Task.sleep(for: .seconds(seconds))
+        switch parts[1] {
+        case "save", "load":
+            let slot = parts.count > 2 ? parts[2] : StateStore.autoSlot
+            let outcome = await EngineSession.shared.requestState(parts[1], slot: slot)
+            print("[ember-keys] \(parts[1]) \(slot): \(outcome)")
+        default:
+            if let key = keys[parts[1]] {
+                key.press()
+                try? await Task.sleep(for: .milliseconds(90))
+                key.release()
+            } else if parts[1].count == 1, let character = parts[1].first {
+                KeyTapper.type(character)
+            }
+            print("[ember-keys] \(parts[1])")
+        }
+    }
+}
+#endif
 
 /// Explains, in the app's voice, how to open another game.
 private struct ReopenSheet: View {
@@ -232,6 +270,8 @@ private struct ReopenSheet: View {
 /// The last game played, big, with "Continuar" in âmbar.
 private struct ContinueCard: View {
     let game: GameEntry
+    /// An automatic save state is waiting: the game opens right there.
+    var resumes = false
 
     var body: some View {
         CoverFrame(game: game, ratio: 16 / 10, initialSize: 64)
@@ -242,7 +282,11 @@ private struct ContinueCard: View {
                             .font(.headline)
                             .foregroundStyle(.white)
                             .lineLimit(1)
-                        if let lastPlayed = game.lastPlayed {
+                        if resumes {
+                            Text("Volta de onde você parou")
+                                .font(.caption.weight(.medium))
+                                .foregroundStyle(.white.opacity(0.8))
+                        } else if let lastPlayed = game.lastPlayed {
                             Text("Jogado \(lastPlayed.formatted(.relative(presentation: .named)))")
                                 .font(.caption.weight(.medium))
                                 .foregroundStyle(.white.opacity(0.8))

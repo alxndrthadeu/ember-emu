@@ -57,12 +57,29 @@ final class EngineSession: ObservableObject {
 
     /// The game pauses when the app leaves the screen, as in Manic EMU.
     /// The pause also captures the frame that becomes the cover.
+    /// Leaving the screen: save the "auto" state (the game does it at
+    /// its next quiet frame), then pause. iOS may close a suspended app
+    /// to free memory; "Continuar" then resumes from this state.
     private func appWillResignActive() {
         touchSession()
-        guard state == .running, AppSettings.pauseOnBackground,
+        guard state == .running, let game = currentGame,
               !mkxp_isPaused(), !mkxp_isPauseRequested() else { return }
-        mkxp_requestPause()
-        pausedForBackground = true
+        pausedForBackground = AppSettings.pauseOnBackground
+        let task = UIApplication.shared.beginBackgroundTask(withName: "ember.autostate")
+        Task { @MainActor in
+            _ = await StateStore.request("save", slot: StateStore.autoSlot, gameID: game.id, timeout: 1.5)
+            if self.pausedForBackground, self.state == .running { mkxp_requestPause() }
+            UIApplication.shared.endBackgroundTask(task)
+        }
+    }
+
+    // MARK: - Save states
+
+    /// Saves or loads a state in the running game. The game must not be
+    /// paused: callers close the menu first.
+    func requestState(_ verb: String, slot: String) async -> StateStore.Outcome {
+        guard state == .running, let game = currentGame else { return .noAnswer }
+        return await StateStore.request(verb, slot: slot, gameID: game.id)
     }
 
     private func appDidBecomeActive() {
@@ -71,9 +88,12 @@ final class EngineSession: ObservableObject {
         mkxp_requestResume()
     }
 
-    func launch(_ game: GameEntry) {
+    /// `resumeSlot`: open the game straight into that save state
+    /// (StateStore), skipping its title screen when the game allows.
+    func launch(_ game: GameEntry, resumeSlot: String? = nil) {
         guard state == .idle else { return }
         state = .preparing(game.title)
+        StateStore.prepareEnvironment(gameID: game.id, resumeSlot: resumeSlot)
         // Games live in Documents/Games, which is writable: the engine
         // runs them in place (it writes a path cache next to them).
         start(game, in: game.folder)

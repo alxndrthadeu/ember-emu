@@ -10,6 +10,8 @@ struct ControlsOverlay: View {
     @ObservedObject private var controllers = ControllerMonitor.shared
     @State private var showingMenu = false
     @State private var quitting = false
+    @State private var showingStates = false
+    @State private var toast: String?
 
     var body: some View {
         GeometryReader { geo in
@@ -53,16 +55,72 @@ struct ControlsOverlay: View {
         }
         .animation(.easeOut(duration: 0.35), value: layout.pictureRect == .zero)
         .sheet(isPresented: $showingMenu, onDismiss: menuDismissed) {
-            GameMenuView(title: session.currentGame?.title ?? "") {
+            GameMenuView(title: session.currentGame?.title ?? "",
+                         onSaveState: { runState("save", slot: StateStore.newSlot()) },
+                         onShowStates: { afterMenu { showingStates = true } }) {
                 quitting = true
                 session.quit()
             }
-            .presentationDetents([.height(350)])
+            .presentationDetents([.height(380)])
         }
+        .sheet(isPresented: $showingStates) {
+            if let game = session.currentGame {
+                StatesSheet(gameID: game.id) { state in
+                    showingStates = false
+                    runState("load", slot: state.slot)
+                }
+                .presentationDetents([.medium, .large])
+            }
+        }
+        .overlay(alignment: .top) {
+            if let toast {
+                Text(toast)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(Theme.onHighlight)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .glassEffect(.regular.tint(Theme.highlight), in: Capsule())
+                    .padding(.top, 54)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+            }
+        }
+        .animation(.spring(response: 0.3), value: toast)
         .onAppear {
             // A profile can put Ember's menu on any button.
             ControlMapper.shared.onMenu = { openMenu() }
             autoMenuForDevelopment()
+        }
+    }
+
+    /// After the menu sheet is gone (and the game resumed).
+    private func afterMenu(_ body: @escaping () -> Void) {
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(450))
+            body()
+        }
+    }
+
+    /// Saves or loads a state once the game runs again, then tells the
+    /// player how it went.
+    private func runState(_ verb: String, slot: String) {
+        afterMenu {
+            Task { @MainActor in
+                let outcome = await session.requestState(verb, slot: slot)
+                switch outcome {
+                case .done: show(verb == "save" ? "Estado salvo" : "Estado carregado")
+                case .busy(let reason): show(StateStore.busyText(reason))
+                case .failed: show(verb == "save" ? "Não deu para salvar o estado neste jogo" : "Não deu para carregar o estado")
+                case .noAnswer: show("O jogo não respondeu. Tente de novo andando pelo mapa")
+                }
+            }
+        }
+    }
+
+    private func show(_ message: String) {
+        toast = message
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(2.5))
+            if toast == message { toast = nil }
         }
     }
 
