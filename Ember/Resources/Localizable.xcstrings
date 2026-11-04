@@ -995,6 +995,22 @@
         }
       }
     },
+    "Clássica": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Classic"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clásica"
+          }
+        }
+      }
+    },
     "Clássico": {
       "localizations": {
         "en": {
@@ -1007,22 +1023,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Clásico"
-          }
-        }
-      }
-    },
-    "Com moldura": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Framed"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Con marco"
           }
         }
       }
@@ -1871,22 +1871,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "L del juego"
-          }
-        }
-      }
-    },
-    "Largura total": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Full width"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ancho completo"
           }
         }
       }
@@ -3413,6 +3397,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pantalla"
+          }
+        }
+      }
+    },
+    "Tela cheia": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Full screen"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pantalla completa"
           }
         }
       }

@@ -63,7 +63,7 @@ struct GameMenuView: View {
                 }
                 MenuTile(icon: skins.portraitFullWidth ? "rectangle.inset.filled" : "rectangle.center.inset.filled",
                          title: String(localized: "Tela"),
-                         value: skins.portraitFullWidth ? String(localized: "Largura total") : String(localized: "Com moldura")) {
+                         value: skins.portraitFullWidth ? String(localized: "Tela cheia") : String(localized: "Clássica")) {
                     skins.portraitFullWidth.toggle()
                 }
                 MenuTile(icon: "gauge.with.dots.needle.67percent", title: String(localized: "Desempenho"),

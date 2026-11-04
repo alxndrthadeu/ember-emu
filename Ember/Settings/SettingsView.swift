@@ -153,8 +153,8 @@ struct SettingsView: View {
             .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
 
             Picker("Tela no modo retrato", selection: $skins.portraitFullWidth) {
-                Text("Com moldura").tag(false)
-                Text("Largura total").tag(true)
+                Text("Clássica").tag(false)
+                Text("Tela cheia").tag(true)
             }
             Button {
                 importingSkin = true

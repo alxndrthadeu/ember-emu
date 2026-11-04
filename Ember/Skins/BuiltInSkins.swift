@@ -82,13 +82,15 @@ enum BuiltInSkins {
         let ratio = max(aspect ?? 4 / 3, 0.5)
         let width = layout.mappingSize.width
         // Keep clear of L/R and the gear row (y 404).
-        let bottomLimit: CGFloat = fullWidth ? 396 : 370
+        let bottomLimit: CGFloat = fullWidth ? 392 : 370
         var screen: CGRect
         if fullWidth {
-            screen = CGRect(x: 0, y: 62, width: width, height: width / ratio)
+            // Tela cheia: nearly edge to edge, in a thin frame.
+            let w = width - 2 * thinBezel
+            screen = CGRect(x: thinBezel, y: 64, width: w, height: w / ratio)
         } else {
-            let w: CGFloat = 386
-            screen = CGRect(x: (width - w) / 2, y: 70, width: w, height: w / ratio)
+            // Clássica: the original frame with the logo under the screen.
+            screen = CGRect(x: 24, y: 72, width: 366, height: 366 / ratio)
         }
         if screen.maxY > bottomLimit {
             let h = bottomLimit - screen.minY
@@ -99,6 +101,9 @@ enum BuiltInSkins {
         copy.screen = screen
         return copy
     }
+
+    /// The frame width around the screen in Tela cheia.
+    static let thinBezel: CGFloat = 6
 
     private static let directions: [SkinInput] = [.key(.up), .key(.down), .key(.left), .key(.right)]
 
@@ -126,8 +131,11 @@ struct BuiltInSkinArt: View {
             ZStack(alignment: .topLeading) {
                 background(isPortrait: isPortrait)
 
-                if let screen = layout.screen, screen.width < layout.mappingSize.width - 1 {
-                    bezel(screen.applying(.init(scaleX: sx, y: sy)), isPortrait: isPortrait)
+                if let screen = layout.screen {
+                    // A screen close to the edges gets the thin frame.
+                    let thin = isPortrait && screen.minX <= BuiltInSkins.thinBezel + 1
+                    bezel(screen.applying(.init(scaleX: sx, y: sy)), isPortrait: isPortrait,
+                          thin: thin ? BuiltInSkins.thinBezel * sx : nil)
                 }
 
                 ForEach(Array(layout.items.enumerated()), id: \.offset) { index, item in
@@ -164,15 +172,16 @@ struct BuiltInSkinArt: View {
         }
     }
 
+    /// `thin`: the frame width in Tela cheia (no logo strip).
     @ViewBuilder
-    private func bezel(_ screen: CGRect, isPortrait: Bool) -> some View {
+    private func bezel(_ screen: CGRect, isPortrait: Bool, thin: CGFloat? = nil) -> some View {
         if style == .ember {
-            let pad: CGFloat = isPortrait ? 12 : 12
-            let bottom: CGFloat = isPortrait ? 30 : 12
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
+            let pad: CGFloat = thin ?? 12
+            let bottom: CGFloat = thin ?? (isPortrait ? 30 : 12)
+            RoundedRectangle(cornerRadius: thin == nil ? 22 : 10, style: .continuous)
                 .fill(Color(hex: 0x2B211C))
                 .overlay(alignment: .bottom) {
-                    if isPortrait {
+                    if isPortrait && thin == nil {
                         HStack(spacing: 6) {
                             Image(systemName: "flame.fill")
                                 .font(.system(size: 11, weight: .bold))
