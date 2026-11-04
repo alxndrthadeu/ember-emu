@@ -31,6 +31,7 @@ struct GameMenuView: View {
     @ObservedObject private var pause = PauseSnapshot.shared
     @ObservedObject private var performance = PerformanceModel.shared
     @ObservedObject private var skins = SkinStore.shared
+    @ObservedObject private var audio = GameAudio.shared
     @State private var speed = GameSettings.speed
     @State private var confirmingQuit = false
     @State private var toast: String?
@@ -65,6 +66,12 @@ struct GameMenuView: View {
                          title: String(localized: "Tela"),
                          value: skins.portraitFullWidth ? String(localized: "Tela cheia") : String(localized: "Clássica")) {
                     skins.portraitFullWidth.toggle()
+                }
+                MenuTile(icon: audio.soundOn ? "speaker.wave.2.fill" : "speaker.slash.fill",
+                         title: String(localized: "Som"),
+                         value: audio.soundOn ? String(localized: "Ligado") : String(localized: "Desligado"),
+                         highlighted: !audio.soundOn) {
+                    audio.soundOn.toggle()
                 }
                 MenuTile(icon: "gauge.with.dots.needle.67percent", title: String(localized: "Desempenho"),
                          value: performance.enabled ? String(localized: "Ligado") : String(localized: "Desligado"), highlighted: performance.enabled) {

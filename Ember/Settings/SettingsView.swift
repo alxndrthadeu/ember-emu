@@ -7,6 +7,7 @@ struct SettingsView: View {
     @ObservedObject private var library = LibraryStore.shared
     @ObservedObject private var performance = PerformanceModel.shared
     @ObservedObject private var controllers = ControllerMonitor.shared
+    @ObservedObject private var audio = GameAudio.shared
 
     @State private var haptics = AppSettings.haptics
     @State private var landscapeOpacity = AppSettings.landscapeOpacity
@@ -82,6 +83,16 @@ struct SettingsView: View {
                     Text("Jogo")
                 } footer: {
                     Text("O avanço rápido é a velocidade dos botões de acelerar das skins. No menu da engrenagem você escolhe a velocidade na hora.")
+                }
+
+                Section {
+                    Toggle("Som do jogo", isOn: $audio.soundOn)
+                    Toggle("Tocar junto com outros apps", isOn: $audio.mixWithOthers)
+                        .disabled(!audio.soundOn)
+                } header: {
+                    Text("Áudio")
+                } footer: {
+                    Text("Para ouvir sua música enquanto joga, desligue o som do jogo ou deixe tocar junto. Assim o Spotify, o Apple Music ou um podcast continuam tocando. Nesse modo, a chave de silêncio do iPhone também silencia o jogo.")
                 }
 
                 Section {

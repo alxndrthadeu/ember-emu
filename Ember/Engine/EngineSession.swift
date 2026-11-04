@@ -113,6 +113,7 @@ final class EngineSession: ObservableObject {
 
         mkxp_setActiveRubyVersion(game.rubyVersion)
         EngineConfig.apply(for: game)
+        GameAudio.shared.configureSession()
         // Buttons, on screen and on controllers, follow the game's profile.
         ControlMapper.shared.profile = ProfileStore.shared.profile(for: game)
         PhysicalControllerInput.shared.start()

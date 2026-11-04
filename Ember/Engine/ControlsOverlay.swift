@@ -59,6 +59,10 @@ struct ControlsOverlay: View {
             }
         }
         .animation(.easeOut(duration: 0.35), value: layout.pictureRect == .zero)
+        .onChange(of: layout.pictureRect == .zero) {
+            // The engine's audio is up once it draws.
+            if layout.pictureRect != .zero { GameAudio.shared.apply() }
+        }
         .sheet(isPresented: $showingMenu, onDismiss: menuDismissed) {
             GameMenuView(title: session.currentGame?.title ?? "",
                          onSaveState: { runState("save", slot: StateStore.newSlot()) },

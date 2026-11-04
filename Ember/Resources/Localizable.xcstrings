@@ -2761,6 +2761,22 @@
         }
       }
     },
+    "Para ouvir sua música enquanto joga, desligue o som do jogo ou deixe tocar junto. Assim o Spotify, o Apple Music ou um podcast continuam tocando. Nesse modo, a chave de silêncio do iPhone também silencia o jogo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To listen to your music while playing, turn the game sound off or let it play alongside. Spotify, Apple Music or a podcast then keep playing. In that mode, the iPhone's silent switch also silences the game."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para escuchar tu música mientras juegas, apaga el sonido del juego o déjalo sonar junto. Así Spotify, Apple Music o un pódcast siguen sonando. En ese modo, el interruptor de silencio del iPhone también silencia el juego."
+          }
+        }
+      }
+    },
     "Pausa: velocidade, captura, sair": {
       "localizations": {
         "en": {
@@ -3209,6 +3225,38 @@
         }
       }
     },
+    "Som": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sound"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sonido"
+          }
+        }
+      }
+    },
+    "Som do jogo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game sound"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sonido del juego"
+          }
+        }
+      }
+    },
     "Start": {
       "localizations": {
         "en": {
@@ -3461,6 +3509,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Termina la conversación o el evento para guardar el estado"
+          }
+        }
+      }
+    },
+    "Tocar junto com outros apps": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play alongside other apps"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sonar junto con otras apps"
           }
         }
       }
@@ -3877,6 +3941,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "caliente"
+          }
+        }
+      }
+    },
+    "Áudio": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audio"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audio"
           }
         }
       }
