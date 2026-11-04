@@ -30,6 +30,7 @@ struct GameMenuView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var pause = PauseSnapshot.shared
     @ObservedObject private var performance = PerformanceModel.shared
+    @ObservedObject private var skins = SkinStore.shared
     @State private var speed = GameSettings.speed
     @State private var confirmingQuit = false
     @State private var toast: String?
@@ -59,6 +60,11 @@ struct GameMenuView: View {
                 }
                 MenuTile(icon: "camera.fill", title: String(localized: "Captura")) {
                     saveScreenshot()
+                }
+                MenuTile(icon: skins.portraitFullWidth ? "rectangle.inset.filled" : "rectangle.center.inset.filled",
+                         title: String(localized: "Tela"),
+                         value: skins.portraitFullWidth ? String(localized: "Largura total") : String(localized: "Com moldura")) {
+                    skins.portraitFullWidth.toggle()
                 }
                 MenuTile(icon: "gauge.with.dots.needle.67percent", title: String(localized: "Desempenho"),
                          value: performance.enabled ? String(localized: "Ligado") : String(localized: "Desligado"), highlighted: performance.enabled) {

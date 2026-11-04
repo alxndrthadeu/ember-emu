@@ -27,7 +27,16 @@ final class SkinStore: ObservableObject {
         let own = current.layout(portrait: portrait)
         let layout = own ?? BuiltInSkins.ember.layout(portrait: portrait)!
         let builtIn = own == nil || current.isBuiltIn
-        return builtIn ? BuiltInSkins.adapted(layout, keyboard: keyboard) : layout
+        guard builtIn else { return layout }
+        let adapted = BuiltInSkins.adapted(layout, keyboard: keyboard)
+        return BuiltInSkins.fitted(adapted, aspect: GameLayout.shared.aspect,
+                                   fullWidth: portraitFullWidth)
+    }
+
+    /// Built-in skins in portrait: the game across the full width, no
+    /// frame (the default: the biggest picture), or in a thin frame.
+    @Published var portraitFullWidth = (UserDefaults.standard.object(forKey: "settings.portraitFullWidth") as? Bool ?? true) {
+        didSet { UserDefaults.standard.set(portraitFullWidth, forKey: "settings.portraitFullWidth") }
     }
 
     private init() {

@@ -73,6 +73,33 @@ enum BuiltInSkins {
         return copy
     }
 
+    /// The portrait screen for this game: shaped like the game's own
+    /// picture (no black bars inside the frame), either in a thin frame
+    /// or across the full width under the Dynamic Island. Portrait
+    /// width is the limit: RPG Maker games are wider than tall.
+    static func fitted(_ layout: SkinLayout, aspect: CGFloat?, fullWidth: Bool) -> SkinLayout {
+        guard layout.mappingSize.height > layout.mappingSize.width, layout.screen != nil else { return layout }
+        let ratio = max(aspect ?? 4 / 3, 0.5)
+        let width = layout.mappingSize.width
+        // Keep clear of L/R and the gear row (y 404).
+        let bottomLimit: CGFloat = fullWidth ? 396 : 370
+        var screen: CGRect
+        if fullWidth {
+            screen = CGRect(x: 0, y: 62, width: width, height: width / ratio)
+        } else {
+            let w: CGFloat = 386
+            screen = CGRect(x: (width - w) / 2, y: 70, width: w, height: w / ratio)
+        }
+        if screen.maxY > bottomLimit {
+            let h = bottomLimit - screen.minY
+            let w = h * ratio
+            screen = CGRect(x: (width - w) / 2, y: screen.minY, width: w, height: h)
+        }
+        var copy = layout
+        copy.screen = screen
+        return copy
+    }
+
     private static let directions: [SkinInput] = [.key(.up), .key(.down), .key(.left), .key(.right)]
 
     private static func button(_ input: SkinInput, _ x: CGFloat, _ y: CGFloat,
@@ -99,7 +126,7 @@ struct BuiltInSkinArt: View {
             ZStack(alignment: .topLeading) {
                 background(isPortrait: isPortrait)
 
-                if let screen = layout.screen {
+                if let screen = layout.screen, screen.width < layout.mappingSize.width - 1 {
                     bezel(screen.applying(.init(scaleX: sx, y: sy)), isPortrait: isPortrait)
                 }
 

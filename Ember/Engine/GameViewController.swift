@@ -47,6 +47,7 @@ final class GameLayout: ObservableObject {
 final class GameViewController: UIViewController {
     private let controls = UIHostingController(rootView: ControlsOverlay())
     private var aspectObservation: AnyCancellable?
+    private var screenModeObservation: AnyCancellable?
     private weak var gameView: UIView?
     private let textField = GameTextField()
 
@@ -87,6 +88,9 @@ final class GameViewController: UIViewController {
         view.addSubview(textField)
 
         aspectObservation = GameLayout.shared.$aspect.sink { [weak self] _ in
+            DispatchQueue.main.async { self?.updateViewport() }
+        }
+        screenModeObservation = SkinStore.shared.$portraitFullWidth.sink { [weak self] _ in
             DispatchQueue.main.async { self?.updateViewport() }
         }
     }
