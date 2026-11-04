@@ -18,8 +18,8 @@ enum ControlButton: String, Codable, CaseIterable, Identifiable {
         case .r: "R"
         case .l2: "L2 / LT"
         case .r2: "R2 / RT"
-        case .start: "Start"
-        case .select: "Select"
+        case .start: String(localized: "Start")
+        case .select: String(localized: "Select")
         }
     }
 
@@ -55,18 +55,18 @@ enum GameAction: String, Codable, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .confirm: "Confirmar"
-        case .back: "Voltar"
-        case .action: "Menu / Correr"
-        case .special: "Especial"
-        case .x: "Botão X do jogo"
-        case .y: "Botão Y do jogo"
-        case .l: "L do jogo"
-        case .r: "R do jogo"
-        case .emberMenu: "Menu do Ember"
-        case .fastForward: "Avanço rápido (segurar)"
-        case .keyboard: "Teclado"
-        case .none: "Nada"
+        case .confirm: String(localized: "Confirmar")
+        case .back: String(localized: "Voltar")
+        case .action: String(localized: "Menu / Correr")
+        case .special: String(localized: "Especial")
+        case .x: String(localized: "Botão X do jogo")
+        case .y: String(localized: "Botão Y do jogo")
+        case .l: String(localized: "L do jogo")
+        case .r: String(localized: "R do jogo")
+        case .emberMenu: String(localized: "Menu do Ember")
+        case .fastForward: String(localized: "Avanço rápido (segurar)")
+        case .keyboard: String(localized: "Teclado")
+        case .none: String(localized: "Nada")
         }
     }
 
@@ -74,18 +74,18 @@ enum GameAction: String, Codable, CaseIterable, Identifiable {
     /// common kind.
     var detail: String {
         switch self {
-        case .confirm: "Falar, interagir, escolher (Enter, Input::C)"
-        case .back: "Cancelar. Em jogos antigos abre o menu; nos novos, segurar corre (Esc, Input::B)"
-        case .action: "Nos jogos novos abre o menu; nos antigos, segurar corre (Shift, Input::A)"
-        case .special: "Menu rápido de itens registrados (D, Input::Z)"
-        case .x: "Tecla A do PC (Input::X)"
-        case .y: "Tecla S do PC (Input::Y)"
-        case .l: "Tecla Q do PC (Input::L)"
-        case .r: "Tecla W do PC (Input::R)"
-        case .emberMenu: "Pausa: velocidade, captura, sair"
-        case .fastForward: "Acelera enquanto estiver apertado"
-        case .keyboard: "Abre o teclado do iPhone"
-        case .none: "O botão não faz nada"
+        case .confirm: String(localized: "Falar, interagir, escolher (Enter, Input::C)")
+        case .back: String(localized: "Cancelar. Em jogos antigos abre o menu; nos novos, segurar corre (Esc, Input::B)")
+        case .action: String(localized: "Nos jogos novos abre o menu; nos antigos, segurar corre (Shift, Input::A)")
+        case .special: String(localized: "Menu rápido de itens registrados (D, Input::Z)")
+        case .x: String(localized: "Tecla A do PC (Input::X)")
+        case .y: String(localized: "Tecla S do PC (Input::Y)")
+        case .l: String(localized: "Tecla Q do PC (Input::L)")
+        case .r: String(localized: "Tecla W do PC (Input::R)")
+        case .emberMenu: String(localized: "Pausa: velocidade, captura, sair")
+        case .fastForward: String(localized: "Acelera enquanto estiver apertado")
+        case .keyboard: String(localized: "Abre o teclado do iPhone")
+        case .none: String(localized: "O botão não faz nada")
         }
     }
 
@@ -118,7 +118,7 @@ struct ControlProfile: Codable, Identifiable, Hashable {
 
     /// Pokémon Essentials v19 and newer, and most games on Ruby 3.
     static let standard = ControlProfile(
-        id: "builtin.padrao", name: "Padrão",
+        id: "builtin.padrao", name: String(localized: "Padrão"),
         mapping: [.a: .confirm, .b: .back, .x: .action, .y: .x, .l: .l, .r: .r,
                   .l2: .special, .r2: .fastForward, .start: .action, .select: .special])
 
@@ -126,7 +126,7 @@ struct ControlProfile: Codable, Identifiable, Hashable {
     /// Input::B and holding Input::A runs, so Start opens the menu and
     /// Select runs.
     static let classic = ControlProfile(
-        id: "builtin.classico", name: "Clássico",
+        id: "builtin.classico", name: String(localized: "Clássico"),
         mapping: [.a: .confirm, .b: .back, .x: .action, .y: .x, .l: .l, .r: .r,
                   .l2: .special, .r2: .fastForward, .start: .back, .select: .action])
 
@@ -181,7 +181,7 @@ final class ProfileStore: ObservableObject {
     func duplicate(_ profile: ControlProfile) -> ControlProfile {
         var copy = profile
         copy.id = UUID().uuidString
-        copy.name = "\(profile.name) (cópia)"
+        copy.name = String(localized: "\(profile.name) (cópia)")
         custom.append(copy)
         save()
         return copy

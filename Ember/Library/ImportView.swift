@@ -17,8 +17,8 @@ struct ImportView: View {
 
                     ImportOption(
                         icon: "folder.fill",
-                        title: "Arquivos",
-                        text: "Escolha no app Arquivos, no iCloud Drive ou em outro serviço instalado.") {
+                        title: String(localized: "Arquivos"),
+                        text: String(localized: "Escolha no app Arquivos, no iCloud Drive ou em outro serviço instalado.")) {
                         Button {
                             showingPicker = true
                         } label: {
@@ -32,20 +32,20 @@ struct ImportView: View {
 
                     ImportOption(
                         icon: "laptopcomputer.and.iphone",
-                        title: "Pelo Mac",
-                        text: "Sem cabo de rede nem app extra: o Finder copia direto para o Ember.") {
+                        title: String(localized: "Pelo Mac"),
+                        text: String(localized: "Sem cabo de rede nem app extra: o Finder copia direto para o Ember.")) {
                         VStack(alignment: .leading, spacing: 10) {
-                            Step(number: 1, text: "Conecte o iPhone ao Mac com o cabo. Depois da primeira vez, o mesmo Wi-Fi basta.")
-                            Step(number: 2, text: "No Finder, escolha o iPhone na barra lateral e abra a aba Arquivos.")
-                            Step(number: 3, text: "Arraste o .zip, .rar, .7z ou a pasta do jogo para o Ember.")
-                            Step(number: 4, text: "Abra o Ember. O jogo aparece na Biblioteca.")
+                            Step(number: 1, text: String(localized: "Conecte o iPhone ao Mac com o cabo. Depois da primeira vez, o mesmo Wi-Fi basta."))
+                            Step(number: 2, text: String(localized: "No Finder, escolha o iPhone na barra lateral e abra a aba Arquivos."))
+                            Step(number: 3, text: String(localized: "Arraste o .zip, .rar, .7z ou a pasta do jogo para o Ember."))
+                            Step(number: 4, text: String(localized: "Abra o Ember. O jogo aparece na Biblioteca."))
                         }
                     }
 
                     ImportOption(
                         icon: "square.and.arrow.up",
-                        title: "De outro app",
-                        text: "No Safari, no Arquivos ou num app de mensagens, toque no arquivo, depois em Compartilhar e em Ember. Skins (.deltaskin, .manicskin) chegam do mesmo jeito.") {
+                        title: String(localized: "De outro app"),
+                        text: String(localized: "No Safari, no Arquivos ou num app de mensagens, toque no arquivo, depois em Compartilhar e em Ember. Skins (.deltaskin, .manicskin) chegam do mesmo jeito.")) {
                         EmptyView()
                     }
                 }

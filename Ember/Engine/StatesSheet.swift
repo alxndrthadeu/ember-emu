@@ -57,7 +57,7 @@ struct StatesSheet: View {
             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
 
             VStack(alignment: .leading, spacing: 3) {
-                Text(state.isAuto ? "Automático" : "Estado salvo")
+                Text(state.isAuto ? String(localized: "Automático") : String(localized: "Estado salvo"))
                     .font(.body.weight(.semibold))
                 Text(state.date.formatted(date: .abbreviated, time: .shortened))
                     .font(.footnote)

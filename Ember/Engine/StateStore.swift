@@ -117,10 +117,10 @@ enum StateStore {
     /// A short, player-facing reason for a busy answer.
     static func busyText(_ reason: String) -> String {
         switch reason {
-        case "battle": "Termine a batalha para salvar o estado"
-        case "message", "event": "Termine a conversa ou o evento para salvar o estado"
-        case "menu": "Feche o menu do jogo para salvar o estado"
-        default: "Volte a andar pelo mapa para salvar o estado"
+        case "battle": String(localized: "Termine a batalha para salvar o estado")
+        case "message", "event": String(localized: "Termine a conversa ou o evento para salvar o estado")
+        case "menu": String(localized: "Feche o menu do jogo para salvar o estado")
+        default: String(localized: "Volte a andar pelo mapa para salvar o estado")
         }
     }
 }

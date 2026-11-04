@@ -353,7 +353,7 @@ final class ControllerMonitor: ObservableObject {
                    battery: Self.battery(controller.battery))
         }
         if GCKeyboard.coalesced != nil {
-            list.append(Device(id: "keyboard", name: "Teclado", symbol: "keyboard", battery: nil))
+            list.append(Device(id: "keyboard", name: String(localized: "Teclado"), symbol: "keyboard", battery: nil))
         }
         devices = list
     }

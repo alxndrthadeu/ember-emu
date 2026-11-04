@@ -132,7 +132,7 @@ final class LibraryStore: ObservableObject {
         do {
             try FileManager.default.removeItem(at: game.folder)
         } catch {
-            lastError = "Não deu para apagar “\(game.title)”: \(error.localizedDescription)"
+            lastError = String(localized: "Não deu para apagar “\(game.title)”: \(error.localizedDescription)")
         }
         reload()
     }

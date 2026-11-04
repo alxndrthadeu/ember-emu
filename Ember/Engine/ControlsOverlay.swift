@@ -92,7 +92,7 @@ struct ControlsOverlay: View {
         .animation(.spring(response: 0.3), value: toast)
         .onChange(of: controllers.justConnected) {
             if let name = controllers.justConnected {
-                show("\(name) conectado")
+                show(String(localized: "\(name) conectado"))
                 controllers.justConnected = nil
             }
         }
@@ -118,10 +118,10 @@ struct ControlsOverlay: View {
             Task { @MainActor in
                 let outcome = await session.requestState(verb, slot: slot)
                 switch outcome {
-                case .done: show(verb == "save" ? "Estado salvo" : "Estado carregado")
+                case .done: show(verb == "save" ? String(localized: "Estado salvo") : String(localized: "Estado carregado"))
                 case .busy(let reason): show(StateStore.busyText(reason))
-                case .failed: show(verb == "save" ? "Não deu para salvar o estado neste jogo" : "Não deu para carregar o estado")
-                case .noAnswer: show("O jogo não respondeu. Tente de novo andando pelo mapa")
+                case .failed: show(verb == "save" ? String(localized: "Não deu para salvar o estado neste jogo") : String(localized: "Não deu para carregar o estado"))
+                case .noAnswer: show(String(localized: "O jogo não respondeu. Tente de novo andando pelo mapa"))
                 }
             }
         }

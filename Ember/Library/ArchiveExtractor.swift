@@ -14,13 +14,13 @@ enum ArchiveExtractor {
         var errorDescription: String? {
             switch self {
             case .cannotOpen(let detail):
-                "Não deu para abrir o arquivo compactado (\(detail))."
+                String(localized: "Não deu para abrir o arquivo compactado (\(detail)).")
             case .encrypted:
-                "O arquivo está protegido por senha. Extraia no computador e importe a pasta ou um .zip."
+                String(localized: "O arquivo está protegido por senha. Extraia no computador e importe a pasta ou um .zip.")
             case .multiVolume:
-                "Este .rar está dividido em partes (part1, part2…). Junte as partes no computador e importe de novo."
+                String(localized: "Este .rar está dividido em partes (part1, part2…). Junte as partes no computador e importe de novo.")
             case .failed(let detail):
-                "A extração parou no meio (\(detail))."
+                String(localized: "A extração parou no meio (\(detail)).")
             }
         }
     }
@@ -33,12 +33,12 @@ enum ArchiveExtractor {
     static func extract(_ archive: URL, to destination: URL) throws {
         try FileManager.default.createDirectory(at: destination, withIntermediateDirectories: true)
 
-        guard let reader = archive_read_new() else { throw ExtractError.cannotOpen("memória") }
+        guard let reader = archive_read_new() else { throw ExtractError.cannotOpen(String(localized: "memória")) }
         defer { archive_read_free(reader) }
         archive_read_support_format_all(reader)
         archive_read_support_filter_all(reader)
 
-        guard let writer = archive_write_disk_new() else { throw ExtractError.cannotOpen("memória") }
+        guard let writer = archive_write_disk_new() else { throw ExtractError.cannotOpen(String(localized: "memória")) }
         defer { archive_write_free(writer) }
         let flags = ARCHIVE_EXTRACT_TIME | ARCHIVE_EXTRACT_SECURE_NODOTDOT
             | ARCHIVE_EXTRACT_SECURE_SYMLINKS
@@ -104,6 +104,6 @@ enum ArchiveExtractor {
     }
 
     private static func message(_ archive: OpaquePointer) -> String {
-        archive_error_string(archive).map { String(cString: $0) } ?? "erro desconhecido"
+        archive_error_string(archive).map { String(cString: $0) } ?? String(localized: "erro desconhecido")
     }
 }

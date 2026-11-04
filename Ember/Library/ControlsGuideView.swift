@@ -22,17 +22,17 @@ struct ControlsGuideView: View {
                 }
 
                 Section("Na tela") {
-                    ControlRow(symbol: "dpad.fill", name: "Direcional", action: "Andar e navegar nos menus")
+                    ControlRow(symbol: "dpad.fill", name: String(localized: "Direcional"), action: String(localized: "Andar e navegar nos menus"))
                     ForEach(ControlButton.allCases.filter(\.isOnScreen)) { button in
                         ControlRow(label: button.label.uppercased(), name: button.label,
                                    action: profile.action(for: button).title)
                     }
-                    ControlRow(symbol: "gearshape.fill", name: "Engrenagem", action: "Pausa: velocidade, captura, teclado, sair")
-                    ControlRow(symbol: "keyboard.fill", name: "Teclado", action: "Aparece nos jogos antigos, para digitar nomes")
+                    ControlRow(symbol: "gearshape.fill", name: String(localized: "Engrenagem"), action: String(localized: "Pausa: velocidade, captura, teclado, sair"))
+                    ControlRow(symbol: "keyboard.fill", name: String(localized: "Teclado"), action: String(localized: "Aparece nos jogos antigos, para digitar nomes"))
                 }
 
                 Section {
-                    ControlRow(symbol: "l.joystick.fill", name: "Direcional e analógico", action: "Andar")
+                    ControlRow(symbol: "l.joystick.fill", name: String(localized: "Direcional e analógico"), action: String(localized: "Andar"))
                     ForEach(ControlButton.allCases) { button in
                         ControlRow(label: button.label.uppercased(), name: physicalName(button),
                                    action: profile.action(for: button).title)
@@ -58,16 +58,16 @@ struct ControlsGuideView: View {
 
     private func physicalName(_ button: ControlButton) -> String {
         switch button {
-        case .a: "A / Cruz"
-        case .b: "B / Círculo"
-        case .x: "X / Quadrado"
-        case .y: "Y / Triângulo"
+        case .a: String(localized: "A / Cruz")
+        case .b: String(localized: "B / Círculo")
+        case .x: String(localized: "X / Quadrado")
+        case .y: String(localized: "Y / Triângulo")
         case .l: "LB / L1"
         case .r: "RB / R1"
         case .l2: "LT / L2"
         case .r2: "RT / R2"
-        case .start: "Menu / Options"
-        case .select: "View / Create"
+        case .start: String(localized: "Menu / Options")
+        case .select: String(localized: "View / Create")
         }
     }
 }

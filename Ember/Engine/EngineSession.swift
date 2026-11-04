@@ -246,19 +246,19 @@ final class EngineSession: ObservableObject {
         let shown = text.count > 900 ? String(text.prefix(900)) + "…" : text
         let alert: UIAlertController
         if isError {
-            let title = currentGame.map { "\($0.title) encontrou um erro" } ?? "O jogo encontrou um erro"
-            let hint = "\n\nSe o jogo não abre, tente outra versão do Ruby: segure o jogo na biblioteca e toque em Ruby."
+            let title = currentGame.map { String(localized: "\($0.title) encontrou um erro") } ?? String(localized: "O jogo encontrou um erro")
+            let hint = "\n\n" + String(localized: "Se o jogo não abre, tente outra versão do Ruby: segure o jogo na biblioteca e toque em Ruby.")
             alert = UIAlertController(title: title, message: shown + hint, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Copiar erro", style: .default) { _ in
+            alert.addAction(UIAlertAction(title: String(localized: "Copiar erro"), style: .default) { _ in
                 UIPasteboard.general.string = text
                 mkxp_signalErrorDismissed()
             })
-            alert.addAction(UIAlertAction(title: "Fechar", style: .cancel) { _ in
+            alert.addAction(UIAlertAction(title: String(localized: "Fechar"), style: .cancel) { _ in
                 mkxp_signalErrorDismissed()
             })
         } else {
             alert = UIAlertController(title: currentGame?.title, message: shown, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+            alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default) { _ in
                 mkxp_signalInfoDismissed()
             })
         }

@@ -30,9 +30,9 @@ enum SaveManager {
         var errorDescription: String? {
             switch self {
             case .noSaves(let title):
-                "Ainda não há saves de \(title)."
+                String(localized: "Ainda não há saves de \(title).")
             case .nothingToImport:
-                "Nenhum arquivo de save encontrado no que foi escolhido."
+                String(localized: "Nenhum arquivo de save encontrado no que foi escolhido.")
             }
         }
     }

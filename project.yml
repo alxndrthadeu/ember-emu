@@ -2,6 +2,7 @@ name: Ember
 
 options:
   bundleIdPrefix: com.alexandrethadeu
+  developmentLanguage: pt-BR
   deploymentTarget:
     iOS: "26.0"
   createIntermediateGroups: true
@@ -43,6 +44,10 @@ targets:
         GENERATE_INFOPLIST_FILE: NO
         TARGETED_DEVICE_FAMILY: "1,2"
         SWIFT_VERSION: "5.0"
+        # Português is the source language; en and es come from
+        # Ember/Resources/Localizable.xcstrings.
+        SWIFT_EMIT_LOC_STRINGS: YES
+        LOCALIZATION_PREFERS_STRING_CATALOGS: YES
         SWIFT_OBJC_BRIDGING_HEADER: Ember/App/Ember-Bridging-Header.h
         CLANG_ENABLE_OBJC_ARC: YES
         ARCHS: arm64

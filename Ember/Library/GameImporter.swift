@@ -11,9 +11,9 @@ enum GameImporter {
         var errorDescription: String? {
             switch self {
             case .notAGame(let name):
-                "“\(name)” não parece um jogo de RPG Maker XP, VX ou VX Ace."
+                String(localized: "“\(name)” não parece um jogo de RPG Maker XP, VX ou VX Ace.")
             case .unsupported(let name):
-                "Ainda não dá para importar “\(name)”. Use .zip, .rar, .7z ou uma pasta."
+                String(localized: "Ainda não dá para importar “\(name)”. Use .zip, .rar, .7z ou uma pasta.")
             }
         }
     }

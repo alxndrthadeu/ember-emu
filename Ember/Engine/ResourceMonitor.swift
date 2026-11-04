@@ -16,10 +16,10 @@ enum ResourceMonitor {
 
         var thermalText: String {
             switch thermal {
-            case .nominal: "normal"
-            case .fair: "morno"
-            case .serious: "quente"
-            case .critical: "muito quente"
+            case .nominal: String(localized: "normal")
+            case .fair: String(localized: "morno")
+            case .serious: String(localized: "quente")
+            case .critical: String(localized: "muito quente")
             @unknown default: "?"
             }
         }

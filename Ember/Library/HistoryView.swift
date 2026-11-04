@@ -115,8 +115,8 @@ struct HistoryView: View {
     }
 
     private func dayTitle(_ day: Date) -> String {
-        if Calendar.current.isDateInToday(day) { return "Hoje" }
-        if Calendar.current.isDateInYesterday(day) { return "Ontem" }
+        if Calendar.current.isDateInToday(day) { return String(localized: "Hoje") }
+        if Calendar.current.isDateInYesterday(day) { return String(localized: "Ontem") }
         return day.formatted(.dateTime.weekday(.wide).day().month(.wide))
     }
 }
@@ -124,9 +124,9 @@ struct HistoryView: View {
 /// "Menos de 1 min", "32 min", "2 h 5 min".
 func durationText(_ seconds: TimeInterval) -> String {
     let minutes = Int(seconds / 60)
-    if minutes < 1 { return "menos de 1 min" }
-    if minutes < 60 { return "\(minutes) min" }
+    if minutes < 1 { return String(localized: "menos de 1 min") }
+    if minutes < 60 { return String(localized: "\(minutes) min") }
     let hours = minutes / 60
     let rest = minutes % 60
-    return rest == 0 ? "\(hours) h" : "\(hours) h \(rest) min"
+    return rest == 0 ? String(localized: "\(hours) h") : String(localized: "\(hours) h \(rest) min")
 }

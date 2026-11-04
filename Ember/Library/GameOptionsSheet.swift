@@ -35,23 +35,23 @@ struct GameOptionsSheet: View {
                 header
                 GlassEffectContainer(spacing: 12) {
                     LazyVGrid(columns: columns, spacing: 12) {
-                        OptionTile(icon: "play.fill", title: "Jogar", highlighted: true) {
+                        OptionTile(icon: "play.fill", title: String(localized: "Jogar"), highlighted: true) {
                             dismiss()
                             onPlay()
                         }
-                        OptionTile(icon: "pencil", title: "Renomear") {
+                        OptionTile(icon: "pencil", title: String(localized: "Renomear")) {
                             newTitle = current.title
                             renaming = true
                         }
                         PhotosPicker(selection: $photo, matching: .images) {
-                            OptionTileLabel(icon: "photo", title: "Capa")
+                            OptionTileLabel(icon: "photo", title: String(localized: "Capa"))
                         }
                         .buttonStyle(.plain)
                         .glassEffect(.regular.interactive(), in: tileShape)
                         if GameCovers.hasCustomCover(current.id) {
-                            OptionTile(icon: "arrow.uturn.backward", title: "Capa automática") {
+                            OptionTile(icon: "arrow.uturn.backward", title: String(localized: "Capa automática")) {
                                 library.removeCustomCover(for: current)
-                                show("Capa automática de volta")
+                                show(String(localized: "Capa automática de volta"))
                             }
                         }
                         Menu {
@@ -60,7 +60,7 @@ struct GameOptionsSheet: View {
                                 set: { choice in
                                     RubyChoice.set(choice, for: current.id)
                                     library.reload()
-                                    show("Vale na próxima vez que o jogo abrir")
+                                    show(String(localized: "Vale na próxima vez que o jogo abrir"))
                                 })) {
                                 Text("Automático (\(RubyChoice.label(for: current.detectedRubyVersion)))")
                                     .tag(RubyChoice?.none)
@@ -70,18 +70,18 @@ struct GameOptionsSheet: View {
                             }
                         } label: {
                             OptionTileLabel(icon: "chevron.left.forwardslash.chevron.right",
-                                            title: "Ruby \(RubyChoice.label(for: current.rubyVersion))")
+                                            title: String(localized: "Ruby \(RubyChoice.label(for: current.rubyVersion))"))
                         }
                         .buttonStyle(.plain)
                         .glassEffect(.regular.interactive(), in: tileShape)
                         OptionTile(icon: InGameKeyboard.isOn(for: current.id) ? "keyboard.fill" : "keyboard",
-                                   title: InGameKeyboard.isOn(for: current.id) ? "Teclado do jogo: ligado" : "Teclado do jogo",
+                                   title: InGameKeyboard.isOn(for: current.id) ? String(localized: "Teclado do jogo: ligado") : String(localized: "Teclado do jogo"),
                                    highlighted: false) {
                             let on = !InGameKeyboard.isOn(for: current.id)
                             InGameKeyboard.set(on, for: current.id)
                             library.reload()
-                            show(on ? "O jogo vai usar o próprio teclado na próxima vez que abrir"
-                                    : "O Ember volta a usar o teclado do iPhone")
+                            show(on ? String(localized: "O jogo vai usar o próprio teclado na próxima vez que abrir")
+                                    : String(localized: "O Ember volta a usar o teclado do iPhone"))
                         }
                         Menu {
                             Picker("Controles", selection: Binding(
@@ -89,7 +89,7 @@ struct GameOptionsSheet: View {
                                 set: { id in
                                     ProfileStore.shared.assign(ProfileStore.shared.all.first { $0.id == id }, to: current)
                                     library.reload()
-                                    show("Vale na próxima vez que o jogo abrir")
+                                    show(String(localized: "Vale na próxima vez que o jogo abrir"))
                                 })) {
                                 Text("Automático (\(ProfileStore.shared.automaticProfile(for: current).name))")
                                     .tag(String?.none)
@@ -99,20 +99,20 @@ struct GameOptionsSheet: View {
                             }
                         } label: {
                             OptionTileLabel(icon: "gamecontroller",
-                                            title: "Controles: \(ProfileStore.shared.profile(for: current).name)")
+                                            title: String(localized: "Controles: \(ProfileStore.shared.profile(for: current).name)"))
                         }
                         .buttonStyle(.plain)
                         .glassEffect(.regular.interactive(), in: tileShape)
-                        OptionTile(icon: "square.and.arrow.up", title: "Exportar saves") {
+                        OptionTile(icon: "square.and.arrow.up", title: String(localized: "Exportar saves")) {
                             exportSaves()
                         }
-                        OptionTile(icon: "square.and.arrow.down", title: "Importar saves") {
+                        OptionTile(icon: "square.and.arrow.down", title: String(localized: "Importar saves")) {
                             importingSaves = true
                         }
-                        OptionTile(icon: "doc.text.magnifyingglass", title: "Registros") {
+                        OptionTile(icon: "doc.text.magnifyingglass", title: String(localized: "Registros")) {
                             showingLogs = true
                         }
-                        OptionTile(icon: "trash", title: "Apagar", destructive: true) {
+                        OptionTile(icon: "trash", title: String(localized: "Apagar"), destructive: true) {
                             confirmingDelete = true
                         }
                     }
@@ -229,7 +229,7 @@ struct GameOptionsSheet: View {
             }
             // verbatim: a plain Text reads the string as Markdown, which
             // eats the backslash of %APPDATA%\.
-            Text(verbatim: "No PC, os saves ficam na pasta do jogo (Save1.rxdata, Save01.rvdata2) ou, nos fangames de Pokémon, em %APPDATA%\\\(current.originalTitle) (Game.rxdata). O Ember usa os mesmos arquivos.")
+            Text(verbatim: String(localized: "No PC, os saves ficam na pasta do jogo (Save1.rxdata, Save01.rvdata2) ou, nos fangames de Pokémon, em %APPDATA%\\\(current.originalTitle) (Game.rxdata). O Ember usa os mesmos arquivos."))
                 .font(.caption)
                 .foregroundStyle(Theme.secondaryText)
         }
@@ -247,7 +247,7 @@ struct GameOptionsSheet: View {
             if let data = try? await photo.loadTransferable(type: Data.self),
                let image = UIImage(data: data) {
                 library.setCover(image, for: current)
-                show("Capa atualizada")
+                show(String(localized: "Capa atualizada"))
             }
             self.photo = nil
         }
@@ -277,7 +277,7 @@ struct GameOptionsSheet: View {
                 working = false
                 switch result {
                 case .success(let count):
-                    show(count == 1 ? "1 save importado" : "\(count) saves importados")
+                    show(count == 1 ? String(localized: "1 save importado") : String(localized: "\(count) saves importados"))
                 case .failure(let error):
                     show(error.localizedDescription)
                 }

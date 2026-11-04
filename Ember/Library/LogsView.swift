@@ -64,7 +64,7 @@ struct LogsView: View {
         // The game's own error log, when it keeps one.
         let gameLog = GameStorage.userDataFolder(for: game).appendingPathComponent("errorlog.txt")
         if fm.fileExists(atPath: gameLog.path) {
-            list.append(Entry(url: gameLog, title: "Erros registrados pelo jogo",
+            list.append(Entry(url: gameLog, title: String(localized: "Erros registrados pelo jogo"),
                               subtitle: modified(gameLog), hasError: true))
         }
         let sessions = ((try? fm.contentsOfDirectory(at: GameLog.folder(for: game.id),
@@ -75,8 +75,8 @@ struct LogsView: View {
             let text = (try? String(contentsOf: url, encoding: .utf8)) ?? ""
             let errors = text.components(separatedBy: "\n").filter { $0.hasPrefix(GameLog.errorMarker) }.count
             let size = ByteCountFormatter.string(fromByteCount: Int64(text.utf8.count), countStyle: .file)
-            list.append(Entry(url: url, title: "Sessão de \(modified(url))",
-                              subtitle: errors > 0 ? "\(errors) erro(s) · \(size)" : size,
+            list.append(Entry(url: url, title: String(localized: "Sessão de \(modified(url))"),
+                              subtitle: errors > 0 ? String(localized: "\(errors) erro(s) · \(size)") : size,
                               hasError: errors > 0))
         }
         entries = list
@@ -102,7 +102,7 @@ private struct LogTextView: View {
             $0.hasPrefix(GameLog.errorMarker) || $0.localizedCaseInsensitiveContains("error")
                 || $0.localizedCaseInsensitiveContains("exception")
         }
-        return lines.isEmpty ? "Nenhum erro nesta sessão." : lines.joined(separator: "\n")
+        return lines.isEmpty ? String(localized: "Nenhum erro nesta sessão.") : lines.joined(separator: "\n")
     }
 
     var body: some View {

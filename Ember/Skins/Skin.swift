@@ -123,9 +123,9 @@ enum SkinParser {
         var errorDescription: String? {
             switch self {
             case .noInfo:
-                "Este arquivo não é uma skin: falta o info.json."
+                String(localized: "Este arquivo não é uma skin: falta o info.json.")
             case .noIPhoneLayout(let name):
-                "A skin “\(name)” não tem layout para iPhone."
+                String(localized: "A skin “\(name)” não tem layout para iPhone.")
             }
         }
     }

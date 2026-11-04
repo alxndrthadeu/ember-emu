@@ -42,29 +42,29 @@ struct GameMenuView: View {
 
             GlassEffectContainer(spacing: 12) {
             LazyVGrid(columns: columns, spacing: 12) {
-                MenuTile(icon: "forward.fill", title: "Velocidade",
-                         value: "\(speed)x", highlighted: speed > 1) {
+                MenuTile(icon: "forward.fill", title: String(localized: "Velocidade"),
+                         value: String(localized: "\(speed)x"), highlighted: speed > 1) {
                     let steps = GameSettings.speedSteps
                     speed = steps[((steps.firstIndex(of: speed) ?? 0) + 1) % steps.count]
                     GameSettings.speed = speed
                     GameSettings.apply()
                 }
-                MenuTile(icon: "square.and.arrow.down.on.square.fill", title: "Salvar estado") {
+                MenuTile(icon: "square.and.arrow.down.on.square.fill", title: String(localized: "Salvar estado")) {
                     dismiss()
                     onSaveState()
                 }
-                MenuTile(icon: "clock.arrow.trianglehead.counterclockwise.rotate.90", title: "Estados") {
+                MenuTile(icon: "clock.arrow.trianglehead.counterclockwise.rotate.90", title: String(localized: "Estados")) {
                     dismiss()
                     onShowStates()
                 }
-                MenuTile(icon: "camera.fill", title: "Captura") {
+                MenuTile(icon: "camera.fill", title: String(localized: "Captura")) {
                     saveScreenshot()
                 }
-                MenuTile(icon: "gauge.with.dots.needle.67percent", title: "Desempenho",
-                         value: performance.enabled ? "Ligado" : "Desligado", highlighted: performance.enabled) {
+                MenuTile(icon: "gauge.with.dots.needle.67percent", title: String(localized: "Desempenho"),
+                         value: performance.enabled ? String(localized: "Ligado") : String(localized: "Desligado"), highlighted: performance.enabled) {
                     performance.enabled.toggle()
                 }
-                MenuTile(icon: "keyboard", title: "Teclado") {
+                MenuTile(icon: "keyboard", title: String(localized: "Teclado")) {
                     dismiss()
                     // After the sheet is gone, so the keyboard has a window.
                     Task {
@@ -72,7 +72,7 @@ struct GameMenuView: View {
                         EngineSession.shared.openKeyboard()
                     }
                 }
-                MenuTile(icon: "xmark.circle.fill", title: "Sair", destructive: true) {
+                MenuTile(icon: "xmark.circle.fill", title: String(localized: "Sair"), destructive: true) {
                     confirmingQuit = true
                 }
             }
@@ -131,18 +131,18 @@ struct GameMenuView: View {
 
     private func saveScreenshot() {
         guard let image = pause.image else {
-            show("A captura ainda não está pronta")
+            show(String(localized: "A captura ainda não está pronta"))
             return
         }
         PHPhotoLibrary.requestAuthorization(for: .addOnly) { status in
             guard status == .authorized || status == .limited else {
-                Task { @MainActor in show("Sem permissão para salvar em Fotos") }
+                Task { @MainActor in show(String(localized: "Sem permissão para salvar em Fotos")) }
                 return
             }
             PHPhotoLibrary.shared().performChanges {
                 PHAssetCreationRequest.creationRequestForAsset(from: image)
             } completionHandler: { ok, _ in
-                Task { @MainActor in show(ok ? "Salvo em Fotos" : "Não deu para salvar") }
+                Task { @MainActor in show(ok ? String(localized: "Salvo em Fotos") : String(localized: "Não deu para salvar")) }
             }
         }
     }

@@ -241,9 +241,9 @@ private struct LicensesView: View {
 
     private var entries: [Entry] {
         var list = [
-            Entry(name: "Ember", license: "GPL-3.0", text: nil),
-            Entry(name: "ZIPFoundation", license: "MIT", text: nil),
-            Entry(name: "libarchive (iOS)", license: "BSD-2-Clause",
+            Entry(name: String(localized: "Ember"), license: "GPL-3.0", text: nil),
+            Entry(name: String(localized: "ZIPFoundation"), license: "MIT", text: nil),
+            Entry(name: String(localized: "libarchive (iOS)"), license: "BSD-2-Clause",
                   text: Bundle.main.url(forResource: "libarchive-COPYING", withExtension: "txt")
                       .flatMap { try? String(contentsOf: $0, encoding: .utf8) }),
         ]

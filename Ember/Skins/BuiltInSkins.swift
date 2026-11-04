@@ -12,9 +12,9 @@ enum BuiltInStyle: String, Hashable {
 /// Ember's own skins. Both share one layout, in Delta's point space,
 /// so their hit areas work exactly like an imported skin's.
 enum BuiltInSkins {
-    static let ember = Skin(id: "ember.laranja", name: "Ember Laranja",
+    static let ember = Skin(id: "ember.laranja", name: String(localized: "Ember Laranja"),
                             source: .builtIn(.ember), portrait: portrait, landscape: landscape)
-    static let glass = Skin(id: "ember.vidro", name: "Vidro",
+    static let glass = Skin(id: "ember.vidro", name: String(localized: "Vidro"),
                             source: .builtIn(.glass), portrait: portrait, landscape: landscape)
     static let all = [ember, glass]
 
