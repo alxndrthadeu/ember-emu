@@ -62,6 +62,8 @@ final class GameViewController: UIViewController {
         textField.openManually()
     }
 
+    var isTyping: Bool { textField.isFirstResponder }
+
     override var prefersStatusBarHidden: Bool { true }
     override var prefersHomeIndicatorAutoHidden: Bool { true }
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .all }

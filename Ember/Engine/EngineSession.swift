@@ -203,6 +203,11 @@ final class EngineSession: ObservableObject {
         gameScreen?.openKeyboard()
     }
 
+    /// The system keyboard is up (a name being typed).
+    var isTyping: Bool {
+        gameScreen?.isTyping ?? false
+    }
+
     func quit() {
         guard state == .running else { return }
         mkxp_requestTerminate()

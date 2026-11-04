@@ -6,6 +6,7 @@ struct SettingsView: View {
     @ObservedObject private var skins = SkinStore.shared
     @ObservedObject private var library = LibraryStore.shared
     @ObservedObject private var performance = PerformanceModel.shared
+    @ObservedObject private var controllers = ControllerMonitor.shared
 
     @State private var haptics = AppSettings.haptics
     @State private var landscapeOpacity = AppSettings.landscapeOpacity
@@ -45,6 +46,29 @@ struct SettingsView: View {
                 } footer: {
                     Text("A transparência vale para skins que permitem ver o jogo por trás dos botões. Com um controle de Xbox, PlayStation ou MFi conectado, os botões da tela somem na paisagem e a engrenagem fica num canto.")
                 }
+
+                Section {
+                    if controllers.devices.isEmpty {
+                        Label("Nenhum controle conectado", systemImage: "gamecontroller")
+                            .foregroundStyle(Theme.secondaryText)
+                    }
+                    ForEach(controllers.devices) { device in
+                        HStack {
+                            Label(device.name, systemImage: device.symbol)
+                            Spacer()
+                            if let battery = device.battery {
+                                Text(battery)
+                                    .foregroundStyle(Theme.secondaryText)
+                                    .monospacedDigit()
+                            }
+                        }
+                    }
+                } header: {
+                    Text("Controles conectados")
+                } footer: {
+                    Text("Bluetooth: ponha o controle em modo de pareamento e escolha-o em Ajustes do iPhone › Bluetooth. USB: ligue o cabo (USB-C direto, ou o adaptador Lightning para USB). Funcionam controles de Xbox, PlayStation, Switch Pro e MFi, e teclados, que chegam ao jogo como o teclado de um computador. Os botões seguem o perfil de controle de cada jogo.")
+                }
+                .onAppear { controllers.refresh() }
 
                 Section {
                     Picker("Avanço rápido", selection: $fastForwardSpeed) {
@@ -190,7 +214,8 @@ private struct SkinTile: View {
         switch skin.source {
         case .builtIn(let style):
             if let layout {
-                BuiltInSkinArt(style: style, layout: layout, pressed: [], held: [:])
+                BuiltInSkinArt(style: style, layout: BuiltInSkins.adapted(layout, keyboard: false),
+                               pressed: [], held: [:])
                     .frame(width: 414, height: 896)
                     .scaleEffect(92 / 414)
                     .frame(width: 92, height: 199)

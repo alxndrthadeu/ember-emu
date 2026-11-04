@@ -90,6 +90,12 @@ struct ControlsOverlay: View {
             }
         }
         .animation(.spring(response: 0.3), value: toast)
+        .onChange(of: controllers.justConnected) {
+            if let name = controllers.justConnected {
+                show("\(name) conectado")
+                controllers.justConnected = nil
+            }
+        }
         .onAppear {
             // A profile can put Ember's menu on any button.
             ControlMapper.shared.onMenu = { openMenu() }

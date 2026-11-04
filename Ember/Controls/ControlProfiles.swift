@@ -276,6 +276,11 @@ final class PhysicalControllerInput {
     func start() {
         mkxp_setGameControllerCaptureEnabled(false)
         GCController.controllers().forEach(bind)
+        bindKeyboard()
+        observers.append(NotificationCenter.default.addObserver(
+            forName: .GCKeyboardDidConnect, object: nil, queue: .main) { _ in
+            MainActor.assumeIsolated { PhysicalControllerInput.shared.bindKeyboard() }
+        })
         let center = NotificationCenter.default
         observers.append(center.addObserver(forName: .GCControllerDidConnect, object: nil, queue: .main) { note in
             guard let controller = note.object as? GCController else { return }
@@ -295,8 +300,24 @@ final class PhysicalControllerInput {
         for controller in GCController.controllers() {
             controller.extendedGamepad?.valueChangedHandler = nil
         }
+        GCKeyboard.coalesced?.keyboardInput?.keyChangedHandler = nil
         releaseDirections()
         ControlMapper.shared.releaseAll()
+    }
+
+    /// A Bluetooth or USB keyboard reaches the game as a PC keyboard:
+    /// GameController key codes are USB HID usages, the same numbers as
+    /// the engine's (SDL) scancodes. While the player types a name, keys
+    /// go to the text field only.
+    func bindKeyboard() {
+        guard let keyboard = GCKeyboard.coalesced, let input = keyboard.keyboardInput else { return }
+        keyboard.handlerQueue = .main
+        input.keyChangedHandler = { _, _, keyCode, pressed in
+            MainActor.assumeIsolated {
+                guard !EngineSession.shared.isTyping else { return }
+                mkxp_injectKeyEvent(Int32(keyCode.rawValue), pressed ? 1 : 0)
+            }
+        }
     }
 
     private func bind(_ controller: GCController) {
