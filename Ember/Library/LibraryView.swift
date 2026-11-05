@@ -45,6 +45,12 @@ struct LibraryView: View {
         } message: {
             Text(library.lastError ?? "")
         }
+        .alert("RTP instalado",
+               isPresented: Binding(get: { library.importNotice != nil }, set: { if !$0 { library.importNotice = nil } })) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(library.importNotice ?? "")
+        }
         .sheet(item: $optionsFor) { game in
             GameOptionsSheet(game: game) { open(game) }
                 .presentationDetents([.medium, .large])

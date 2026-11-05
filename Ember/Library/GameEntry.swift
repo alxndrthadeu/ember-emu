@@ -125,11 +125,22 @@ enum GameFolder {
             let parts = line.split(separator: "=", maxSplits: 1)
             if parts.count == 2,
                parts[0].trimmingCharacters(in: .whitespaces).lowercased() == "title" {
-                let value = parts[1].trimmingCharacters(in: .whitespaces)
+                let value = cleanTitle(parts[1])
                 return value.isEmpty ? nil : value
             }
         }
         return nil
+    }
+
+    /// Games put key hints in the window title, which is also the
+    /// .ini's Title: "The Witch's House (F5 Screen Size, F12 Reset)".
+    /// Drops bracketed parts that name F-keys, and doubled spaces.
+    static func cleanTitle(_ raw: some StringProtocol) -> String {
+        var text = String(raw)
+        let hints = #"\s*[\(\[][^\)\]]*\bF\d{1,2}\b[^\)\]]*[\)\]]"#
+        text = text.replacingOccurrences(of: hints, with: "", options: .regularExpression)
+        text = text.replacingOccurrences(of: #"\s{2,}"#, with: " ", options: .regularExpression)
+        return text.trimmingCharacters(in: .whitespaces)
     }
 
     /// The RPG Maker .ini: the one with a [Game] section. Games ship
@@ -142,8 +153,11 @@ enum GameFolder {
     }
 
     private static func iniLines(_ url: URL) -> [String] {
+        // Japanese games write their .ini in Shift-JIS; Western ones in
+        // Windows-1252, which decodes anything, so it goes last.
         guard let data = try? Data(contentsOf: url),
               let text = String(data: data, encoding: .utf8)
+                ?? String(data: data, encoding: .shiftJIS)
                 ?? String(data: data, encoding: .windowsCP1252)
         else { return [] }
         return text.components(separatedBy: .newlines)

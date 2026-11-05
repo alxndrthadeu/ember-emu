@@ -1,3982 +1,4229 @@
 {
-  "sourceLanguage": "pt-BR",
-  "strings": {
-    " fps": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " fps"
+  "sourceLanguage" : "pt-BR",
+  "strings" : {
+    " fps" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " fps"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " fps"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " fps"
           }
         }
       }
     },
-    "%@ (cópia)": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ (copy)"
+    "“%@” é um programa do Windows, não um jogo compactado. Importe a pasta do jogo, ou um .zip dela." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@” is a Windows program, not a packed game. Import the game folder, or a .zip of it."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ (copia)"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@” es un programa de Windows, no un juego comprimido. Importa la carpeta del juego, o un .zip de ella."
           }
         }
       }
     },
-    "%@ conectado": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ connected"
+    "“%@” foi empacotado com o Enigma Virtual Box, que o Ember ainda não abre. Procure a versão em .zip do jogo, ou extraia no computador com o EnigmaVBUnpacker." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@” was packed with Enigma Virtual Box, which Ember can’t open yet. Look for a .zip version of the game, or extract it on a computer with EnigmaVBUnpacker."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ conectado"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@” se empaquetó con Enigma Virtual Box, que Ember todavía no abre. Busca la versión .zip del juego, o extráelo en un ordenador con EnigmaVBUnpacker."
           }
         }
       }
     },
-    "%@ encontrou um erro": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ ran into an error"
+    "“%@” não parece um jogo de RPG Maker XP, VX ou VX Ace." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@” doesn't look like an RPG Maker XP, VX or VX Ace game."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ encontró un error"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@” no parece un juego de RPG Maker XP, VX o VX Ace."
           }
         }
       }
     },
-    "%@ no total": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ in total"
+    "%@ · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ en total"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$@"
+          }
+        }
+      }
+    },
+    "%@ (cópia)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ (copy)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ (copia)"
+          }
+        }
+      }
+    },
+    "%@ conectado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ connected"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ conectado"
+          }
+        }
+      }
+    },
+    "%@ encontrou um erro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ ran into an error"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ encontró un error"
+          }
+        }
+      }
+    },
+    "%@ no total" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ in total"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ en total"
+          }
+        }
+      }
+    },
+    "%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        }
+      }
+    },
+    "%lld erro(s) · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld error(s) · %2$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld error(es) · %2$@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld erro(s) · %2$@"
+          }
+        }
+      }
+    },
+    "%lld h" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld h"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld h"
+          }
         }
       }
     },
-    "%@ · %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · %2$@"
+    "%lld h %lld min" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld h %2$lld min"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · %2$@"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld h %2$lld min"
           }
         },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "new",
-            "value": "%1$@ · %2$@"
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld h %2$lld min"
           }
         }
       }
     },
-    "%lld": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld"
+    "%lld min" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min"
           }
         }
       }
     },
-    "%lld erro(s) · %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$lld error(s) · %2$@"
+    "%lld saves importados" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld saves imported"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$lld error(es) · %2$@"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld partidas guardadas importadas"
           }
+        }
+      }
+    },
+    "%lld%%" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        }
+      }
+    },
+    "%lldx" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldx"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldx"
+          }
+        }
+      }
+    },
+    "1 save importado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 save imported"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 partida guardada importada"
+          }
+        }
+      }
+    },
+    "2x" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2x"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2x"
+          }
+        }
+      }
+    },
+    "3x" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3x"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3x"
+          }
+        }
+      }
+    },
+    "5x" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5x"
+          }
         },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "new",
-            "value": "%1$lld erro(s) · %2$@"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5x"
           }
         }
       }
     },
-    "%lld h": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld h"
+    "A / Cruz" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A / Cross"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld h"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A / Cruz"
           }
         }
       }
     },
-    "%lld h %lld min": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$lld h %2$lld min"
+    "A captura ainda não está pronta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The screenshot isn't ready yet"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$lld h %2$lld min"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La captura todavía no está lista"
           }
+        }
+      }
+    },
+    "A extração parou no meio (%@)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extraction stopped partway (%@)."
+          }
         },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "new",
-            "value": "%1$lld h %2$lld min"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La extracción se detuvo a mitad de camino (%@)."
           }
         }
       }
     },
-    "%lld min": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld min"
+    "A skin “%@” não tem layout para iPhone." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The skin “%@” has no iPhone layout."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld min"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La skin “%@” no tiene diseño para iPhone."
           }
         }
       }
     },
-    "%lld saves importados": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld saves imported"
+    "A transparência vale para skins que permitem ver o jogo por trás dos botões. Com um controle de Xbox, PlayStation ou MFi conectado, os botões da tela somem na paisagem e a engrenagem fica num canto." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transparency applies to skins that let you see the game behind the buttons. With an Xbox, PlayStation or MFi controller connected, the on-screen buttons hide in landscape and the gear moves to a corner."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld partidas guardadas importadas"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La transparencia vale para las skins que dejan ver el juego detrás de los botones. Con un mando de Xbox, PlayStation o MFi conectado, los botones de la pantalla se ocultan en horizontal y el engranaje queda en una esquina."
           }
         }
       }
     },
-    "%lld%%": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld%%"
+    "Abra o Ember. O jogo aparece na Biblioteca." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Ember. The game shows up in the Library."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld%%"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre Ember. El juego aparece en la Biblioteca."
           }
         }
       }
     },
-    "%lldx": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lldx"
+    "Abre o teclado do iPhone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens the iPhone keyboard"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lldx"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre el teclado del iPhone"
           }
         }
       }
     },
-    "1 save importado": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1 save imported"
+    "Acelera enquanto estiver apertado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speeds up while held"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1 partida guardada importada"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acelera mientras se mantiene pulsado"
           }
         }
       }
     },
-    "2x": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "2x"
+    "Acendendo…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lighting up…"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "2x"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encendiendo…"
           }
         }
       }
     },
-    "3x": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "3x"
+    "Ainda não dá para importar “%@”. Use .zip, .rar, .7z ou uma pasta." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@” can't be imported yet. Use a .zip, .rar, .7z or a folder."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "3x"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todavía no se puede importar “%@”. Usa .zip, .rar, .7z o una carpeta."
           }
         }
       }
     },
-    "5x": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "5x"
+    "Ainda não dá para importar “%@”. Use .zip, .rar, .7z, .exe autoextraível ou uma pasta." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@” can’t be imported yet. Use a .zip, .rar, .7z, self-extracting .exe, or a folder."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "5x"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todavía no se puede importar “%@”. Usa un .zip, .rar, .7z, .exe autoextraíble o una carpeta."
           }
         }
       }
     },
-    "A / Cruz": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A / Cross"
+    "Ainda não há saves de %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There are no saves for %@ yet."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A / Cruz"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todavía no hay partidas guardadas de %@."
           }
         }
       }
     },
-    "A captura ainda não está pronta": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The screenshot isn't ready yet"
+    "Ajustes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "La captura todavía no está lista"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes"
           }
         }
       }
     },
-    "A extração parou no meio (%@).": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Extraction stopped partway (%@)."
+    "Andar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Walk"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "La extracción se detuvo a mitad de camino (%@)."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caminar"
           }
         }
       }
     },
-    "A skin “%@” não tem layout para iPhone.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The skin “%@” has no iPhone layout."
+    "Andar e navegar nos menus" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Walk and move through menus"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "La skin “%@” no tiene diseño para iPhone."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caminar y moverse por los menús"
           }
         }
       }
     },
-    "A transparência vale para skins que permitem ver o jogo por trás dos botões. Com um controle de Xbox, PlayStation ou MFi conectado, os botões da tela somem na paisagem e a engrenagem fica num canto.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Transparency applies to skins that let you see the game behind the buttons. With an Xbox, PlayStation or MFi controller connected, the on-screen buttons hide in landscape and the gear moves to a corner."
+    "Apagar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "La transparencia vale para las skins que dejan ver el juego detrás de los botones. Con un mando de Xbox, PlayStation o MFi conectado, los botones de la pantalla se ocultan en horizontal y el engranaje queda en una esquina."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar"
           }
         }
       }
     },
-    "Abra o Ember. O jogo aparece na Biblioteca.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open Ember. The game shows up in the Library."
+    "Apagar %@?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete %@?"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Abre Ember. El juego aparece en la Biblioteca."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Eliminar %@?"
           }
         }
       }
     },
-    "Abre o teclado do iPhone": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Opens the iPhone keyboard"
+    "Apagar a skin %@?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete the %@ skin?"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Abre el teclado del iPhone"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Eliminar la skin %@?"
           }
         }
       }
     },
-    "Acelera enquanto estiver apertado": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Speeds up while held"
+    "Apagar jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Game"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Acelera mientras se mantiene pulsado"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar juego"
           }
         }
       }
     },
-    "Acendendo…": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lighting up…"
+    "Apagar o arquivo depois de importar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete the file after importing"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Encendiendo…"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar el archivo después de importar"
           }
         }
       }
     },
-    "Ainda não dá para importar “%@”. Use .zip, .rar, .7z ou uma pasta.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%@” can't be imported yet. Use a .zip, .rar, .7z or a folder."
+    "Apagar o RTP?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete the RTP?"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Todavía no se puede importar “%@”. Usa .zip, .rar, .7z o una carpeta."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Borrar el RTP?"
           }
         }
       }
     },
-    "Ainda não há saves de %@.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "There are no saves for %@ yet."
+    "Apagar perfil" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Profile"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Todavía no hay partidas guardadas de %@."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar perfil"
           }
         }
       }
     },
-    "Ajustes": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Settings"
+    "Apagar skin" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Skin"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ajustes"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar skin"
           }
         }
       }
     },
-    "Andar": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Walk"
+    "Aparece nos jogos antigos, para digitar nomes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shows up in older games, for typing names"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Caminar"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aparece en los juegos antiguos, para escribir nombres"
           }
         }
       }
     },
-    "Andar e navegar nos menus": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Walk and move through menus"
+    "Arquivos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Files"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Caminar y moverse por los menús"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archivos"
           }
         }
       }
     },
-    "Apagar": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete"
+    "Arraste o .zip, .rar, .7z ou a pasta do jogo para o Ember." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drag the game's .zip, .rar, .7z or folder onto Ember."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Eliminar"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrastra el .zip, .rar, .7z o la carpeta del juego a Ember."
           }
         }
       }
     },
-    "Apagar %@?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete %@?"
+    "Áudio" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "¿Eliminar %@?"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio"
           }
         }
       }
     },
-    "Apagar a skin %@?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete the %@ skin?"
+    "Automático" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatic"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "¿Eliminar la skin %@?"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automático"
           }
         }
       }
     },
-    "Apagar jogo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete Game"
+    "Automático (%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatic (%@)"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Eliminar juego"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automático (%@)"
           }
         }
       }
     },
-    "Apagar o arquivo depois de importar": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete the file after importing"
+    "Avanço rápido" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fast Forward"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Eliminar el archivo después de importar"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avance rápido"
           }
         }
       }
     },
-    "Apagar perfil": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete Profile"
+    "Avanço rápido (segurar)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fast forward (hold)"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Eliminar perfil"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avance rápido (mantener)"
           }
         }
       }
     },
-    "Apagar skin": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete Skin"
+    "B / Círculo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B / Circle"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Eliminar skin"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B / Círculo"
           }
         }
       }
     },
-    "Aparece nos jogos antigos, para digitar nomes": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Shows up in older games, for typing names"
+    "Biblioteca" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Library"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aparece en los juegos antiguos, para escribir nombres"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Biblioteca"
           }
         }
       }
     },
-    "Arquivos": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Files"
+    "Bluetooth: ponha o controle em modo de pareamento e escolha-o em Ajustes do iPhone › Bluetooth. USB: ligue o cabo (USB-C direto, ou o adaptador Lightning para USB). Funcionam controles de Xbox, PlayStation, Switch Pro e MFi, e teclados, que chegam ao jogo como o teclado de um computador. Os botões seguem o perfil de controle de cada jogo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bluetooth: put the controller in pairing mode and choose it in iPhone Settings › Bluetooth. USB: plug in the cable (USB-C directly, or the Lightning to USB adapter). Xbox, PlayStation, Switch Pro and MFi controllers work, and so do keyboards, which reach the game like a computer keyboard. Buttons follow each game's control profile."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Archivos"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bluetooth: pon el mando en modo de emparejamiento y elígelo en Ajustes del iPhone › Bluetooth. USB: conecta el cable (USB-C directo, o el adaptador de Lightning a USB). Funcionan mandos de Xbox, PlayStation, Switch Pro y MFi, y teclados, que llegan al juego como el teclado de un ordenador. Los botones siguen el perfil de control de cada juego."
           }
         }
       }
     },
-    "Arraste o .zip, .rar, .7z ou a pasta do jogo para o Ember.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Drag the game's .zip, .rar, .7z or folder onto Ember."
+    "Botão X do jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game's X button"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Arrastra el .zip, .rar, .7z o la carpeta del juego a Ember."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Botón X del juego"
           }
         }
       }
     },
-    "Automático": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Automatic"
+    "Botão Y do jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game's Y button"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Automático"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Botón Y del juego"
           }
         }
       }
     },
-    "Automático (%@)": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Automatic (%@)"
+    "Cada jogo usa Padrão ou Clássico automaticamente (Clássico nos jogos antigos). Troque no painel do jogo, segurando a capa, ou crie o seu em Ajustes › Perfis de controle." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Each game uses Standard or Classic automatically (Classic for older games). Change it in the game's panel by holding its cover, or make your own in Settings › Control Profiles."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Automático (%@)"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cada juego usa Estándar o Clásico automáticamente (Clásico en los juegos antiguos). Cámbialo en el panel del juego manteniendo pulsada la portada, o crea el tuyo en Ajustes › Perfiles de control."
           }
         }
       }
     },
-    "Avanço rápido": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fast Forward"
+    "Cada vez que o jogo abre, o Ember guarda o que aconteceu: erros, avisos e o que o motor escreveu." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every time the game opens, Ember keeps what happened: errors, notices and what the engine wrote."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Avance rápido"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cada vez que el juego se abre, Ember guarda lo que pasó: errores, avisos y lo que escribió el motor."
           }
         }
       }
     },
-    "Avanço rápido (segurar)": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fast forward (hold)"
+    "Cada vez que você jogar, a partida aparece aqui com a duração." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Each time you play, the session shows up here with how long it lasted."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Avance rápido (mantener)"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cada vez que juegues, la partida aparece aquí con su duración."
           }
         }
       }
     },
-    "B / Círculo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "B / Circle"
+    "Cancelar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "B / Círculo"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
           }
         }
       }
     },
-    "Biblioteca": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Library"
+    "Cancelar. Em jogos antigos abre o menu; nos novos, segurar corre (Esc, Input::B)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel. Opens the menu in older games; in newer ones, hold to run (Esc, Input::B)"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Biblioteca"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar. En los juegos antiguos abre el menú; en los nuevos, mantener para correr (Esc, Input::B)"
           }
         }
       }
     },
-    "Bluetooth: ponha o controle em modo de pareamento e escolha-o em Ajustes do iPhone › Bluetooth. USB: ligue o cabo (USB-C direto, ou o adaptador Lightning para USB). Funcionam controles de Xbox, PlayStation, Switch Pro e MFi, e teclados, que chegam ao jogo como o teclado de um computador. Os botões seguem o perfil de controle de cada jogo.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bluetooth: put the controller in pairing mode and choose it in iPhone Settings › Bluetooth. USB: plug in the cable (USB-C directly, or the Lightning to USB adapter). Xbox, PlayStation, Switch Pro and MFi controllers work, and so do keyboards, which reach the game like a computer keyboard. Buttons follow each game's control profile."
+    "Capa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cover"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bluetooth: pon el mando en modo de emparejamiento y elígelo en Ajustes del iPhone › Bluetooth. USB: conecta el cable (USB-C directo, o el adaptador de Lightning a USB). Funcionan mandos de Xbox, PlayStation, Switch Pro y MFi, y teclados, que llegan al juego como el teclado de un ordenador. Los botones siguen el perfil de control de cada juego."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portada"
           }
         }
       }
     },
-    "Botão X do jogo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Game's X button"
+    "Capa atualizada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cover updated"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Botón X del juego"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portada actualizada"
           }
         }
       }
     },
-    "Botão Y do jogo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Game's Y button"
+    "Capa automática" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatic cover"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Botón Y del juego"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portada automática"
           }
         }
       }
     },
-    "Cada jogo usa Padrão ou Clássico automaticamente (Clássico nos jogos antigos). Troque no painel do jogo, segurando a capa, ou crie o seu em Ajustes › Perfis de controle.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Each game uses Standard or Classic automatically (Classic for older games). Change it in the game's panel by holding its cover, or make your own in Settings › Control Profiles."
+    "Capa automática de volta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatic cover is back"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cada juego usa Estándar o Clásico automáticamente (Clásico en los juegos antiguos). Cámbialo en el panel del juego manteniendo pulsada la portada, o crea el tuyo en Ajustes › Perfiles de control."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portada automática restaurada"
           }
         }
       }
     },
-    "Cada vez que o jogo abre, o Ember guarda o que aconteceu: erros, avisos e o que o motor escreveu.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Every time the game opens, Ember keeps what happened: errors, notices and what the engine wrote."
+    "Captura" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Screenshot"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cada vez que el juego se abre, Ember guarda lo que pasó: errores, avisos y lo que escribió el motor."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Captura"
           }
         }
       }
     },
-    "Cada vez que você jogar, a partida aparece aqui com a duração.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Each time you play, the session shows up here with how long it lasted."
+    "Clássica" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Classic"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cada vez que juegues, la partida aparece aquí con su duración."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clásica"
           }
         }
       }
     },
-    "Cancelar": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cancel"
+    "Clássico" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Classic"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cancelar"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clásico"
           }
         }
       }
     },
-    "Cancelar. Em jogos antigos abre o menu; nos novos, segurar corre (Esc, Input::B)": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cancel. Opens the menu in older games; in newer ones, hold to run (Esc, Input::B)"
+    "Como criar sua própria skin" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How to make your own skin"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cancelar. En los juegos antiguos abre el menú; en los nuevos, mantener para correr (Esc, Input::B)"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cómo crear tu propia skin"
           }
         }
       }
     },
-    "Capa": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cover"
+    "Conecte o iPhone ao Mac com o cabo. Depois da primeira vez, o mesmo Wi-Fi basta." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connect the iPhone to the Mac with a cable. After the first time, the same Wi-Fi is enough."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Portada"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conecta el iPhone al Mac con el cable. Después de la primera vez, basta con la misma Wi-Fi."
           }
         }
       }
     },
-    "Capa atualizada": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cover updated"
+    "Confirmar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Portada actualizada"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmar"
           }
         }
       }
     },
-    "Capa automática": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Automatic cover"
+    "Continuar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Portada automática"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuar"
           }
         }
       }
     },
-    "Capa automática de volta": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Automatic cover is back"
+    "Continuar %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue %@"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Portada automática restaurada"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuar %@"
           }
         }
       }
     },
-    "Captura": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Screenshot"
+    "Controle físico" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Physical controller"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Captura"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mando físico"
           }
         }
       }
     },
-    "Clássica": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Classic"
+    "Controles" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controls"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Clásica"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controles"
           }
         }
       }
     },
-    "Clássico": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Classic"
+    "Controles conectados" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connected Controllers"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Clásico"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mandos conectados"
           }
         }
       }
     },
-    "Como criar sua própria skin": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "How to make your own skin"
+    "Controles de Xbox, PlayStation e MFi funcionam assim que conectados e seguem o perfil do jogo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xbox, PlayStation and MFi controllers work as soon as they connect and follow the game's profile."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cómo crear tu propia skin"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los mandos de Xbox, PlayStation y MFi funcionan en cuanto se conectan y siguen el perfil del juego."
           }
         }
       }
     },
-    "Conecte o iPhone ao Mac com o cabo. Depois da primeira vez, o mesmo Wi-Fi basta.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Connect the iPhone to the Mac with a cable. After the first time, the same Wi-Fi is enough."
+    "Controles: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controls: %@"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Conecta el iPhone al Mac con el cable. Después de la primera vez, basta con la misma Wi-Fi."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controles: %@"
           }
         }
       }
     },
-    "Confirmar": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Confirm"
+    "Copiar erro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy Error"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Confirmar"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copiar error"
           }
         }
       }
     },
-    "Continuar": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Continue"
+    "De outro app" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From Another App"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Continuar"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desde otra app"
           }
         }
       }
     },
-    "Continuar %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Continue %@"
+    "Desempenho" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Performance"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Continuar %@"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rendimiento"
           }
         }
       }
     },
-    "Controle físico": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Physical controller"
+    "Desempenho: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Performance: %@"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mando físico"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rendimiento: %@"
           }
         }
       }
     },
-    "Controles": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Controls"
+    "Desligado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Controles"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desactivado"
           }
         }
       }
     },
-    "Controles conectados": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Connected Controllers"
+    "Direcional" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D-pad"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mandos conectados"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cruceta"
           }
         }
       }
     },
-    "Controles de Xbox, PlayStation e MFi funcionam assim que conectados e seguem o perfil do jogo.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Xbox, PlayStation and MFi controllers work as soon as they connect and follow the game's profile."
+    "Direcional e analógico" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D-pad and stick"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Los mandos de Xbox, PlayStation y MFi funcionan en cuanto se conectan y siguen el perfil del juego."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cruceta y joystick"
           }
         }
       }
     },
-    "Controles: %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Controls: %@"
+    "Duplicar para editar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duplicate to Edit"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Controles: %@"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duplicar para editar"
           }
         }
       }
     },
-    "Copiar erro": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Copy Error"
+    "ember" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ember"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Copiar error"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ember"
           }
         }
       }
     },
-    "De outro app": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "From Another App"
+    "Ember" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Desde otra app"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember"
           }
         }
       }
     },
-    "Desempenho": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Performance"
+    "Ember Laranja" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember Orange"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rendimiento"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember Naranja"
           }
         }
       }
     },
-    "Desempenho: %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Performance: %@"
+    "Engrenagem" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gear"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rendimiento: %@"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Engranaje"
           }
         }
       }
     },
-    "Desligado": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Off"
+    "Entendi" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Got It"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Desactivado"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entendido"
           }
         }
       }
     },
-    "Direcional": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "D-pad"
+    "erro desconhecido" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "unknown error"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cruceta"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "error desconocido"
           }
         }
       }
     },
-    "Direcional e analógico": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "D-pad and stick"
+    "Erros registrados pelo jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Errors logged by the game"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cruceta y joystick"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Errores registrados por el juego"
           }
         }
       }
     },
-    "Duplicar para editar": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Duplicate to Edit"
+    "Escolha no app Arquivos, no iCloud Drive ou em outro serviço instalado." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick from the Files app, iCloud Drive or another installed service."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Duplicar para editar"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige en la app Archivos, en iCloud Drive o en otro servicio instalado."
           }
         }
       }
     },
-    "Ember": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ember"
+    "Escolher no Arquivos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose in Files"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ember"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elegir en Archivos"
           }
         }
       }
     },
-    "Ember Laranja": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ember Orange"
+    "Esconder botões com controle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide buttons with a controller"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ember Naranja"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocultar botones con mando"
           }
         }
       }
     },
-    "Engrenagem": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gear"
+    "Especial" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Special"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Engranaje"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Especial"
           }
         }
       }
     },
-    "Entendi": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Got It"
+    "Estado carregado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "State loaded"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Entendido"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estado cargado"
           }
         }
       }
     },
-    "Erros registrados pelo jogo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Errors logged by the game"
+    "Estado salvo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "State saved"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Errores registrados por el juego"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estado guardado"
           }
         }
       }
     },
-    "Escolha no app Arquivos, no iCloud Drive ou em outro serviço instalado.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pick from the Files app, iCloud Drive or another installed service."
+    "Estados" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "States"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Elige en la app Archivos, en iCloud Drive o en otro servicio instalado."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estados"
           }
         }
       }
     },
-    "Escolher no Arquivos": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Choose in Files"
+    "Este .rar está dividido em partes (part1, part2…). Junte as partes no computador e importe de novo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This .rar is split into parts (part1, part2…). Join the parts on a computer and import again."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Elegir en Archivos"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este .rar está dividido en partes (part1, part2…). Une las partes en el ordenador e importa de nuevo."
           }
         }
       }
     },
-    "Esconder botões com controle": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hide buttons with a controller"
+    "Este arquivo não é uma skin: falta o info.json." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This file isn't a skin: info.json is missing."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ocultar botones con mando"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este archivo no es una skin: falta info.json."
           }
         }
       }
     },
-    "Especial": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Special"
+    "Exportar saves" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export Saves"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Especial"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportar partidas"
           }
         }
       }
     },
-    "Estado carregado": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "State loaded"
+    "Falar, interagir, escolher (Enter, Input::C)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Talk, interact, choose (Enter, Input::C)"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Estado cargado"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hablar, interactuar, elegir (Enter, Input::C)"
           }
         }
       }
     },
-    "Estado salvo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "State saved"
+    "Falta o arquivo %@, que vem no RTP do %@. Importe o RTP uma vez pela aba Importar, como pasta ou .zip, e abra o jogo de novo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The file %1$@ is missing. It comes with the %2$@ RTP. Import the RTP once from the Import tab, as a folder or .zip, and open the game again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Falta el archivo %1$@, que viene en el RTP de %2$@. Importa el RTP una vez desde la pestaña Importar, como carpeta o .zip, y abre el juego de nuevo."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Estado guardado"
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Falta o arquivo %1$@, que vem no RTP do %2$@. Importe o RTP uma vez pela aba Importar, como pasta ou .zip, e abra o jogo de novo."
           }
         }
       }
     },
-    "Estados": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "States"
+    "Falta o arquivo %@. Confira se o jogo foi importado inteiro." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The file %@ is missing. Check that the whole game was imported."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Estados"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Falta el archivo %@. Comprueba que el juego se importó completo."
           }
         }
       }
     },
-    "Este .rar está dividido em partes (part1, part2…). Junte as partes no computador e importe de novo.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This .rar is split into parts (part1, part2…). Join the parts on a computer and import again."
+    "Fechar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Este .rar está dividido en partes (part1, part2…). Une las partes en el ordenador e importa de nuevo."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cerrar"
           }
         }
       }
     },
-    "Este arquivo não é uma skin: falta o info.json.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This file isn't a skin: info.json is missing."
+    "Feche o Ember para abrir %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close Ember to open %@"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Este archivo no es una skin: falta info.json."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cierra Ember para abrir %@"
           }
         }
       }
     },
-    "Exportar saves": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Export Saves"
+    "Feche o menu do jogo para salvar o estado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close the game's menu to save the state"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exportar partidas"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cierra el menú del juego para guardar el estado"
           }
         }
       }
     },
-    "Falar, interagir, escolher (Enter, Input::C)": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Talk, interact, choose (Enter, Input::C)"
+    "FluidSynth" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FluidSynth"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hablar, interactuar, elegir (Enter, Input::C)"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FluidSynth"
           }
         }
       }
     },
-    "Fechar": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Close"
+    "GeneralUser GS (instrumentos MIDI)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GeneralUser GS (MIDI instruments)"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cerrar"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GeneralUser GS (instrumentos MIDI)"
           }
         }
       }
     },
-    "Feche o Ember para abrir %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Close Ember to open %@"
+    "Histórico" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "History"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cierra Ember para abrir %@"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historial"
           }
         }
       }
     },
-    "Feche o menu do jogo para salvar o estado": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Close the game's menu to save the state"
+    "Hoje" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cierra el menú del juego para guardar el estado"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoy"
           }
         }
       }
     },
-    "Histórico": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "History"
+    "Importação" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importing"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Historial"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importación"
           }
         }
       }
     },
-    "Hoje": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Today"
+    "Importando %@…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importing %@…"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hoy"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importando %@…"
           }
         }
       }
     },
-    "Importando %@…": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importing %@…"
+    "Importando %lld jogos…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importing %lld games…"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importando %@…"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importando %lld juegos…"
           }
         }
       }
     },
-    "Importando %lld jogos…": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importing %lld games…"
+    "Importar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importando %lld juegos…"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar"
           }
         }
       }
     },
-    "Importar": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Import"
+    "Importar jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import Game"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importar"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar juego"
           }
         }
       }
     },
-    "Importar jogo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Import Game"
+    "Importar saves" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import Saves"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importar juego"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar partidas"
           }
         }
       }
     },
-    "Importar saves": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Import Saves"
+    "Importar skin" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import Skin"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importar partidas"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar skin"
           }
         }
       }
     },
-    "Importar skin": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Import Skin"
+    "Importe um jogo .zip ou uma pasta para começar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import a game .zip or folder to get started."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importar skin"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importa un juego en .zip o una carpeta para empezar."
           }
         }
       }
     },
-    "Importação": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importing"
+    "Instalado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Installed"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importación"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instalado"
           }
         }
       }
     },
-    "Importe um jogo .zip ou uma pasta para começar.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Import a game .zip or folder to get started."
+    "Jogado %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Played %@"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importa un juego en .zip o una carpeta para empezar."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jugado %@"
           }
         }
       }
     },
-    "Jogado %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Played %@"
+    "Jogar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Jugado %@"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jugar"
           }
         }
       }
     },
-    "Jogar": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Play"
+    "Jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Jugar"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Juego"
           }
         }
       }
     },
-    "Jogo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Game"
+    "Jogo removido da biblioteca" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game removed from the library"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Juego"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Juego eliminado de la biblioteca"
           }
         }
       }
     },
-    "Jogo removido da biblioteca": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Game removed from the library"
+    "Jogos ocupam bastante espaço. Depois de importar um .zip, .rar ou .7z, o Ember manda o arquivo original para Apagados Recentemente, no app Arquivos. Dá para recuperar por 30 dias." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Games take up a lot of space. After importing a .zip, .rar or .7z, Ember moves the original file to Recently Deleted in the Files app. You can recover it for 30 days."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Juego eliminado de la biblioteca"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los juegos ocupan mucho espacio. Después de importar un .zip, .rar o .7z, Ember envía el archivo original a Eliminados recientemente, en la app Archivos. Se puede recuperar durante 30 días."
           }
         }
       }
     },
-    "Jogos ocupam bastante espaço. Depois de importar um .zip, .rar ou .7z, o Ember manda o arquivo original para Apagados Recentemente, no app Arquivos. Dá para recuperar por 30 dias.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Games take up a lot of space. After importing a .zip, .rar or .7z, Ember moves the original file to Recently Deleted in the Files app. You can recover it for 30 days."
+    "Jogos que dependem dele vão parar de achar alguns gráficos e sons." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Games that rely on it will stop finding some graphics and sounds."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Los juegos ocupan mucho espacio. Después de importar un .zip, .rar o .7z, Ember envía el archivo original a Eliminados recientemente, en la app Archivos. Se puede recuperar durante 30 días."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los juegos que dependen de él dejarán de encontrar algunos gráficos y sonidos."
           }
         }
       }
     },
-    "L do jogo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Game's L"
+    "L do jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game's L"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "L del juego"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L del juego"
           }
         }
       }
     },
-    "Licenças": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Licenses"
+    "libarchive (iOS)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "libarchive (iOS)"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Licencias"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "libarchive (iOS)"
           }
         }
       }
     },
-    "Licenças de código aberto": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open Source Licenses"
+    "Licenças" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Licenses"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Licencias de código abierto"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Licencias"
           }
         }
       }
     },
-    "Ligado": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "On"
+    "Licenças de código aberto" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Source Licenses"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Activado"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Licencias de código abierto"
           }
         }
       }
     },
-    "Limpar": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Clear"
+    "Ligado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Borrar"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activado"
           }
         }
       }
     },
-    "Limpar histórico": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Clear History"
+    "Limpar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Borrar historial"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar"
           }
         }
       }
     },
-    "Limpar o histórico?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Clear the history?"
+    "Limpar histórico" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear History"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "¿Borrar el historial?"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar historial"
           }
         }
       }
     },
-    "Menu": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Menu"
+    "Limpar o histórico?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear the history?"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Menú"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Borrar el historial?"
           }
         }
       }
     },
-    "Menu / Correr": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Menu / Run"
+    "memória" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "memory"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Menú / Correr"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "memoria"
           }
         }
       }
     },
-    "Menu / Options": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Menu / Options"
+    "menos de 1 min" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "under 1 min"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Menu / Options"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "menos de 1 min"
           }
         }
       }
     },
-    "Menu do Ember": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ember menu"
+    "Menu" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menu"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Menú de Ember"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menú"
           }
         }
       }
     },
-    "Menu rápido de itens registrados (D, Input::Z)": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quick menu of registered items (D, Input::Z)"
+    "Menu / Correr" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menu / Run"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Menú rápido de objetos registrados (D, Input::Z)"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menú / Correr"
           }
         }
       }
     },
-    "Mostrar desempenho (FPS, CPU, memória)": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show performance (FPS, CPU, memory)"
+    "Menu / Options" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menu / Options"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mostrar rendimiento (FPS, CPU, memoria)"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menu / Options"
           }
         }
       }
     },
-    "Motor": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Engine"
+    "Menu do Ember" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember menu"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Motor"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menú de Ember"
           }
         }
       }
     },
-    "Muda só o nome na biblioteca. A pasta e os saves continuam iguais.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Only changes the name in the library. The folder and saves stay the same."
+    "Menu rápido de itens registrados (D, Input::Z)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quick menu of registered items (D, Input::Z)"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Solo cambia el nombre en la biblioteca. La carpeta y las partidas siguen igual."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menú rápido de objetos registrados (D, Input::Z)"
           }
         }
       }
     },
-    "Na tela": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "On screen"
+    "morno" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "warm"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "En pantalla"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tibio"
           }
         }
       }
     },
-    "Na tela e no controle": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "On screen and on controllers"
+    "Mostrar desempenho (FPS, CPU, memória)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show performance (FPS, CPU, memory)"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "En pantalla y en el mando"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar rendimiento (FPS, CPU, memoria)"
           }
         }
       }
     },
-    "Nada": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nothing"
+    "Motor" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Engine"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nada"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Motor"
           }
         }
       }
     },
-    "Nenhum arquivo de save encontrado no que foi escolhido.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No save files found in what you picked."
+    "Muda só o nome na biblioteca. A pasta e os saves continuam iguais." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only changes the name in the library. The folder and saves stay the same."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No se encontraron partidas guardadas en lo que elegiste."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo cambia el nombre en la biblioteca. La carpeta y las partidas siguen igual."
           }
         }
       }
     },
-    "Nenhum controle conectado": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No controller connected"
+    "muito quente" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "very hot"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ningún mando conectado"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "muy caliente"
           }
         }
       }
     },
-    "Nenhum erro nesta sessão.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No errors in this session."
+    "Muitos jogos contam com os gráficos e sons padrão do RPG Maker (o RTP), que o Ember não traz. Importe a pasta do RTP, ou um .zip dela, pela aba Importar: o Ember reconhece a versão e todos os jogos dela passam a usar. No Windows, ela fica em Arquivos Comuns › Enterbrain › RGSS." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Many games count on RPG Maker’s stock graphics and sounds (the RTP), which Ember doesn’t include. Import the RTP folder, or a .zip of it, from the Import tab: Ember recognizes the version and every game of that version uses it. On Windows, it lives in Common Files › Enterbrain › RGSS."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sin errores en esta sesión."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muchos juegos cuentan con los gráficos y sonidos estándar de RPG Maker (el RTP), que Ember no incluye. Importa la carpeta del RTP, o un .zip de ella, desde la pestaña Importar: Ember reconoce la versión y todos los juegos de esa versión la usan. En Windows está en Archivos comunes › Enterbrain › RGSS."
           }
         }
       }
     },
-    "Nenhum estado salvo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No Saved States"
+    "Na tela" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On screen"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ningún estado guardado"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En pantalla"
           }
         }
       }
     },
-    "Nenhum registro ainda": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No Logs Yet"
+    "Na tela e no controle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On screen and on controllers"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Todavía no hay registros"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En pantalla y en el mando"
           }
         }
       }
     },
-    "Nenhum save ainda. Para continuar de onde parou em outro aparelho, use Importar saves com os arquivos do jogo (.rxdata, .rvdata ou .rvdata2) ou um .zip deles.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No saves yet. To pick up where you left off on another device, use Import Saves with the game's files (.rxdata, .rvdata or .rvdata2) or a .zip of them."
+    "Nada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Todavía no hay partidas. Para seguir donde lo dejaste en otro dispositivo, usa Importar partidas con los archivos del juego (.rxdata, .rvdata o .rvdata2) o un .zip con ellos."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada"
           }
         }
       }
     },
-    "Nenhuma partida ainda": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No Sessions Yet"
+    "Não deu certo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That Didn't Work"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Todavía no hay partidas"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No funcionó"
           }
         }
       }
     },
-    "No Finder, escolha o iPhone na barra lateral e abra a aba Arquivos.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "In the Finder, choose the iPhone in the sidebar and open the Files tab."
+    "Não deu para abrir o arquivo compactado (%@)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't open the archive (%@)."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "En el Finder, elige el iPhone en la barra lateral y abre la pestaña Archivos."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo abrir el archivo comprimido (%@)."
           }
         }
       }
     },
-    "No PC, os saves ficam na pasta do jogo (Save1.rxdata, Save01.rvdata2) ou, nos fangames de Pokémon, em %%APPDATA%%\\%@ (Game.rxdata). O Ember usa os mesmos arquivos.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "On a PC, saves live in the game folder (Save1.rxdata, Save01.rvdata2) or, for Pokémon fan games, in %%APPDATA%%\\%@ (Game.rxdata). Ember uses the same files."
+    "Não deu para apagar “%@”: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't delete “%1$@”: %2$@"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "En el PC, las partidas están en la carpeta del juego (Save1.rxdata, Save01.rvdata2) o, en los fangames de Pokémon, en %%APPDATA%%\\%@ (Game.rxdata). Ember usa los mismos archivos."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo eliminar “%1$@”: %2$@"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Não deu para apagar “%1$@”: %2$@"
+          }
         }
       }
     },
-    "No Safari, no Arquivos ou num app de mensagens, toque no arquivo, depois em Compartilhar e em Ember. Skins (.deltaskin, .manicskin) chegam do mesmo jeito.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "In Safari, Files or a messaging app, tap the file, then Share and Ember. Skins (.deltaskin, .manicskin) arrive the same way."
+    "Não deu para carregar o estado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't load the state"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "En Safari, Archivos o una app de mensajes, toca el archivo, luego Compartir y Ember. Las skins (.deltaskin, .manicskin) llegan igual."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo cargar el estado"
           }
         }
       }
     },
-    "Nome": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Name"
+    "Não deu para salvar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't save"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nombre"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo guardar"
           }
         }
       }
     },
-    "Nome do perfil": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Profile name"
+    "Não deu para salvar o estado neste jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't save the state in this game"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nombre del perfil"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo guardar el estado en este juego"
           }
         }
       }
     },
-    "Nos jogos novos abre o menu; nos antigos, segurar corre (Shift, Input::A)": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Opens the menu in newer games; in older ones, hold to run (Shift, Input::A)"
+    "Não instalado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not installed"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "En los juegos nuevos abre el menú; en los antiguos, mantener para correr (Shift, Input::A)"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No instalado"
           }
         }
       }
     },
-    "Novo perfil": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New Profile"
+    "Nenhum arquivo de save encontrado no que foi escolhido." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No save files found in what you picked."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nuevo perfil"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontraron partidas guardadas en lo que elegiste."
           }
         }
       }
     },
-    "Não deu certo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "That Didn't Work"
+    "Nenhum controle conectado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No controller connected"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No funcionó"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ningún mando conectado"
           }
         }
       }
     },
-    "Não deu para abrir o arquivo compactado (%@).": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Couldn't open the archive (%@)."
+    "Nenhum erro nesta sessão." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No errors in this session."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No se pudo abrir el archivo comprimido (%@)."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin errores en esta sesión."
           }
         }
       }
     },
-    "Não deu para apagar “%@”: %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Couldn't delete “%1$@”: %2$@"
+    "Nenhum estado salvo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Saved States"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No se pudo eliminar “%1$@”: %2$@"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ningún estado guardado"
+          }
+        }
+      }
+    },
+    "Nenhum registro ainda" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Logs Yet"
           }
         },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "new",
-            "value": "Não deu para apagar “%1$@”: %2$@"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todavía no hay registros"
           }
         }
       }
     },
-    "Não deu para carregar o estado": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Couldn't load the state"
+    "Nenhum save ainda. Para continuar de onde parou em outro aparelho, use Importar saves com os arquivos do jogo (.rxdata, .rvdata ou .rvdata2) ou um .zip deles." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No saves yet. To pick up where you left off on another device, use Import Saves with the game's files (.rxdata, .rvdata or .rvdata2) or a .zip of them."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No se pudo cargar el estado"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todavía no hay partidas. Para seguir donde lo dejaste en otro dispositivo, usa Importar partidas con los archivos del juego (.rxdata, .rvdata o .rvdata2) o un .zip con ellos."
           }
         }
       }
     },
-    "Não deu para salvar": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Couldn't save"
+    "Nenhuma partida ainda" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Sessions Yet"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No se pudo guardar"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todavía no hay partidas"
           }
         }
       }
     },
-    "Não deu para salvar o estado neste jogo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Couldn't save the state in this game"
+    "No Finder, escolha o iPhone na barra lateral e abra a aba Arquivos." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In the Finder, choose the iPhone in the sidebar and open the Files tab."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No se pudo guardar el estado en este juego"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En el Finder, elige el iPhone en la barra lateral y abre la pestaña Archivos."
           }
         }
       }
     },
-    "O Ember abre um jogo por vez. Deslize de baixo para cima, feche o Ember no seletor de apps e abra de novo. Seus saves estão guardados.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ember opens one game at a time. Swipe up from the bottom, close Ember in the app switcher and open it again. Your saves are safe."
+    "No PC, os saves ficam na pasta do jogo (Save1.rxdata, Save01.rvdata2) ou, nos fangames de Pokémon, em %%APPDATA%%\\%@ (Game.rxdata). O Ember usa os mesmos arquivos." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On a PC, saves live in the game folder (Save1.rxdata, Save01.rvdata2) or, for Pokémon fan games, in %%APPDATA%%\\%@ (Game.rxdata). Ember uses the same files."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ember abre un juego a la vez. Desliza desde abajo, cierra Ember en el selector de apps y ábrelo de nuevo. Tus partidas están a salvo."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En el PC, las partidas están en la carpeta del juego (Save1.rxdata, Save01.rvdata2) o, en los fangames de Pokémon, en %%APPDATA%%\\%@ (Game.rxdata). Ember usa los mismos archivos."
           }
         }
       }
     },
-    "O Ember lê skins do Delta e do Manic EMU (.deltaskin, .manicskin). Procure por “GBA deltaskin”: há muitas, de graça e pagas, feitas por artistas independentes. Toque numa skin para usar, ou segure para apagar uma importada. Skins sem paisagem usam a Ember Laranja quando o iPhone deita.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ember reads Delta and Manic EMU skins (.deltaskin, .manicskin). Search for “GBA deltaskin”: there are lots, free and paid, made by independent artists. Tap a skin to use it, or hold one you imported to delete it. Skins without landscape use Ember Orange when the iPhone turns sideways."
+    "No Safari, no Arquivos ou num app de mensagens, toque no arquivo, depois em Compartilhar e em Ember. Skins (.deltaskin, .manicskin) chegam do mesmo jeito." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Safari, Files or a messaging app, tap the file, then Share and Ember. Skins (.deltaskin, .manicskin) arrive the same way."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ember lee skins de Delta y de Manic EMU (.deltaskin, .manicskin). Busca “GBA deltaskin”: hay muchas, gratis y de pago, hechas por artistas independientes. Toca una skin para usarla, o mantén pulsada una importada para eliminarla. Las skins sin horizontal usan Ember Naranja cuando el iPhone se pone de lado."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En Safari, Archivos o una app de mensajes, toca el archivo, luego Compartir y Ember. Las skins (.deltaskin, .manicskin) llegan igual."
           }
         }
       }
     },
-    "O Ember volta a usar o teclado do iPhone": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ember goes back to the iPhone keyboard"
+    "Nome" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ember vuelve a usar el teclado del iPhone"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre"
           }
         }
       }
     },
-    "O arquivo está protegido por senha. Extraia no computador e importe a pasta ou um .zip.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The archive is password protected. Extract it on a computer and import the folder or a .zip."
+    "Nome do perfil" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profile name"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "El archivo está protegido con contraseña. Extráelo en el ordenador e importa la carpeta o un .zip."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre del perfil"
           }
         }
       }
     },
-    "O avanço rápido é a velocidade dos botões de acelerar das skins. No menu da engrenagem você escolhe a velocidade na hora.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fast forward is the speed of the skins' speed-up buttons. In the gear menu you pick the speed on the spot."
+    "normal" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "normal"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "El avance rápido es la velocidad de los botones de acelerar de las skins. En el menú del engranaje eliges la velocidad al momento."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "normal"
           }
         }
       }
     },
-    "O botão não faz nada": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The button does nothing"
+    "Nos jogos novos abre o menu; nos antigos, segurar corre (Shift, Input::A)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens the menu in newer games; in older ones, hold to run (Shift, Input::A)"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "El botón no hace nada"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En los juegos nuevos abre el menú; en los antiguos, mantener para correr (Shift, Input::A)"
           }
         }
       }
     },
-    "O jogo encontrou um erro": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The game ran into an error"
+    "Novo perfil" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Profile"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "El juego encontró un error"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuevo perfil"
           }
         }
       }
     },
-    "O jogo não respondeu. Tente de novo andando pelo mapa": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The game didn't answer. Try again while walking around the map"
+    "O arquivo está protegido por senha. Extraia no computador e importe a pasta ou um .zip." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The archive is password protected. Extract it on a computer and import the folder or a .zip."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "El juego no respondió. Inténtalo de nuevo caminando por el mapa"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El archivo está protegido con contraseña. Extráelo en el ordenador e importa la carpeta o un .zip."
           }
         }
       }
     },
-    "O jogo vai usar o próprio teclado na próxima vez que abrir": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The game will use its own keyboard the next time it opens"
+    "O avanço rápido é a velocidade dos botões de acelerar das skins. No menu da engrenagem você escolhe a velocidade na hora." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fast forward is the speed of the skins' speed-up buttons. In the gear menu you pick the speed on the spot."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "El juego usará su propio teclado la próxima vez que se abra"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El avance rápido es la velocidad de los botones de acelerar de las skins. En el menú del engranaje eliges la velocidad al momento."
           }
         }
       }
     },
-    "O progresso que não foi salvo no jogo será perdido.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Progress not saved in the game will be lost."
+    "O botão não faz nada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The button does nothing"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Se perderá el progreso que no se haya guardado en el juego."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El botón no hace nada"
           }
         }
       }
     },
-    "OK": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OK"
+    "O Ember abre um jogo por vez. Deslize de baixo para cima, feche o Ember no seletor de apps e abra de novo. Seus saves estão guardados." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember opens one game at a time. Swipe up from the bottom, close Ember in the app switcher and open it again. Your saves are safe."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OK"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember abre un juego a la vez. Desliza desde abajo, cierra Ember en el selector de apps y ábrelo de nuevo. Tus partidas están a salvo."
           }
         }
       }
     },
-    "Ontem": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yesterday"
+    "O Ember lê skins do Delta e do Manic EMU (.deltaskin, .manicskin). Procure por “GBA deltaskin”: há muitas, de graça e pagas, feitas por artistas independentes. Toque numa skin para usar, ou segure para apagar uma importada. Skins sem paisagem usam a Ember Laranja quando o iPhone deita." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember reads Delta and Manic EMU skins (.deltaskin, .manicskin). Search for “GBA deltaskin”: there are lots, free and paid, made by independent artists. Tap a skin to use it, or hold one you imported to delete it. Skins without landscape use Ember Orange when the iPhone turns sideways."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ayer"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember lee skins de Delta y de Manic EMU (.deltaskin, .manicskin). Busca “GBA deltaskin”: hay muchas, gratis y de pago, hechas por artistas independientes. Toca una skin para usarla, o mantén pulsada una importada para eliminarla. Las skins sin horizontal usan Ember Naranja cuando el iPhone se pone de lado."
           }
         }
       }
     },
-    "Opções": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Options"
+    "O Ember volta a usar o teclado do iPhone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember goes back to the iPhone keyboard"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Opciones"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember vuelve a usar el teclado del iPhone"
           }
         }
       }
     },
-    "Os arquivos do jogo saem do iPhone. Os saves ficam guardados no Ember: importe o jogo de novo e eles voltam.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The game's files leave the iPhone. Saves stay in Ember: import the game again and they come back."
+    "O jogo encontrou um erro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The game ran into an error"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Los archivos del juego salen del iPhone. Las partidas quedan guardadas en Ember: importa el juego de nuevo y vuelven."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El juego encontró un error"
           }
         }
       }
     },
-    "Os jogos e os saves não mudam.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Games and saves don't change."
+    "O jogo não respondeu. Tente de novo andando pelo mapa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The game didn't answer. Try again while walking around the map"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Los juegos y las partidas no cambian."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El juego no respondió. Inténtalo de nuevo caminando por el mapa"
           }
         }
       }
     },
-    "Os perfis prontos não mudam. Duplique para criar o seu a partir deste.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Built-in profiles don't change. Duplicate this one to make your own."
+    "O jogo vai usar o próprio teclado na próxima vez que abrir" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The game will use its own keyboard the next time it opens"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Los perfiles predefinidos no cambian. Duplica este para crear el tuyo."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El juego usará su propio teclado la próxima vez que se abra"
           }
         }
       }
     },
-    "Padrão": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Standard"
+    "O progresso que não foi salvo no jogo será perdido." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Progress not saved in the game will be lost."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Estándar"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se perderá el progreso que no se haya guardado en el juego."
           }
         }
       }
     },
-    "Padrão serve para Pokémon Essentials v19 ou mais novo e jogos em Ruby 3. Clássico serve para jogos antigos: Start abre o menu e segurar Select faz correr. Cada jogo usa um deles automaticamente, e você pode trocar no painel do jogo.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Standard fits Pokémon Essentials v19 or newer and Ruby 3 games. Classic fits older games: Start opens the menu and holding Select runs. Each game uses one of them automatically, and you can change it in the game's panel."
+    "OK" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Estándar sirve para Pokémon Essentials v19 o más nuevo y juegos en Ruby 3. Clásico sirve para juegos antiguos: Start abre el menú y mantener Select hace correr. Cada juego usa uno automáticamente, y puedes cambiarlo en el panel del juego."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
           }
         }
       }
     },
-    "Para ouvir sua música enquanto joga, desligue o som do jogo ou deixe tocar junto. Assim o Spotify, o Apple Music ou um podcast continuam tocando. Nesse modo, a chave de silêncio do iPhone também silencia o jogo.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "To listen to your music while playing, turn the game sound off or let it play alongside. Spotify, Apple Music or a podcast then keep playing. In that mode, the iPhone's silent switch also silences the game."
+    "Ontem" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yesterday"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Para escuchar tu música mientras juegas, apaga el sonido del juego o déjalo sonar junto. Así Spotify, Apple Music o un pódcast siguen sonando. En ese modo, el interruptor de silencio del iPhone también silencia el juego."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayer"
           }
         }
       }
     },
-    "Pausa: velocidade, captura, sair": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pause: speed, screenshot, quit"
+    "Opções" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Options"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pausa: velocidad, captura, salir"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opciones"
           }
         }
       }
     },
-    "Pausa: velocidade, captura, teclado, sair": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pause: speed, screenshot, keyboard, quit"
+    "Os arquivos do jogo saem do iPhone. Os saves ficam guardados no Ember: importe o jogo de novo e eles voltam." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The game's files leave the iPhone. Saves stay in Ember: import the game again and they come back."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pausa: velocidad, captura, teclado, salir"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los archivos del juego salen del iPhone. Las partidas quedan guardadas en Ember: importa el juego de nuevo y vuelven."
           }
         }
       }
     },
-    "Pausado": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Paused"
+    "Os jogos e os saves não mudam." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Games and saves don't change."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "En pausa"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los juegos y las partidas no cambian."
           }
         }
       }
     },
-    "Pausar ao sair do app": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pause when leaving the app"
+    "Os perfis prontos não mudam. Duplique para criar o seu a partir deste." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Built-in profiles don't change. Duplicate this one to make your own."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pausar al salir de la app"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los perfiles predefinidos no cambian. Duplica este para crear el tuyo."
           }
         }
       }
     },
-    "Pelo Mac": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "From a Mac"
+    "Padrão" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Desde un Mac"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estándar"
           }
         }
       }
     },
-    "Perfil": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Profile"
+    "Padrão serve para Pokémon Essentials v19 ou mais novo e jogos em Ruby 3. Clássico serve para jogos antigos: Start abre o menu e segurar Select faz correr. Cada jogo usa um deles automaticamente, e você pode trocar no painel do jogo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard fits Pokémon Essentials v19 or newer and Ruby 3 games. Classic fits older games: Start opens the menu and holding Select runs. Each game uses one of them automatically, and you can change it in the game's panel."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Perfil"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estándar sirve para Pokémon Essentials v19 o más nuevo y juegos en Ruby 3. Clásico sirve para juegos antiguos: Start abre el menú y mantener Select hace correr. Cada juego usa uno automáticamente, y puedes cambiarlo en el panel del juego."
           }
         }
       }
     },
-    "Perfis de controle": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Control Profiles"
+    "Para ouvir sua música enquanto joga, desligue o som do jogo ou deixe tocar junto. Assim o Spotify, o Apple Music ou um podcast continuam tocando. Nesse modo, a chave de silêncio do iPhone também silencia o jogo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To listen to your music while playing, turn the game sound off or let it play alongside. Spotify, Apple Music or a podcast then keep playing. In that mode, the iPhone's silent switch also silences the game."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Perfiles de control"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para escuchar tu música mientras juegas, apaga el sonido del juego o déjalo sonar junto. Así Spotify, Apple Music o un pódcast siguen sonando. En ese modo, el interruptor de silencio del iPhone también silencia el juego."
           }
         }
       }
     },
-    "Prontos": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Built-in"
+    "Pausa: velocidade, captura, sair" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pause: speed, screenshot, quit"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Predefinidos"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pausa: velocidad, captura, salir"
           }
         }
       }
     },
-    "R do jogo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Game's R"
+    "Pausa: velocidade, captura, teclado, sair" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pause: speed, screenshot, keyboard, quit"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "R del juego"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pausa: velocidad, captura, teclado, salir"
           }
         }
       }
     },
-    "Registros": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Logs"
+    "Pausado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paused"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Registros"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En pausa"
           }
         }
       }
     },
-    "Renomear": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rename"
+    "Pausar ao sair do app" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pause when leaving the app"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Renombrar"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pausar al salir de la app"
           }
         }
       }
     },
-    "Ruby": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ruby"
+    "Pelo Mac" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From a Mac"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ruby"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desde un Mac"
           }
         }
       }
     },
-    "Ruby %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ruby %@"
+    "Perfil" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profile"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ruby %@"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perfil"
           }
         }
       }
     },
-    "Sair": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quit"
+    "Perfis de controle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Control Profiles"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Salir"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perfiles de control"
           }
         }
       }
     },
-    "Sair de %@?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quit %@?"
+    "Prontos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Built-in"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "¿Salir de %@?"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Predefinidos"
           }
         }
       }
     },
-    "Sair do jogo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quit Game"
+    "quente" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "hot"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Salir del juego"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "caliente"
           }
         }
       }
     },
-    "Salvar": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Save"
+    "R do jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game's R"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Guardar"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "R del juego"
           }
         }
       }
     },
-    "Salvar estado": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Save State"
+    "Registros" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logs"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Guardar estado"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registros"
           }
         }
       }
     },
-    "Salvo em Fotos": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Saved to Photos"
+    "Renomear" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rename"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Guardado en Fotos"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Renombrar"
           }
         }
       }
     },
-    "Saves": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Saves"
+    "RTP" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RTP"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Partidas guardadas"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RTP"
           }
         }
       }
     },
-    "Se o jogo não abre, tente outra versão do Ruby: segure o jogo na biblioteca e toque em Ruby.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "If the game won't open, try another Ruby version: hold the game in the library and tap Ruby."
+    "RTP do %@ instalado. Os jogos dessa versão já usam os gráficos e sons dele." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ RTP installed. Games of that version now use its graphics and sounds."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Si el juego no abre, prueba otra versión de Ruby: mantén pulsado el juego en la biblioteca y toca Ruby."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RTP de %@ instalado. Los juegos de esa versión ya usan sus gráficos y sonidos."
           }
         }
       }
     },
-    "Select": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select"
+    "RTP instalado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RTP installed"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RTP instalado"
           }
         }
       }
     },
-    "Sem cabo de rede nem app extra: o Finder copia direto para o Ember.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No network cable or extra app: the Finder copies straight into Ember."
+    "Ruby" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruby"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sin cable de red ni app extra: el Finder copia directo a Ember."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruby"
           }
         }
       }
     },
-    "Sem permissão para salvar em Fotos": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No permission to save to Photos"
+    "Ruby %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruby %@"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sin permiso para guardar en Fotos"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruby %@"
           }
         }
       }
     },
-    "Sessão de %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Session of %@"
+    "Sair" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sesión del %@"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salir"
           }
         }
       }
     },
-    "Seus perfis": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Your Profiles"
+    "Sair de %@?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit %@?"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tus perfiles"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Salir de %@?"
           }
         }
       }
     },
-    "Skins": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Skins"
+    "Sair do jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit Game"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Skins"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salir del juego"
           }
         }
       }
     },
-    "Sobre": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "About"
+    "Salvar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Acerca de"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardar"
           }
         }
       }
     },
-    "Som": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sound"
+    "Salvar estado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save State"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sonido"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardar estado"
           }
         }
       }
     },
-    "Som do jogo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Game sound"
+    "Salvo em Fotos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved to Photos"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sonido del juego"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardado en Fotos"
           }
         }
       }
     },
-    "Start": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Start"
+    "Saves" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saves"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Start"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partidas guardadas"
           }
         }
       }
     },
-    "Sua estante está vazia": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Your shelf is empty"
+    "Se o jogo não abre, tente outra versão do Ruby: segure o jogo na biblioteca e toque em Ruby." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If the game won't open, try another Ruby version: hold the game in the library and tap Ruby."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tu estantería está vacía"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si el juego no abre, prueba otra versión de Ruby: mantén pulsado el juego en la biblioteca y toca Ruby."
           }
         }
       }
     },
-    "Só erros": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Errors only"
+    "Select" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Solo errores"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select"
           }
         }
       }
     },
-    "Só no controle": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Controllers only"
+    "Sem cabo de rede nem app extra: o Finder copia direto para o Ember." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No network cable or extra app: the Finder copies straight into Ember."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Solo en el mando"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin cable de red ni app extra: el Finder copia directo a Ember."
           }
         }
       }
     },
-    "Tecla A do PC (Input::X)": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "PC A key (Input::X)"
+    "Sem permissão para salvar em Fotos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No permission to save to Photos"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tecla A del PC (Input::X)"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin permiso para guardar en Fotos"
           }
         }
       }
     },
-    "Tecla Q do PC (Input::L)": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "PC Q key (Input::L)"
+    "Sessão de %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Session of %@"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tecla Q del PC (Input::L)"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sesión del %@"
           }
         }
       }
     },
-    "Tecla S do PC (Input::Y)": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "PC S key (Input::Y)"
+    "Seus perfis" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Profiles"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tecla S del PC (Input::Y)"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tus perfiles"
           }
         }
       }
     },
-    "Tecla W do PC (Input::R)": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "PC W key (Input::R)"
+    "Skins" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skins"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tecla W del PC (Input::R)"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skins"
           }
         }
       }
     },
-    "Teclado": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Keyboard"
+    "Só erros" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Errors only"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Teclado"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo errores"
           }
         }
       }
     },
-    "Teclado do jogo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Game's keyboard"
+    "Só no controle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controllers only"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Teclado del juego"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo en el mando"
           }
         }
       }
     },
-    "Teclado do jogo: ligado": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Game's keyboard: on"
+    "Sobre" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Teclado del juego: activado"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acerca de"
           }
         }
       }
     },
-    "Tela": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Screen"
+    "Som" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sound"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pantalla"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonido"
           }
         }
       }
     },
-    "Tela cheia": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Full screen"
+    "Som do jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game sound"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pantalla completa"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonido del juego"
           }
         }
       }
     },
-    "Tela no modo retrato": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Portrait screen"
+    "Start" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pantalla en vertical"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start"
           }
         }
       }
     },
-    "Termine a batalha para salvar o estado": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Finish the battle to save the state"
+    "Sua estante está vazia" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your shelf is empty"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Termina la batalla para guardar el estado"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu estantería está vacía"
           }
         }
       }
     },
-    "Termine a conversa ou o evento para salvar o estado": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Finish the conversation or event to save the state"
+    "Tecla A do PC (Input::X)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PC A key (Input::X)"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Termina la conversación o el evento para guardar el estado"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tecla A del PC (Input::X)"
           }
         }
       }
     },
-    "Tocar junto com outros apps": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Play alongside other apps"
+    "Tecla Q do PC (Input::L)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PC Q key (Input::L)"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sonar junto con otras apps"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tecla Q del PC (Input::L)"
           }
         }
       }
     },
-    "Todos os jogos": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "All Games"
+    "Tecla S do PC (Input::Y)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PC S key (Input::Y)"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Todos los juegos"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tecla S del PC (Input::Y)"
           }
         }
       }
     },
-    "Traga jogos de RPG Maker XP, VX ou VX Ace: .zip, .rar, .7z ou a pasta do jogo. O Ember encontra o jogo mesmo dentro de subpastas e, se você quiser, apaga o arquivo compactado depois para liberar espaço.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bring in RPG Maker XP, VX or VX Ace games: a .zip, .rar, .7z or the game folder. Ember finds the game even inside subfolders and, if you like, deletes the archive afterwards to free up space."
+    "Tecla W do PC (Input::R)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PC W key (Input::R)"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Trae juegos de RPG Maker XP, VX o VX Ace: .zip, .rar, .7z o la carpeta del juego. Ember encuentra el juego incluso dentro de subcarpetas y, si quieres, elimina el archivo comprimido después para liberar espacio."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tecla W del PC (Input::R)"
           }
         }
       }
     },
-    "Transparência na paisagem": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Landscape transparency"
+    "Teclado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keyboard"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Transparencia en horizontal"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teclado"
           }
         }
       }
     },
-    "Use Salvar estado no menu, andando pelo mapa. O Ember também salva sozinho quando você sai do app.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use Save State in the menu while walking around the map. Ember also saves on its own when you leave the app."
+    "Teclado do jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game's keyboard"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Usa Guardar estado en el menú mientras caminas por el mapa. Ember también guarda solo cuando sales de la app."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teclado del juego"
           }
         }
       }
     },
-    "Vale na próxima vez que o jogo abrir": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Takes effect the next time the game opens"
+    "Teclado do jogo: ligado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game's keyboard: on"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Se aplica la próxima vez que se abra el juego"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teclado del juego: activado"
           }
         }
       }
     },
-    "Velocidade": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Speed"
+    "Tela" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Screen"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Velocidad"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pantalla"
           }
         }
       }
     },
-    "Versão": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Version"
+    "Tela cheia" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Full screen"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Versión"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pantalla completa"
           }
         }
       }
     },
-    "Vibração ao tocar": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Haptics on tap"
+    "Tela no modo retrato" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portrait screen"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vibración al tocar"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pantalla en vertical"
           }
         }
       }
     },
-    "Vidro": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Glass"
+    "Termine a batalha para salvar o estado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finish the battle to save the state"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cristal"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Termina la batalla para guardar el estado"
           }
         }
       }
     },
-    "View / Create": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "View / Create"
+    "Termine a conversa ou o evento para salvar o estado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finish the conversation or event to save the state"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "View / Create"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Termina la conversación o el evento para guardar el estado"
           }
         }
       }
     },
-    "Volta de onde você parou": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Picks up where you left off"
+    "Tocar junto com outros apps" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play alongside other apps"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sigue donde lo dejaste"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonar junto con otras apps"
           }
         }
       }
     },
-    "Voltar": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Back"
+    "Todos os jogos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Games"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Volver"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todos los juegos"
           }
         }
       }
     },
-    "Voltar ao jogo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Back to Game"
+    "Traga jogos de RPG Maker XP, VX ou VX Ace: .zip, .rar, .7z ou a pasta do jogo. O Ember encontra o jogo mesmo dentro de subpastas e, se você quiser, apaga o arquivo compactado depois para liberar espaço." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bring in RPG Maker XP, VX or VX Ace games: a .zip, .rar, .7z or the game folder. Ember finds the game even inside subfolders and, if you like, deletes the archive afterwards to free up space."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Volver al juego"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trae juegos de RPG Maker XP, VX o VX Ace: .zip, .rar, .7z o la carpeta del juego. Ember encuentra el juego incluso dentro de subcarpetas y, si quieres, elimina el archivo comprimido después para liberar espacio."
           }
         }
       }
     },
-    "Volte a andar pelo mapa para salvar o estado": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Get back to walking around the map to save the state"
+    "Transparência na paisagem" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Landscape transparency"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vuelve a caminar por el mapa para guardar el estado"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transparencia en horizontal"
           }
         }
       }
     },
-    "X / Quadrado": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "X / Square"
+    "Use Salvar estado no menu, andando pelo mapa. O Ember também salva sozinho quando você sai do app." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use Save State in the menu while walking around the map. Ember also saves on its own when you leave the app."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "X / Cuadrado"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usa Guardar estado en el menú mientras caminas por el mapa. Ember también guarda solo cuando sales de la app."
           }
         }
       }
     },
-    "Y / Triângulo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Y / Triangle"
+    "Vale na próxima vez que o jogo abrir" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Takes effect the next time the game opens"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Y / Triángulo"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se aplica la próxima vez que se abra el juego"
           }
         }
       }
     },
-    "ZIPFoundation": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ZIPFoundation"
+    "Velocidade" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speed"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ZIPFoundation"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Velocidad"
           }
         }
       }
     },
-    "ember": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ember"
+    "Versão" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ember"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versión"
           }
         }
       }
     },
-    "erro desconhecido": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "unknown error"
+    "Vibração ao tocar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haptics on tap"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "error desconocido"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vibración al tocar"
           }
         }
       }
     },
-    "libarchive (iOS)": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "libarchive (iOS)"
+    "Vidro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glass"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "libarchive (iOS)"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cristal"
           }
         }
       }
     },
-    "memória": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "memory"
+    "View / Create" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View / Create"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "memoria"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View / Create"
           }
         }
       }
     },
-    "menos de 1 min": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "under 1 min"
+    "Volta de onde você parou" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Picks up where you left off"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "menos de 1 min"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sigue donde lo dejaste"
           }
         }
       }
     },
-    "morno": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "warm"
+    "Voltar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "tibio"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volver"
           }
         }
       }
     },
-    "muito quente": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "very hot"
+    "Voltar ao jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back to Game"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "muy caliente"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volver al juego"
           }
         }
       }
     },
-    "normal": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "normal"
+    "Volte a andar pelo mapa para salvar o estado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get back to walking around the map to save the state"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "normal"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vuelve a caminar por el mapa para guardar el estado"
           }
         }
       }
     },
-    "quente": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "hot"
+    "X / Quadrado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "X / Square"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "caliente"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "X / Cuadrado"
           }
         }
       }
     },
-    "Áudio": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Audio"
+    "Y / Triângulo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Y / Triangle"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Audio"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Y / Triángulo"
           }
         }
       }
     },
-    "“%@” não parece um jogo de RPG Maker XP, VX ou VX Ace.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%@” doesn't look like an RPG Maker XP, VX or VX Ace game."
+    "ZIPFoundation" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ZIPFoundation"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%@” no parece un juego de RPG Maker XP, VX o VX Ace."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ZIPFoundation"
           }
         }
       }
     }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }

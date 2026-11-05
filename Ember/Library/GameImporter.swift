@@ -13,7 +13,7 @@ enum GameImporter {
             case .notAGame(let name):
                 String(localized: "“\(name)” não parece um jogo de RPG Maker XP, VX ou VX Ace.")
             case .unsupported(let name):
-                String(localized: "Ainda não dá para importar “\(name)”. Use .zip, .rar, .7z ou uma pasta.")
+                String(localized: "Ainda não dá para importar “\(name)”. Use .zip, .rar, .7z, .exe autoextraível ou uma pasta.")
             }
         }
     }
@@ -26,7 +26,13 @@ enum GameImporter {
     /// Archive types the importer unpacks.
     static let archiveExtensions: Set<String> = ArchiveExtractor.extensions.union(["zip"])
 
-    /// Imports one item. Returns the new game's id.
+    enum Imported {
+        case game(String)
+        case rtp(RTPStore.Kind)
+    }
+
+    /// Imports one item: a game, or an RTP (Graphics and Audio with no
+    /// game), which goes to the RTP store.
     ///
     /// Work happens in a scratch folder, and the game moves into
     /// Documents/Games only once it is complete, so a failed import
@@ -35,7 +41,7 @@ enum GameImporter {
     ///
     /// `discardArchive` sends an imported .zip/.rar/.7z to the trash
     /// (Recently Deleted in the Files app) to free the space it takes.
-    static func importItem(at url: URL, discardArchive: Bool = false) throws -> String {
+    static func importItem(at url: URL, discardArchive: Bool = false) throws -> Imported {
         let scoped = url.startAccessingSecurityScopedResource()
         defer { if scoped { url.stopAccessingSecurityScopedResource() } }
 
@@ -68,7 +74,17 @@ enum GameImporter {
 
         removeMacMetadata(in: unpacked)
 
-        guard let root = GameFolder.findRoot(in: unpacked) else {
+        // Some downloads are a .zip holding an installer .exe.
+        let inner = GameFolder.findRoot(in: unpacked) == nil && RTPStore.findRoot(in: unpacked) == nil
+            ? try unpackInstallers(in: unpacked, scratch: scratch) : nil
+        let searched = inner ?? unpacked
+
+        guard let root = GameFolder.findRoot(in: searched) else {
+            if let (rtp, kind) = RTPStore.findRoot(in: searched) {
+                try RTPStore.install(rtp, as: kind)
+                if discardArchive, !isFolder { trash(url) }
+                return .rtp(kind)
+            }
             throw ImportError.notAGame(name)
         }
 
@@ -81,7 +97,41 @@ enum GameImporter {
         if discardArchive, !isFolder {
             trash(url)
         }
-        return id
+        return .game(id)
+    }
+
+    /// Extracts the self-extracting .exe files found near the top of an
+    /// unpacked download. Returns the folder that holds a game, or nil.
+    /// A plain program (Game.exe of a game, a launcher) is skipped.
+    private static func unpackInstallers(in folder: URL, scratch: URL) throws -> URL? {
+        let fm = FileManager.default
+        var installers: [URL] = []
+        var queue: [(URL, Int)] = [(folder, 0)]
+        while let (dir, depth) = queue.popLast() {
+            for name in (try? fm.contentsOfDirectory(atPath: dir.path)) ?? [] where !name.hasPrefix(".") {
+                let url = dir.appendingPathComponent(name)
+                if (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) == true {
+                    if depth < 2 { queue.append((url, depth + 1)) }
+                } else if url.pathExtension.lowercased() == "exe" {
+                    installers.append(url)
+                }
+            }
+        }
+        var lastError: Error?
+        for (index, exe) in installers.enumerated() {
+            let target = scratch.appendingPathComponent("installer-\(index)", isDirectory: true)
+            do {
+                try ArchiveExtractor.extract(exe, to: target)
+            } catch {
+                lastError = error
+                continue
+            }
+            removeMacMetadata(in: target)
+            if GameFolder.findRoot(in: target) != nil || RTPStore.findRoot(in: target) != nil { return target }
+        }
+        // Say why, when the only lead was an unusual installer.
+        if let lastError, case ArchiveExtractor.ExtractError.virtualBox = lastError { throw lastError }
+        return nil
     }
 
     /// Moves an imported archive to the trash, so it can still be

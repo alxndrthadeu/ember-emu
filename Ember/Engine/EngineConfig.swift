@@ -20,8 +20,18 @@ enum EngineConfig {
         let gameConfig = readGameConfig(in: game.folder)
         let gamePreloads = gameConfig["preloadScript"] as? [String] ?? []
         let gamePostloads = gameConfig["postloadScript"] as? [String] ?? []
-        let overlay: [String: Any] = ["preloadScript": gamePreloads + emberPreloads,
+        var overlay: [String: Any] = ["preloadScript": gamePreloads + emberPreloads,
                                       "postloadScript": gamePostloads + emberPostloads]
+        // MIDI instruments, unless the game brings its own soundfont.
+        if (gameConfig["midiSoundFont"] as? String ?? "").isEmpty,
+           let soundFont = Bundle.main.url(forResource: "GeneralUser-GS", withExtension: "sf2") {
+            overlay["midiSoundFont"] = soundFont.path
+        }
+        // The imported RTP of the game's version, after any the game
+        // lists itself: the game's own files always win.
+        if let rtp = RTPStore.path(forRGSS: GameFolder.rgssVersion(in: game.folder)) {
+            overlay["RTP"] = (gameConfig["RTP"] as? [String] ?? []) + [rtp]
+        }
         guard let data = try? JSONSerialization.data(withJSONObject: overlay),
               let json = String(data: data, encoding: .utf8)
         else { return }

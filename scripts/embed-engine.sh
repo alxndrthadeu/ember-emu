@@ -38,5 +38,23 @@ rsync -a --delete "$TREE/ruby-stdlib/" "$APP/Ruby/"
 # The engine's license notices, for Ajustes > Licenças.
 rsync -a "$TREE/licenses.json" "$APP/EngineLicenses.json"
 
+# MIDI: the soundfont FluidSynth plays (scripts/build-fluidsynth.sh
+# downloads it). Without it the game runs with MIDI music silent.
+SOUNDFONT="$ENGINE/deps/downloads/GeneralUser-GS.sf2"
+if [ -f "$SOUNDFONT" ]; then
+    rsync -a "$SOUNDFONT" "$APP/GeneralUser-GS.sf2"
+else
+    echo "warning: no soundfont; MIDI music will be silent. Run scripts/build-fluidsynth.sh" >&2
+fi
+
 # Builds from before the import flow bundled games/ here.
 rm -rf "$APP/Games"
+
+# The app ships no game and no RTP: stop the build if any game data
+# (test corpus, RTP) ever ends up in the bundle.
+leak=$(find "$APP" \( -iname '*.rxdata' -o -iname '*.rvdata' -o -iname '*.rvdata2' \
+    -o -iname '*.rgssad' -o -iname '*.rgss2a' -o -iname '*.rgss3a' -o -iname 'Game.ini' \) -print -quit)
+if [ -n "$leak" ]; then
+    echo "error: game data inside the app bundle: $leak" >&2
+    exit 1
+fi

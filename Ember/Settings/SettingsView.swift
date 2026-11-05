@@ -103,6 +103,8 @@ struct SettingsView: View {
                     Text("Jogos ocupam bastante espaço. Depois de importar um .zip, .rar ou .7z, o Ember manda o arquivo original para Apagados Recentemente, no app Arquivos. Dá para recuperar por 30 dias.")
                 }
 
+                RTPSection()
+
                 aboutSection
             }
             .scrollContentBackground(.hidden)
@@ -261,6 +263,12 @@ private struct LicensesView: View {
             Entry(name: String(localized: "libarchive (iOS)"), license: "BSD-2-Clause",
                   text: Bundle.main.url(forResource: "libarchive-COPYING", withExtension: "txt")
                       .flatMap { try? String(contentsOf: $0, encoding: .utf8) }),
+            Entry(name: String(localized: "FluidSynth"), license: "LGPL-2.1",
+                  text: Bundle.main.url(forResource: "fluidsynth-LICENSE", withExtension: "txt")
+                      .flatMap { try? String(contentsOf: $0, encoding: .utf8) }),
+            Entry(name: String(localized: "GeneralUser GS (instrumentos MIDI)"), license: "GeneralUser GS License v2.0",
+                  text: Bundle.main.url(forResource: "GeneralUser-GS-LICENSE", withExtension: "txt")
+                      .flatMap { try? String(contentsOf: $0, encoding: .utf8) }),
         ]
         if let url = Bundle.main.url(forResource: "EngineLicenses", withExtension: "json"),
            let data = try? Data(contentsOf: url),
@@ -289,5 +297,52 @@ private struct LicensesView: View {
             }
         }
         .navigationTitle("Licenças")
+    }
+}
+
+/// Ajustes › RTP: which stock packages are installed.
+private struct RTPSection: View {
+    @State private var installed = Set(RTPStore.Kind.allCases.filter(RTPStore.isInstalled))
+    @State private var removing: RTPStore.Kind?
+
+    var body: some View {
+        Section {
+            ForEach(RTPStore.Kind.allCases) { kind in
+                HStack {
+                    Text(kind.name)
+                        .foregroundStyle(Theme.primaryText)
+                    Spacer()
+                    if installed.contains(kind) {
+                        Label("Instalado", systemImage: "checkmark.circle.fill")
+                            .labelStyle(.titleAndIcon)
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.active)
+                    } else {
+                        Text("Não instalado")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.secondaryText)
+                    }
+                }
+                .swipeActions {
+                    if installed.contains(kind) {
+                        Button("Apagar", role: .destructive) { removing = kind }
+                    }
+                }
+            }
+        } header: {
+            Text("RTP")
+        } footer: {
+            Text("Muitos jogos contam com os gráficos e sons padrão do RPG Maker (o RTP), que o Ember não traz. Importe a pasta do RTP, ou um .zip dela, pela aba Importar: o Ember reconhece a versão e todos os jogos dela passam a usar. No Windows, ela fica em Arquivos Comuns › Enterbrain › RGSS.")
+        }
+        .onAppear { installed = Set(RTPStore.Kind.allCases.filter(RTPStore.isInstalled)) }
+        .confirmationDialog("Apagar o RTP?", isPresented: Binding(get: { removing != nil }, set: { if !$0 { removing = nil } }),
+                            titleVisibility: .visible) {
+            Button("Apagar", role: .destructive) {
+                if let removing { RTPStore.delete(removing) }
+                installed = Set(RTPStore.Kind.allCases.filter(RTPStore.isInstalled))
+            }
+        } message: {
+            Text("Jogos que dependem dele vão parar de achar alguns gráficos e sons.")
+        }
     }
 }

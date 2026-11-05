@@ -123,7 +123,9 @@ extension UTType {
     static let manicSkin = UTType(importedAs: "com.alexandrethadeu.ember.manicskin")
 
     /// What the game importer takes.
-    static let importable: [UTType] = [.zip, .rar, .sevenZip, .folder]
+    /// Windows .exe: self-extracting archives (installers that carry the game).
+    static let windowsProgram = UTType(filenameExtension: "exe") ?? .data
+    static let importable: [UTType] = [.zip, .rar, .sevenZip, .windowsProgram, .folder]
     /// What the skin importer takes.
     static let skins: [UTType] = [.deltaSkin, .manicSkin, .zip, .folder]
 }

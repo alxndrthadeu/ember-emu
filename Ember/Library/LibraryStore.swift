@@ -12,6 +12,8 @@ final class LibraryStore: ObservableObject {
     @Published var lastError: String?
     /// Set when a skin arrived through an import, for a confirmation.
     @Published var importedSkinName: String?
+    /// A confirmation to show after an import that is not a game (an RTP).
+    @Published var importNotice: String?
 
     /// The game to offer under "Continuar": the last one played.
     var recent: GameEntry? {
@@ -74,8 +76,13 @@ final class LibraryStore: ObservableObject {
                 }
                 await MainActor.run {
                     self.importing.removeAll { $0 == name }
-                    if case .failure(let error) = result {
+                    switch result {
+                    case .failure(let error):
                         self.lastError = error.localizedDescription
+                    case .success(.rtp(let kind)):
+                        self.importNotice = String(localized: "RTP do \(kind.name) instalado. Os jogos dessa versão já usam os gráficos e sons dele.")
+                    case .success(.game):
+                        break
                     }
                     self.reload()
                 }
@@ -98,7 +105,7 @@ final class LibraryStore: ObservableObject {
                 let isFolder = (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) == true
                 let ext = url.pathExtension.lowercased()
                 if GameImporter.archiveExtensions.contains(ext) || SkinStore.skinExtensions.contains(ext)
-                    || (isFolder && GameFolder.findRoot(in: url) != nil) {
+                    || (isFolder && (GameFolder.findRoot(in: url) != nil || RTPStore.findRoot(in: url) != nil)) {
                     candidates.append(url)
                 }
             }

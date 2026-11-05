@@ -234,6 +234,19 @@ final class EngineSession: ObservableObject {
         }, nil)
     }
 
+    /// What the player can do about an error. A missing stock graphic
+    /// or sound means the game counts on the RTP.
+    private static func hint(for text: String) -> String {
+        if let file = RTPStore.missingFile(in: text), RTPStore.isRTPAsset(file) {
+            let rgss = EngineSession.shared.currentGame.flatMap { GameFolder.rgssVersion(in: $0.folder) }
+            if let kind = rgss.flatMap(RTPStore.Kind.init(rgss:)), !RTPStore.isInstalled(kind) {
+                return String(localized: "Falta o arquivo \(file), que vem no RTP do \(kind.name). Importe o RTP uma vez pela aba Importar, como pasta ou .zip, e abra o jogo de novo.")
+            }
+            return String(localized: "Falta o arquivo \(file). Confira se o jogo foi importado inteiro.")
+        }
+        return String(localized: "Se o jogo não abre, tente outra versão do Ruby: segure o jogo na biblioteca e toque em Ruby.")
+    }
+
     private func presentEngineMessage(_ text: String, isError: Bool) {
         guard let screen = gameScreen, !text.isEmpty else {
             isError ? mkxp_signalErrorDismissed() : mkxp_signalInfoDismissed()
@@ -248,7 +261,7 @@ final class EngineSession: ObservableObject {
         let alert: UIAlertController
         if isError {
             let title = currentGame.map { String(localized: "\($0.title) encontrou um erro") } ?? String(localized: "O jogo encontrou um erro")
-            let hint = "\n\n" + String(localized: "Se o jogo não abre, tente outra versão do Ruby: segure o jogo na biblioteca e toque em Ruby.")
+            let hint = "\n\n" + Self.hint(for: text)
             alert = UIAlertController(title: title, message: shown + hint, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: String(localized: "Copiar erro"), style: .default) { _ in
                 UIPasteboard.general.string = text
