@@ -106,6 +106,8 @@
 		<key>UIColorName</key>
 		<string>LaunchBackground</string>
 	</dict>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Para conectar controles de jogo Bluetooth.</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Para receber jogos enviados pelo navegador de um computador no mesmo Wi-Fi.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
