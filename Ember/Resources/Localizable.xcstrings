@@ -878,6 +878,38 @@
         }
       }
     },
+    "Apagar do iCloud" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete from iCloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar de iCloud"
+          }
+        }
+      }
+    },
+    "Apagar do iCloud?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete from iCloud?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Borrar de iCloud?"
+          }
+        }
+      }
+    },
     "Apagar jogo" : {
       "localizations" : {
         "en" : {
@@ -970,6 +1002,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aparece en los juegos antiguos, para escribir nombres"
+          }
+        }
+      }
+    },
+    "Arquivar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archive"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archivar"
+          }
+        }
+      }
+    },
+    "Arquivar %@ no iCloud?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archive %@ to iCloud?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Archivar %@ en iCloud?"
+          }
+        }
+      }
+    },
+    "Arquivar no iCloud" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archive to iCloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archivar en iCloud"
           }
         }
       }
@@ -1269,6 +1349,38 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Backup restaurado: %1$lld jogos e %2$lld arquivos."
+          }
+        }
+      }
+    },
+    "Baixa o jogo de volta do iCloud" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Downloads the game back from iCloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descarga el juego de vuelta desde iCloud"
+          }
+        }
+      }
+    },
+    "Baixando do iCloud…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Downloading from iCloud…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descargando de iCloud…"
           }
         }
       }
@@ -1676,6 +1788,22 @@
         }
       }
     },
+    "Compactando…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compressing…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comprimiendo…"
+          }
+        }
+      }
+    },
     "Conectando ao iPhone…" : {
       "localizations" : {
         "en" : {
@@ -1977,6 +2105,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Después, elige dónde guardarla. Los juegos grandes hacen una copia grande: revisa el espacio en la nube."
+          }
+        }
+      }
+    },
+    "Descompactando…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unpacking…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descomprimiendo…"
           }
         }
       }
@@ -3952,6 +4096,22 @@
         }
       }
     },
+    "Não deu para compactar o jogo. Confira se há espaço livre e tente de novo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not compress the game. Check that there is free space and try again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo comprimir el juego. Comprueba que haya espacio libre e inténtalo de nuevo."
+          }
+        }
+      }
+    },
     "Não deu para salvar" : {
       "localizations" : {
         "en" : {
@@ -4160,6 +4320,22 @@
         }
       }
     },
+    "No iCloud" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In iCloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En iCloud"
+          }
+        }
+      }
+    },
     "No PC, os saves ficam na pasta do jogo (Save1.rxdata, Save01.rvdata2) ou, nos fangames de Pokémon, em %%APPDATA%%\\%@ (Game.rxdata). O Ember usa os mesmos arquivos." : {
       "localizations" : {
         "en" : {
@@ -4285,6 +4461,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nuevo perfil"
+          }
+        }
+      }
+    },
+    "O arquivo de “%@” não está mais no iCloud Drive." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The file for “%@” is no longer in iCloud Drive."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El archivo de “%@” ya no está en iCloud Drive."
           }
         }
       }
@@ -4433,6 +4625,22 @@
         }
       }
     },
+    "O iCloud não está disponível. Entre na sua conta em Ajustes do iPhone e ligue o iCloud Drive." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud is not available. Sign in to your account in the iPhone’s Settings and turn on iCloud Drive."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud no está disponible. Inicia sesión en Ajustes del iPhone y activa iCloud Drive."
+          }
+        }
+      }
+    },
     "O iPhone virou o controle" : {
       "localizations" : {
         "en" : {
@@ -4493,6 +4701,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El juego no respondió. Inténtalo de nuevo caminando por el mapa"
+          }
+        }
+      }
+    },
+    "O jogo sai do iCloud de vez. Os saves que ficaram no iPhone continuam." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The game leaves iCloud for good. The saves kept on the iPhone stay."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El juego sale de iCloud para siempre. Las partidas que quedaron en el iPhone se mantienen."
+          }
+        }
+      }
+    },
+    "O jogo vai para o iCloud Drive (pasta Ember) e sai do iPhone, liberando %@. Saves, estados, capa e histórico ficam. Para jogar de novo, toque nele na estante." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The game moves to iCloud Drive (Ember folder) and leaves the iPhone, freeing %@. Saves, states, cover and history stay. To play again, tap it on the shelf."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El juego pasa a iCloud Drive (carpeta Ember) y sale del iPhone, liberando %@. Partidas, estados, portada e historial se quedan. Para volver a jugar, tócalo en la estantería."
           }
         }
       }
@@ -4944,6 +5184,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Suéltalo"
+          }
+        }
+      }
+    },
+    "Preparando…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preparing…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preparando…"
           }
         }
       }
@@ -5956,6 +6212,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Toca Duplicar pantalla y elige la TV."
+          }
+        }
+      }
+    },
+    "Toque para baixar de volta. Saves e capa ficaram no iPhone." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap to download it back. Saves and cover stayed on the iPhone."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toca para descargarlo de vuelta. Las partidas y la portada se quedaron en el iPhone."
           }
         }
       }

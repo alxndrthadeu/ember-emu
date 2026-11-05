@@ -10,13 +10,14 @@ struct LibraryView: View {
     @State private var showingControls = false
     /// A game tapped after another one ended: the app must reopen.
     @State private var reopenFor: GameEntry?
+    @State private var removingArchived: ArchivedGame?
 
     private let columns = [GridItem(.adaptive(minimum: 160), spacing: 16)]
 
     var body: some View {
         NavigationStack {
             Group {
-                if library.games.isEmpty && library.importing.isEmpty {
+                if library.games.isEmpty && library.archived.isEmpty && library.importing.isEmpty {
                     emptyState
                 } else {
                     grid
@@ -109,6 +110,43 @@ struct LibraryView: View {
             .padding(.horizontal, 20)
             .padding(.top, 8)
             .padding(.bottom, 24)
+
+            if !library.archived.isEmpty {
+                HStack(spacing: 8) {
+                    Image(systemName: "icloud")
+                    Text("No iCloud")
+                }
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(Theme.primaryText)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 20)
+                Text("Toque para baixar de volta. Saves e capa ficaram no iPhone.")
+                    .font(.footnote)
+                    .foregroundStyle(Theme.secondaryText)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 20)
+                LazyVGrid(columns: columns, spacing: 22) {
+                    ForEach(library.archived) { record in
+                        ArchivedCard(record: record, status: library.archiveStatus[record.id])
+                            .onTapGesture { library.unarchive(record) }
+                            .onLongPressGesture { removingArchived = record }
+                            .accessibilityAddTraits(.isButton)
+                            .accessibilityHint("Baixa o jogo de volta do iCloud")
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 8)
+                .padding(.bottom, 24)
+            }
+        }
+        .confirmationDialog("Apagar do iCloud?", isPresented: Binding(get: { removingArchived != nil },
+                                                                        set: { if !$0 { removingArchived = nil } }),
+                            titleVisibility: .visible) {
+            Button("Apagar do iCloud", role: .destructive) {
+                if let record = removingArchived { library.deleteArchived(record) }
+            }
+        } message: {
+            Text("O jogo sai do iCloud de vez. Os saves que ficaram no iPhone continuam.")
         }
     }
 
@@ -209,6 +247,8 @@ struct LibraryView: View {
     ///   EMBER_QUICK=continue|import|wifi  acts as an app icon quick action
     ///   EMBER_TV=1                starts "Jogar na TV" 8 s after the game opens
     ///   EMBER_MAKE_BACKUP=<id>    writes a backup with that whole game (logs the path)
+    ///   EMBER_ARCHIVE=<id> / EMBER_UNARCHIVE=<id>  archives or brings back a game
+    ///   EMBER_FAKE_CLOUD=1        a local folder stands in for iCloud
     private func developmentHooks() {
         #if DEBUG
         let environment = ProcessInfo.processInfo.environment
@@ -231,6 +271,12 @@ struct LibraryView: View {
             var options = EmberBackup.Options()
             options.games = [id]
             print("[ember-backup]", Result { try EmberBackup.make(options, library: library.games) })
+        }
+        if let id = environment["EMBER_ARCHIVE"], let game = library.games.first(where: { $0.id == id }) {
+            library.archive(game)
+        }
+        if let id = environment["EMBER_UNARCHIVE"], let record = library.archived.first(where: { $0.id == id }) {
+            library.unarchive(record)
         }
         if let quick = environment["EMBER_QUICK"] {
             let map: [String: QuickAction] = ["continue": .continueLast, "import": .importGame, "wifi": .wifi]
@@ -402,6 +448,53 @@ private struct GameCard: View {
             Text(game.title)
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(Theme.primaryText)
+                .lineLimit(2)
+        }
+        .contentShape(Rectangle())
+    }
+}
+
+/// An archived game on the shelf: its cover, dimmed, with a cloud.
+private struct ArchivedCard: View {
+    let record: ArchivedGame
+    let status: String?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            ZStack {
+                Color.clear.aspectRatio(4 / 3, contentMode: .fit)
+                    .overlay {
+                        ZStack {
+                            LinearGradient(colors: [Theme.surface, Theme.surface2], startPoint: .top, endPoint: .bottom)
+                            if let url = GameCovers.url(forGameID: record.id,
+                                                        folder: GameImporter.gamesFolder.appendingPathComponent(record.id)),
+                               let image = UIImage(contentsOfFile: url.path) {
+                                Image(uiImage: image).resizable().interpolation(.none).scaledToFill()
+                            } else {
+                                Text(String(record.title.prefix(1)))
+                                    .font(.system(size: 44, weight: .bold, design: .rounded))
+                                    .foregroundStyle(Theme.secondaryText)
+                            }
+                        }
+                        .opacity(status == nil ? 0.45 : 0.25)
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: Theme.cardRadius, style: .continuous))
+                VStack(spacing: 6) {
+                    if let status {
+                        ProgressView()
+                        Text(status).font(.caption.weight(.semibold))
+                    } else {
+                        Image(systemName: "icloud.and.arrow.down")
+                            .font(.system(size: 26, weight: .semibold))
+                        Text(ByteCountFormatter.string(fromByteCount: record.size, countStyle: .file))
+                            .font(.caption.weight(.semibold))
+                    }
+                }
+                .foregroundStyle(Theme.primaryText)
+            }
+            Text(record.title)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(Theme.secondaryText)
                 .lineLimit(2)
         }
         .contentShape(Rectangle())

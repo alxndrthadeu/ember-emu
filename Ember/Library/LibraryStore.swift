@@ -7,6 +7,10 @@ final class LibraryStore: ObservableObject {
     static let shared = LibraryStore()
 
     @Published private(set) var games: [GameEntry] = []
+    /// Games archived in iCloud (Arquivar no iCloud).
+    @Published private(set) var archived: [ArchivedGame] = []
+    /// What an archive or restore is doing right now, by game id.
+    @Published private(set) var archiveStatus: [String: String] = [:]
     /// Names of the items being imported right now.
     @Published private(set) var importing: [String] = []
     @Published var lastError: String?
@@ -50,7 +54,12 @@ final class LibraryStore: ObservableObject {
         games = folders
             .compactMap(GameEntry.init(folder:))
             .sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
+        archived = GameArchive.records().filter { record in !games.contains { $0.id == record.id } }
         QuickAction.refresh(self)
+        // Packs iCloud already has no longer need their local copy.
+        if !archived.isEmpty {
+            Task.detached(priority: .utility) { GameArchive.evictUploaded() }
+        }
     }
 
     /// Imports items one after another, off the main thread: a big
@@ -174,6 +183,54 @@ final class LibraryStore: ObservableObject {
     func installDemo() {
         guard let folder = Self.demoFolder, !hasDemo else { return }
         importItems([folder])
+    }
+
+    // MARK: - iCloud archive
+
+    func archive(_ game: GameEntry) {
+        guard archiveStatus[game.id] == nil else { return }
+        archiveStatus[game.id] = String(localized: "Compactando…")
+        Task.detached(priority: .userInitiated) {
+            let result = Result { try GameArchive.archive(game) }
+            await MainActor.run {
+                self.archiveStatus[game.id] = nil
+                if case .failure(let error) = result { self.lastError = error.localizedDescription }
+                self.reload()
+            }
+            // Free the local copy once iCloud has it.
+            for _ in 0..<60 {
+                try? await Task.sleep(for: .seconds(10))
+                GameArchive.evictUploaded()
+            }
+        }
+    }
+
+    func unarchive(_ record: ArchivedGame) {
+        guard archiveStatus[record.id] == nil else { return }
+        archiveStatus[record.id] = String(localized: "Preparando…")
+        Task.detached(priority: .userInitiated) {
+            let result: Result<Void, Error>
+            do {
+                try await GameArchive.restore(record) { status in
+                    Task { @MainActor in self.archiveStatus[record.id] = status }
+                }
+                result = .success(())
+            } catch {
+                result = .failure(error)
+            }
+            await MainActor.run {
+                self.archiveStatus[record.id] = nil
+                if case .failure(let error) = result { self.lastError = error.localizedDescription }
+                self.reload()
+            }
+        }
+    }
+
+    func deleteArchived(_ record: ArchivedGame) {
+        Task.detached(priority: .utility) {
+            GameArchive.delete(record)
+            await MainActor.run { self.reload() }
+        }
     }
 
     func rename(_ game: GameEntry, to title: String) {

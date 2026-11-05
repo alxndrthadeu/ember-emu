@@ -163,6 +163,18 @@
 	<string>Para receber jogos enviados pelo navegador de um computador no mesmo Wi-Fi.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Para salvar capturas de tela dos jogos em Fotos.</string>
+	<key>NSUbiquitousContainers</key>
+	<dict>
+		<key>iCloud.com.alexandrethadeu.ember</key>
+		<dict>
+			<key>NSUbiquitousContainerIsDocumentScopePublic</key>
+			<true/>
+			<key>NSUbiquitousContainerName</key>
+			<string>Ember</string>
+			<key>NSUbiquitousContainerSupportedFolderLevels</key>
+			<string>Any</string>
+		</dict>
+	</dict>
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>

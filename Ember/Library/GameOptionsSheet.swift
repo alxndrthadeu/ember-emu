@@ -17,6 +17,7 @@ struct GameOptionsSheet: View {
     @State private var exportFile: ExportFile?
     @State private var importingSaves = false
     @State private var confirmingDelete = false
+    @State private var confirmingArchive = false
     @State private var toast: String?
     @State private var working = false
     @State private var showingLogs = false
@@ -115,6 +116,9 @@ struct GameOptionsSheet: View {
                         OptionTile(icon: "doc.text.magnifyingglass", title: String(localized: "Registros")) {
                             showingLogs = true
                         }
+                        OptionTile(icon: "icloud.and.arrow.up", title: String(localized: "Arquivar no iCloud")) {
+                            confirmingArchive = true
+                        }
                         OptionTile(icon: "trash", title: String(localized: "Apagar"), destructive: true) {
                             confirmingDelete = true
                         }
@@ -156,6 +160,14 @@ struct GameOptionsSheet: View {
         }
         .sheet(item: $exportFile) { file in
             ShareSheet(url: file.url)
+        }
+        .confirmationDialog("Arquivar \(current.title) no iCloud?", isPresented: $confirmingArchive, titleVisibility: .visible) {
+            Button("Arquivar") {
+                LibraryStore.shared.archive(current)
+                dismiss()
+            }
+        } message: {
+            Text("O jogo vai para o iCloud Drive (pasta Ember) e sai do iPhone, liberando \(ByteCountFormatter.string(fromByteCount: EmberBackup.size(of: current.folder), countStyle: .file)). Saves, estados, capa e histórico ficam. Para jogar de novo, toque nele na estante.")
         }
         .confirmationDialog("Apagar \(current.title)?", isPresented: $confirmingDelete, titleVisibility: .visible) {
             Button("Apagar jogo", role: .destructive) {
