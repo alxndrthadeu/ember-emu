@@ -81,8 +81,10 @@ enum BuiltInSkins {
         guard layout.mappingSize.height > layout.mappingSize.width, layout.screen != nil else { return layout }
         let ratio = max(aspect ?? 4 / 3, 0.5)
         let width = layout.mappingSize.width
-        // Keep clear of L/R and the gear row (y 404).
-        let bottomLimit: CGFloat = fullWidth ? 392 : 370
+        // Keep clear of L/R and the gear row (y 404 on a phone), leaving
+        // room for the logo strip in Clássica.
+        let controlsTop = layout.items.map(\.frame.minY).min() ?? 404
+        let bottomLimit: CGFloat = controlsTop - (fullWidth ? 12 : 34)
         var screen: CGRect
         if fullWidth {
             // Tela cheia: nearly edge to edge, in a thin frame.
@@ -102,6 +104,67 @@ enum BuiltInSkins {
         return copy
     }
 
+    /// Height / width below which a portrait screen counts as wide (an
+    /// open iPhone Duo is about 1.46; phones are about 2.17).
+    static let wideBelow: CGFloat = 1.75
+
+    /// The portrait layout redrawn for a wide screen: the same point
+    /// width (414), a height in the screen's own proportion, and the
+    /// controls kept at the bottom, scaled evenly (shapes stay round)
+    /// so they take at most about half the height. `fitted` then gives
+    /// the game the space above them.
+    static func reshaped(_ layout: SkinLayout, viewAspect: CGFloat) -> SkinLayout {
+        let width = layout.mappingSize.width
+        let height = (width * viewAspect).rounded()
+        guard height < layout.mappingSize.height, !layout.items.isEmpty else { return layout }
+        let bandTop = layout.items.map(\.frame.minY).min()!
+        let bandBottom = layout.items.map(\.frame.maxY).max()!
+        let band = bandBottom - bandTop
+        let scale = min(1, height * 0.5 / (band + 24))
+        let newTop = height - 20 - band * scale
+        var copy = layout
+        copy.mappingSize = CGSize(width: width, height: height)
+        copy.items = layout.items.map { item in
+            var item = item
+            let f = item.frame
+            item.frame = CGRect(x: width / 2 + (f.minX - width / 2) * scale,
+                                y: newTop + (f.minY - bandTop) * scale,
+                                width: f.width * scale, height: f.height * scale)
+            return item
+        }
+        return copy
+    }
+
+    /// The landscape layout for a screen less wide than a phone's: the
+    /// same height (414), a width in the screen's proportion, the
+    /// right-hand controls following the right edge, and the game
+    /// centered in its own shape (the controls float over it, as in
+    /// any landscape layout).
+    static func reshapedLandscape(_ layout: SkinLayout, viewAspect: CGFloat, gameAspect: CGFloat?) -> SkinLayout {
+        let height = layout.mappingSize.height
+        let oldWidth = layout.mappingSize.width
+        let width = (height * viewAspect).rounded()
+        guard width < oldWidth else { return layout }
+        var copy = layout
+        copy.mappingSize = CGSize(width: width, height: height)
+        copy.items = layout.items.map { item in
+            var item = item
+            if item.frame.midX > oldWidth / 2 { item.frame.origin.x += width - oldWidth }
+            return item
+        }
+        if layout.screen != nil {
+            let ratio = max(gameAspect ?? 4 / 3, 0.5)
+            var h = height - 54
+            var w = h * ratio
+            if w > width - 16 {
+                w = width - 16
+                h = w / ratio
+            }
+            copy.screen = CGRect(x: (width - w) / 2, y: (height - h) / 2, width: w, height: h)
+        }
+        return copy
+    }
+
     /// The frame width around the screen in Tela cheia.
     static let thinBezel: CGFloat = 6
 
@@ -113,6 +176,13 @@ enum BuiltInSkins {
     }
 }
 
+/// Which part of a built-in skin to draw: the shell (body, frame,
+/// grille), which the game picture cuts through, and the controls,
+/// which stay visible over it.
+enum BuiltInLayer {
+    case all, shell, controls
+}
+
 /// Draws a built-in skin's artwork for one layout, scaled to the view.
 struct BuiltInSkinArt: View {
     let style: BuiltInStyle
@@ -121,6 +191,7 @@ struct BuiltInSkinArt: View {
     let pressed: Set<Int>
     /// The direction held on a d-pad item, by item index.
     let held: [Int: GameKey]
+    var layer: BuiltInLayer = .all
 
     var body: some View {
         GeometryReader { geo in
@@ -129,23 +200,27 @@ struct BuiltInSkinArt: View {
             let isPortrait = layout.mappingSize.height > layout.mappingSize.width
 
             ZStack(alignment: .topLeading) {
-                background(isPortrait: isPortrait)
+                if layer != .controls {
+                    background(isPortrait: isPortrait)
+                }
 
-                if let screen = layout.screen {
-                    // A screen close to the edges gets the thin frame.
-                    let thin = isPortrait && screen.minX <= BuiltInSkins.thinBezel + 1
+                if layer != .controls, let screen = layout.screen {
+                    // Tela cheia gets the thin frame, also when a wide screen
+                    // (an open iPhone Duo) keeps the picture off the edges.
+                    let thin = isPortrait && (screen.minX <= BuiltInSkins.thinBezel + 1
+                                              || SkinStore.shared.portraitFullWidth)
                     bezel(screen.applying(.init(scaleX: sx, y: sy)), isPortrait: isPortrait,
                           thin: thin ? BuiltInSkins.thinBezel * sx : nil)
                 }
 
-                ForEach(Array(layout.items.enumerated()), id: \.offset) { index, item in
+                ForEach(Array(layout.items.enumerated()).filter { _ in layer != .shell }, id: \.offset) { index, item in
                     let rect = item.frame.applying(.init(scaleX: sx, y: sy))
                     control(item, index: index, size: rect.size)
                         .frame(width: rect.width, height: rect.height)
                         .position(x: rect.midX, y: rect.midY)
                 }
 
-                if style == .ember && isPortrait {
+                if layer != .controls && style == .ember && isPortrait {
                     grille
                         .position(x: geo.size.width - 64 * sx, y: geo.size.height - 108 * sy)
                 }

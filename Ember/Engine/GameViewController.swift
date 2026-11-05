@@ -11,6 +11,21 @@ final class GameLayout: ObservableObject {
     @Published private(set) var pictureRect: CGRect = .zero
     /// Width / height of the game's own resolution (608x416 -> 1.46).
     @Published private(set) var aspect: CGFloat?
+    /// Height / width of the game screen itself (2.17 on most iPhones,
+    /// about 1.46 on an open iPhone Duo). Built-in skins reshape for
+    /// screens wider than a phone.
+    @Published private(set) var viewAspect: CGFloat?
+    /// The game shows on a TV (AirPlay or cable); the iPhone is only
+    /// the controller.
+    @Published var onTV = false
+
+    /// Called on every layout of the game screen; publishes only real
+    /// changes (folding, unfolding, rotating), so layout cannot loop.
+    func setViewSize(_ size: CGSize) {
+        guard size.width > 0, size.height > 0 else { return }
+        let value = (max(size.width, size.height) / min(size.width, size.height) * 100).rounded() / 100
+        if value != viewAspect { viewAspect = value }
+    }
 
     private init() {}
 
@@ -48,6 +63,7 @@ final class GameViewController: UIViewController {
     private let controls = UIHostingController(rootView: ControlsOverlay())
     private var aspectObservation: AnyCancellable?
     private var screenModeObservation: AnyCancellable?
+    private var externalObservation: AnyCancellable?
     private weak var gameView: UIView?
     private let textField = GameTextField()
 
@@ -93,6 +109,43 @@ final class GameViewController: UIViewController {
         screenModeObservation = SkinStore.shared.$portraitFullWidth.sink { [weak self] _ in
             DispatchQueue.main.async { self?.updateViewport() }
         }
+        externalObservation = ExternalDisplay.shared.$isConnected.sink { [weak self] _ in
+            DispatchQueue.main.async { self?.routeGameView() }
+        }
+    }
+
+    /// Puts the game's view on the TV when one is attached, and back on
+    /// the iPhone when it goes away.
+    private func routeGameView() {
+        guard let gameView else { return }
+        let display = ExternalDisplay.shared
+        if display.isConnected {
+            guard gameView.superview !== display.host.view else { return }
+            Self.setScale(display.scale, of: gameView)
+            GameLayout.shared.onTV = true
+            mkxp_clearHostViewportRegion()
+            display.host.host(gameView)
+            display.host.view.setNeedsLayout()
+        } else {
+            guard gameView.superview !== view else { return }
+            display.host.release()
+            Self.setScale(view.window?.screen.scale ?? UIScreen.main.scale, of: gameView)
+            gameView.removeFromSuperview()
+            gameView.frame = view.bounds
+            gameView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            view.insertSubview(gameView, at: 0)
+            GameLayout.shared.onTV = false
+            view.setNeedsLayout()
+            view.layoutIfNeeded()
+            EngineSession.shared.externalViewDidResize(view.bounds.size)
+        }
+    }
+
+    /// SDL's Metal view sizes its drawable from contentScaleFactor.
+    private static func setScale(_ scale: CGFloat, of view: UIView) {
+        view.contentScaleFactor = scale
+        view.layer.contentsScale = scale
+        for subview in view.subviews { setScale(scale, of: subview) }
     }
 
     /// Moves SDL's view out of SDL's window and under the controls.
@@ -107,6 +160,8 @@ final class GameViewController: UIViewController {
         window.isHidden = true
         self.view.window?.makeKeyAndVisible()
         updateViewport()
+        // A TV attached before the game started.
+        routeGameView()
         #if DEBUG
         // Development aid: EMBER_ORIENTATION=landscape turns the screen,
         // so landscape can be checked in the simulator.
@@ -131,6 +186,9 @@ final class GameViewController: UIViewController {
         guard size.width > 0, size.height > 0 else { return }
 
         let portrait = size.height >= size.width
+        GameLayout.shared.setViewSize(size)
+        // On a TV the engine fills the TV; the iPhone only shows controls.
+        guard !GameLayout.shared.onTV else { return }
 
         // The skin says where the game goes, in its own point space,
         // stretched to the screen like the artwork.

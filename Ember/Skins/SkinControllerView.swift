@@ -34,6 +34,15 @@ struct SkinControllerView: View {
                         HoleShape(hole: pictureRect)
                             .fill(style: FillStyle(eoFill: true))
                     }
+                // Built-in controls stay visible when they sit over the
+                // picture (landscape on a near-square screen like an open
+                // iPhone Duo). On phones they never overlap it.
+                if case .builtIn(let style) = skin.source {
+                    BuiltInSkinArt(style: style, layout: layout, pressed: touches.pressed,
+                                   held: touches.held, layer: .controls)
+                        .opacity(opacity)
+                        .allowsHitTesting(false)
+                }
                 SkinTouchLayer(layout: layout, state: touches, onMenu: onMenu, onKeyboard: onKeyboard)
 
                 // An imported skin has no keyboard button: put one next
@@ -56,7 +65,8 @@ struct SkinControllerView: View {
     private func artwork(size: CGSize) -> some View {
         switch skin.source {
         case .builtIn(let style):
-            BuiltInSkinArt(style: style, layout: layout, pressed: touches.pressed, held: touches.held)
+            BuiltInSkinArt(style: style, layout: layout, pressed: touches.pressed, held: touches.held,
+                           layer: .shell)
         case .imported:
             ZStack(alignment: .topLeading) {
                 if let url = layout.artwork, let image = SkinArtwork.image(url, size: size) {

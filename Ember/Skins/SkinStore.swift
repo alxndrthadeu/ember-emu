@@ -28,7 +28,14 @@ final class SkinStore: ObservableObject {
         let layout = own ?? BuiltInSkins.ember.layout(portrait: portrait)!
         let builtIn = own == nil || current.isBuiltIn
         guard builtIn else { return layout }
-        let adapted = BuiltInSkins.adapted(layout, keyboard: keyboard)
+        var adapted = BuiltInSkins.adapted(layout, keyboard: keyboard)
+        // Screens wider than a phone (an open iPhone Duo): drawn in their
+        // own proportions instead of a stretched phone layout.
+        if let viewAspect = GameLayout.shared.viewAspect, viewAspect < BuiltInSkins.wideBelow {
+            adapted = portrait
+                ? BuiltInSkins.reshaped(adapted, viewAspect: viewAspect)
+                : BuiltInSkins.reshapedLandscape(adapted, viewAspect: viewAspect, gameAspect: GameLayout.shared.aspect)
+        }
         return BuiltInSkins.fitted(adapted, aspect: GameLayout.shared.aspect,
                                    fullWidth: portraitFullWidth)
     }

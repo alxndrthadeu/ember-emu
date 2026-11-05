@@ -2035,6 +2035,22 @@
         }
       }
     },
+    "Escolha um jogo no iPhone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick a game on your iPhone"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige un juego en el iPhone"
+          }
+        }
+      }
+    },
     "Escolher arquivos" : {
       "localizations" : {
         "en" : {
@@ -2697,6 +2713,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jugado %@"
+          }
+        }
+      }
+    },
+    "Jogando na TV" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playing on the TV"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jugando en la TV"
           }
         }
       }
@@ -3841,6 +3873,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El envío se detuvo. Comprueba que el Wi-Fi de Ember siga activado e inténtalo de nuevo."
+          }
+        }
+      }
+    },
+    "O iPhone virou o controle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your iPhone is now the controller"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El iPhone ahora es el mando"
           }
         }
       }

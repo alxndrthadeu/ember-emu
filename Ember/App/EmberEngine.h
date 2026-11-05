@@ -14,4 +14,9 @@ int EmberRunEngine(void);
 void alListenerf(int param, float value);
 void alGetListenerf(int param, float *value);
 
+// Tells the engine its view now has this size in points (moved to or
+// from a TV): the same window event a rotation sends, through SDL's
+// public SDL_PushEvent.
+void EmberNotifyViewResized(int width, int height);
+
 #endif

@@ -185,6 +185,8 @@ final class EngineSession: ObservableObject {
         windowWatcher?.invalidate()
         windowWatcher = nil
         gameScreen = nil
+        ExternalDisplay.shared.host.release()
+        GameLayout.shared.onTV = false
         if let libraryRoot {
             launcherWindow?.rootViewController = libraryRoot
         }

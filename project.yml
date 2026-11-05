@@ -54,7 +54,7 @@ targets:
         ONLY_ACTIVE_ARCH: YES
         ENABLE_USER_SCRIPT_SANDBOXING: NO
         DEAD_CODE_STRIPPING: YES
-        HEADER_SEARCH_PATHS: $(EMBER_ENGINE)/src $(SRCROOT)/Ember/Vendor/libarchive
+        HEADER_SEARCH_PATHS: $(EMBER_ENGINE)/src $(SRCROOT)/Ember/Vendor/libarchive $(EMBER_DEPS)/include/SDL2
         LIBRARY_SEARCH_PATHS: $(EMBER_DEPS)/lib $(EMBER_ANGLE)/lib
         # Same link line as the fork's tools/build-test-host-ios.sh,
         # minus libSDL2main: Ember owns main() and starts the engine

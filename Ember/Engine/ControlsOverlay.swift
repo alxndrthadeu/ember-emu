@@ -27,14 +27,25 @@ struct ControlsOverlay: View {
             ZStack(alignment: .topLeading) {
                 if !hideButtons {
                     SkinControllerView(skin: skins.current, layout: skinLayout,
-                                       pictureRect: layout.pictureRect,
+                                       pictureRect: layout.onTV ? .zero : layout.pictureRect,
                                        opacity: opacity, showKeyboard: wantsKeyboard,
                                        onMenu: openMenu, onKeyboard: session.openKeyboard)
                 }
+                // The game is on the TV: say so where the picture was.
+                if layout.onTV, let screen = skinLayout.screen {
+                    let sx = size.width / skinLayout.mappingSize.width
+                    let sy = size.height / skinLayout.mappingSize.height
+                    let rect = screen.applying(.init(scaleX: sx, y: sy))
+                    PlayingOnTVLabel()
+                        .frame(width: rect.width, height: rect.height)
+                        .position(x: rect.midX, y: rect.midY)
+                }
                 // PC-style readout in the picture's corner (this stack fills
                 // the screen from its top-left, like pictureRect).
-                PerformanceHUD()
-                    .offset(x: layout.pictureRect.minX + 6, y: layout.pictureRect.minY + 6)
+                if !layout.onTV {
+                    PerformanceHUD()
+                        .offset(x: layout.pictureRect.minX + 6, y: layout.pictureRect.minY + 6)
+                }
 
                 // Every skin needs a way to the menu.
                 if hideButtons || !skinLayout.hasMenuButton {
