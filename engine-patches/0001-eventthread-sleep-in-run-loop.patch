@@ -1,0 +1,36 @@
+diff --git a/src/eventthread.cpp b/src/eventthread.cpp
+index 2ef096b..7e3f1e4 100644
+--- a/src/eventthread.cpp
++++ b/src/eventthread.cpp
+@@ -52,6 +52,7 @@ extern "C" bool mkxp_getTouchMouseEnabled(void);
+ #include "input/keybindings.h"
+ 
+ #include <TargetConditionals.h>
++#include <CoreFoundation/CoreFoundation.h>
+ #include "app_bridge.h"
+ extern void mkxpGL_GetDrawableSize(SDL_Window *win, int *w, int *h);
+ extern void mkxpGL_RefreshDrawableSize(SDL_Window *win, int *w, int *h);
+@@ -227,14 +228,16 @@ void EventThread::process(RGSSThreadData &rtData)
+     while (true)
+     {
+ #if MKXPZ_MOBILE
+-        /* Timed waits keep the main run loop spinning so SwiftUI
+-         * alerts stay tappable while the engine session is alive. */
+-        const int waitRc = SDL_WaitEventTimeout(&event, 16);
+-        if (waitRc == 0)
++        /* UIKit has no blocking event wait, so SDL_WaitEventTimeout
++         * polls: pump the run loop, sleep 1 ms, repeat. About a
++         * thousand wakeups a second keep the CPU from idling and heat
++         * the phone. Poll once, then sleep in the run loop itself:
++         * touches, timers and main-queue work (SwiftUI alerts, the
++         * host's callbacks) wake it at once; events pushed from other
++         * threads wait at most 8 ms. (Ember patch.) */
++        if (!SDL_PollEvent(&event)) {
++            CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.008, true);
+             continue;
+-        if (waitRc < 0) {
+-            Debug() << "EventThread: Event error";
+-            break;
+         }
+ #else
+         if (!SDL_WaitEvent(&event))
