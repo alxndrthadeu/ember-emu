@@ -1,8 +1,10 @@
+import StoreKit
 import SwiftUI
 
 struct LibraryView: View {
     @ObservedObject private var session = EngineSession.shared
     @ObservedObject private var library = LibraryStore.shared
+    @Environment(\.requestReview) private var requestReview
     @State private var optionsFor: GameEntry?
     @State private var showingHistory = false
     @State private var showingControls = false
@@ -45,11 +47,22 @@ struct LibraryView: View {
         } message: {
             Text(library.lastError ?? "")
         }
-        .alert("RTP instalado",
+        .alert(library.importNotice?.title ?? "",
                isPresented: Binding(get: { library.importNotice != nil }, set: { if !$0 { library.importNotice = nil } })) {
             Button("OK", role: .cancel) {}
         } message: {
-            Text(library.importNotice ?? "")
+            Text(library.importNotice?.message ?? "")
+        }
+        .onReceive(AppRouter.shared.$quickAction.compactMap { $0 }) { handle($0) }
+        .onChange(of: session.state) { _, state in
+            // A good moment to ask for a rating: a long session just
+            // ended well (see ReviewPrompt).
+            guard state == .finished, ReviewPrompt.isGoodMoment else { return }
+            ReviewPrompt.markAsked()
+            Task {
+                try? await Task.sleep(for: .seconds(1.5))
+                requestReview()
+            }
         }
         .sheet(item: $optionsFor) { game in
             GameOptionsSheet(game: game) { open(game) }
@@ -142,6 +155,21 @@ struct LibraryView: View {
         }
     }
 
+    /// The app icon's quick actions.
+    private func handle(_ action: QuickAction) {
+        AppRouter.shared.quickAction = nil
+        switch action {
+        case .continueLast:
+            AppRouter.shared.tab = .library
+            if let recent = library.recent { open(recent, resume: true) }
+        case .importGame:
+            AppRouter.shared.tab = .importGames
+        case .wifi:
+            AppRouter.shared.tab = .importGames
+            WifiTransfer.shared.start()
+        }
+    }
+
     private func showOptions(_ game: GameEntry) {
         Haptics.tap()
         optionsFor = game
@@ -177,6 +205,8 @@ struct LibraryView: View {
     ///   EMBER_EXPORT_SAVES=1      exports the first game's saves (logs the .zip)
     ///   EMBER_WIFI=1              turns on the Wi-Fi transfer (logs the address)
     ///   EMBER_INSTALL_DEMO=1      copies the bundled demo game into the library
+    ///   EMBER_SHARE_SAVES=<id>    builds that game's .embersave (logs the path)
+    ///   EMBER_QUICK=continue|import|wifi  acts as an app icon quick action
     private func developmentHooks() {
         #if DEBUG
         let environment = ProcessInfo.processInfo.environment
@@ -191,6 +221,13 @@ struct LibraryView: View {
             if environment["EMBER_EXPORT_SAVES"] != nil {
                 print("[ember-saves] export:", Result { try SaveManager.export(game) })
             }
+        }
+        if let id = environment["EMBER_SHARE_SAVES"], let game = library.games.first(where: { $0.id == id }) {
+            print("[ember-share]", Result { try SaveShare.package(game) })
+        }
+        if let quick = environment["EMBER_QUICK"] {
+            let map: [String: QuickAction] = ["continue": .continueLast, "import": .importGame, "wifi": .wifi]
+            AppRouter.shared.quickAction = map[quick]
         }
         if environment["EMBER_INSTALL_DEMO"] != nil {
             library.installDemo()

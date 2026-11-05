@@ -38,6 +38,18 @@
 		</dict>
 		<dict>
 			<key>CFBundleTypeName</key>
+			<string>Saves do Ember</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.alexandrethadeu.ember.save</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
 			<string>Skin de controle</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
@@ -48,6 +60,21 @@
 				<string>com.rileytestut.delta.skin</string>
 				<string>com.alexandrethadeu.ember.manicskin</string>
 			</array>
+		</dict>
+	</array>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.alexandrethadeu.ember.save</string>
+			<key>UTTypeDescription</key>
+			<string>Saves do Ember</string>
+			<key>UTTypeConformsTo</key>
+			<array><string>public.data</string><string>public.content</string></array>
+			<key>UTTypeIconFiles</key>
+			<array/>
+			<key>UTTypeTagSpecification</key>
+			<dict><key>public.filename-extension</key><array><string>embersave</string></array></dict>
 		</dict>
 	</array>
 	<key>UTImportedTypeDeclarations</key>

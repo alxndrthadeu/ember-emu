@@ -243,6 +243,28 @@
         }
       }
     },
+    "%lld saves de “%@” chegaram. Os saves que já estavam aqui foram guardados em Backups." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld saves from “%2$@” arrived. The saves already here were kept in Backups."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Llegaron %1$lld partidas de “%2$@”. Las partidas que ya estaban aquí se guardaron en Backups."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld saves de “%2$@” chegaram. Os saves que já estavam aqui foram guardados em Backups."
+          }
+        }
+      }
+    },
     "%lld saves importados" : {
       "localizations" : {
         "en" : {
@@ -287,6 +309,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lldx"
+          }
+        }
+      }
+    },
+    "1 save de “%@” chegou. Os saves que já estavam aqui foram guardados em Backups." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 save from “%@” arrived. The saves already here were kept in Backups."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Llegó 1 partida de “%@”. Las partidas que ya estaban aquí se guardaron en Backups."
           }
         }
       }
@@ -1932,6 +1970,22 @@
         }
       }
     },
+    "Enviar saves" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send saves"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar partidas"
+          }
+        }
+      }
+    },
     "erro desconhecido" : {
       "localizations" : {
         "en" : {
@@ -2125,6 +2179,22 @@
         }
       }
     },
+    "Este arquivo não é um pacote de saves do Ember." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This file is not an Ember saves package."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este archivo no es un paquete de partidas de Ember."
+          }
+        }
+      }
+    },
     "Este arquivo não é uma skin: falta o info.json." : {
       "localizations" : {
         "en" : {
@@ -2137,6 +2207,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Este archivo no es una skin: falta info.json."
+          }
+        }
+      }
+    },
+    "Estes saves são de “%@”. Importe o jogo primeiro e abra o arquivo de novo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "These saves belong to “%@”. Import the game first, then open the file again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estas partidas son de “%@”. Importa el juego primero y vuelve a abrir el archivo."
           }
         }
       }
@@ -4556,6 +4642,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Partidas desde el panel del juego, en la Biblioteca"
+          }
+        }
+      }
+    },
+    "Saves recebidos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saves received"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partidas recibidas"
           }
         }
       }

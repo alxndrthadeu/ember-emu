@@ -1,190 +1,206 @@
 {
-  "sourceLanguage": "pt-BR",
-  "strings": {
-    "Arquivo 7z": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "7z archive"
+  "sourceLanguage" : "pt-BR",
+  "strings" : {
+    "Arquivo 7z" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7z archive"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Archivo 7z"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archivo 7z"
           }
         }
       }
     },
-    "Arquivo RAR": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "RAR archive"
+    "Arquivo RAR" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RAR archive"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Archivo RAR"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archivo RAR"
           }
         }
       }
     },
-    "CFBundleDisplayName": {
-      "comment": "Bundle display name",
-      "extractionState": "extracted_with_value",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ember"
+    "CFBundleDisplayName" : {
+      "comment" : "Bundle display name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ember"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember"
           }
         },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "new",
-            "value": "Ember"
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Ember"
           }
         }
       }
     },
-    "CFBundleName": {
-      "comment": "Bundle name",
-      "extractionState": "extracted_with_value",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ember"
+    "CFBundleName" : {
+      "comment" : "Bundle name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ember"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember"
           }
         },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "new",
-            "value": "Ember"
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Ember"
           }
         }
       }
     },
-    "NSLocalNetworkUsageDescription": {
-      "comment": "Privacy - Local Network Usage Description",
-      "extractionState": "extracted_with_value",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "To receive games sent from a computer’s browser on the same Wi-Fi."
+    "NSBluetoothAlwaysUsageDescription" : {
+      "comment" : "Why Ember may use Bluetooth: game controllers.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To connect Bluetooth game controllers."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Para recibir juegos enviados desde el navegador de un ordenador en la misma red Wi-Fi."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para conectar mandos de juego Bluetooth."
           }
         },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "new",
-            "value": "Para receber jogos enviados pelo navegador de um computador no mesmo Wi-Fi."
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para conectar controles de jogo Bluetooth."
           }
         }
       }
     },
-    "NSPhotoLibraryAddUsageDescription": {
-      "comment": "Privacy - Photo Library Additions Usage Description",
-      "extractionState": "extracted_with_value",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "To save game screenshots to Photos."
+    "NSLocalNetworkUsageDescription" : {
+      "comment" : "Privacy - Local Network Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To receive games sent from a computer’s browser on the same Wi-Fi."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Para guardar capturas de pantalla de los juegos en Fotos."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para recibir juegos enviados desde el navegador de un ordenador en la misma red Wi-Fi."
           }
         },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "new",
-            "value": "Para salvar capturas de tela dos jogos em Fotos."
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Para receber jogos enviados pelo navegador de um computador no mesmo Wi-Fi."
           }
         }
       }
     },
-    "Skin do Delta": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delta skin"
+    "NSPhotoLibraryAddUsageDescription" : {
+      "comment" : "Privacy - Photo Library Additions Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To save game screenshots to Photos."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Skin de Delta"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para guardar capturas de pantalla de los juegos en Fotos."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Para salvar capturas de tela dos jogos em Fotos."
           }
         }
       }
     },
-    "Skin do Manic EMU": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Manic EMU skin"
+    "Saves do Ember" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember Saves"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Skin de Manic EMU"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partidas de Ember"
           }
         }
       }
     },
-    "NSBluetoothAlwaysUsageDescription": {
-      "comment": "Why Ember may use Bluetooth: game controllers.",
-      "extractionState": "manual",
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Para conectar controles de jogo Bluetooth."
+    "Skin do Delta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delta skin"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "To connect Bluetooth game controllers."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skin de Delta"
+          }
+        }
+      }
+    },
+    "Skin do Manic EMU" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manic EMU skin"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Para conectar mandos de juego Bluetooth."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skin de Manic EMU"
           }
         }
       }
     }
   },
-  "version": "1.3"
+  "version" : "1.3"
 }

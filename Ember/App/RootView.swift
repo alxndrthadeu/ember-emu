@@ -12,6 +12,8 @@ enum AppTab: Hashable {
 final class AppRouter: ObservableObject {
     static let shared = AppRouter()
     @Published var tab: AppTab = .library
+    /// A home screen quick action waiting for the library to handle it.
+    @Published var quickAction: QuickAction?
     private init() {}
 }
 

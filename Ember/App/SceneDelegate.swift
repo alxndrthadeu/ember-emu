@@ -18,6 +18,22 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         EngineSession.shared.launcherWindow = window
 
         importOpenedFiles(connectionOptions.urlContexts)
+        if let item = connectionOptions.shortcutItem {
+            AppRouter.shared.quickAction = QuickAction(rawValue: item.type)
+        }
+        QuickAction.refresh()
+    }
+
+    /// A quick action from the app icon while the app was running.
+    func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem,
+                     completionHandler: @escaping (Bool) -> Void) {
+        let action = QuickAction(rawValue: shortcutItem.type)
+        AppRouter.shared.quickAction = action
+        completionHandler(action != nil)
+    }
+
+    func sceneWillResignActive(_ scene: UIScene) {
+        QuickAction.refresh()
     }
 
     /// "Open in Ember" from the Files app or the share sheet.

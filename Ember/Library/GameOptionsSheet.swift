@@ -106,6 +106,9 @@ struct GameOptionsSheet: View {
                         OptionTile(icon: "square.and.arrow.up", title: String(localized: "Exportar saves")) {
                             exportSaves()
                         }
+                        OptionTile(icon: "iphone.radiowaves.left.and.right", title: String(localized: "Enviar saves")) {
+                            shareSaves()
+                        }
                         OptionTile(icon: "square.and.arrow.down", title: String(localized: "Importar saves")) {
                             importingSaves = true
                         }
@@ -258,6 +261,23 @@ struct GameOptionsSheet: View {
         working = true
         Task.detached(priority: .userInitiated) {
             let result = Result { try SaveManager.export(game) }
+            await MainActor.run {
+                working = false
+                switch result {
+                case .success(let url): exportFile = ExportFile(url: url)
+                case .failure(let error): show(error.localizedDescription)
+                }
+            }
+        }
+    }
+
+    /// Saves for another iPhone: an .embersave package in the share
+    /// sheet. Bringing two iPhones together there starts AirDrop.
+    private func shareSaves() {
+        let game = current
+        working = true
+        Task.detached(priority: .userInitiated) {
+            let result = Result { try SaveShare.package(game) }
             await MainActor.run {
                 working = false
                 switch result {

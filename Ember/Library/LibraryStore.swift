@@ -12,8 +12,14 @@ final class LibraryStore: ObservableObject {
     @Published var lastError: String?
     /// Set when a skin arrived through an import, for a confirmation.
     @Published var importedSkinName: String?
-    /// A confirmation to show after an import that is not a game (an RTP).
-    @Published var importNotice: String?
+    /// A confirmation to show after an import that is not a game (an
+    /// RTP, saves from another iPhone).
+    @Published var importNotice: Notice?
+
+    struct Notice: Equatable {
+        let title: String
+        let message: String
+    }
 
     /// The game to offer under "Continuar": the last one played.
     var recent: GameEntry? {
@@ -44,6 +50,7 @@ final class LibraryStore: ObservableObject {
         games = folders
             .compactMap(GameEntry.init(folder:))
             .sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
+        QuickAction.refresh(self)
     }
 
     /// Imports items one after another, off the main thread: a big
@@ -62,8 +69,23 @@ final class LibraryStore: ObservableObject {
                 lastError = error.localizedDescription
             }
         }
+        // Saves sent from another iPhone go into their game.
+        let saves = urls.filter { $0.pathExtension.lowercased() == SaveShare.fileExtension }
+        for url in saves {
+            do {
+                let (game, count) = try SaveShare.receive(url)
+                if removeSources { try? FileManager.default.removeItem(at: url) }
+                importNotice = Notice(
+                    title: String(localized: "Saves recebidos"),
+                    message: count == 1
+                        ? String(localized: "1 save de “\(game.title)” chegou. Os saves que já estavam aqui foram guardados em Backups.")
+                        : String(localized: "\(count) saves de “\(game.title)” chegaram. Os saves que já estavam aqui foram guardados em Backups."))
+            } catch {
+                lastError = error.localizedDescription
+            }
+        }
         let discard = AppSettings.deleteArchiveAfterImport
-        for url in urls where !skins.contains(url) {
+        for url in urls where !skins.contains(url) && !saves.contains(url) {
             let name = url.lastPathComponent
             guard !importing.contains(name) else { continue }
             importing.append(name)
@@ -80,7 +102,9 @@ final class LibraryStore: ObservableObject {
                     case .failure(let error):
                         self.lastError = error.localizedDescription
                     case .success(.rtp(let kind)):
-                        self.importNotice = String(localized: "RTP do \(kind.name) instalado. Os jogos dessa versão já usam os gráficos e sons dele.")
+                        self.importNotice = Notice(
+                            title: String(localized: "RTP instalado"),
+                            message: String(localized: "RTP do \(kind.name) instalado. Os jogos dessa versão já usam os gráficos e sons dele."))
                     case .success(.game):
                         break
                     }
@@ -105,6 +129,7 @@ final class LibraryStore: ObservableObject {
                 let isFolder = (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) == true
                 let ext = url.pathExtension.lowercased()
                 if GameImporter.archiveExtensions.contains(ext) || SkinStore.skinExtensions.contains(ext)
+                    || ext == SaveShare.fileExtension
                     || (isFolder && (GameFolder.findRoot(in: url) != nil || RTPStore.findRoot(in: url) != nil)) {
                     candidates.append(url)
                 }
