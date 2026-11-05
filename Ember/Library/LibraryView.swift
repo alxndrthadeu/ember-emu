@@ -207,6 +207,7 @@ struct LibraryView: View {
     ///   EMBER_INSTALL_DEMO=1      copies the bundled demo game into the library
     ///   EMBER_SHARE_SAVES=<id>    builds that game's .embersave (logs the path)
     ///   EMBER_QUICK=continue|import|wifi  acts as an app icon quick action
+    ///   EMBER_TV=1                starts "Jogar na TV" 8 s after the game opens
     private func developmentHooks() {
         #if DEBUG
         let environment = ProcessInfo.processInfo.environment
@@ -252,6 +253,14 @@ struct LibraryView: View {
         else { return }
         let resume = environment["EMBER_RESUME"] != nil ? StateStore.autoSlot : nil
         session.launch(game, resumeSlot: resume)
+        if environment["EMBER_TV"] != nil {
+            Task {
+                try? await Task.sleep(for: .seconds(8))
+                TVStream.shared.start()
+                try? await Task.sleep(for: .seconds(1))
+                print("[ember-tv]", TVStream.shared.address ?? "no address", TVStream.shared.isOn)
+            }
+        }
         if let script = environment["EMBER_KEYS"] {
             Task { await runKeyScript(script) }
         }

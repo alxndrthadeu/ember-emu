@@ -474,6 +474,7 @@
       }
     },
     "A imagem está na TV e o iPhone virou o controle." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -538,6 +539,7 @@
       }
     },
     "Abra a Central de Controle (deslize do canto superior direito)." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -586,6 +588,22 @@
         }
       }
     },
+    "Abra no navegador, na mesma rede Wi-Fi" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open in a browser on the same Wi-Fi"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ábrelo en el navegador, en la misma Wi-Fi"
+          }
+        }
+      }
+    },
     "Abra o Ember. O jogo aparece na Biblioteca." : {
       "localizations" : {
         "en" : {
@@ -598,6 +616,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Abre Ember. El juego aparece en la Biblioteca."
+          }
+        }
+      }
+    },
+    "Abra um jogo no Ember, no iPhone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open a game in Ember on your iPhone"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre un juego en Ember, en el iPhone"
           }
         }
       }
@@ -700,6 +734,7 @@
       }
     },
     "AirPlay" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1424,6 +1459,22 @@
         }
       }
     },
+    "Clique ou aperte OK para tela cheia" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Click or press OK for full screen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haz clic o pulsa OK para pantalla completa"
+          }
+        }
+      }
+    },
     "Código-fonte do Ember" : {
       "localizations" : {
         "en" : {
@@ -1490,6 +1541,7 @@
       }
     },
     "Com uma Apple TV ou TV com AirPlay na mesma rede." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1517,6 +1569,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cómo crear tu propia skin"
+          }
+        }
+      }
+    },
+    "Conectando ao iPhone…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connecting to your iPhone…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conectando con el iPhone…"
+          }
+        }
+      }
+    },
+    "Conecte o iPhone a uma rede Wi-Fi para jogar na TV." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connect your iPhone to a Wi-Fi network to play on the TV."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conecta el iPhone a una red Wi-Fi para jugar en la TV."
           }
         }
       }
@@ -1806,6 +1890,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rendimiento: %@"
+          }
+        }
+      }
+    },
+    "Desligada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apagada"
           }
         }
       }
@@ -2100,6 +2200,7 @@
       }
     },
     "Escolha um jogo no iPhone" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2191,6 +2292,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Especial"
+          }
+        }
+      }
+    },
+    "Esperando uma tela abrir o endereço" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting for a screen to open the address"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esperando que una pantalla abra la dirección"
           }
         }
       }
@@ -2470,6 +2587,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "FluidSynth"
+          }
+        }
+      }
+    },
+    "Funciona com smart TVs (LG, Samsung e outras), computadores e tablets: qualquer aparelho com navegador no mesmo Wi-Fi." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Works with smart TVs (LG, Samsung and others), computers and tablets: any device with a browser on the same Wi-Fi."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Funciona con smart TV (LG, Samsung y otras), ordenadores y tabletas: cualquier aparato con navegador en la misma Wi-Fi."
           }
         }
       }
@@ -2781,6 +2914,22 @@
         }
       }
     },
+    "Jogando em %lld telas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playing on %lld screens"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jugando en %lld pantallas"
+          }
+        }
+      }
+    },
     "Jogando na TV" : {
       "localizations" : {
         "en" : {
@@ -2793,6 +2942,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jugando en la TV"
+          }
+        }
+      }
+    },
+    "Jogando numa tela" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playing on one screen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jugando en una pantalla"
           }
         }
       }
@@ -3002,6 +3167,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Licencias de código abierto"
+          }
+        }
+      }
+    },
+    "Ligada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encendida"
           }
         }
       }
@@ -3989,6 +4170,22 @@
         }
       }
     },
+    "O jogo aparece no navegador da TV ou do computador, e o iPhone vira o controle." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The game shows in the TV or computer browser, and your iPhone becomes the controller."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El juego aparece en el navegador de la TV o del ordenador, y el iPhone pasa a ser el mando."
+          }
+        }
+      }
+    },
     "O jogo encontrou um erro" : {
       "localizations" : {
         "en" : {
@@ -4065,6 +4262,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Qué se puede importar"
+          }
+        }
+      }
+    },
+    "O som continua no iPhone. Num computador, clique na imagem para tela cheia." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sound stays on the iPhone. On a computer, click the picture for full screen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El sonido sigue en el iPhone. En un ordenador, haz clic en la imagen para pantalla completa."
           }
         }
       }
@@ -4262,6 +4475,7 @@
       }
     },
     "Para trazer o jogo de volta, pare o espelhamento na Central de Controle." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4839,6 +5053,7 @@
       }
     },
     "Se só o som for para a TV" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5369,6 +5584,7 @@
       }
     },
     "Toque em Espelhar Tela e escolha a TV." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5385,6 +5601,7 @@
       }
     },
     "Toque para escolher a TV" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5675,6 +5892,7 @@
       }
     },
     "Volte ao Ember: o jogo vai para a TV sozinho." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

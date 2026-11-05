@@ -1,0 +1,134 @@
+diff --git a/src/app_bridge.cpp b/src/app_bridge.cpp
+index 23651f7..ea20c57 100644
+--- a/src/app_bridge.cpp
++++ b/src/app_bridge.cpp
+@@ -968,6 +968,53 @@ bool mkxp_copySnapshotRGBA(unsigned char *dest, int destSize, int *width, int *h
+     return true;
+ }
+ 
++/* Frame stream (Ember patch 0003). */
++static std::atomic<bool> s_streamEnabled{false};
++static std::mutex s_streamMutex;
++static std::vector<unsigned char> s_streamData;
++static int s_streamWidth = 0, s_streamHeight = 0;
++static unsigned int s_streamSequence = 0;
++
++void mkxp_setFrameStreamEnabled(bool enabled) {
++    s_streamEnabled.store(enabled, std::memory_order_release);
++    if (!enabled) {
++        std::lock_guard<std::mutex> lock(s_streamMutex);
++        s_streamData.clear();
++        s_streamData.shrink_to_fit();
++    }
++}
++
++bool mkxp_isFrameStreamEnabled(void) {
++    return s_streamEnabled.load(std::memory_order_acquire);
++}
++
++void mkxp_setStreamFrame(const unsigned char *data, int width, int height) {
++    std::lock_guard<std::mutex> lock(s_streamMutex);
++    size_t size = (size_t)width * height * 4;
++    s_streamData.assign(data, data + size);
++    s_streamWidth = width;
++    s_streamHeight = height;
++    if (++s_streamSequence == 0) s_streamSequence = 1;
++}
++
++bool mkxp_copyStreamFrame(unsigned char *dest, int destSize, int *width, int *height,
++                          unsigned int *sequence) {
++    std::lock_guard<std::mutex> lock(s_streamMutex);
++    if (s_streamData.empty()) return false;
++    if (sequence && *sequence == s_streamSequence) return false;
++    int size = (int)s_streamData.size();
++    if (destSize < size) {
++        if (width) *width = s_streamWidth;
++        if (height) *height = s_streamHeight;
++        return false;
++    }
++    memcpy(dest, s_streamData.data(), size);
++    if (width) *width = s_streamWidth;
++    if (height) *height = s_streamHeight;
++    if (sequence) *sequence = s_streamSequence;
++    return true;
++}
++
+ bool mkxp_getSnapshotSize(int *width, int *height) {
+     std::lock_guard<std::mutex> lock(s_snapshotMutex);
+     if (s_snapshotData.empty()) return false;
+diff --git a/src/app_bridge.h b/src/app_bridge.h
+index 3506f39..560f215 100644
+--- a/src/app_bridge.h
++++ b/src/app_bridge.h
+@@ -626,6 +626,20 @@ bool        mkxp_copySnapshotRGBA(unsigned char *dest, int destSize, int *width,
+ // the buffer for mkxp_copySnapshotRGBA.
+ bool        mkxp_getSnapshotSize(int *width, int *height);
+ 
++// Frame stream (Ember patch 0003): while enabled, the engine copies
++// each presented frame (at most 30 per second, at the game's own
++// resolution) into a buffer the host reads with mkxp_copyStreamFrame.
++// Ember sends these frames to a TV or computer browser.
++void        mkxp_setFrameStreamEnabled(bool enabled);
++bool        mkxp_isFrameStreamEnabled(void);
++// Copies the latest frame if its sequence number differs from
++// `*sequence` (pass 0 the first time). Returns false when there is no
++// newer frame or `dest` is too small. RGBA, top-down rows.
++bool        mkxp_copyStreamFrame(unsigned char *dest, int destSize, int *width, int *height,
++                                 unsigned int *sequence);
++// Called by the renderer.
++void        mkxp_setStreamFrame(const unsigned char *data, int width, int height);
++
+ void        mkxp_setPausedCallback(mkxp_PausedCallback cb, void *userdata);
+ void        mkxp_setResumedCallback(mkxp_ResumedCallback cb, void *userdata);
+ void        mkxp_setFrameRenderedCallback(mkxp_FrameRenderedCallback cb, void *userdata);
+@@ -815,6 +829,11 @@ static inline bool        mkxp_isPaused(void) { return false; }
+ static inline void        mkxp_setSnapshot(const unsigned char *data, int width, int height) { (void)data; (void)width; (void)height; }
+ static inline bool        mkxp_copySnapshotRGBA(unsigned char *dest, int destSize, int *width, int *height) { (void)dest; (void)destSize; (void)width; (void)height; return false; }
+ static inline bool        mkxp_getSnapshotSize(int *width, int *height) { (void)width; (void)height; return false; }
++static inline void        mkxp_setFrameStreamEnabled(bool enabled) { (void)enabled; }
++static inline bool        mkxp_isFrameStreamEnabled(void) { return false; }
++static inline bool        mkxp_copyStreamFrame(unsigned char *dest, int destSize, int *width, int *height,
++                                               unsigned int *sequence) { (void)dest; (void)destSize; (void)width; (void)height; (void)sequence; return false; }
++static inline void        mkxp_setStreamFrame(const unsigned char *data, int width, int height) { (void)data; (void)width; (void)height; }
+ static inline void        mkxp_setPausedCallback(mkxp_PausedCallback cb, void *userdata) { (void)cb; (void)userdata; }
+ static inline void        mkxp_setResumedCallback(mkxp_ResumedCallback cb, void *userdata) { (void)cb; (void)userdata; }
+ static inline void        mkxp_setFrameRenderedCallback(mkxp_FrameRenderedCallback cb, void *userdata) { (void)cb; (void)userdata; }
+diff --git a/src/display/graphics.cpp b/src/display/graphics.cpp
+index bb4fc5e..fe97cd8 100644
+--- a/src/display/graphics.cpp
++++ b/src/display/graphics.cpp
+@@ -1250,8 +1250,34 @@ struct GraphicsPrivate {
+         fpsLimiter.resetFrameAdjust();
+     }
+ 
++    /* Frame stream for a TV or computer browser (Ember patch 0003):
++     * the presented frame, at the game's own resolution, at most 30
++     * times a second, and only while the host asks for it. */
++    uint64_t lastStreamTicks = 0;
++
++    void streamFrame(TEXFBO &presented) {
++        if (!mkxp_isFrameStreamEnabled())
++            return;
++        uint64_t now = SDL_GetTicks64();
++        if (now - lastStreamTicks < 33)
++            return;
++        lastStreamTicks = now;
++
++        int w = presented.width;
++        int h = presented.height;
++        if (w <= 0 || h <= 0)
++            return;
++        FBO::ID prevFBO = FBO::boundFramebufferID;
++        FBO::bind(presented.fbo);
++        std::vector<uint8_t> pixels(w * h * 4);
++        gl.ReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
++        FBO::bind(prevFBO);
++        mkxp_setStreamFrame(pixels.data(), w, h);
++    }
++
+     /* Call right after every swap. */
+     void framePresented(TEXFBO &presented) {
++        streamFrame(presented);
+         checkPause(presented);
+         keepPresentedFrame(presented);
+     }

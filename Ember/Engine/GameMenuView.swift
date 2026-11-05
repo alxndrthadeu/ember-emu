@@ -1,4 +1,3 @@
-import AVKit
 import Photos
 import SwiftUI
 import UIKit
@@ -31,7 +30,7 @@ struct GameMenuView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var pause = PauseSnapshot.shared
     @ObservedObject private var performance = PerformanceModel.shared
-    @ObservedObject private var tv = ExternalDisplay.shared
+    @ObservedObject private var tv = TVStream.shared
     @State private var showingTV = false
     @ObservedObject private var skins = SkinStore.shared
     @ObservedObject private var audio = GameAudio.shared
@@ -88,9 +87,10 @@ struct GameMenuView: View {
                         EngineSession.shared.openKeyboard()
                     }
                 }
-                MenuTile(icon: tv.isConnected ? "tv.fill" : "airplay.video", title: String(localized: "TV"),
-                         value: tv.isConnected ? String(localized: "Na TV") : String(localized: "AirPlay"),
-                         highlighted: tv.isConnected) {
+                MenuTile(icon: tv.viewers > 0 ? "tv.fill" : "tv", title: String(localized: "TV"),
+                         value: tv.viewers > 0 ? String(localized: "Na TV")
+                             : (tv.isOn ? String(localized: "Ligada") : String(localized: "Desligada")),
+                         highlighted: tv.isOn) {
                     showingTV = true
                 }
                 MenuTile(icon: "xmark.circle.fill", title: String(localized: "Sair"), destructive: true) {
@@ -105,7 +105,7 @@ struct GameMenuView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .sheet(isPresented: $showingTV) {
             TVSheet()
-                .presentationDetents([.height(440)])
+                .presentationDetents([.height(460)])
         }
         .overlay(alignment: .bottom) {
             if let toast {
@@ -265,87 +265,4 @@ final class PauseSnapshot: ObservableObject {
             GameCovers.saveSnapshot(image, forGameID: id)
         }
     }
-}
-
-/// The game menu's TV sheet: the system AirPlay button, the steps for
-/// screen mirroring, and where the game is now. Apps cannot turn
-/// mirroring on themselves; AirPlay always takes the sound, and the
-/// picture follows when iOS mirrors the screen.
-private struct TVSheet: View {
-    @ObservedObject private var tv = ExternalDisplay.shared
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            HStack(spacing: 12) {
-                Image(systemName: tv.isConnected ? "tv.fill" : "airplay.video")
-                    .font(.system(size: 22, weight: .semibold))
-                    .foregroundStyle(Theme.highlight)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(tv.isConnected ? "Jogando na TV" : "Jogar na TV")
-                        .font(.title3.weight(.semibold))
-                    Text(tv.isConnected
-                         ? "A imagem está na TV e o iPhone virou o controle."
-                         : "Com uma Apple TV ou TV com AirPlay na mesma rede.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-            }
-
-            if !tv.isConnected {
-                HStack(spacing: 12) {
-                    AirPlayButton()
-                        .frame(width: 44, height: 44)
-                    Text("Toque para escolher a TV")
-                        .font(.body.weight(.medium))
-                }
-                .padding(12)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .emberGlass(.regular, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Se só o som for para a TV")
-                        .font(.footnote.weight(.semibold))
-                        .foregroundStyle(.secondary)
-                    step(1, String(localized: "Abra a Central de Controle (deslize do canto superior direito)."))
-                    step(2, String(localized: "Toque em Espelhar Tela e escolha a TV."))
-                    step(3, String(localized: "Volte ao Ember: o jogo vai para a TV sozinho."))
-                }
-            } else {
-                Text("Para trazer o jogo de volta, pare o espelhamento na Central de Controle.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
-            Spacer(minLength: 0)
-        }
-        .padding(24)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .environment(\.colorScheme, .dark)
-    }
-
-    private func step(_ number: Int, _ text: String) -> some View {
-        HStack(alignment: .firstTextBaseline, spacing: 10) {
-            Text("\(number)")
-                .font(.caption.weight(.bold))
-                .foregroundStyle(Color(hex: 0x1E1814))
-                .frame(width: 20, height: 20)
-                .background(Circle().fill(Theme.highlight))
-            Text(text)
-                .font(.subheadline)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-    }
-}
-
-/// The system's AirPlay button (opens the list of TVs and speakers).
-private struct AirPlayButton: UIViewRepresentable {
-    func makeUIView(context: Context) -> AVRoutePickerView {
-        let picker = AVRoutePickerView()
-        picker.prioritizesVideoDevices = true
-        picker.tintColor = UIColor(Theme.highlight)
-        picker.activeTintColor = UIColor(Theme.highlight)
-        return picker
-    }
-
-    func updateUIView(_ view: AVRoutePickerView, context: Context) {}
 }
