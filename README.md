@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/licen%C3%A7a-GPL--3.0--or--later-C83A1E" alt="Licença GPL-3.0-or-later"></a>
-  <img src="https://img.shields.io/badge/iOS-26%2B-EE6A2A" alt="iOS 26 ou mais novo">
+  <img src="https://img.shields.io/badge/iOS-17%2B-EE6A2A" alt="iOS 17 ou mais novo">
   <img src="https://img.shields.io/badge/status-em%20desenvolvimento-F7B538" alt="Em desenvolvimento">
 </p>
 
@@ -20,7 +20,7 @@
 
 O Ember roda jogos feitos em RPG Maker XP, VX e VX Ace, inclusive fangames grandes feitos com kits populares. Ele usa o motor [mkxp-z-apple-mobile](https://github.com/mateo-m/mkxp-z-apple-mobile) e envolve tudo num app pensado para o celular: biblioteca com capas, controles na tela, save rápido, skins e importação por vários caminhos.
 
-O Ember não vem com nenhum jogo nem com o RTP. Você traz os seus.
+O Ember não vem com jogos comerciais nem com o RTP: você traz os seus. Ele traz só **A Última Brasa**, um jogo pequeno e original feito para o Ember, para experimentar na hora.
 
 <p align="center">
   <img src="docs/assets/import.png" alt="Tela de importar do Ember" width="280">
@@ -53,6 +53,7 @@ O Ember não vem com nenhum jogo nem com o RTP. Você traz os seus.
 **Outros**
 - Registros por jogo (erros e eventos) e painel de desempenho (FPS, CPU, memória, temperatura).
 - Português, inglês e espanhol.
+- iOS 17 ou mais novo. No iOS 26+ a interface usa Liquid Glass; nas versões anteriores, o material translúcido do sistema.
 
 ## Compilar
 
@@ -72,7 +73,7 @@ cd ~/Developer/ember-engine
 git submodule update --init --depth 1
 ```
 
-Aplique os patches do Ember e compile as dependências. Use o `bison` do sistema (2.3), não o do Homebrew: o bison 3 gera um parser inválido para o Ruby 1.9.
+Aplique os patches do Ember **antes** de compilar as dependências (um deles muda o iOS mínimo para 17). Use o `bison` do sistema (2.3), não o do Homebrew: o bison 3 gera um parser inválido para o Ruby 1.9.
 
 ```sh
 cd <este repositório>
@@ -106,6 +107,10 @@ O projeto procura o motor em `~/Developer/ember-engine`. Para rodar no simulador
 DEVELOPMENT_TEAM = ABCDE12345
 ```
 
+## Jogo de exemplo
+
+**A Última Brasa** fica em [`demo/`](demo): Lia, uma viajante, e Faísca, uma gata, cuidam da última fogueira da floresta. O código Ruby é original e toda a arte é desenhada por código, sem os scripts padrão do RPG Maker e sem RTP. Ele fala português, inglês ou espanhol conforme o idioma do aparelho. `ruby scripts/build-demo.rb` gera o jogo em `demo/game`, que o build copia para dentro do app.
+
 ## Scripts
 
 | Script | O que faz |
@@ -116,12 +121,16 @@ DEVELOPMENT_TEAM = ABCDE12345
 | `scripts/embed-engine.sh` | Fase do build: copia shaders, fontes, scripts e a biblioteca do Ruby para o app. Falha se encontrar dados de jogo ou RTP no pacote. |
 | `scripts/compat-test.sh` | Teste de compatibilidade no simulador: abre cada jogo com o som desligado, tira capturas e escreve um relatório. |
 | `scripts/make-app-icon.py` | Gera o ícone em pixel art (claro, escuro e tinted). |
+| `scripts/build-demo.rb` | Monta o jogo de exemplo (`demo/scripts` → `demo/game`). |
+| `scripts/store-screenshots.sh` | Tira as capturas da App Store num simulador limpo, em português, inglês e espanhol. |
+| `scripts/compose-screenshots.swift` | Monta as capturas com legenda, fundo e moldura de iPhone, nas cores do Ember. |
 
 ## Patches no motor
 
 | Patch | Por quê |
 | --- | --- |
 | `0001-eventthread-sleep-in-run-loop` | No iOS, o SDL espera eventos acordando a cada 1 ms. O patch faz a thread dormir no run loop até chegar um toque ou passar 8 ms. No iPhone 15 Pro, o uso de CPU caiu cerca de 48% e o aparelho parou de esquentar. |
+| `0002-minimum-ios-17` | Compila o motor e as dependências para iOS 17 ou mais novo (o original pede 26). O código do motor não usa nada exclusivo do iOS 26: o build trata isso como erro e não acusou nada. |
 
 ## Licença
 

@@ -467,6 +467,22 @@
         }
       }
     },
+    "A Última Brasa, um jogo pequeno feito para o Ember" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Last Ember, a tiny game made for Ember"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Última Brasa, un juego pequeño hecho para Ember"
+          }
+        }
+      }
+    },
     "Abra no navegador" : {
       "localizations" : {
         "en" : {
@@ -2125,6 +2141,22 @@
         }
       }
     },
+    "Experimentar o jogo de exemplo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try the sample game"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Probar el juego de ejemplo"
+          }
+        }
+      }
+    },
     "Exportar saves" : {
       "localizations" : {
         "en" : {
@@ -2615,6 +2647,22 @@
         }
       }
     },
+    "Jogo de exemplo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sample game"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Juego de ejemplo"
+          }
+        }
+      }
+    },
     "Jogo removido da biblioteca" : {
       "localizations" : {
         "en" : {
@@ -3092,6 +3140,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Muchos juegos cuentan con los gráficos y sonidos estándar de RPG Maker (el RTP), que Ember no incluye. Importa la carpeta del RTP, o un .zip de ella, desde la pestaña Importar: Ember reconoce la versión y todos los juegos de esa versión la usan. En Windows está en Archivos comunes › Enterbrain › RGSS."
+          }
+        }
+      }
+    },
+    "Na estante" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On the shelf"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En la estantería"
           }
         }
       }

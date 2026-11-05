@@ -50,9 +50,18 @@ fi
 # Builds from before the import flow bundled games/ here.
 rm -rf "$APP/Games"
 
-# The app ships no game and no RTP: stop the build if any game data
-# (test corpus, RTP) ever ends up in the bundle.
-leak=$(find "$APP" \( -iname '*.rxdata' -o -iname '*.rvdata' -o -iname '*.rvdata2' \
+# The one game Ember ships: its own demo, A Última Brasa (demo/, all
+# original, built by scripts/build-demo.rb).
+DEMO="${PROJECT_DIR:?}/demo/game"
+if [ -f "$DEMO/Game.ini" ]; then
+    rsync -a --delete "$DEMO/" "$APP/EmberDemo/"
+else
+    echo "warning: no demo game; run ruby scripts/build-demo.rb" >&2
+fi
+
+# Besides that demo, the app ships no game and no RTP: stop the build
+# if any other game data (test corpus, RTP) ends up in the bundle.
+leak=$(find "$APP" -path "$APP/EmberDemo" -prune -o \( -iname '*.rxdata' -o -iname '*.rvdata' -o -iname '*.rvdata2' \
     -o -iname '*.rgssad' -o -iname '*.rgss2a' -o -iname '*.rgss3a' -o -iname 'Game.ini' \) -print -quit)
 if [ -n "$leak" ]; then
     echo "error: game data inside the app bundle: $leak" >&2

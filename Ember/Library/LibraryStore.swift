@@ -115,6 +115,22 @@ final class LibraryStore: ObservableObject {
         }
     }
 
+    /// The demo game that ships inside the app (A Última Brasa).
+    static var demoFolder: URL? {
+        Bundle.main.url(forResource: "EmberDemo", withExtension: nil)
+    }
+
+    var hasDemo: Bool {
+        guard let folder = Self.demoFolder, let title = GameFolder.title(in: folder) else { return false }
+        return games.contains { $0.originalTitle == title }
+    }
+
+    /// Copies the demo into the library, once.
+    func installDemo() {
+        guard let folder = Self.demoFolder, !hasDemo else { return }
+        importItems([folder])
+    }
+
     func rename(_ game: GameEntry, to title: String) {
         TitleOverrides.set(title == game.originalTitle ? nil : title, for: game.id)
         reload()

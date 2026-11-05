@@ -111,10 +111,16 @@ struct LibraryView: View {
                 .foregroundStyle(Theme.secondaryText)
                 .multilineTextAlignment(.center)
             Button("Importar jogo") { AppRouter.shared.tab = .importGames }
-                .buttonStyle(.glassProminent)
+                .emberGlassProminentButton()
                 .tint(Theme.accent)
                 .controlSize(.large)
                 .padding(.top, 10)
+            if LibraryStore.demoFolder != nil {
+                Button("Experimentar o jogo de exemplo") { library.installDemo() }
+                    .font(.subheadline.weight(.semibold))
+                    .tint(Theme.accent)
+                    .padding(.top, 2)
+            }
         }
         .padding(32)
     }
@@ -170,6 +176,7 @@ struct LibraryView: View {
     ///   EMBER_IMPORT_SAVES=<path>[:<path>…]  imports saves into the first game
     ///   EMBER_EXPORT_SAVES=1      exports the first game's saves (logs the .zip)
     ///   EMBER_WIFI=1              turns on the Wi-Fi transfer (logs the address)
+    ///   EMBER_INSTALL_DEMO=1      copies the bundled demo game into the library
     private func developmentHooks() {
         #if DEBUG
         let environment = ProcessInfo.processInfo.environment
@@ -184,6 +191,9 @@ struct LibraryView: View {
             if environment["EMBER_EXPORT_SAVES"] != nil {
                 print("[ember-saves] export:", Result { try SaveManager.export(game) })
             }
+        }
+        if environment["EMBER_INSTALL_DEMO"] != nil {
+            library.installDemo()
         }
         if environment["EMBER_WIFI"] != nil {
             WifiTransfer.shared.start()
@@ -271,7 +281,7 @@ private struct ReopenSheet: View {
             Button { dismiss() } label: {
                 Text("Entendi").frame(maxWidth: .infinity)
             }
-            .buttonStyle(.glassProminent)
+            .emberGlassProminentButton()
             .tint(Theme.accent)
             .controlSize(.large)
             .padding(.top, 8)
@@ -312,7 +322,7 @@ private struct ContinueCard: View {
                         .foregroundStyle(Theme.onHighlight)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 10)
-                        .glassEffect(.regular.tint(Theme.highlight), in: Capsule())
+                        .emberGlass(.regular.tint(Theme.highlight), in: Capsule())
                 }
                 .padding(14)
                 .background(
@@ -355,7 +365,7 @@ private struct Banner<Content: View>: View {
             .foregroundStyle(Theme.primaryText)
             .padding(.horizontal, 18)
             .padding(.vertical, 12)
-            .glassEffect(.regular, in: Capsule())
+            .emberGlass(.regular, in: Capsule())
             .padding(.bottom, 8)
     }
 }

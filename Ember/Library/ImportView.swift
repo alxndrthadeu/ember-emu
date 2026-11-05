@@ -130,7 +130,7 @@ struct ImportView: View {
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 4)
             }
-            .buttonStyle(.glassProminent)
+            .emberGlassProminentButton()
             .tint(Theme.accent)
             .controlSize(.large)
 
@@ -147,7 +147,7 @@ struct ImportView: View {
                            center: .topLeading, startRadius: 0, endRadius: 260)
                 .clipShape(shape)
         }
-        .glassEffect(.regular, in: shape)
+        .emberGlass(.regular, in: shape)
         .padding(.top, 6)
     }
 
@@ -197,7 +197,7 @@ struct ImportView: View {
                             .font(.body.weight(.semibold))
                             .frame(width: 22, height: 22)
                     }
-                    .buttonStyle(.glass)
+                    .emberGlassButton()
                     .accessibilityLabel(copied ? "Copiado" : "Copiar endereço")
                 }
                 .padding(14)
@@ -220,7 +220,7 @@ struct ImportView: View {
         }
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .glassEffect(.regular, in: shape)
+        .emberGlass(.regular, in: shape)
         .animation(.easeInOut(duration: 0.25), value: wifi.isOn)
         .animation(.easeInOut(duration: 0.25), value: wifi.address)
     }
@@ -241,6 +241,16 @@ struct ImportView: View {
                 sheet = .computer
             }
             Divider().padding(.leading, 64)
+            if LibraryStore.demoFolder != nil {
+                RoadRow(icon: "sparkles", tint: Theme.highlight,
+                        title: String(localized: "Jogo de exemplo"),
+                        detail: String(localized: "A Última Brasa, um jogo pequeno feito para o Ember"),
+                        badge: library.hasDemo ? String(localized: "Na estante") : nil) {
+                    library.installDemo()
+                    AppRouter.shared.tab = .library
+                }
+                Divider().padding(.leading, 64)
+            }
             RoadRow(icon: "shippingbox.fill", tint: Theme.accent,
                     title: String(localized: "RTP"),
                     detail: String(localized: "Gráficos e sons padrão que muitos jogos usam"),
@@ -248,7 +258,7 @@ struct ImportView: View {
                 sheet = .rtp
             }
         }
-        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .emberGlass(.regular, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
     }
 
     private var rtpBadge: String? {
