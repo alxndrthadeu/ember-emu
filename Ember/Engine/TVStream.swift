@@ -111,6 +111,8 @@ private final class FrameStreamer: @unchecked Sendable {
 
     private var timer: DispatchSourceTimer?
     private var viewers: [ObjectIdentifier: TVConnection] = [:]
+    private var listeners: [ObjectIdentifier: TVConnection] = [:]
+    private var samples = [Int16](repeating: 0, count: 8192 * 2)
     private var buffer = [UInt8](repeating: 0, count: 640 * 480 * 4)
     private var sequence: UInt32 = 0
 
@@ -127,7 +129,10 @@ private final class FrameStreamer: @unchecked Sendable {
             timer?.cancel()
             timer = nil
             for viewer in viewers.values { viewer.close() }
+            for listener in listeners.values { listener.close() }
             viewers.removeAll()
+            if !listeners.isEmpty { EmberAudioTapEnable(0, 0) }
+            listeners.removeAll()
         }
     }
 
@@ -137,13 +142,39 @@ private final class FrameStreamer: @unchecked Sendable {
         onViewersChanged(viewers.count)
     }
 
+    /// Called on `queue`. The first listener turns the sound tap on and
+    /// the iPhone's speaker off.
+    func addListener(_ listener: TVConnection) {
+        if listeners.isEmpty { EmberAudioTapEnable(1, 1) }
+        listeners[ObjectIdentifier(listener)] = listener
+    }
+
     /// Called on `queue`.
-    func remove(_ viewer: TVConnection) {
-        guard viewers.removeValue(forKey: ObjectIdentifier(viewer)) != nil else { return }
+    func remove(_ connection: TVConnection) {
+        let id = ObjectIdentifier(connection)
+        if listeners.removeValue(forKey: id) != nil, listeners.isEmpty {
+            EmberAudioTapEnable(0, 0)
+        }
+        guard viewers.removeValue(forKey: id) != nil else { return }
         onViewersChanged(viewers.count)
     }
 
+    /// Moves the sound gathered since the last tick to every listener.
+    private func pumpAudio() {
+        guard !listeners.isEmpty else { return }
+        var chunk = Data()
+        while true {
+            let frames = samples.withUnsafeMutableBufferPointer { EmberAudioTapRead($0.baseAddress, 8192) }
+            if frames == 0 { break }
+            samples.withUnsafeBytes { chunk.append(contentsOf: $0.prefix(frames * 4)) }
+            if frames < 8192 { break }
+        }
+        guard !chunk.isEmpty else { return }
+        for listener in listeners.values { listener.sendAudio(chunk) }
+    }
+
     private func tick() {
+        pumpAudio()
         guard !viewers.isEmpty else { return }
         var width: Int32 = 0, height: Int32 = 0
         var copied = buffer.withUnsafeMutableBytes { raw in
@@ -190,6 +221,9 @@ private final class TVConnection: @unchecked Sendable {
     private var head = Data()
     private var sending = false
     private var closed = false
+    /// Sound waiting to go out (never dropped, unlike frames, up to
+    /// half a second).
+    private var pendingAudio = Data()
     private var keepAlive: TVConnection?
 
     init(connection: NWConnection, streamer: FrameStreamer) {
@@ -222,6 +256,14 @@ private final class TVConnection: @unchecked Sendable {
         switch path {
         case "/", "/tv":
             respond("text/html; charset=utf-8", Data(TVPage.html.utf8))
+        case "/audio":
+            let rate = EmberAudioTapRate()
+            let header = "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nX-Sample-Rate: \(rate)\r\n"
+                + "Cache-Control: no-store\r\nConnection: close\r\n\r\n"
+            connection.send(content: Data(header.utf8), completion: .contentProcessed { [self] error in
+                if error != nil { close() } else { streamer.addListener(self) }
+            })
+            watchForClose()
         case "/stream":
             let header = "HTTP/1.1 200 OK\r\nContent-Type: multipart/x-mixed-replace; boundary=emberframe\r\n"
                 + "Cache-Control: no-store\r\nConnection: close\r\n\r\n"
@@ -252,6 +294,26 @@ private final class TVConnection: @unchecked Sendable {
         })
     }
 
+    /// 16-bit stereo sound; queued while the last chunk is on its way.
+    func sendAudio(_ chunk: Data) {
+        guard !closed else { return }
+        pendingAudio.append(chunk)
+        let limit = Int(EmberAudioTapRate()) * 4 / 2
+        if pendingAudio.count > limit { pendingAudio.removeFirst(pendingAudio.count - limit) }
+        flushAudio()
+    }
+
+    private func flushAudio() {
+        guard !sending, !closed, !pendingAudio.isEmpty else { return }
+        sending = true
+        let out = pendingAudio
+        pendingAudio.removeAll(keepingCapacity: true)
+        connection.send(content: out, completion: .contentProcessed { [self] error in
+            sending = false
+            if error != nil { close() } else { flushAudio() }
+        })
+    }
+
     private func respond(_ type: String, _ body: Data, status: String = "200 OK") {
         let header = "HTTP/1.1 \(status)\r\nContent-Type: \(type)\r\nContent-Length: \(body.count)\r\n"
             + "Cache-Control: no-store\r\nConnection: close\r\n\r\n"
@@ -275,7 +337,7 @@ private enum TVPage {
             value.replacingOccurrences(of: "&", with: "&amp;").replacingOccurrences(of: "<", with: "&lt;")
         }
         let connecting = text(String(localized: "Conectando ao iPhone…"))
-        let hint = text(String(localized: "Clique ou aperte OK para tela cheia"))
+        let hint = text(String(localized: "Clique ou aperte OK para tela cheia e som"))
         let paused = text(String(localized: "Abra um jogo no Ember, no iPhone"))
         return """
         <!doctype html><html><head><meta charset="utf-8">
@@ -297,8 +359,32 @@ private enum TVPage {
         function connect(){game.src='/stream?'+Date.now()}
         game.onerror=()=>{game.style.display='none';wait.style.display='flex';msg.textContent='\(paused)';setTimeout(connect,1500)};
         setInterval(()=>{if(game.naturalWidth>0){game.style.display='block';wait.style.display='none'}},300);
-        document.body.addEventListener('click',()=>{const e=document.documentElement;(e.requestFullscreen||e.webkitRequestFullscreen||(()=>{})).call(e)});
-        document.addEventListener('keydown',e=>{if(e.key==='Enter'){const d=document.documentElement;(d.requestFullscreen||(()=>{})).call(d)}});
+        let ctx=null,playing=false;
+        async function sound(){
+          if(playing)return;playing=true;
+          try{
+            const res=await fetch('/audio?'+Date.now());
+            const rate=parseInt(res.headers.get('X-Sample-Rate')||'44100');
+            if(!ctx){const A=window.AudioContext||window.webkitAudioContext;ctx=new A({sampleRate:rate});}
+            await ctx.resume();
+            const reader=res.body.getReader();let next=0,rest=new Uint8Array(0);
+            for(;;){
+              const r=await reader.read();if(r.done)break;
+              const bytes=new Uint8Array(rest.length+r.value.length);bytes.set(rest);bytes.set(r.value,rest.length);
+              const frames=Math.floor(bytes.length/4);rest=bytes.slice(frames*4);if(!frames)continue;
+              const view=new DataView(bytes.buffer,0,frames*4),buf=ctx.createBuffer(2,frames,rate);
+              const L=buf.getChannelData(0),R=buf.getChannelData(1);
+              for(let i=0;i<frames;i++){L[i]=view.getInt16(i*4,true)/32768;R[i]=view.getInt16(i*4+2,true)/32768}
+              const src=ctx.createBufferSource();src.buffer=buf;src.connect(ctx.destination);
+              const now=ctx.currentTime;if(next<now+0.04||next>now+0.5)next=now+0.12;
+              src.start(next);next+=buf.duration;
+            }
+          }catch(e){}
+          playing=false;if(ctx)setTimeout(sound,1500);
+        }
+        function go(){const d=document.documentElement;(d.requestFullscreen||d.webkitRequestFullscreen||(()=>{})).call(d);sound()}
+        document.body.addEventListener('click',go);
+        document.addEventListener('keydown',e=>{if(e.key==='Enter')go()});
         connect();
         </script></body></html>
         """
@@ -386,7 +472,7 @@ struct TVSheet: View {
                     .font(.subheadline.weight(.medium))
                     .foregroundStyle(tv.viewers == 0 ? Color.secondary : Theme.active)
 
-                Text("O som continua no iPhone. Num computador, clique na imagem para tela cheia.")
+                Text("Na TV, aperte OK (ou clique, no computador) para tela cheia e som: o som passa a sair na TV e o iPhone fica mudo.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)

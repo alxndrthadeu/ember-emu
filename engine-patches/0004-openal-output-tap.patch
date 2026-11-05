@@ -1,0 +1,119 @@
+diff --git a/deps/sources/openal-soft/alc/backends/coreaudio.cpp b/deps/sources/openal-soft/alc/backends/coreaudio.cpp
+index e2408b8..af8c8fb 100644
+--- a/deps/sources/openal-soft/alc/backends/coreaudio.cpp
++++ b/deps/sources/openal-soft/alc/backends/coreaudio.cpp
+@@ -21,6 +21,10 @@
+ #include "config.h"
+ 
+ #include "coreaudio.h"
++#include <cstring>
++#include <algorithm>
++#include <mutex>
++#include <atomic>
+ 
+ #include <cinttypes>
+ #include <cmath>
+@@ -379,6 +383,82 @@ CoreAudioPlayback::~CoreAudioPlayback()
+ }
+ 
+ 
++/* Ember patch 0004: a tap of the mixed output, so Ember can send the
++ * game's sound to a TV or computer browser along with the picture.
++ * The audio thread never waits: it copies under try_lock, converted to
++ * 16-bit stereo, into a one-second ring, and drops a block when Ember
++ * is reading. Optionally the iPhone's own output goes silent. */
++namespace {
++std::atomic<bool> gEmberTapOn{false};
++std::atomic<bool> gEmberMuteLocal{false};
++std::atomic<unsigned> gEmberTapRate{44100};
++std::mutex gEmberTapMutex;
++std::vector<int16_t> gEmberRing; /* interleaved stereo */
++size_t gEmberRingHead{0}, gEmberRingCount{0};
++
++template<typename T> int16_t EmberToShort(T value);
++template<> int16_t EmberToShort<float>(float v)
++{ v = std::clamp(v, -1.0f, 1.0f); return static_cast<int16_t>(v * 32767.0f); }
++template<> int16_t EmberToShort<int16_t>(int16_t v) { return v; }
++template<> int16_t EmberToShort<int32_t>(int32_t v) { return static_cast<int16_t>(v >> 16); }
++
++template<typename T>
++void EmberTapCopy(const void *data, size_t frames, size_t channels)
++{
++    std::unique_lock<std::mutex> lock{gEmberTapMutex, std::try_to_lock};
++    if(!lock.owns_lock() || channels == 0) return;
++    const size_t capacity{gEmberRing.size() / 2};
++    if(capacity == 0) return;
++    const T *in{static_cast<const T*>(data)};
++    for(size_t f{0};f < frames;++f)
++    {
++        const int16_t left{EmberToShort<T>(in[f*channels])};
++        const int16_t right{EmberToShort<T>(in[f*channels + (channels > 1 ? 1 : 0)])};
++        const size_t slot{(gEmberRingHead + gEmberRingCount) % capacity};
++        gEmberRing[slot*2] = left;
++        gEmberRing[slot*2 + 1] = right;
++        if(gEmberRingCount < capacity) ++gEmberRingCount;
++        else gEmberRingHead = (gEmberRingHead + 1) % capacity;
++    }
++}
++} // namespace
++
++extern "C" {
++/* Turns the tap on or off, and the iPhone's own output off or on. */
++void EmberAudioTapEnable(int on, int muteLocal)
++{
++    {
++        std::lock_guard<std::mutex> lock{gEmberTapMutex};
++        if(on && gEmberRing.empty())
++            gEmberRing.assign(static_cast<size_t>(gEmberTapRate.load()) * 2, 0);
++        if(!on) { gEmberRing.clear(); gEmberRing.shrink_to_fit(); }
++        gEmberRingHead = 0;
++        gEmberRingCount = 0;
++    }
++    gEmberMuteLocal.store(on && muteLocal);
++    gEmberTapOn.store(on != 0);
++}
++
++/* Copies up to `maxFrames` stereo frames (16-bit, interleaved). */
++size_t EmberAudioTapRead(int16_t *out, size_t maxFrames)
++{
++    std::lock_guard<std::mutex> lock{gEmberTapMutex};
++    const size_t capacity{gEmberRing.size() / 2};
++    const size_t frames{std::min(maxFrames, gEmberRingCount)};
++    for(size_t f{0};f < frames;++f)
++    {
++        const size_t slot{(gEmberRingHead + f) % capacity};
++        out[f*2] = gEmberRing[slot*2];
++        out[f*2 + 1] = gEmberRing[slot*2 + 1];
++    }
++    if(capacity) gEmberRingHead = (gEmberRingHead + frames) % capacity;
++    gEmberRingCount -= frames;
++    return frames;
++}
++
++unsigned EmberAudioTapRate(void) { return gEmberTapRate.load(); }
++} // extern "C"
++
+ OSStatus CoreAudioPlayback::MixerProc(AudioUnitRenderActionFlags*, const AudioTimeStamp*, UInt32,
+     UInt32, AudioBufferList *ioData) noexcept
+ {
+@@ -387,6 +467,20 @@ OSStatus CoreAudioPlayback::MixerProc(AudioUnitRenderActionFlags*, const AudioTi
+         auto &buffer = ioData->mBuffers[i];
+         mDevice->renderSamples(buffer.mData, buffer.mDataByteSize/mFrameSize,
+             buffer.mNumberChannels);
++        if(gEmberTapOn.load(std::memory_order_relaxed) && ioData->mNumberBuffers == 1)
++        {
++            gEmberTapRate.store(mDevice->mSampleRate, std::memory_order_relaxed);
++            const size_t frames{buffer.mDataByteSize/mFrameSize};
++            switch(mDevice->FmtType)
++            {
++            case DevFmtFloat: EmberTapCopy<float>(buffer.mData, frames, buffer.mNumberChannels); break;
++            case DevFmtShort: EmberTapCopy<int16_t>(buffer.mData, frames, buffer.mNumberChannels); break;
++            case DevFmtInt: EmberTapCopy<int32_t>(buffer.mData, frames, buffer.mNumberChannels); break;
++            default: break;
++            }
++            if(gEmberMuteLocal.load(std::memory_order_relaxed))
++                std::memset(buffer.mData, 0, buffer.mDataByteSize);
++        }
+     }
+     return noErr;
+ }

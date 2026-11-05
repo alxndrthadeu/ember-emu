@@ -14,4 +14,12 @@ int EmberRunEngine(void);
 void alListenerf(int param, float value);
 void alGetListenerf(int param, float *value);
 
+// The game's mixed sound, copied out of OpenAL (engine patch 0004), to
+// send to a TV or computer browser. muteLocal silences the iPhone.
+#include <stddef.h>
+#include <stdint.h>
+void EmberAudioTapEnable(int on, int muteLocal);
+size_t EmberAudioTapRead(int16_t *out, size_t maxFrames);
+unsigned EmberAudioTapRate(void);
+
 #endif

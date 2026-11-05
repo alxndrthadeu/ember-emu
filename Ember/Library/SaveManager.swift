@@ -77,7 +77,7 @@ enum SaveManager {
 
     /// "Save1.rxdata", "Save01.rvdata2", and the "Game.rxdata" of
     /// older Essentials games that keep it next to the executable.
-    private static func isGameFolderSaveName(_ name: String) -> Bool {
+    static func isGameFolderSaveName(_ name: String) -> Bool {
         let lower = name.lowercased()
         let base = lower.hasSuffix(".bak") ? String(lower.dropLast(4)) : lower
         let ext = (base as NSString).pathExtension

@@ -84,8 +84,28 @@ final class LibraryStore: ObservableObject {
                 lastError = error.localizedDescription
             }
         }
+        // A whole Ember backup ("Open in Ember", the Finder, Files).
+        let backups = urls.filter { $0.pathExtension.lowercased() == EmberBackup.fileExtension }
+        for url in backups {
+            let existing = Set(games.map(\.id))
+            Task.detached(priority: .userInitiated) {
+                let outcome = Result { try EmberBackup.restore(url, keepingGames: existing) }
+                await MainActor.run {
+                    self.reload()
+                    SkinStore.shared.reload()
+                    switch outcome {
+                    case .success(let summary):
+                        self.importNotice = Notice(
+                            title: String(localized: "Backup restaurado"),
+                            message: String(localized: "Backup restaurado: \(summary.games) jogos e \(summary.files) arquivos."))
+                    case .failure(let error):
+                        self.lastError = error.localizedDescription
+                    }
+                }
+            }
+        }
         let discard = AppSettings.deleteArchiveAfterImport
-        for url in urls where !skins.contains(url) && !saves.contains(url) {
+        for url in urls where !skins.contains(url) && !saves.contains(url) && !backups.contains(url) {
             let name = url.lastPathComponent
             guard !importing.contains(name) else { continue }
             importing.append(name)
@@ -129,7 +149,7 @@ final class LibraryStore: ObservableObject {
                 let isFolder = (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) == true
                 let ext = url.pathExtension.lowercased()
                 if GameImporter.archiveExtensions.contains(ext) || SkinStore.skinExtensions.contains(ext)
-                    || ext == SaveShare.fileExtension
+                    || ext == SaveShare.fileExtension || ext == EmberBackup.fileExtension
                     || (isFolder && (GameFolder.findRoot(in: url) != nil || RTPStore.findRoot(in: url) != nil)) {
                     candidates.append(url)
                 }

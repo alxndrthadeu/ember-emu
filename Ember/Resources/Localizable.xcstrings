@@ -782,6 +782,22 @@
         }
       }
     },
+    "Ajustes, nomes e histórico" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings, names and history"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes, nombres e historial"
+          }
+        }
+      }
+    },
     "Andar" : {
       "localizations" : {
         "en" : {
@@ -1203,6 +1219,60 @@
         }
       }
     },
+    "Backup" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copia de seguridad"
+          }
+        }
+      }
+    },
+    "Backup restaurado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup restored"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copia restaurada"
+          }
+        }
+      }
+    },
+    "Backup restaurado: %lld jogos e %lld arquivos." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup restored: %1$lld games and %2$lld files."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copia restaurada: %1$lld juegos y %2$lld archivos."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Backup restaurado: %1$lld jogos e %2$lld arquivos."
+          }
+        }
+      }
+    },
     "Biblioteca" : {
       "localizations" : {
         "en" : {
@@ -1411,6 +1481,22 @@
         }
       }
     },
+    "Capas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Covers"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portadas"
+          }
+        }
+      }
+    },
     "Captura" : {
       "localizations" : {
         "en" : {
@@ -1460,6 +1546,7 @@
       }
     },
     "Clique ou aperte OK para tela cheia" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1471,6 +1558,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Haz clic o pulsa OK para pantalla completa"
+          }
+        }
+      }
+    },
+    "Clique ou aperte OK para tela cheia e som" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Click or press OK for full screen and sound"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haz clic o pulsa OK para pantalla completa y sonido"
           }
         }
       }
@@ -1862,6 +1965,22 @@
         }
       }
     },
+    "Depois, escolha onde salvar. Jogos grandes deixam o backup grande: confira o espaço na nuvem." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Then choose where to save it. Big games make a big backup: check your cloud space."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Después, elige dónde guardarla. Los juegos grandes hacen una copia grande: revisa el espacio en la nube."
+          }
+        }
+      }
+    },
     "Desempenho" : {
       "localizations" : {
         "en" : {
@@ -2199,6 +2318,22 @@
         }
       }
     },
+    "Escolha o que guardar e salve o arquivo .emberbackup onde quiser: iCloud Drive, Google Drive, Dropbox ou no computador, pelo app Arquivos." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose what to keep and save the .emberbackup file wherever you like: iCloud Drive, Google Drive, Dropbox or a computer, through the Files app."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige qué guardar y guarda el archivo .emberbackup donde quieras: iCloud Drive, Google Drive, Dropbox o un ordenador, con la app Archivos."
+          }
+        }
+      }
+    },
     "Escolha um jogo no iPhone" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -2360,6 +2495,22 @@
         }
       }
     },
+    "Estados salvos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save states"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estados guardados"
+          }
+        }
+      }
+    },
     "Este .rar está dividido em partes (part1, part2…). Junte as partes no computador e importe de novo." : {
       "localizations" : {
         "en" : {
@@ -2372,6 +2523,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Este .rar está dividido en partes (part1, part2…). Une las partes en el ordenador e importa de nuevo."
+          }
+        }
+      }
+    },
+    "Este arquivo não é um backup do Ember." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This file is not an Ember backup."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este archivo no es una copia de seguridad de Ember."
           }
         }
       }
@@ -2506,6 +2673,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Falta el archivo %@. Comprueba que el juego se importó completo."
+          }
+        }
+      }
+    },
+    "Fazer backup" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back up"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hacer copia"
+          }
+        }
+      }
+    },
+    "Fazer backup…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back up…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hacer copia…"
           }
         }
       }
@@ -3026,6 +3225,22 @@
         }
       }
     },
+    "Jogo desmarcado não entra, mas os saves dele entram se \"Saves\" estiver ligado." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An unchecked game stays out, but its saves go in when \"Saves\" is on."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un juego sin marcar no entra, pero sus partidas sí si \"Partidas\" está activado."
+          }
+        }
+      }
+    },
     "Jogo removido da biblioteca" : {
       "localizations" : {
         "en" : {
@@ -3038,6 +3253,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Juego eliminado de la biblioteca"
+          }
+        }
+      }
+    },
+    "Jogos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Games"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Juegos"
           }
         }
       }
@@ -3086,6 +3317,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Los juegos que dependen de él dejarán de encontrar algunos gráficos y sonidos."
+          }
+        }
+      }
+    },
+    "Jogos que não estão aqui voltam inteiros. Nos que já estão, só os saves voltam. O que for substituído fica guardado em Backups, no app Arquivos." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Games that are not here come back whole. For games already here, only the saves come back. Anything replaced is kept in Backups, in the Files app."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los juegos que no están aquí vuelven completos. En los que ya están, solo vuelven las partidas. Lo que se reemplace queda guardado en Backups, en la app Archivos."
           }
         }
       }
@@ -3587,6 +3834,22 @@
         }
       }
     },
+    "Na TV, aperte OK (ou clique, no computador) para tela cheia e som: o som passa a sair na TV e o iPhone fica mudo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On the TV, press OK (or click, on a computer) for full screen and sound: the sound moves to the TV and the iPhone goes quiet."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En la TV, pulsa OK (o haz clic, en un ordenador) para pantalla completa y sonido: el sonido pasa a la TV y el iPhone se silencia."
+          }
+        }
+      }
+    },
     "Nada" : {
       "localizations" : {
         "en" : {
@@ -3733,6 +3996,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No instalado"
+          }
+        }
+      }
+    },
+    "Nenhum" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ninguno"
           }
         }
       }
@@ -4267,6 +4546,7 @@
       }
     },
     "O som continua no iPhone. Num computador, clique na imagem para tela cheia." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4668,6 +4948,22 @@
         }
       }
     },
+    "Progresso e ajustes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Progress and settings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Progreso y ajustes"
+          }
+        }
+      }
+    },
     "Pronto. Abra a Biblioteca do Ember." : {
       "localizations" : {
         "en" : {
@@ -4776,6 +5072,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Renombrar"
+          }
+        }
+      }
+    },
+    "Restaurar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurar"
+          }
+        }
+      }
+    },
+    "Restaurar este backup?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore this backup?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Restaurar esta copia?"
+          }
+        }
+      }
+    },
+    "Restaurar um backup…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore a backup…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurar una copia…"
           }
         }
       }
@@ -5563,6 +5907,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Toda aventura empieza con una chispa."
+          }
+        }
+      }
+    },
+    "Todos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todos"
           }
         }
       }

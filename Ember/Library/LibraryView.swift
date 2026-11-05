@@ -208,6 +208,7 @@ struct LibraryView: View {
     ///   EMBER_SHARE_SAVES=<id>    builds that game's .embersave (logs the path)
     ///   EMBER_QUICK=continue|import|wifi  acts as an app icon quick action
     ///   EMBER_TV=1                starts "Jogar na TV" 8 s after the game opens
+    ///   EMBER_MAKE_BACKUP=<id>    writes a backup with that whole game (logs the path)
     private func developmentHooks() {
         #if DEBUG
         let environment = ProcessInfo.processInfo.environment
@@ -225,6 +226,11 @@ struct LibraryView: View {
         }
         if let id = environment["EMBER_SHARE_SAVES"], let game = library.games.first(where: { $0.id == id }) {
             print("[ember-share]", Result { try SaveShare.package(game) })
+        }
+        if let id = environment["EMBER_MAKE_BACKUP"] {
+            var options = EmberBackup.Options()
+            options.games = [id]
+            print("[ember-backup]", Result { try EmberBackup.make(options, library: library.games) })
         }
         if let quick = environment["EMBER_QUICK"] {
             let map: [String: QuickAction] = ["continue": .continueLast, "import": .importGame, "wifi": .wifi]

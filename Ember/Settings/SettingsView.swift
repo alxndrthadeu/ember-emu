@@ -103,6 +103,8 @@ struct SettingsView: View {
                     Text("Jogos ocupam bastante espaço. Depois de importar um .zip, .rar ou .7z, o Ember manda o arquivo original para Apagados Recentemente, no app Arquivos. Dá para recuperar por 30 dias.")
                 }
 
+                BackupSection()
+
                 RTPSection()
 
                 aboutSection
