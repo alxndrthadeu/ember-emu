@@ -130,7 +130,8 @@ enum GameArchive {
     static func isUploaded(_ record: ArchivedGame) -> Bool {
         if fakeCloud { return true }
         guard let cloud = cloudFolder() else { return false }
-        let url = cloud.appendingPathComponent(record.archiveName)
+        var url = cloud.appendingPathComponent(record.archiveName)
+        url.removeAllCachedResourceValues()
         return (try? url.resourceValues(forKeys: [.ubiquitousItemIsUploadedKey]))?.ubiquitousItemIsUploaded == true
             || !FileManager.default.fileExists(atPath: url.path)
     }
@@ -164,13 +165,14 @@ enum GameArchive {
         }
 
         // Download from iCloud, when only the placeholder is here.
-        if !fakeCloud, (try? url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey]))?
-            .ubiquitousItemDownloadingStatus != .current {
+        if !fakeCloud, !isDownloaded(url) {
             try fm.startDownloadingUbiquitousItem(at: url)
-            while (try? url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey]))?
-                .ubiquitousItemDownloadingStatus != .current {
+            while !isDownloaded(url) {
                 let percent = await MainActor.run { CloudProgress.shared.items[record.archiveName]?.downloaded }
                 progress(String(localized: "Baixando do iCloud…"), percent.map { $0 / 100 })
+                // At 100%, iCloud may still be finishing the file: the
+                // coordinated read below waits for it, so stop polling.
+                if let percent, percent >= 100 { break }
                 try await Task.sleep(for: .milliseconds(400))
             }
         }
@@ -180,7 +182,14 @@ enum GameArchive {
         let scratch = fm.temporaryDirectory.appendingPathComponent("Unarchive-\(UUID().uuidString)", isDirectory: true)
         try fm.createDirectory(at: scratch, withIntermediateDirectories: true)
         defer { try? fm.removeItem(at: scratch) }
-        try unpack(url, into: scratch)
+        // A coordinated read hands over the whole file, downloading what
+        // is still missing.
+        var coordinatorError: NSError?
+        var unpackError: Error?
+        NSFileCoordinator().coordinate(readingItemAt: url, options: [], error: &coordinatorError) { readable in
+            do { try unpack(readable, into: scratch) } catch { unpackError = error }
+        }
+        if let error = coordinatorError ?? unpackError { throw error }
         if fm.fileExists(atPath: target.path) { try fm.removeItem(at: target) }
         try fm.createDirectory(at: GameImporter.gamesFolder, withIntermediateDirectories: true)
         try fm.moveItem(at: scratch, to: target)
@@ -214,6 +223,17 @@ enum GameArchive {
             removeFromCloud(cloud.appendingPathComponent(record.archiveName))
         }
         dropRecord(record.id)
+    }
+
+    /// Whether the pack is on the iPhone. Resource values are cached per
+    /// URL, so each check reads them fresh (with the cache, a finished
+    /// download kept looking unfinished).
+    private static func isDownloaded(_ url: URL) -> Bool {
+        var fresh = url
+        fresh.removeAllCachedResourceValues()
+        let status = (try? fresh.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey]))?
+            .ubiquitousItemDownloadingStatus
+        return status == .current || status == .downloaded
     }
 
     /// An evicted iCloud file shows as a ".name.icloud" placeholder.
