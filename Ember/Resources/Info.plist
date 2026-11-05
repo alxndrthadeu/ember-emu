@@ -139,6 +139,25 @@
 	<string>Para receber jogos enviados pelo navegador de um computador no mesmo Wi-Fi.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Para salvar capturas de tela dos jogos em Fotos.</string>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.alexandrethadeu.ember.import</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Importar jogo</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>folder.badge.plus</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.alexandrethadeu.ember.wifi</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Enviar pelo Wi-Fi</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>wifi</string>
+		</dict>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

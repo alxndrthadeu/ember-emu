@@ -8,7 +8,10 @@ enum QuickAction: String {
     case importGame = "com.alexandrethadeu.ember.import"
     case wifi = "com.alexandrethadeu.ember.wifi"
 
-    /// Rebuilds the menu, so "Continuar" names the last game played.
+    /// Rebuilds the dynamic part of the menu: "Continuar" with the last
+    /// game's name. "Importar jogo" and "Enviar pelo Wi-Fi" are static
+    /// (Info.plist), so they show right after install, before the app
+    /// has ever run.
     /// `library` is passed by the store itself while it starts up
     /// (reading LibraryStore.shared then would recurse into its init).
     @MainActor
@@ -21,16 +24,6 @@ enum QuickAction: String {
                 localizedSubtitle: recent.title,
                 icon: UIApplicationShortcutIcon(systemImageName: "play.fill")))
         }
-        items.append(UIApplicationShortcutItem(
-            type: importGame.rawValue,
-            localizedTitle: String(localized: "Importar jogo"),
-            localizedSubtitle: nil,
-            icon: UIApplicationShortcutIcon(systemImageName: "folder.badge.plus")))
-        items.append(UIApplicationShortcutItem(
-            type: wifi.rawValue,
-            localizedTitle: String(localized: "Enviar pelo Wi-Fi"),
-            localizedSubtitle: nil,
-            icon: UIApplicationShortcutIcon(systemImageName: "wifi")))
         UIApplication.shared.shortcutItems = items
     }
 }
