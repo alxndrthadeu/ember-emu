@@ -100,8 +100,9 @@ struct LibraryView: View {
             }
             LazyVGrid(columns: columns, spacing: 22) {
                 ForEach(library.games) { game in
-                    GameCard(game: game)
-                        .onTapGesture { open(game) }
+                    GameCard(game: game, status: library.archiveStatus[game.id])
+                        .transition(.scale(scale: 0.85).combined(with: .opacity))
+                        .onTapGesture { if library.archiveStatus[game.id] == nil { open(game) } }
                         .onLongPressGesture { showOptions(game) }
                         .accessibilityAddTraits(.isButton)
                         .accessibilityAction(named: "Opções") { showOptions(game) }
@@ -127,7 +128,9 @@ struct LibraryView: View {
                     .padding(.horizontal, 20)
                 LazyVGrid(columns: columns, spacing: 22) {
                     ForEach(library.archived) { record in
-                        ArchivedCard(record: record, status: library.archiveStatus[record.id])
+                        ArchivedCard(record: record, status: library.archiveStatus[record.id],
+                                     progress: library.archiveProgress[record.id])
+                            .transition(.scale(scale: 0.85).combined(with: .opacity))
                             .onTapGesture { library.unarchive(record) }
                             .onLongPressGesture { removingArchived = record }
                             .accessibilityAddTraits(.isButton)
@@ -272,11 +275,17 @@ struct LibraryView: View {
             options.games = [id]
             print("[ember-backup]", Result { try EmberBackup.make(options, library: library.games) })
         }
-        if let id = environment["EMBER_ARCHIVE"], let game = library.games.first(where: { $0.id == id }) {
-            library.archive(game)
+        if let id = environment["EMBER_ARCHIVE"] {
+            Task {
+                try? await Task.sleep(for: .seconds(5))
+                if let game = library.games.first(where: { $0.id == id }) { library.archive(game) }
+            }
         }
-        if let id = environment["EMBER_UNARCHIVE"], let record = library.archived.first(where: { $0.id == id }) {
-            library.unarchive(record)
+        if let id = environment["EMBER_UNARCHIVE"] {
+            Task {
+                try? await Task.sleep(for: .seconds(5))
+                if let record = library.archived.first(where: { $0.id == id }) { library.unarchive(record) }
+            }
         }
         if let quick = environment["EMBER_QUICK"] {
             let map: [String: QuickAction] = ["continue": .continueLast, "import": .importGame, "wifi": .wifi]
@@ -440,10 +449,27 @@ private struct ContinueCard: View {
 
 private struct GameCard: View {
     let game: GameEntry
+    /// Set while the game is being archived.
+    var status: String? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             CoverFrame(game: game)
+                .overlay {
+                    if let status {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: Theme.cardRadius, style: .continuous)
+                                .fill(.black.opacity(0.45))
+                            VStack(spacing: 8) {
+                                ProgressView().tint(.white)
+                                Label(status, systemImage: "icloud.and.arrow.up")
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(.white)
+                            }
+                        }
+                        .transition(.opacity)
+                    }
+                }
                 .shadow(color: .black.opacity(0.08), radius: 10, y: 4)
             Text(game.title)
                 .font(.subheadline.weight(.semibold))
@@ -458,6 +484,7 @@ private struct GameCard: View {
 private struct ArchivedCard: View {
     let record: ArchivedGame
     let status: String?
+    var progress: Double? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -481,7 +508,20 @@ private struct ArchivedCard: View {
                     .clipShape(RoundedRectangle(cornerRadius: Theme.cardRadius, style: .continuous))
                 VStack(spacing: 6) {
                     if let status {
-                        ProgressView()
+                        if let progress {
+                            ZStack {
+                                Circle().stroke(Theme.primaryText.opacity(0.15), lineWidth: 4)
+                                Circle().trim(from: 0, to: progress)
+                                    .stroke(Theme.accent, style: StrokeStyle(lineWidth: 4, lineCap: .round))
+                                    .rotationEffect(.degrees(-90))
+                                    .animation(.easeOut(duration: 0.3), value: progress)
+                                Text("\(Int(progress * 100))%")
+                                    .font(.caption2.weight(.bold).monospacedDigit())
+                            }
+                            .frame(width: 44, height: 44)
+                        } else {
+                            ProgressView()
+                        }
                         Text(status).font(.caption.weight(.semibold))
                     } else {
                         Image(systemName: "icloud.and.arrow.down")

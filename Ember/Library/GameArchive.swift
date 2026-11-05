@@ -117,11 +117,22 @@ enum GameArchive {
             try fm.setUbiquitous(true, itemAt: packed, destinationURL: target)
         }
 
+        // The test stand-in is instant: slow it down so the animation shows.
+        if fakeCloud { Thread.sleep(forTimeInterval: 3) }
         let record = ArchivedGame(id: game.id, title: game.title, originalTitle: game.originalTitle,
                                   archiveName: name, size: size, archived: Date())
         try save(record)
         try fm.removeItem(at: game.folder)
         return record
+    }
+
+    /// Whether iCloud has the whole pack (always true for the stand-in).
+    static func isUploaded(_ record: ArchivedGame) -> Bool {
+        if fakeCloud { return true }
+        guard let cloud = cloudFolder() else { return false }
+        let url = cloud.appendingPathComponent(record.archiveName)
+        return (try? url.resourceValues(forKeys: [.ubiquitousItemIsUploadedKey]))?.ubiquitousItemIsUploaded == true
+            || !FileManager.default.fileExists(atPath: url.path)
     }
 
     /// Frees the local copies of packs iCloud already has. Called after
@@ -144,7 +155,7 @@ enum GameArchive {
 
     /// Downloads the pack if needed (calling `progress` with a status
     /// line), unpacks it into the library and forgets the archive.
-    static func restore(_ record: ArchivedGame, progress: @escaping (String) -> Void) async throws {
+    static func restore(_ record: ArchivedGame, progress: @escaping (String, Double?) -> Void) async throws {
         guard let cloud = cloudFolder() else { throw ArchiveError.noICloud }
         let fm = FileManager.default
         let url = cloud.appendingPathComponent(record.archiveName)
@@ -158,12 +169,13 @@ enum GameArchive {
             try fm.startDownloadingUbiquitousItem(at: url)
             while (try? url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey]))?
                 .ubiquitousItemDownloadingStatus != .current {
-                progress(String(localized: "Baixando do iCloud…"))
-                try await Task.sleep(for: .milliseconds(500))
+                let percent = await MainActor.run { CloudProgress.shared.items[record.archiveName]?.downloaded }
+                progress(String(localized: "Baixando do iCloud…"), percent.map { $0 / 100 })
+                try await Task.sleep(for: .milliseconds(400))
             }
         }
 
-        progress(String(localized: "Descompactando…"))
+        progress(String(localized: "Descompactando…"), nil)
         let target = GameImporter.gamesFolder.appendingPathComponent(record.id, isDirectory: true)
         let scratch = fm.temporaryDirectory.appendingPathComponent("Unarchive-\(UUID().uuidString)", isDirectory: true)
         try fm.createDirectory(at: scratch, withIntermediateDirectories: true)
@@ -173,22 +185,33 @@ enum GameArchive {
         try fm.createDirectory(at: GameImporter.gamesFolder, withIntermediateDirectories: true)
         try fm.moveItem(at: scratch, to: target)
 
-        // The game is home: the archive and its record go.
+        // The game is home: the pack leaves iCloud (no space used twice)
+        // and the record goes.
+        removeFromCloud(url)
+        dropRecord(record.id)
+    }
+
+    /// Deletes a pack from iCloud Drive, also when only its evicted
+    /// placeholder (".name.icloud") is on the iPhone.
+    private static func removeFromCloud(_ url: URL) {
+        let fm = FileManager.default
         var coordinatorError: NSError?
         NSFileCoordinator().coordinate(writingItemAt: url, options: .forDeleting, error: &coordinatorError) { writable in
             try? fm.removeItem(at: writable)
         }
-        dropRecord(record.id)
+        let placeholder = url.deletingLastPathComponent().appendingPathComponent(".\(url.lastPathComponent).icloud")
+        if fm.fileExists(atPath: placeholder.path) {
+            NSFileCoordinator().coordinate(writingItemAt: placeholder, options: .forDeleting, error: &coordinatorError) { writable in
+                try? fm.removeItem(at: writable)
+            }
+        }
+        if fm.fileExists(atPath: url.path) { try? fm.removeItem(at: url) }
     }
 
     /// Deletes an archived game for good (the pack and its record).
     static func delete(_ record: ArchivedGame) {
         if let cloud = cloudFolder() {
-            let url = cloud.appendingPathComponent(record.archiveName)
-            var coordinatorError: NSError?
-            NSFileCoordinator().coordinate(writingItemAt: url, options: .forDeleting, error: &coordinatorError) { writable in
-                try? FileManager.default.removeItem(at: writable)
-            }
+            removeFromCloud(cloud.appendingPathComponent(record.archiveName))
         }
         dropRecord(record.id)
     }
@@ -238,5 +261,48 @@ enum GameArchive {
             try? input.close()
         }
         _ = try ArchiveStream.process(readingFrom: decode, writingTo: extract)
+    }
+}
+
+/// Upload and download percentages of Ember's packs in iCloud, from
+/// the system's metadata query (URL resource values have no percent).
+@MainActor
+final class CloudProgress: ObservableObject {
+    static let shared = CloudProgress()
+
+    struct Item: Equatable {
+        var uploaded: Double?
+        var downloaded: Double?
+        var isUploaded = false
+    }
+
+    /// By file name.
+    @Published private(set) var items: [String: Item] = [:]
+    private let query = NSMetadataQuery()
+
+    private init() {
+        guard !GameArchive.fakeCloud else { return }
+        query.searchScopes = [NSMetadataQueryUbiquitousDocumentsScope]
+        query.predicate = NSPredicate(format: "%K LIKE '*.emberarchive'", NSMetadataItemFSNameKey)
+        for name in [NSNotification.Name.NSMetadataQueryDidFinishGathering, .NSMetadataQueryDidUpdate] {
+            NotificationCenter.default.addObserver(forName: name, object: query, queue: .main) { _ in
+                MainActor.assumeIsolated { CloudProgress.shared.refresh() }
+            }
+        }
+        query.start()
+    }
+
+    private func refresh() {
+        query.disableUpdates()
+        defer { query.enableUpdates() }
+        var next: [String: Item] = [:]
+        for case let entry as NSMetadataItem in query.results {
+            guard let name = entry.value(forAttribute: NSMetadataItemFSNameKey) as? String else { continue }
+            next[name] = Item(
+                uploaded: entry.value(forAttribute: NSMetadataUbiquitousItemPercentUploadedKey) as? Double,
+                downloaded: entry.value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? Double,
+                isUploaded: entry.value(forAttribute: NSMetadataUbiquitousItemIsUploadedKey) as? Bool ?? false)
+        }
+        items = next
     }
 }

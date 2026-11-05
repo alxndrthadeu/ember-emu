@@ -1,4 +1,6 @@
+import Combine
 import Foundation
+import SwiftUI
 import UIKit
 
 /// The games in Documents/Games, and the imports into it.
@@ -11,6 +13,9 @@ final class LibraryStore: ObservableObject {
     @Published private(set) var archived: [ArchivedGame] = []
     /// What an archive or restore is doing right now, by game id.
     @Published private(set) var archiveStatus: [String: String] = [:]
+    /// Its progress (0...1), when known.
+    @Published private(set) var archiveProgress: [String: Double] = [:]
+    private var cloudWatch: AnyCancellable?
     /// Names of the items being imported right now.
     @Published private(set) var importing: [String] = []
     @Published var lastError: String?
@@ -55,6 +60,7 @@ final class LibraryStore: ObservableObject {
             .compactMap(GameEntry.init(folder:))
             .sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
         archived = GameArchive.records().filter { record in !games.contains { $0.id == record.id } }
+        watchUploads()
         QuickAction.refresh(self)
         // Packs iCloud already has no longer need their local copy.
         if !archived.isEmpty {
@@ -189,39 +195,74 @@ final class LibraryStore: ObservableObject {
 
     func archive(_ game: GameEntry) {
         guard archiveStatus[game.id] == nil else { return }
-        archiveStatus[game.id] = String(localized: "Compactando…")
+        withAnimation { archiveStatus[game.id] = String(localized: "Compactando…") }
         Task.detached(priority: .userInitiated) {
             let result = Result { try GameArchive.archive(game) }
             await MainActor.run {
-                self.archiveStatus[game.id] = nil
-                if case .failure(let error) = result { self.lastError = error.localizedDescription }
-                self.reload()
+                withAnimation(.spring(response: 0.5, dampingFraction: 0.85)) {
+                    self.archiveStatus[game.id] = nil
+                    if case .failure(let error) = result { self.lastError = error.localizedDescription }
+                    self.reload()
+                }
             }
-            // Free the local copy once iCloud has it.
-            for _ in 0..<60 {
-                try? await Task.sleep(for: .seconds(10))
-                GameArchive.evictUploaded()
+        }
+    }
+
+    /// While a pack uploads, its card says so with the percentage; once
+    /// iCloud has it, the local copy is freed.
+    private func watchUploads() {
+        let pending = archived.filter { !GameArchive.isUploaded($0) }
+        for record in pending where archiveStatus[record.id] == nil {
+            archiveStatus[record.id] = String(localized: "Enviando ao iCloud…")
+        }
+        guard cloudWatch == nil, !pending.isEmpty else { return }
+        cloudWatch = CloudProgress.shared.$items.sink { [weak self] items in
+            guard let self else { return }
+            var stillUploading = false
+            for record in self.archived {
+                guard let item = items[record.archiveName] else { continue }
+                if item.isUploaded {
+                    if self.archiveStatus[record.id] == String(localized: "Enviando ao iCloud…") {
+                        withAnimation {
+                            self.archiveStatus[record.id] = nil
+                            self.archiveProgress[record.id] = nil
+                        }
+                    }
+                } else {
+                    stillUploading = true
+                    self.archiveProgress[record.id] = item.uploaded.map { $0 / 100 }
+                }
+            }
+            if !stillUploading {
+                Task.detached(priority: .utility) { GameArchive.evictUploaded() }
+                self.cloudWatch = nil
             }
         }
     }
 
     func unarchive(_ record: ArchivedGame) {
         guard archiveStatus[record.id] == nil else { return }
-        archiveStatus[record.id] = String(localized: "Preparando…")
+        withAnimation { archiveStatus[record.id] = String(localized: "Preparando…") }
         Task.detached(priority: .userInitiated) {
             let result: Result<Void, Error>
             do {
-                try await GameArchive.restore(record) { status in
-                    Task { @MainActor in self.archiveStatus[record.id] = status }
+                try await GameArchive.restore(record) { status, fraction in
+                    Task { @MainActor in
+                        self.archiveStatus[record.id] = status
+                        self.archiveProgress[record.id] = fraction
+                    }
                 }
                 result = .success(())
             } catch {
                 result = .failure(error)
             }
             await MainActor.run {
-                self.archiveStatus[record.id] = nil
-                if case .failure(let error) = result { self.lastError = error.localizedDescription }
-                self.reload()
+                withAnimation(.spring(response: 0.5, dampingFraction: 0.85)) {
+                    self.archiveStatus[record.id] = nil
+                    self.archiveProgress[record.id] = nil
+                    if case .failure(let error) = result { self.lastError = error.localizedDescription }
+                    self.reload()
+                }
             }
         }
     }

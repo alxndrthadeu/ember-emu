@@ -2365,6 +2365,22 @@
         }
       }
     },
+    "Enviando ao iCloud…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uploading to iCloud…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subiendo a iCloud…"
+          }
+        }
+      }
+    },
     "Enviar para o Ember" : {
       "localizations" : {
         "en" : {
