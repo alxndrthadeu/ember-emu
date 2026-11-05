@@ -20,6 +20,12 @@ struct SettingsView: View {
     @State private var pendingDelete: Skin?
     @State private var skinError: String?
 
+    /// The screen is wider than a phone's (an open iPhone Duo).
+    private static var isWideScreen: Bool {
+        let size = UIScreen.main.bounds.size
+        return max(size.width, size.height) / max(min(size.width, size.height), 1) < BuiltInSkins.wideBelow
+    }
+
     var body: some View {
         NavigationStack {
             Form {
@@ -170,6 +176,13 @@ struct SettingsView: View {
             Picker("Tela no modo retrato", selection: $skins.portraitFullWidth) {
                 Text("Clássica").tag(false)
                 Text("Tela cheia").tag(true)
+            }
+            if Self.isWideScreen {
+                // An iPhone Duo: the inner screen is far wider than a phone's.
+                Picker("Com o iPhone aberto", selection: $skins.duoSplit) {
+                    Text("Tela dividida").tag(true)
+                    Text("Tela única").tag(false)
+                }
             }
             Button {
                 importingSkin = true

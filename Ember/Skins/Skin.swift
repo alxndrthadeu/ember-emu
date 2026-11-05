@@ -47,6 +47,10 @@ struct SkinLayout: Equatable {
     var extendedEdges: UIEdgeInsets
     /// The skin allows a see-through controller (landscape over the game).
     var translucent: Bool
+    /// Where an iPhone Duo folds, in mapping points: y in portrait, x in
+    /// landscape. Set only by the split layouts, which keep the game and
+    /// the controls on their own half.
+    var fold: CGFloat? = nil
 
     var hasMenuButton: Bool {
         items.contains { $0.inputs.contains(.menu) }

@@ -165,6 +165,112 @@ enum BuiltInSkins {
         return copy
     }
 
+    // MARK: iPhone Duo, split like a handheld with two screens
+
+    /// The gap kept clear around the fold (mapping points): the crease
+    /// is curved and hard to read or tap. Wider when the Duo is half
+    /// folded, where the halves meet at an angle.
+    static func foldGap(partiallyOpen: Bool) -> CGFloat { partiallyOpen ? 40 : 26 }
+
+    /// Portrait, unfolded (the fold runs across): the game on the top
+    /// half, the controller on the bottom half, nothing on the crease.
+    static func splitPortrait(_ layout: SkinLayout, viewAspect: CGFloat, gameAspect: CGFloat?,
+                              gap: CGFloat) -> SkinLayout {
+        let width = layout.mappingSize.width
+        let height = (width * viewAspect).rounded()
+        let fold = (height / 2).rounded()
+        var copy = layout
+        copy.mappingSize = CGSize(width: width, height: height)
+        copy.fold = fold
+        copy.translucent = false
+
+        // Top half: the biggest picture in the game's shape, centered
+        // under the status bar.
+        let ratio = max(gameAspect ?? 4 / 3, 0.5)
+        let area = CGRect(x: 10, y: 46, width: width - 20, height: fold - gap / 2 - 8 - 46)
+        copy.screen = fit(ratio, in: area)
+
+        // Bottom half: the phone controller, drawn for about 270 points
+        // of height and squeezed evenly if there is less.
+        let top = fold + gap / 2
+        let room = height - 18 - top
+        let squeeze = min(1, room / 262)
+        copy.items = layout.items.map { item in
+            var item = item
+            let x = item.frame.minX
+            func place(_ x: CGFloat, _ y: CGFloat, _ w: CGFloat, _ h: CGFloat) {
+                item.frame = CGRect(x: x, y: top + y * squeeze, width: w, height: h)
+            }
+            switch item.inputs.first {
+            case .key(.l): place(0, 6, 112, 40)
+            case .key(.r): place(width - 112, 6, 112, 40)
+            case .menu, .keyboard: place(x, 6, 40, 40)
+            case .key(.up): place(28, 64, 144 * squeeze, 144 * squeeze)
+            case .key(.confirm): place(width - 112, 66, 76 * squeeze, 76 * squeeze)
+            case .key(.back): place(width - 196, 126, 76 * squeeze, 76 * squeeze)
+            case .key(.select): place(width / 2 - 83, 230, 76, 28)
+            case .key(.start): place(width / 2 + 7, 230, 76, 28)
+            default: break
+            }
+            return item
+        }
+        return copy
+    }
+
+    /// Landscape, unfolded (the fold runs down the middle, like a book):
+    /// the game on the left page, the controller on the right page.
+    static func splitLandscape(_ layout: SkinLayout, viewAspect: CGFloat, gameAspect: CGFloat?,
+                               gap: CGFloat) -> SkinLayout {
+        let height = layout.mappingSize.height
+        let width = (height * viewAspect).rounded()
+        let fold = (width / 2).rounded()
+        var copy = layout
+        copy.mappingSize = CGSize(width: width, height: height)
+        copy.fold = fold
+        copy.translucent = false
+
+        let ratio = max(gameAspect ?? 4 / 3, 0.5)
+        let area = CGRect(x: 18, y: 16, width: fold - gap / 2 - 10 - 18, height: height - 32)
+        copy.screen = fit(ratio, in: area)
+
+        // The right page is about as wide as a phone held upright: the
+        // same controller, d-pad on the left, A and B on the right.
+        let left = fold + gap / 2
+        let page = width - left
+        let unit = min(1, page / 300)
+        copy.items = layout.items.map { item in
+            var item = item
+            func place(_ x: CGFloat, _ y: CGFloat, _ w: CGFloat, _ h: CGFloat) {
+                item.frame = CGRect(x: left + x * unit, y: y, width: w * unit, height: h * unit)
+            }
+            let hasKeyboard = layout.hasKeyboardButton
+            switch item.inputs.first {
+            case .key(.l): place(0, 26, 88, 40)
+            case .key(.r): place(page / unit - 88, 26, 88, 40)
+            case .menu: place(hasKeyboard ? page / unit / 2 - 46 : page / unit / 2 - 20, 26, 40, 40)
+            case .keyboard: place(page / unit / 2 + 6, 26, 40, 40)
+            case .key(.up): place(8, 130, 124, 124)
+            case .key(.confirm): place(page / unit - 80, 126, 70, 70)
+            case .key(.back): place(page / unit - 150, 192, 70, 70)
+            case .key(.select): place(page / unit / 2 - 76, 340, 70, 26)
+            case .key(.start): place(page / unit / 2 + 6, 340, 70, 26)
+            default: break
+            }
+            return item
+        }
+        return copy
+    }
+
+    private static func fit(_ ratio: CGFloat, in area: CGRect) -> CGRect {
+        var w = area.width
+        var h = w / ratio
+        if h > area.height {
+            h = area.height
+            w = h * ratio
+        }
+        return CGRect(x: area.midX - w / 2, y: area.midY - h / 2, width: w, height: h)
+    }
+
     /// The frame width around the screen in Tela cheia.
     static let thinBezel: CGFloat = 6
 
@@ -207,8 +313,9 @@ struct BuiltInSkinArt: View {
                 if layer != .controls, let screen = layout.screen {
                     // Tela cheia gets the thin frame, also when a wide screen
                     // (an open iPhone Duo) keeps the picture off the edges.
-                    let thin = isPortrait && (screen.minX <= BuiltInSkins.thinBezel + 1
-                                              || SkinStore.shared.portraitFullWidth)
+                    let thin = layout.fold != nil
+                        || (isPortrait && (screen.minX <= BuiltInSkins.thinBezel + 1
+                                           || SkinStore.shared.portraitFullWidth))
                     bezel(screen.applying(.init(scaleX: sx, y: sy)), isPortrait: isPortrait,
                           thin: thin ? BuiltInSkins.thinBezel * sx : nil)
                 }
@@ -220,7 +327,11 @@ struct BuiltInSkinArt: View {
                         .position(x: rect.midX, y: rect.midY)
                 }
 
-                if layer != .controls && style == .ember && isPortrait {
+                if layer != .controls, let fold = layout.fold {
+                    crease(at: fold, isPortrait: isPortrait, size: geo.size, sx: sx, sy: sy)
+                }
+
+                if layer != .controls && style == .ember && isPortrait && layout.fold == nil {
                     grille
                         .position(x: geo.size.width - 64 * sx, y: geo.size.height - 108 * sy)
                 }
@@ -275,6 +386,30 @@ struct BuiltInSkinArt: View {
                 .fill(.black)
                 .frame(width: screen.width, height: screen.height)
                 .position(x: screen.midX, y: screen.midY)
+        }
+    }
+
+    /// A soft groove where an iPhone Duo folds, so the two halves read
+    /// as two parts of one handheld.
+    private func crease(at fold: CGFloat, isPortrait: Bool, size: CGSize, sx: CGFloat, sy: CGFloat) -> some View {
+        let dark = style == .ember ? Color(hex: 0xB9481C) : Color.white.opacity(0.08)
+        let light = style == .ember ? Color.white.opacity(0.22) : Color.black.opacity(0.4)
+        return Group {
+            if isPortrait {
+                VStack(spacing: 0) {
+                    Rectangle().fill(dark).frame(height: 1.5)
+                    Rectangle().fill(light).frame(height: 1)
+                }
+                .frame(width: size.width)
+                .position(x: size.width / 2, y: fold * sy)
+            } else {
+                HStack(spacing: 0) {
+                    Rectangle().fill(dark).frame(width: 1.5)
+                    Rectangle().fill(light).frame(width: 1)
+                }
+                .frame(height: size.height)
+                .position(x: fold * sx, y: size.height / 2)
+            }
         }
     }
 

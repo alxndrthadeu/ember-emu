@@ -22,8 +22,6 @@ struct GameOptionsSheet: View {
     @State private var working = false
     @State private var showingLogs = false
 
-    private let columns = [GridItem(.adaptive(minimum: 100), spacing: 12)]
-
     /// The entry as the library holds it now (title or cover may have
     /// changed while the sheet is open).
     private var current: GameEntry {
@@ -32,99 +30,104 @@ struct GameOptionsSheet: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 22) {
                 header
-                EmberGlassContainer(spacing: 12) {
-                    LazyVGrid(columns: columns, spacing: 12) {
-                        OptionTile(icon: "play.fill", title: String(localized: "Jogar"), highlighted: true) {
-                            dismiss()
-                            onPlay()
-                        }
-                        OptionTile(icon: "pencil", title: String(localized: "Renomear")) {
-                            newTitle = current.title
-                            renaming = true
-                        }
-                        PhotosPicker(selection: $photo, matching: .images) {
-                            OptionTileLabel(icon: "photo", title: String(localized: "Capa"))
-                        }
-                        .buttonStyle(.plain)
-                        .emberGlass(.regular.interactive(), in: tileShape)
-                        if GameCovers.hasCustomCover(current.id) {
-                            OptionTile(icon: "arrow.uturn.backward", title: String(localized: "Capa automática")) {
-                                library.removeCustomCover(for: current)
-                                show(String(localized: "Capa automática de volta"))
+
+                // The one thing most people came for.
+                Button {
+                    dismiss()
+                    onPlay()
+                } label: {
+                    Label("Jogar", systemImage: "play.fill")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 4)
+                }
+                .emberGlassProminentButton()
+                .tint(Theme.accent)
+                .controlSize(.large)
+
+                quickActions
+
+                group(String(localized: "Saves")) {
+                    SheetRow(icon: "square.and.arrow.up", title: String(localized: "Exportar saves (.zip)")) { exportSaves() }
+                    Divider().padding(.leading, 48)
+                    SheetRow(icon: "square.and.arrow.down", title: String(localized: "Importar saves")) { importingSaves = true }
+                    Divider().padding(.leading, 48)
+                    savesList
+                }
+
+                group(String(localized: "Ajustes deste jogo")) {
+                    Menu {
+                        Picker("Controles", selection: Binding(
+                            get: { ProfileStore.shared.isAutomatic(current) ? nil : ProfileStore.shared.profile(for: current).id },
+                            set: { id in
+                                ProfileStore.shared.assign(ProfileStore.shared.all.first { $0.id == id }, to: current)
+                                library.reload()
+                                show(String(localized: "Vale na próxima vez que o jogo abrir"))
+                            })) {
+                            Text("Automático (\(ProfileStore.shared.automaticProfile(for: current).name))")
+                                .tag(String?.none)
+                            ForEach(ProfileStore.shared.all) { profile in
+                                Text(profile.name).tag(String?.some(profile.id))
                             }
                         }
-                        Menu {
-                            Picker("Ruby", selection: Binding(
-                                get: { RubyChoice.saved(for: current.id) },
-                                set: { choice in
-                                    RubyChoice.set(choice, for: current.id)
-                                    library.reload()
-                                    show(String(localized: "Vale na próxima vez que o jogo abrir"))
-                                })) {
-                                Text("Automático (\(RubyChoice.label(for: current.detectedRubyVersion)))")
-                                    .tag(RubyChoice?.none)
-                                ForEach(RubyChoice.allCases) { choice in
-                                    Text("Ruby \(choice.label)").tag(RubyChoice?.some(choice))
-                                }
+                    } label: {
+                        SheetRowLabel(icon: "gamecontroller", title: String(localized: "Controles"),
+                                      value: ProfileStore.shared.profile(for: current).name, chevron: "chevron.up.chevron.down")
+                    }
+                    .buttonStyle(.plain)
+                    Divider().padding(.leading, 48)
+                    Menu {
+                        Picker("Ruby", selection: Binding(
+                            get: { RubyChoice.saved(for: current.id) },
+                            set: { choice in
+                                RubyChoice.set(choice, for: current.id)
+                                library.reload()
+                                show(String(localized: "Vale na próxima vez que o jogo abrir"))
+                            })) {
+                            Text("Automático (\(RubyChoice.label(for: current.detectedRubyVersion)))")
+                                .tag(RubyChoice?.none)
+                            ForEach(RubyChoice.allCases) { choice in
+                                Text("Ruby \(choice.label)").tag(RubyChoice?.some(choice))
                             }
-                        } label: {
-                            OptionTileLabel(icon: "chevron.left.forwardslash.chevron.right",
-                                            title: String(localized: "Ruby \(RubyChoice.label(for: current.rubyVersion))"))
                         }
-                        .buttonStyle(.plain)
-                        .emberGlass(.regular.interactive(), in: tileShape)
-                        OptionTile(icon: InGameKeyboard.isOn(for: current.id) ? "keyboard.fill" : "keyboard",
-                                   title: InGameKeyboard.isOn(for: current.id) ? String(localized: "Teclado do jogo: ligado") : String(localized: "Teclado do jogo"),
-                                   highlighted: false) {
-                            let on = !InGameKeyboard.isOn(for: current.id)
-                            InGameKeyboard.set(on, for: current.id)
-                            library.reload()
-                            show(on ? String(localized: "O jogo vai usar o próprio teclado na próxima vez que abrir")
-                                    : String(localized: "O Ember volta a usar o teclado do iPhone"))
-                        }
-                        Menu {
-                            Picker("Controles", selection: Binding(
-                                get: { ProfileStore.shared.isAutomatic(current) ? nil : ProfileStore.shared.profile(for: current).id },
-                                set: { id in
-                                    ProfileStore.shared.assign(ProfileStore.shared.all.first { $0.id == id }, to: current)
-                                    library.reload()
-                                    show(String(localized: "Vale na próxima vez que o jogo abrir"))
-                                })) {
-                                Text("Automático (\(ProfileStore.shared.automaticProfile(for: current).name))")
-                                    .tag(String?.none)
-                                ForEach(ProfileStore.shared.all) { profile in
-                                    Text(profile.name).tag(String?.some(profile.id))
-                                }
-                            }
-                        } label: {
-                            OptionTileLabel(icon: "gamecontroller",
-                                            title: String(localized: "Controles: \(ProfileStore.shared.profile(for: current).name)"))
-                        }
-                        .buttonStyle(.plain)
-                        .emberGlass(.regular.interactive(), in: tileShape)
-                        OptionTile(icon: "square.and.arrow.up", title: String(localized: "Exportar saves")) {
-                            exportSaves()
-                        }
-                        OptionTile(icon: "iphone.radiowaves.left.and.right", title: String(localized: "Enviar saves")) {
-                            shareSaves()
-                        }
-                        OptionTile(icon: "square.and.arrow.down", title: String(localized: "Importar saves")) {
-                            importingSaves = true
-                        }
-                        OptionTile(icon: "doc.text.magnifyingglass", title: String(localized: "Registros")) {
-                            showingLogs = true
-                        }
-                        OptionTile(icon: "icloud.and.arrow.up", title: String(localized: "Arquivar no iCloud")) {
-                            confirmingArchive = true
-                        }
-                        OptionTile(icon: "trash", title: String(localized: "Apagar"), destructive: true) {
-                            confirmingDelete = true
+                    } label: {
+                        SheetRowLabel(icon: "chevron.left.forwardslash.chevron.right", title: String(localized: "Versão do Ruby"),
+                                      value: RubyChoice.label(for: current.rubyVersion), chevron: "chevron.up.chevron.down")
+                    }
+                    .buttonStyle(.plain)
+                    Divider().padding(.leading, 48)
+                    Toggle(isOn: Binding(get: { InGameKeyboard.isOn(for: current.id) }, set: { on in
+                        InGameKeyboard.set(on, for: current.id)
+                        library.reload()
+                        show(on ? String(localized: "O jogo vai usar o próprio teclado na próxima vez que abrir")
+                                : String(localized: "O Ember volta a usar o teclado do iPhone"))
+                    })) {
+                        SheetRowLabel(icon: "keyboard", title: String(localized: "Teclado do próprio jogo"))
+                    }
+                    .tint(Theme.active)
+                    .padding(.trailing, 14)
+                    if GameCovers.hasCustomCover(current.id) {
+                        Divider().padding(.leading, 48)
+                        SheetRow(icon: "arrow.uturn.backward", title: String(localized: "Voltar à capa automática")) {
+                            library.removeCustomCover(for: current)
+                            show(String(localized: "Capa automática de volta"))
                         }
                     }
                 }
-                savesSection
+
+                group(String(localized: "Mais")) {
+                    SheetRow(icon: "doc.text.magnifyingglass", title: String(localized: "Registros")) { showingLogs = true }
+                    Divider().padding(.leading, 48)
+                    SheetRow(icon: "trash", title: String(localized: "Apagar jogo"), destructive: true) { confirmingDelete = true }
+                }
+
+                // verbatim: a plain Text reads the string as Markdown, which
+                // eats the backslash of %APPDATA%\.
+                Text(verbatim: String(localized: "No PC, os saves ficam na pasta do jogo (Save1.rxdata, Save01.rvdata2) ou, nos fangames de Pokémon, em %APPDATA%\\\(current.originalTitle) (Game.rxdata). O Ember usa os mesmos arquivos."))
+                    .font(.caption)
+                    .foregroundStyle(Theme.secondaryText)
             }
             .padding(20)
         }
@@ -206,47 +209,69 @@ struct GameOptionsSheet: View {
         }
     }
 
-    private var savesSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Text("Saves")
-                    .font(.headline)
-                    .foregroundStyle(Theme.primaryText)
-                Spacer()
-                if working { ProgressView() }
+    /// Four things people do often, one tap each.
+    private var quickActions: some View {
+        HStack(spacing: 10) {
+            SheetQuickAction(icon: "pencil", title: String(localized: "Renomear")) {
+                newTitle = current.title
+                renaming = true
             }
-            if saves.isEmpty {
-                Text("Nenhum save ainda. Para continuar de onde parou em outro aparelho, use Importar saves com os arquivos do jogo (.rxdata, .rvdata ou .rvdata2) ou um .zip deles.")
-                    .font(.footnote)
+            PhotosPicker(selection: $photo, matching: .images) {
+                SheetQuickActionLabel(icon: "photo", title: String(localized: "Capa"))
+            }
+            .buttonStyle(.plain)
+            SheetQuickAction(icon: "iphone.radiowaves.left.and.right", title: String(localized: "Enviar saves")) {
+                shareSaves()
+            }
+            SheetQuickAction(icon: "icloud.and.arrow.up", title: String(localized: "Arquivar")) {
+                confirmingArchive = true
+            }
+        }
+    }
+
+    private func group<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text(title)
+                    .font(.footnote.weight(.semibold))
                     .foregroundStyle(Theme.secondaryText)
-            } else {
-                VStack(spacing: 0) {
-                    ForEach(saves) { save in
-                        HStack {
-                            Image(systemName: "doc.fill")
-                                .foregroundStyle(Theme.secondaryText)
-                            Text(save.id)
-                                .font(.subheadline.weight(.medium))
-                                .foregroundStyle(Theme.primaryText)
-                                .lineLimit(1)
-                            Spacer()
-                            Text(save.modified.formatted(.relative(presentation: .named)))
-                                .font(.caption)
-                                .foregroundStyle(Theme.secondaryText)
-                        }
-                        .padding(.vertical, 8)
-                        if save.id != saves.last?.id { Divider() }
-                    }
+                    .textCase(.uppercase)
+                Spacer()
+                if title == String(localized: "Saves"), working { ProgressView() }
+            }
+            .padding(.leading, 6)
+            VStack(spacing: 0) { content() }
+                .emberGlass(.regular, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        }
+    }
+
+    @ViewBuilder
+    private var savesList: some View {
+        if saves.isEmpty {
+            Text("Nenhum save ainda. Para continuar de onde parou em outro aparelho, importe os arquivos do jogo (.rxdata, .rvdata ou .rvdata2) ou um .zip deles.")
+                .font(.footnote)
+                .foregroundStyle(Theme.secondaryText)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(14)
+        } else {
+            ForEach(saves) { save in
+                HStack {
+                    Image(systemName: "doc.fill")
+                        .foregroundStyle(Theme.secondaryText)
+                        .frame(width: 22)
+                    Text(save.id)
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(Theme.primaryText)
+                        .lineLimit(1)
+                    Spacer()
+                    Text(save.modified.formatted(.relative(presentation: .named)))
+                        .font(.caption)
+                        .foregroundStyle(Theme.secondaryText)
                 }
                 .padding(.horizontal, 14)
-                .padding(.vertical, 4)
-                .emberGlass(.regular, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .padding(.vertical, 10)
+                if save.id != saves.last?.id { Divider().padding(.leading, 48) }
             }
-            // verbatim: a plain Text reads the string as Markdown, which
-            // eats the backslash of %APPDATA%\.
-            Text(verbatim: String(localized: "No PC, os saves ficam na pasta do jogo (Save1.rxdata, Save01.rvdata2) ou, nos fangames de Pokémon, em %APPDATA%\\\(current.originalTitle) (Game.rxdata). O Ember usa os mesmos arquivos."))
-                .font(.caption)
-                .foregroundStyle(Theme.secondaryText)
         }
     }
 
@@ -325,10 +350,6 @@ struct GameOptionsSheet: View {
             withAnimation { if toast == message { toast = nil } }
         }
     }
-
-    private var tileShape: RoundedRectangle {
-        RoundedRectangle(cornerRadius: 20, style: .continuous)
-    }
 }
 
 private struct ExportFile: Identifiable {
@@ -336,10 +357,49 @@ private struct ExportFile: Identifiable {
     let url: URL
 }
 
-private struct OptionTile: View {
+/// One of the four round buttons under "Jogar".
+private struct SheetQuickAction: View {
     let icon: String
     let title: String
-    var highlighted = false
+    let action: () -> Void
+
+    var body: some View {
+        Button {
+            Haptics.tap()
+            action()
+        } label: {
+            SheetQuickActionLabel(icon: icon, title: title)
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct SheetQuickActionLabel: View {
+    let icon: String
+    let title: String
+
+    var body: some View {
+        VStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.system(size: 19, weight: .medium))
+                .foregroundStyle(Theme.primaryText)
+                .frame(width: 54, height: 54)
+                .emberGlass(.regular.interactive(), in: Circle())
+            Text(title)
+                .font(.caption.weight(.medium))
+                .foregroundStyle(Theme.secondaryText)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+        }
+        .frame(maxWidth: .infinity)
+        .contentShape(Rectangle())
+    }
+}
+
+/// A row inside a grouped card: icon, title, optional value.
+private struct SheetRow: View {
+    let icon: String
+    let title: String
     var destructive = false
     let action: () -> Void
 
@@ -348,33 +408,44 @@ private struct OptionTile: View {
             Haptics.tap()
             action()
         } label: {
-            OptionTileLabel(icon: icon, title: title, highlighted: highlighted, destructive: destructive)
+            SheetRowLabel(icon: icon, title: title, destructive: destructive)
         }
         .buttonStyle(.plain)
-        .emberGlass(highlighted ? .regular.tint(Theme.highlight).interactive() : .regular.interactive(),
-                     in: RoundedRectangle(cornerRadius: 20, style: .continuous))
     }
 }
 
-private struct OptionTileLabel: View {
+private struct SheetRowLabel: View {
     let icon: String
     let title: String
-    var highlighted = false
+    var value: String?
     var destructive = false
+    var chevron: String?
 
     var body: some View {
-        VStack(spacing: 8) {
+        HStack(spacing: 12) {
             Image(systemName: icon)
-                .font(.system(size: 20, weight: .medium))
-                .frame(height: 24)
+                .font(.system(size: 16, weight: .medium))
+                .foregroundStyle(destructive ? Theme.accent : Theme.secondaryText)
+                .frame(width: 22)
             Text(title)
-                .font(.footnote.weight(.semibold))
-                .multilineTextAlignment(.center)
-                .lineLimit(2)
+                .font(.body)
+                .foregroundStyle(destructive ? Theme.accent : Theme.primaryText)
+            Spacer(minLength: 8)
+            if let value {
+                Text(value)
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.secondaryText)
+                    .lineLimit(1)
+            }
+            if let chevron {
+                Image(systemName: chevron)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.secondaryText)
+            }
         }
-        .foregroundStyle(highlighted ? Theme.onHighlight : destructive ? Theme.accent : Theme.primaryText)
-        .frame(maxWidth: .infinity, minHeight: 84)
-        .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .padding(.horizontal, 14)
+        .padding(.vertical, 13)
+        .contentShape(Rectangle())
     }
 }
 

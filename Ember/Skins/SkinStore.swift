@@ -32,6 +32,16 @@ final class SkinStore: ObservableObject {
         // Screens wider than a phone (an open iPhone Duo): drawn in their
         // own proportions instead of a stretched phone layout.
         if let viewAspect = GameLayout.shared.viewAspect, viewAspect < BuiltInSkins.wideBelow {
+            // Split (the default): game on one half, controller on the
+            // other, nothing on the crease.
+            if duoSplit {
+                let gap = BuiltInSkins.foldGap(partiallyOpen: GameLayout.shared.hingePartiallyOpen)
+                return portrait
+                    ? BuiltInSkins.splitPortrait(adapted, viewAspect: viewAspect,
+                                                 gameAspect: GameLayout.shared.aspect, gap: gap)
+                    : BuiltInSkins.splitLandscape(adapted, viewAspect: viewAspect,
+                                                  gameAspect: GameLayout.shared.aspect, gap: gap)
+            }
             adapted = portrait
                 ? BuiltInSkins.reshaped(adapted, viewAspect: viewAspect)
                 : BuiltInSkins.reshapedLandscape(adapted, viewAspect: viewAspect, gameAspect: GameLayout.shared.aspect)
@@ -44,6 +54,12 @@ final class SkinStore: ObservableObject {
     /// frame (the default: the biggest picture), or in a thin frame.
     @Published var portraitFullWidth = (UserDefaults.standard.object(forKey: "settings.portraitFullWidth") as? Bool ?? true) {
         didSet { UserDefaults.standard.set(portraitFullWidth, forKey: "settings.portraitFullWidth") }
+    }
+
+    /// iPhone Duo unfolded: game and controller on separate halves
+    /// (true) or one big picture with the controller around it.
+    @Published var duoSplit = (UserDefaults.standard.object(forKey: "settings.duoSplit") as? Bool ?? true) {
+        didSet { UserDefaults.standard.set(duoSplit, forKey: "settings.duoSplit") }
     }
 
     private init() {

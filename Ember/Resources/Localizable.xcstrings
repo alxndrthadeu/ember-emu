@@ -782,6 +782,22 @@
         }
       }
     },
+    "Ajustes deste jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings for this game"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes de este juego"
+          }
+        }
+      }
+    },
     "Ajustes, nomes e histórico" : {
       "localizations" : {
         "en" : {
@@ -915,7 +931,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Delete Game"
+            "value" : "Delete game"
           }
         },
         "es" : {
@@ -1039,6 +1055,7 @@
       }
     },
     "Arquivar no iCloud" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1562,6 +1579,7 @@
       }
     },
     "Capa automática" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1751,6 +1769,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Con libimobiledevice e ifuse instalados, este comando monta la carpeta de Ember. Copia el juego dentro, desmonta con fusermount -u ~/ember y abre Ember."
+          }
+        }
+      }
+    },
+    "Com o iPhone aberto" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "With the iPhone open"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Con el iPhone abierto"
           }
         }
       }
@@ -1997,6 +2031,7 @@
       }
     },
     "Controles: %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2217,6 +2252,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cruceta y joystick"
+          }
+        }
+      }
+    },
+    "Dividida" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Split"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dividida"
           }
         }
       }
@@ -2768,17 +2819,34 @@
       }
     },
     "Exportar saves" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Export Saves"
+            "value" : "Export saves"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Exportar partidas"
+          }
+        }
+      }
+    },
+    "Exportar saves (.zip)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export saves (.zip)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportar partidas (.zip)"
           }
         }
       }
@@ -3148,7 +3216,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Import Saves"
+            "value" : "Import saves"
           }
         },
         "es" : {
@@ -3722,6 +3790,22 @@
         }
       }
     },
+    "Mais" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Más"
+          }
+        }
+      }
+    },
     "memória" : {
       "localizations" : {
         "en" : {
@@ -4272,7 +4356,24 @@
         }
       }
     },
+    "Nenhum save ainda. Para continuar de onde parou em outro aparelho, importe os arquivos do jogo (.rxdata, .rvdata ou .rvdata2) ou um .zip deles." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No saves yet. To pick up where you left off on another device, import the game’s files (.rxdata, .rvdata or .rvdata2) or a .zip of them."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aún no hay partidas. Para seguir donde lo dejaste en otro dispositivo, importa los archivos del juego (.rxdata, .rvdata o .rvdata2) o un .zip con ellos."
+          }
+        }
+      }
+    },
     "Nenhum save ainda. Para continuar de onde parou em outro aparelho, use Importar saves com os arquivos do jogo (.rxdata, .rvdata ou .rvdata2) ou um .zip deles." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5615,7 +5716,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Partidas guardadas"
+            "value" : "Partidas"
           }
         }
       }
@@ -6039,6 +6140,7 @@
       }
     },
     "Teclado do jogo" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6055,6 +6157,7 @@
       }
     },
     "Teclado do jogo: ligado" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6066,6 +6169,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Teclado del juego: activado"
+          }
+        }
+      }
+    },
+    "Teclado do próprio jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The game’s own keyboard"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teclado propio del juego"
           }
         }
       }
@@ -6102,6 +6221,22 @@
         }
       }
     },
+    "Tela dividida" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Split screen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pantalla dividida"
+          }
+        }
+      }
+    },
     "Tela no modo retrato" : {
       "localizations" : {
         "en" : {
@@ -6114,6 +6249,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pantalla en vertical"
+          }
+        }
+      }
+    },
+    "Tela única" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Single screen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pantalla única"
           }
         }
       }
@@ -6346,6 +6497,22 @@
         }
       }
     },
+    "Única" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Single"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Única"
+          }
+        }
+      }
+    },
     "Use Salvar estado no menu, andando pelo mapa. O Ember também salva sozinho quando você sai do app." : {
       "localizations" : {
         "en" : {
@@ -6427,6 +6594,22 @@
         }
       }
     },
+    "Versão do Ruby" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruby version"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versión de Ruby"
+          }
+        }
+      }
+    },
     "Vibração ao tocar" : {
       "localizations" : {
         "en" : {
@@ -6503,6 +6686,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Volver"
+          }
+        }
+      }
+    },
+    "Voltar à capa automática" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back to the automatic cover"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volver a la portada automática"
           }
         }
       }

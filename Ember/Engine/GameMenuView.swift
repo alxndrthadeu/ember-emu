@@ -64,10 +64,19 @@ struct GameMenuView: View {
                 MenuTile(icon: "camera.fill", title: String(localized: "Captura")) {
                     saveScreenshot()
                 }
-                MenuTile(icon: skins.portraitFullWidth ? "rectangle.inset.filled" : "rectangle.center.inset.filled",
-                         title: String(localized: "Tela"),
-                         value: skins.portraitFullWidth ? String(localized: "Tela cheia") : String(localized: "Clássica")) {
-                    skins.portraitFullWidth.toggle()
+                if (GameLayout.shared.viewAspect ?? 2) < BuiltInSkins.wideBelow {
+                    // An open iPhone Duo: split halves or one big picture.
+                    MenuTile(icon: skins.duoSplit ? "rectangle.split.1x2.fill" : "rectangle.fill",
+                             title: String(localized: "Tela"),
+                             value: skins.duoSplit ? String(localized: "Dividida") : String(localized: "Única")) {
+                        skins.duoSplit.toggle()
+                    }
+                } else {
+                    MenuTile(icon: skins.portraitFullWidth ? "rectangle.inset.filled" : "rectangle.center.inset.filled",
+                             title: String(localized: "Tela"),
+                             value: skins.portraitFullWidth ? String(localized: "Tela cheia") : String(localized: "Clássica")) {
+                        skins.portraitFullWidth.toggle()
+                    }
                 }
                 MenuTile(icon: audio.soundOn ? "speaker.wave.2.fill" : "speaker.slash.fill",
                          title: String(localized: "Som"),
