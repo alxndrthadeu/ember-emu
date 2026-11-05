@@ -258,7 +258,7 @@ private struct LicensesView: View {
 
     private var entries: [Entry] {
         var list = [
-            Entry(name: String(localized: "Ember"), license: "GPL-3.0", text: nil),
+            Entry(name: String(localized: "Ember"), license: "GPL-3.0-or-later", text: nil),
             Entry(name: String(localized: "ZIPFoundation"), license: "MIT", text: nil),
             Entry(name: String(localized: "libarchive (iOS)"), license: "BSD-2-Clause",
                   text: Bundle.main.url(forResource: "libarchive-COPYING", withExtension: "txt")
@@ -279,7 +279,39 @@ private struct LicensesView: View {
     }
 
     var body: some View {
-        List(entries) { entry in
+        List {
+            // The engine's additional terms (section 7) ask for this
+            // attribution as text, as visible as the other notices,
+            // with a link, and for the modified version to be marked.
+            Section {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(verbatim: "Ember, Copyright (C) 2026 Alexandre Thadeu. GPL-3.0-or-later.")
+                    Text("O Ember contém uma versão modificada do mkxp-z-apple-mobile (patches em engine-patches/ no código-fonte do Ember), baseado no mkxp-z e no mkxp.")
+                    Text(verbatim: "mkxp-z-apple-mobile, Copyright (C) 2026 Mateo M., https://github.com/mateo-m/mkxp-z-apple-mobile")
+                    Link(destination: URL(string: "https://github.com/mateo-m/mkxp-z-apple-mobile")!) {
+                        Text(verbatim: "github.com/mateo-m/mkxp-z-apple-mobile")
+                    }
+                    Text(verbatim: "mkxp-z, Copyright (C) 2013-2023 Jonas Kulla and contributors. GPL-2.0-or-later.")
+                    Link(destination: URL(string: "https://github.com/alxndrthadeu/ember-emu")!) {
+                        Text("Código-fonte do Ember")
+                    }
+                }
+                .font(.footnote)
+                .padding(.vertical, 4)
+            }
+
+            Section {
+                ForEach(entries) { entry in
+                    row(entry)
+                }
+            }
+        }
+        .navigationTitle("Licenças")
+    }
+
+    @ViewBuilder
+    private func row(_ entry: Entry) -> some View {
+        Group {
             if let text = entry.text, !text.isEmpty {
                 NavigationLink {
                     ScrollView {
@@ -296,7 +328,6 @@ private struct LicensesView: View {
                 LabeledContent(entry.name, value: entry.license)
             }
         }
-        .navigationTitle("Licenças")
     }
 }
 

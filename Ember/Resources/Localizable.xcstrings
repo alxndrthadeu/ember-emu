@@ -1322,6 +1322,22 @@
         }
       }
     },
+    "Código-fonte do Ember" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember source code"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Código fuente de Ember"
+          }
+        }
+      }
+    },
     "Colar da área de transferência" : {
       "localizations" : {
         "en" : {
@@ -3595,6 +3611,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ember abre un juego a la vez. Desliza desde abajo, cierra Ember en el selector de apps y ábrelo de nuevo. Tus partidas están a salvo."
+          }
+        }
+      }
+    },
+    "O Ember contém uma versão modificada do mkxp-z-apple-mobile (patches em engine-patches/ no código-fonte do Ember), baseado no mkxp-z e no mkxp." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember contains a modified version of mkxp-z-apple-mobile (patches in engine-patches/ in Ember’s source code), based on mkxp-z and mkxp."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember contiene una versión modificada de mkxp-z-apple-mobile (parches en engine-patches/ del código fuente de Ember), basado en mkxp-z y mkxp."
           }
         }
       }

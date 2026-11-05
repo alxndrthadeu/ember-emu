@@ -1,5 +1,5 @@
 diff --git a/src/eventthread.cpp b/src/eventthread.cpp
-index 2ef096b..7e3f1e4 100644
+index 2ef096b..f6bf2c5 100644
 --- a/src/eventthread.cpp
 +++ b/src/eventthread.cpp
 @@ -52,6 +52,7 @@ extern "C" bool mkxp_getTouchMouseEnabled(void);
@@ -10,7 +10,7 @@ index 2ef096b..7e3f1e4 100644
  #include "app_bridge.h"
  extern void mkxpGL_GetDrawableSize(SDL_Window *win, int *w, int *h);
  extern void mkxpGL_RefreshDrawableSize(SDL_Window *win, int *w, int *h);
-@@ -227,14 +228,16 @@ void EventThread::process(RGSSThreadData &rtData)
+@@ -227,14 +228,17 @@ void EventThread::process(RGSSThreadData &rtData)
      while (true)
      {
  #if MKXPZ_MOBILE
@@ -24,7 +24,8 @@ index 2ef096b..7e3f1e4 100644
 +         * the phone. Poll once, then sleep in the run loop itself:
 +         * touches, timers and main-queue work (SwiftUI alerts, the
 +         * host's callbacks) wake it at once; events pushed from other
-+         * threads wait at most 8 ms. (Ember patch.) */
++         * threads wait at most 8 ms.
++         * Modified for Ember on 2026-11-05 (engine-patches/0001). */
 +        if (!SDL_PollEvent(&event)) {
 +            CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.008, true);
              continue;
