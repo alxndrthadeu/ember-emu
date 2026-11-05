@@ -169,6 +169,7 @@ struct LibraryView: View {
     ///   EMBER_RESUME=1            starts from the auto state
     ///   EMBER_IMPORT_SAVES=<path>[:<path>…]  imports saves into the first game
     ///   EMBER_EXPORT_SAVES=1      exports the first game's saves (logs the .zip)
+    ///   EMBER_WIFI=1              turns on the Wi-Fi transfer (logs the address)
     private func developmentHooks() {
         #if DEBUG
         let environment = ProcessInfo.processInfo.environment
@@ -184,11 +185,18 @@ struct LibraryView: View {
                 print("[ember-saves] export:", Result { try SaveManager.export(game) })
             }
         }
+        if environment["EMBER_WIFI"] != nil {
+            WifiTransfer.shared.start()
+            Task {
+                try? await Task.sleep(for: .seconds(1))
+                print("[ember-wifi]", WifiTransfer.shared.address ?? "no address")
+            }
+        }
         switch environment["EMBER_SHOW"] {
         case "history": showingHistory = true
         case "controls": showingControls = true
         case "options": optionsFor = library.games.first
-        case "import": AppRouter.shared.tab = .importGames
+        case "import", "computer", "rtp": AppRouter.shared.tab = .importGames
         case "settings": AppRouter.shared.tab = .settings
         default: break
         }

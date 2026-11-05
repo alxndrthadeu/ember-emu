@@ -371,6 +371,38 @@
         }
       }
     },
+    "A Apple não tem app para Linux. O jeito mais fácil é mandar pelo navegador, no mesmo Wi-Fi: funciona com arquivos e pastas inteiras." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple has no app for Linux. The easiest way is to send from a browser on the same Wi-Fi: it works with files and whole folders."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple no tiene app para Linux. Lo más fácil es enviar desde el navegador, en la misma Wi-Fi: funciona con archivos y carpetas enteras."
+          }
+        }
+      }
+    },
+    "A área de transferência não tem um jogo, RTP, skin ou save. Copie o arquivo no Mac ou no app Arquivos e tente de novo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The clipboard has no game, RTP, skin or save. Copy the file on the Mac or in the Files app and try again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El portapapeles no tiene un juego, RTP, skin ni partida. Copia el archivo en el Mac o en la app Archivos e inténtalo de nuevo."
+          }
+        }
+      }
+    },
     "A captura ainda não está pronta" : {
       "localizations" : {
         "en" : {
@@ -431,6 +463,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "La transparencia vale para las skins que dejan ver el juego detrás de los botones. Con un mando de Xbox, PlayStation o MFi conectado, los botones de la pantalla se ocultan en horizontal y el engranaje queda en una esquina."
+          }
+        }
+      }
+    },
+    "Abra no navegador" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open in a browser"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre en el navegador"
+          }
+        }
+      }
+    },
+    "Abra no navegador do computador, no mesmo Wi-Fi" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open it in a computer’s browser on the same Wi-Fi"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ábrelo en el navegador de un ordenador en la misma Wi-Fi"
           }
         }
       }
@@ -544,6 +609,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Todavía no hay partidas guardadas de %@."
+          }
+        }
+      }
+    },
+    "Ajuda" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Help"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuda"
           }
         }
       }
@@ -741,6 +822,7 @@
       }
     },
     "Arquivos" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -752,6 +834,88 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Archivos"
+          }
+        }
+      }
+    },
+    "Arrastar e soltar" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drag and drop"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrastrar y soltar"
+          }
+        }
+      }
+    },
+    "Arraste arquivos de outro app para esta tela" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drag files from another app onto this screen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrastra archivos desde otra app a esta pantalla"
+          }
+        }
+      }
+    },
+    "Arraste arquivos ou a pasta de um jogo para cá. Vale .zip, .rar, .7z, .exe autoextraível, RTP, skins e saves." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drag files or a game folder here. .zip, .rar, .7z, self-extracting .exe, RTP, skins and saves all work."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrastra aquí archivos o la carpeta de un juego. Sirven .zip, .rar, .7z, .exe autoextraíble, RTP, skins y partidas."
+          }
+        }
+      }
+    },
+    "Arraste de outro app, com a tela dividida ou no iPad" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drag from another app, in split view or on iPad"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrastra desde otra app, en pantalla dividida o en el iPad"
+          }
+        }
+      }
+    },
+    "Arraste o .zip, .rar ou .7z do jogo para o Ember e abra o Ember. O jogo aparece na Biblioteca." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drag the game’s .zip, .rar or .7z onto Ember and open Ember. The game shows up in the Library."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrastra el .zip, .rar o .7z del juego a Ember y abre Ember. El juego aparece en la Biblioteca."
           }
         }
       }
@@ -768,6 +932,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Arrastra el .zip, .rar, .7z o la carpeta del juego a Ember."
+          }
+        }
+      }
+    },
+    "Arraste para o Ember pelo Finder, com cabo ou no mesmo Wi-Fi" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drag into Ember from the Finder, by cable or on the same Wi-Fi"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrastra a Ember desde el Finder, con cable o en la misma Wi-Fi"
+          }
+        }
+      }
+    },
+    "Arraste para o Ember, com cabo ou no mesmo Wi-Fi" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drag into Ember, by cable or on the same Wi-Fi"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrastra a Ember, con cable o en la misma Wi-Fi"
           }
         }
       }
@@ -1124,6 +1322,55 @@
         }
       }
     },
+    "Colar da área de transferência" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paste from clipboard"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pegar del portapapeles"
+          }
+        }
+      }
+    },
+    "Cole um .zip copiado no Mac ou no app Arquivos" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paste a .zip copied on the Mac or in the Files app"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pega un .zip copiado en el Mac o en la app Archivos"
+          }
+        }
+      }
+    },
+    "Com libimobiledevice e ifuse instalados, esse comando monta a pasta do Ember. Copie o jogo para dentro dela, desmonte com fusermount -u ~/ember e abra o Ember." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "With libimobiledevice and ifuse installed, this command mounts Ember’s folder. Copy the game into it, unmount with fusermount -u ~/ember and open Ember."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Con libimobiledevice e ifuse instalados, este comando monta la carpeta de Ember. Copia el juego dentro, desmonta con fusermount -u ~/ember y abre Ember."
+          }
+        }
+      }
+    },
     "Como criar sua própria skin" : {
       "localizations" : {
         "en" : {
@@ -1140,6 +1387,22 @@
         }
       }
     },
+    "Conecte o iPhone a uma rede Wi-Fi para usar a transferência." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connect the iPhone to a Wi-Fi network to use the transfer."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conecta el iPhone a una red Wi-Fi para usar la transferencia."
+          }
+        }
+      }
+    },
     "Conecte o iPhone ao Mac com o cabo. Depois da primeira vez, o mesmo Wi-Fi basta." : {
       "localizations" : {
         "en" : {
@@ -1152,6 +1415,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Conecta el iPhone al Mac con el cable. Después de la primera vez, basta con la misma Wi-Fi."
+          }
+        }
+      }
+    },
+    "Conecte o iPhone com o cabo e toque em Confiar, se o iPhone perguntar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connect the iPhone with the cable and tap Trust if the iPhone asks."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conecta el iPhone con el cable y toca Confiar si el iPhone lo pide."
           }
         }
       }
@@ -1284,6 +1563,38 @@
         }
       }
     },
+    "Copiado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copied"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copiado"
+          }
+        }
+      }
+    },
+    "Copiar endereço" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy address"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copiar dirección"
+          }
+        }
+      }
+    },
     "Copiar erro" : {
       "localizations" : {
         "en" : {
@@ -1301,6 +1612,7 @@
       }
     },
     "De outro app" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1312,6 +1624,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Desde otra app"
+          }
+        }
+      }
+    },
+    "De um computador na mesma rede" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From a computer on the same network"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desde un ordenador en la misma red"
           }
         }
       }
@@ -1392,6 +1720,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cruceta y joystick"
+          }
+        }
+      }
+    },
+    "Do computador" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From a computer"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desde el ordenador"
+          }
+        }
+      }
+    },
+    "Do computador, com cabo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From a computer, by cable"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desde el ordenador, con cable"
           }
         }
       }
@@ -1492,6 +1852,54 @@
         }
       }
     },
+    "Enviando" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sending"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviando"
+          }
+        }
+      }
+    },
+    "Enviar para o Ember" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send to Ember"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar a Ember"
+          }
+        }
+      }
+    },
+    "Enviar pelo Wi-Fi" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send over Wi-Fi"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar por Wi-Fi"
+          }
+        }
+      }
+    },
     "erro desconhecido" : {
       "localizations" : {
         "en" : {
@@ -1525,6 +1933,7 @@
       }
     },
     "Escolha no app Arquivos, no iCloud Drive ou em outro serviço instalado." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1536,6 +1945,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Elige en la app Archivos, en iCloud Drive o en otro servicio instalado."
+          }
+        }
+      }
+    },
+    "Escolher arquivos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose files"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elegir archivos"
           }
         }
       }
@@ -1552,6 +1977,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Elegir en Archivos"
+          }
+        }
+      }
+    },
+    "Escolher pasta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose folder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elegir carpeta"
           }
         }
       }
@@ -1786,6 +2227,23 @@
         }
       }
     },
+    "Finder do Mac" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac Finder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finder del Mac"
+          }
+        }
+      }
+    },
     "FluidSynth" : {
       "localizations" : {
         "en" : {
@@ -1814,6 +2272,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "GeneralUser GS (instrumentos MIDI)"
+          }
+        }
+      }
+    },
+    "Gráficos e sons padrão que muitos jogos usam" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stock graphics and sounds many games use"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gráficos y sonidos estándar que usan muchos juegos"
           }
         }
       }
@@ -1914,6 +2388,23 @@
         }
       }
     },
+    "Importar do Arquivos" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import from Files"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar desde Archivos"
+          }
+        }
+      }
+    },
     "Importar jogo" : {
       "localizations" : {
         "en" : {
@@ -1926,6 +2417,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Importar juego"
+          }
+        }
+      }
+    },
+    "Importar RTP do Arquivos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import RTP from Files"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar RTP desde Archivos"
           }
         }
       }
@@ -1962,6 +2469,23 @@
         }
       }
     },
+    "Importe jogos, RTP, skins e saves do app Arquivos ou do iCloud" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import games, RTP, skins and saves from the Files app or iCloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importa juegos, RTP, skins y partidas desde la app Archivos o iCloud"
+          }
+        }
+      }
+    },
     "Importe um jogo .zip ou uma pasta para começar." : {
       "localizations" : {
         "en" : {
@@ -1990,6 +2514,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Instalado"
+          }
+        }
+      }
+    },
+    "Instalado: %@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Installed: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instalado: %@"
+          }
+        }
+      }
+    },
+    "Instale o app Dispositivos Apple pela Microsoft Store (ou use o iTunes)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Install the Apple Devices app from the Microsoft Store (or use iTunes)."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instala la app Dispositivos Apple desde Microsoft Store (o usa iTunes)."
           }
         }
       }
@@ -2058,6 +2615,22 @@
         }
       }
     },
+    "Jogos de RPG Maker XP, VX e VX Ace: .zip, .rar, .7z, .exe autoextraível ou a pasta do jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RPG Maker XP, VX and VX Ace games: .zip, .rar, .7z, self-extracting .exe or the game folder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Juegos de RPG Maker XP, VX y VX Ace: .zip, .rar, .7z, .exe autoextraíble o la carpeta del juego"
+          }
+        }
+      }
+    },
     "Jogos ocupam bastante espaço. Depois de importar um .zip, .rar ou .7z, o Ember manda o arquivo original para Apagados Recentemente, no app Arquivos. Dá para recuperar por 30 dias." : {
       "localizations" : {
         "en" : {
@@ -2102,6 +2675,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "L del juego"
+          }
+        }
+      }
+    },
+    "Ler área de transferência" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read clipboard"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leer portapapeles"
           }
         }
       }
@@ -2170,6 +2760,54 @@
         }
       }
     },
+    "Ligado, esperando arquivos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On, waiting for files"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activado, esperando archivos"
+          }
+        }
+      }
+    },
+    "Ligar o envio pelo Wi-Fi" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on Wi-Fi transfer"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activar el envío por Wi-Fi"
+          }
+        }
+      }
+    },
+    "Ligue, abra o endereço no navegador do computador e mande arquivos ou a pasta inteira de um jogo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn it on, open the address in a computer’s browser and send files or a whole game folder."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actívalo, abre la dirección en el navegador del ordenador y envía archivos o la carpeta entera de un juego."
+          }
+        }
+      }
+    },
     "Limpar" : {
       "localizations" : {
         "en" : {
@@ -2214,6 +2852,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¿Borrar el historial?"
+          }
+        }
+      }
+    },
+    "Mac, Windows ou Linux" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac, Windows or Linux"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac, Windows o Linux"
           }
         }
       }
@@ -2474,6 +3128,22 @@
         }
       }
     },
+    "Nada do que foi solto parece um jogo, RTP, skin ou save." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing you dropped looks like a game, RTP, skin or save."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada de lo que soltaste parece un juego, RTP, skin o partida."
+          }
+        }
+      }
+    },
     "Não deu certo" : {
       "localizations" : {
         "en" : {
@@ -2704,6 +3374,22 @@
         }
       }
     },
+    "No app, escolha o iPhone e abra Arquivos. Selecione o Ember." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In the app, choose the iPhone and open Files. Select Ember."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En la app, elige el iPhone y abre Archivos. Selecciona Ember."
+          }
+        }
+      }
+    },
     "No Finder, escolha o iPhone na barra lateral e abra a aba Arquivos." : {
       "localizations" : {
         "en" : {
@@ -2736,7 +3422,24 @@
         }
       }
     },
+    "No Safari, no Arquivos ou num app de mensagens também dá: toque no arquivo, depois em Compartilhar e em Ember." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From Safari, Files or a messaging app works too: tap the file, then Share, then Ember."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desde Safari, Archivos o una app de mensajes también: toca el archivo, luego Compartir y Ember."
+          }
+        }
+      }
+    },
     "No Safari, no Arquivos ou num app de mensagens, toque no arquivo, depois em Compartilhar e em Ember. Skins (.deltaskin, .manicskin) chegam do mesmo jeito." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2896,6 +3599,22 @@
         }
       }
     },
+    "O Ember encontra o jogo mesmo dentro de subpastas. Se quiser, ele manda o arquivo compactado para a lixeira depois de importar, para liberar espaço (Ajustes › Importação)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember finds the game even inside subfolders. If you like, it moves the archive to the trash after importing, to free up space (Settings › Import)."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember encuentra el juego incluso dentro de subcarpetas. Si quieres, envía el archivo comprimido a la papelera después de importar, para liberar espacio (Ajustes › Importación)."
+          }
+        }
+      }
+    },
     "O Ember lê skins do Delta e do Manic EMU (.deltaskin, .manicskin). Procure por “GBA deltaskin”: há muitas, de graça e pagas, feitas por artistas independentes. Toque numa skin para usar, ou segure para apagar uma importada. Skins sem paisagem usam a Ember Laranja quando o iPhone deita." : {
       "localizations" : {
         "en" : {
@@ -2924,6 +3643,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ember vuelve a usar el teclado del iPhone"
+          }
+        }
+      }
+    },
+    "O envio parou. Confira se o Wi-Fi do Ember continua ligado e tente de novo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The upload stopped. Check that Ember’s Wi-Fi is still on and try again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El envío se detuvo. Comprueba que el Wi-Fi de Ember siga activado e inténtalo de nuevo."
           }
         }
       }
@@ -2988,6 +3723,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Se perderá el progreso que no se haya guardado en el juego."
+          }
+        }
+      }
+    },
+    "O que dá para importar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What you can import"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qué se puede importar"
+          }
+        }
+      }
+    },
+    "O Windows não copia pastas por esse caminho: compacte a pasta do jogo num .zip antes, ou use o Wi-Fi." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windows doesn’t copy folders this way: zip the game folder first, or use Wi-Fi."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windows no copia carpetas por esta vía: comprime la carpeta del juego en un .zip antes, o usa la Wi-Fi."
           }
         }
       }
@@ -3088,6 +3855,38 @@
         }
       }
     },
+    "Ou solte arquivos aqui" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Or drop files here"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O suelta archivos aquí"
+          }
+        }
+      }
+    },
+    "Outros caminhos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other ways"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otras formas"
+          }
+        }
+      }
+    },
     "Padrão" : {
       "localizations" : {
         "en" : {
@@ -3132,6 +3931,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Para escuchar tu música mientras juegas, apaga el sonido del juego o déjalo sonar junto. Así Spotify, Apple Music o un pódcast siguen sonando. En ese modo, el interruptor de silencio del iPhone también silencia el juego."
+          }
+        }
+      }
+    },
+    "pasta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "folder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "carpeta"
           }
         }
       }
@@ -3201,6 +4016,7 @@
       }
     },
     "Pelo Mac" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3212,6 +4028,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Desde un Mac"
+          }
+        }
+      }
+    },
+    "Pelo navegador" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From a browser"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desde un navegador"
+          }
+        }
+      }
+    },
+    "Pelo terminal, com cabo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From the terminal, by cable"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desde la terminal, con cable"
           }
         }
       }
@@ -3244,6 +4092,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Perfiles de control"
+          }
+        }
+      }
+    },
+    "Pode soltar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drop it"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suéltalo"
+          }
+        }
+      }
+    },
+    "Pronto. Abra a Biblioteca do Ember." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done. Open Ember’s Library."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listo. Abre la Biblioteca de Ember."
           }
         }
       }
@@ -3296,6 +4176,22 @@
         }
       }
     },
+    "Recebendo %@…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Receiving %@…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recibiendo %@…"
+          }
+        }
+      }
+    },
     "Registros" : {
       "localizations" : {
         "en" : {
@@ -3324,6 +4220,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Renombrar"
+          }
+        }
+      }
+    },
+    "RPG Maker XP, VX e VX Ace" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RPG Maker XP, VX and VX Ace"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RPG Maker XP, VX y VX Ace"
           }
         }
       }
@@ -3372,6 +4284,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "RTP instalado"
+          }
+        }
+      }
+    },
+    "RTP, a pasta com os gráficos e sons padrão" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RTP, the folder with the stock graphics and sounds"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RTP, la carpeta con los gráficos y sonidos estándar"
           }
         }
       }
@@ -3520,6 +4448,22 @@
         }
       }
     },
+    "Saves pelo painel do jogo, na Biblioteca" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saves from the game’s panel, in the Library"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partidas desde el panel del juego, en la Biblioteca"
+          }
+        }
+      }
+    },
     "Se o jogo não abre, tente outra versão do Ruby: segure o jogo na biblioteca e toque em Ruby." : {
       "localizations" : {
         "en" : {
@@ -3553,6 +4497,7 @@
       }
     },
     "Sem cabo de rede nem app extra: o Finder copia direto para o Ember." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3616,6 +4561,22 @@
         }
       }
     },
+    "Sistema" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistema"
+          }
+        }
+      }
+    },
     "Skins" : {
       "localizations" : {
         "en" : {
@@ -3628,6 +4589,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Skins"
+          }
+        }
+      }
+    },
+    "Skins .deltaskin e .manicskin" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ".deltaskin and .manicskin skins"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skins .deltaskin y .manicskin"
           }
         }
       }
@@ -3676,6 +4653,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Acerca de"
+          }
+        }
+      }
+    },
+    "Solte aqui" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drop here"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suelta aquí"
           }
         }
       }
@@ -3740,6 +4733,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tu estantería está vacía"
+          }
+        }
+      }
+    },
+    "Também servem RTP, skins e saves. O jogo pode estar dentro de subpastas." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RTP, skins and saves work too. The game can be inside subfolders."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "También sirven RTP, skins y partidas. El juego puede estar dentro de subcarpetas."
           }
         }
       }
@@ -3952,6 +4961,23 @@
         }
       }
     },
+    "Toda aventura começa com uma faísca." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every adventure starts with a spark."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toda aventura empieza con una chispa."
+          }
+        }
+      }
+    },
     "Todos os jogos" : {
       "localizations" : {
         "en" : {
@@ -3969,6 +4995,7 @@
       }
     },
     "Traga jogos de RPG Maker XP, VX ou VX Ace: .zip, .rar, .7z ou a pasta do jogo. O Ember encontra o jogo mesmo dentro de subpastas e, se você quiser, apaga o arquivo compactado depois para liberar espaço." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3980,6 +5007,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Trae juegos de RPG Maker XP, VX o VX Ace: .zip, .rar, .7z o la carpeta del juego. Ember encuentra el juego incluso dentro de subcarpetas y, si quieres, elimina el archivo comprimido después para liberar espacio."
+          }
+        }
+      }
+    },
+    "Traga seus jogos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bring your games"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trae tus juegos"
           }
         }
       }
@@ -4000,6 +5043,22 @@
         }
       }
     },
+    "Um arquivo copiado no Mac ou no Arquivos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A file copied on the Mac or in Files"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un archivo copiado en el Mac o en Archivos"
+          }
+        }
+      }
+    },
     "Use Salvar estado no menu, andando pelo mapa. O Ember também salva sozinho quando você sai do app." : {
       "localizations" : {
         "en" : {
@@ -4012,6 +5071,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Usa Guardar estado en el menú mientras caminas por el mapa. Ember también guarda solo cuando sales de la app."
+          }
+        }
+      }
+    },
+    "Use um navegador para enviar arquivos" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use a browser to send files"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usa un navegador para enviar archivos"
           }
         }
       }
@@ -4172,6 +5248,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vuelve a caminar por el mapa para guardar el estado"
+          }
+        }
+      }
+    },
+    "Wi-Fi" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wi-Fi"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wi-Fi"
           }
         }
       }

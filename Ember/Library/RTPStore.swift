@@ -20,6 +20,14 @@ enum RTPStore {
             }
         }
 
+        var shortName: String {
+            switch self {
+            case .xp: "XP"
+            case .vx: "VX"
+            case .vxace: "VX Ace"
+            }
+        }
+
         var name: String {
             switch self {
             case .xp: "RPG Maker XP"
