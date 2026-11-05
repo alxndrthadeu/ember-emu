@@ -7,7 +7,7 @@
 // Store metadata must not.)
 //
 // Usage: swift scripts/compose-screenshots.swift <raw dir> <out dir> [lang ...]
-// Output: <out dir>/<lang>/NN-name.png, 1320×2868 (6.9" iPhone).
+// Output: <out dir>/<lang>/{6.9-inch,6.5-inch}/NN-name.png, opaque PNGs.
 
 import AppKit
 
@@ -194,10 +194,37 @@ func compose(_ slide: Slide, lang: String, rawDir: String, outDir: String) throw
     ctx.restoreGState()
 
     NSGraphicsContext.restoreGraphicsState()
-    try FileManager.default.createDirectory(atPath: "\(outDir)/\(lang)", withIntermediateDirectories: true)
-    let png = rep.representation(using: .png, properties: [:])!
-    try png.write(to: URL(fileURLWithPath: "\(outDir)/\(lang)/\(slide.name).png"))
+    guard let composed = rep.cgImage else { return }
+    for (folder, size) in outputSizes {
+        try writeOpaque(composed, size: size, to: "\(outDir)/\(lang)/\(folder)/\(slide.name).png")
+    }
     print("  \(lang)/\(slide.name).png")
+}
+
+/// App Store slots: 6.9" (1320×2868) and 6.5" (1284×2778). The 6.5"
+/// image is scaled to its width and loses a few pixels at the bottom,
+/// where the phone runs off the edge anyway.
+let outputSizes: [(String, CGSize)] = [("6.9-inch", CGSize(width: 1320, height: 2868)),
+                                       ("6.5-inch", CGSize(width: 1284, height: 2778))]
+
+/// Writes a PNG with no alpha channel: App Store Connect rejects
+/// screenshots that carry one.
+func writeOpaque(_ image: CGImage, size: CGSize, to path: String) throws {
+    let w = Int(size.width), h = Int(size.height)
+    let ctx = CGContext(data: nil, width: w, height: h, bitsPerComponent: 8, bytesPerRow: 0,
+                        space: CGColorSpace(name: CGColorSpace.sRGB)!,
+                        bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue)!
+    ctx.interpolationQuality = .high
+    let scale = size.width / CGFloat(image.width)
+    let drawnHeight = CGFloat(image.height) * scale
+    // Keep the top (the headline); trim the bottom.
+    ctx.draw(image, in: CGRect(x: 0, y: size.height - drawnHeight, width: size.width, height: drawnHeight))
+    let url = URL(fileURLWithPath: path)
+    try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+    guard let out = ctx.makeImage(),
+          let dest = CGImageDestinationCreateWithURL(url as CFURL, "public.png" as CFString, 1, nil) else { return }
+    CGImageDestinationAddImage(dest, out, nil)
+    CGImageDestinationFinalize(dest)
 }
 
 let args = CommandLine.arguments
