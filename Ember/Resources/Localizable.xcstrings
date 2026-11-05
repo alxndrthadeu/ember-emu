@@ -473,6 +473,22 @@
         }
       }
     },
+    "A imagem está na TV e o iPhone virou o controle." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The picture is on the TV and your iPhone is the controller."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La imagen está en la TV y el iPhone es el mando."
+          }
+        }
+      }
+    },
     "A skin “%@” não tem layout para iPhone." : {
       "localizations" : {
         "en" : {
@@ -517,6 +533,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "La Última Brasa, un juego pequeño hecho para Ember"
+          }
+        }
+      }
+    },
+    "Abra a Central de Controle (deslize do canto superior direito)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Control Center (swipe down from the top-right corner)."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre el Centro de control (desliza desde la esquina superior derecha)."
           }
         }
       }
@@ -663,6 +695,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Todavía no hay partidas guardadas de %@."
+          }
+        }
+      }
+    },
+    "AirPlay" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay"
           }
         }
       }
@@ -1437,6 +1485,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Con libimobiledevice e ifuse instalados, este comando monta la carpeta de Ember. Copia el juego dentro, desmonta con fusermount -u ~/ember y abre Ember."
+          }
+        }
+      }
+    },
+    "Com uma Apple TV ou TV com AirPlay na mesma rede." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "With an Apple TV or AirPlay TV on the same network."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Con un Apple TV o una TV con AirPlay en la misma red."
           }
         }
       }
@@ -2749,6 +2813,22 @@
         }
       }
     },
+    "Jogar na TV" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play on the TV"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jugar en la TV"
+          }
+        }
+      }
+    },
     "Jogo" : {
       "localizations" : {
         "en" : {
@@ -3306,6 +3386,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "En pantalla y en el mando"
+          }
+        }
+      }
+    },
+    "Na TV" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On TV"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En la TV"
           }
         }
       }
@@ -4165,6 +4261,22 @@
         }
       }
     },
+    "Para trazer o jogo de volta, pare o espelhamento na Central de Controle." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To bring the game back, stop mirroring in Control Center."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para traer el juego de vuelta, detén la duplicación en el Centro de control."
+          }
+        }
+      }
+    },
     "pasta" : {
       "localizations" : {
         "en" : {
@@ -4726,6 +4838,22 @@
         }
       }
     },
+    "Se só o som for para a TV" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If only the sound goes to the TV"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si solo el sonido va a la TV"
+          }
+        }
+      }
+    },
     "Select" : {
       "localizations" : {
         "en" : {
@@ -5240,6 +5368,38 @@
         }
       }
     },
+    "Toque em Espelhar Tela e escolha a TV." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap Screen Mirroring and choose the TV."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toca Duplicar pantalla y elige la TV."
+          }
+        }
+      }
+    },
+    "Toque para escolher a TV" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap to choose the TV"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toca para elegir la TV"
+          }
+        }
+      }
+    },
     "Traga jogos de RPG Maker XP, VX ou VX Ace: .zip, .rar, .7z ou a pasta do jogo. O Ember encontra o jogo mesmo dentro de subpastas e, se você quiser, apaga o arquivo compactado depois para liberar espaço." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -5285,6 +5445,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Transparencia en horizontal"
+          }
+        }
+      }
+    },
+    "TV" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TV"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TV"
           }
         }
       }
@@ -5494,6 +5670,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vuelve a caminar por el mapa para guardar el estado"
+          }
+        }
+      }
+    },
+    "Volte ao Ember: o jogo vai para a TV sozinho." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go back to Ember: the game moves to the TV on its own."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vuelve a Ember: el juego pasa a la TV solo."
           }
         }
       }

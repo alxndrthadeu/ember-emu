@@ -81,7 +81,7 @@ struct ControlsOverlay: View {
                 quitting = true
                 session.quit()
             }
-            .presentationDetents([.height(380)])
+            .presentationDetents([.height(500)])
         }
         .sheet(isPresented: $showingStates) {
             if let game = session.currentGame {
