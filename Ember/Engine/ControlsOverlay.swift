@@ -17,8 +17,11 @@ struct ControlsOverlay: View {
         GeometryReader { geo in
             let size = geo.size
             let portrait = size.height >= size.width
-            // Old games poll a PC keyboard: a keyboard button by the gear.
-            let wantsKeyboard = session.currentGame?.wantsKeyboardButton ?? false
+            // A keyboard button by the gear, for every game: old games poll a
+            // PC keyboard, and on newer ones it is the way in if the game's
+            // own text prompt never brings the keyboard up. (GameTextField
+            // sends text or key taps, whichever the game is reading.)
+            let wantsKeyboard = true
             let skinLayout = skins.layout(portrait: portrait, keyboard: wantsKeyboard)
             // Landscape with a controller in hand: the buttons step away.
             let hideButtons = !portrait && controllers.connected && AppSettings.hideControlsWithController

@@ -83,7 +83,7 @@ enum SkinInput: Hashable {
     /// Ember's in-game menu.
     case menu
     /// Opens the system keyboard, for games that poll a PC keyboard.
-    /// Shown only for those games (GameEntry.wantsKeyboardButton).
+    /// Shown for every game (ControlsOverlay).
     case keyboard
     /// Fast forward while held.
     case fastForward
