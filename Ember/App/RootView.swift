@@ -31,18 +31,35 @@ struct RootView: View {
         }
     }
 
+    @ViewBuilder
     private var tabs: some View {
-        TabView(selection: $router.tab) {
-            Tab("Biblioteca", image: "Cartridge", value: AppTab.library) {
+        if #available(iOS 18, *), !EmberCompat.forceLegacy {
+            TabView(selection: $router.tab) {
+                Tab("Biblioteca", image: "Cartridge", value: AppTab.library) {
+                    LibraryView()
+                }
+                Tab("Importar", systemImage: "folder.badge.plus", value: AppTab.importGames) {
+                    ImportView()
+                }
+                Tab("Ajustes", systemImage: "gearshape", value: AppTab.settings) {
+                    SettingsView()
+                }
+            }
+            .tint(Theme.accent)
+        } else {
+            // iOS 17: the Tab type does not exist yet.
+            TabView(selection: $router.tab) {
                 LibraryView()
-            }
-            Tab("Importar", systemImage: "folder.badge.plus", value: AppTab.importGames) {
+                    .tabItem { Label("Biblioteca", image: "Cartridge") }
+                    .tag(AppTab.library)
                 ImportView()
-            }
-            Tab("Ajustes", systemImage: "gearshape", value: AppTab.settings) {
+                    .tabItem { Label("Importar", systemImage: "folder.badge.plus") }
+                    .tag(AppTab.importGames)
                 SettingsView()
+                    .tabItem { Label("Ajustes", systemImage: "gearshape") }
+                    .tag(AppTab.settings)
             }
+            .tint(Theme.accent)
         }
-        .tint(Theme.accent)
     }
 }

@@ -136,7 +136,7 @@ struct ProfileEditor: View {
                             .font(.system(size: button.label.count > 2 ? 11 : 15, weight: .bold, design: .rounded))
                             .foregroundStyle(Theme.primaryText)
                             .frame(width: 56, height: 30)
-                            .glassEffect(.regular, in: Capsule())
+                            .emberGlass(.regular, in: Capsule())
                         VStack(alignment: .leading, spacing: 1) {
                             Text(profile.action(for: button).title)
                                 .foregroundStyle(Theme.primaryText)

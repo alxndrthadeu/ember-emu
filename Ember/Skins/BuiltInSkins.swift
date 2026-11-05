@@ -246,11 +246,19 @@ struct BuiltInSkinArt: View {
     private func surface<S: Shape>(_ shape: S, pressed: Bool, fill: Color) -> some View {
         switch style {
         case .ember:
-            shape.fill(pressed ? fill.mix(with: .black, by: 0.3) : fill)
-                .shadow(color: .black.opacity(pressed ? 0.1 : 0.3), radius: pressed ? 1 : 3, y: pressed ? 1 : 3)
+            Group {
+                if #available(iOS 18, *), !EmberCompat.forceLegacy {
+                    shape.fill(pressed ? fill.mix(with: .black, by: 0.3) : fill)
+                } else {
+                    // iOS 17 has no Color.mix: darken with a layer on top.
+                    shape.fill(fill)
+                        .overlay(shape.fill(Color.black.opacity(pressed ? 0.3 : 0)))
+                }
+            }
+            .shadow(color: .black.opacity(pressed ? 0.1 : 0.3), radius: pressed ? 1 : 3, y: pressed ? 1 : 3)
         case .glass:
             shape.fill(.clear)
-                .glassEffect(pressed ? Theme.controlGlassPressed : Theme.controlGlass, in: shape)
+                .emberGlass(pressed ? Theme.controlGlassPressed : Theme.controlGlass, in: shape)
         }
     }
 

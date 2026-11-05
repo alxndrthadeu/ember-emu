@@ -13,6 +13,8 @@
 set -eu
 
 ENGINE="${EMBER_ENGINE:-$HOME/Developer/ember-engine}"
+# Lowest iOS the library runs on (the engine's MINIMUM_REQUIRED).
+MIN_IOS="${EMBER_MIN_IOS:-17.0}"
 VERSION=v2.5.7
 SRC="$ENGINE/deps/sources/fluidsynth"
 
@@ -47,9 +49,9 @@ for SDK in "$@"; do
     PREFIX="$ENGINE/deps/build-$SDK-arm64"
     BUILD="$ENGINE/deps/build-fluidsynth-$SDK"
     if [ "$SDK" = iphonesimulator ]; then
-        TARGET=arm64-apple-ios26.0-simulator
+        TARGET=arm64-apple-ios$MIN_IOS-simulator
     else
-        TARGET=arm64-apple-ios26.0
+        TARGET=arm64-apple-ios$MIN_IOS
     fi
     rm -rf "$BUILD"
     # Only the synthesizer: no audio drivers (the engine renders the
@@ -59,7 +61,7 @@ for SDK in "$@"; do
         -DCMAKE_SYSTEM_NAME=iOS \
         -DCMAKE_OSX_SYSROOT="$SDK" \
         -DCMAKE_OSX_ARCHITECTURES=arm64 \
-        -DCMAKE_OSX_DEPLOYMENT_TARGET=26.0 \
+        -DCMAKE_OSX_DEPLOYMENT_TARGET="$MIN_IOS" \
         -DCMAKE_C_FLAGS="-target $TARGET" \
         -DCMAKE_CXX_FLAGS="-target $TARGET" \
         -DCMAKE_BUILD_TYPE=Release \

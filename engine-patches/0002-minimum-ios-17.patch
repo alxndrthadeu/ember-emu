@@ -1,0 +1,26 @@
+diff --git a/deps/iphoneos.make b/deps/iphoneos.make
+index 82a4cd5..7e3a572 100644
+--- a/deps/iphoneos.make
++++ b/deps/iphoneos.make
+@@ -1,7 +1,7 @@
+ ARCH := arm64
+ HOST := aarch64-apple-darwin
+ SDK := iphoneos
+-MINIMUM_REQUIRED := 26.0
++MINIMUM_REQUIRED := 17.0
+ TARGET_FLAG := -miphoneos-version-min=$(MINIMUM_REQUIRED) -target arm64-apple-ios$(MINIMUM_REQUIRED)
+ 
+ include common.make
+diff --git a/deps/iphonesimulator.make b/deps/iphonesimulator.make
+index 08102df..ee2ad7b 100644
+--- a/deps/iphonesimulator.make
++++ b/deps/iphonesimulator.make
+@@ -1,7 +1,7 @@
+ ARCH := arm64
+ HOST := aarch64-apple-darwin
+ SDK := iphonesimulator
+-MINIMUM_REQUIRED := 26.0
++MINIMUM_REQUIRED := 17.0
+ TARGET_FLAG := -mios-simulator-version-min=$(MINIMUM_REQUIRED) -target arm64-apple-ios$(MINIMUM_REQUIRED)-simulator
+ 
+ include common.make

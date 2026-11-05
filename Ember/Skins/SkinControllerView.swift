@@ -389,7 +389,7 @@ struct KeyboardButton: View {
                 .frame(width: 38, height: 38)
         }
         .buttonStyle(.plain)
-        .glassEffect(Theme.controlGlass.interactive(), in: Circle())
+        .emberGlass(Theme.controlGlass.interactive(), in: Circle())
         .accessibilityLabel("Teclado")
     }
 }

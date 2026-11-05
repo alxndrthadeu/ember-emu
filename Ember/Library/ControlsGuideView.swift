@@ -92,7 +92,7 @@ private struct ControlRow: View {
             }
             .foregroundStyle(Theme.primaryText)
             .frame(width: 48, height: 32)
-            .glassEffect(.regular, in: Capsule())
+            .emberGlass(.regular, in: Capsule())
 
             VStack(alignment: .leading, spacing: 1) {
                 Text(name)

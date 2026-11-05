@@ -28,8 +28,8 @@ enum Theme {
     static let controllerBackground = Color(hex: 0x17120F)
     static let controlLabel = Color(hex: 0xF4E9D8).opacity(0.9)
     /// Glass over the dark controller area, warmed with the cream.
-    static let controlGlass = Glass.regular.tint(Color(hex: 0xF4E9D8).opacity(0.08))
-    static let controlGlassPressed = Glass.regular.tint(Color(hex: 0xF4E9D8).opacity(0.30))
+    static let controlGlass = EmberGlass.regular.tint(Color(hex: 0xF4E9D8).opacity(0.08))
+    static let controlGlassPressed = EmberGlass.regular.tint(Color(hex: 0xF4E9D8).opacity(0.30))
 
     // MARK: Shapes
 

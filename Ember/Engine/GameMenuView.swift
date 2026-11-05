@@ -42,7 +42,7 @@ struct GameMenuView: View {
         VStack(alignment: .leading, spacing: 20) {
             header
 
-            GlassEffectContainer(spacing: 12) {
+            EmberGlassContainer(spacing: 12) {
             LazyVGrid(columns: columns, spacing: 12) {
                 MenuTile(icon: "forward.fill", title: String(localized: "Velocidade"),
                          value: String(localized: "\(speed)x"), highlighted: speed > 1) {
@@ -102,7 +102,7 @@ struct GameMenuView: View {
                     .padding(.horizontal, 16)
                     .padding(.vertical, 10)
                     .foregroundStyle(Theme.onHighlight)
-                    .glassEffect(.regular.tint(Theme.highlight), in: Capsule())
+                    .emberGlass(.regular.tint(Theme.highlight), in: Capsule())
                     .transition(.opacity)
                     .padding(.bottom, 12)
             }
@@ -137,7 +137,7 @@ struct GameMenuView: View {
                     .frame(width: 34, height: 34)
             }
             .buttonStyle(.plain)
-            .glassEffect(.regular.interactive(), in: Circle())
+            .emberGlass(.regular.interactive(), in: Circle())
             .accessibilityLabel("Voltar ao jogo")
         }
     }
@@ -199,7 +199,7 @@ private struct MenuTile: View {
             .frame(maxWidth: .infinity, minHeight: 92)
             .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         }
-        .glassEffect(highlighted ? .regular.tint(Theme.highlight).interactive() : .regular.interactive(),
+        .emberGlass(highlighted ? .regular.tint(Theme.highlight).interactive() : .regular.interactive(),
                      in: RoundedRectangle(cornerRadius: 20, style: .continuous))
         .buttonStyle(.plain)
     }

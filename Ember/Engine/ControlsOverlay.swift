@@ -88,7 +88,7 @@ struct ControlsOverlay: View {
                     .foregroundStyle(Theme.onHighlight)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 10)
-                    .glassEffect(.regular.tint(Theme.highlight), in: Capsule())
+                    .emberGlass(.regular.tint(Theme.highlight), in: Capsule())
                     .padding(.top, 54)
                     .transition(.move(edge: .top).combined(with: .opacity))
             }
@@ -180,7 +180,7 @@ private struct FloatingMenuButton: View {
                 .frame(width: 38, height: 38)
         }
         .buttonStyle(.plain)
-        .glassEffect(Theme.controlGlass.interactive(), in: Circle())
+        .emberGlass(Theme.controlGlass.interactive(), in: Circle())
         .accessibilityLabel("Menu")
     }
 }

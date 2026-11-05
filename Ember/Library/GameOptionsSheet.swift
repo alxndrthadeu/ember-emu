@@ -33,7 +33,7 @@ struct GameOptionsSheet: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 header
-                GlassEffectContainer(spacing: 12) {
+                EmberGlassContainer(spacing: 12) {
                     LazyVGrid(columns: columns, spacing: 12) {
                         OptionTile(icon: "play.fill", title: String(localized: "Jogar"), highlighted: true) {
                             dismiss()
@@ -47,7 +47,7 @@ struct GameOptionsSheet: View {
                             OptionTileLabel(icon: "photo", title: String(localized: "Capa"))
                         }
                         .buttonStyle(.plain)
-                        .glassEffect(.regular.interactive(), in: tileShape)
+                        .emberGlass(.regular.interactive(), in: tileShape)
                         if GameCovers.hasCustomCover(current.id) {
                             OptionTile(icon: "arrow.uturn.backward", title: String(localized: "Capa automática")) {
                                 library.removeCustomCover(for: current)
@@ -73,7 +73,7 @@ struct GameOptionsSheet: View {
                                             title: String(localized: "Ruby \(RubyChoice.label(for: current.rubyVersion))"))
                         }
                         .buttonStyle(.plain)
-                        .glassEffect(.regular.interactive(), in: tileShape)
+                        .emberGlass(.regular.interactive(), in: tileShape)
                         OptionTile(icon: InGameKeyboard.isOn(for: current.id) ? "keyboard.fill" : "keyboard",
                                    title: InGameKeyboard.isOn(for: current.id) ? String(localized: "Teclado do jogo: ligado") : String(localized: "Teclado do jogo"),
                                    highlighted: false) {
@@ -102,7 +102,7 @@ struct GameOptionsSheet: View {
                                             title: String(localized: "Controles: \(ProfileStore.shared.profile(for: current).name)"))
                         }
                         .buttonStyle(.plain)
-                        .glassEffect(.regular.interactive(), in: tileShape)
+                        .emberGlass(.regular.interactive(), in: tileShape)
                         OptionTile(icon: "square.and.arrow.up", title: String(localized: "Exportar saves")) {
                             exportSaves()
                         }
@@ -128,7 +128,7 @@ struct GameOptionsSheet: View {
                     .foregroundStyle(Theme.onHighlight)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 10)
-                    .glassEffect(.regular.tint(Theme.highlight), in: Capsule())
+                    .emberGlass(.regular.tint(Theme.highlight), in: Capsule())
                     .padding(.bottom, 16)
                     .transition(.opacity)
             }
@@ -225,7 +225,7 @@ struct GameOptionsSheet: View {
                 }
                 .padding(.horizontal, 14)
                 .padding(.vertical, 4)
-                .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .emberGlass(.regular, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             }
             // verbatim: a plain Text reads the string as Markdown, which
             // eats the backslash of %APPDATA%\.
@@ -319,7 +319,7 @@ private struct OptionTile: View {
             OptionTileLabel(icon: icon, title: title, highlighted: highlighted, destructive: destructive)
         }
         .buttonStyle(.plain)
-        .glassEffect(highlighted ? .regular.tint(Theme.highlight).interactive() : .regular.interactive(),
+        .emberGlass(highlighted ? .regular.tint(Theme.highlight).interactive() : .regular.interactive(),
                      in: RoundedRectangle(cornerRadius: 20, style: .continuous))
     }
 }
