@@ -18,8 +18,20 @@ final class AppRouter: ObservableObject {
 /// The app's tabs, in the system's Liquid Glass tab bar.
 struct RootView: View {
     @ObservedObject private var router = AppRouter.shared
+    /// Once per launch, over everything until it fades.
+    @State private var showingSplash = true
 
     var body: some View {
+        ZStack {
+            tabs
+            if showingSplash {
+                SplashView { showingSplash = false }
+                    .zIndex(1)
+            }
+        }
+    }
+
+    private var tabs: some View {
         TabView(selection: $router.tab) {
             Tab("Biblioteca", image: "Cartridge", value: AppTab.library) {
                 LibraryView()
