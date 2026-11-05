@@ -19,7 +19,12 @@ APP=com.alexandrethadeu.ember
 BOOT_WAIT="${EMBER_BOOT_WAIT:-20}"
 PLAY_WAIT="${EMBER_PLAY_WAIT:-30}"
 
-if ! xcrun simctl list devices | grep -q "($DEV)"; then
+if [ "$DEV" = booted ]; then
+    if ! xcrun simctl list devices booted | grep -q Booted; then
+        echo "compat-test: nenhum simulador aberto. Abra um ou passe EMBER_SIM=<udid>." >&2
+        exit 1
+    fi
+elif ! xcrun simctl list devices | grep -q "($DEV)"; then
     echo "compat-test: $DEV não é um simulador deste Mac; o teste só roda no simulador." >&2
     exit 1
 fi

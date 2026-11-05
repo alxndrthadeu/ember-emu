@@ -14,3 +14,6 @@ build/
 DerivedData/
 .DS_Store
 xcuserdata/
+
+# Notas locais do projeto (aparelho, conta Apple): fora do repositório público.
+/CLAUDE.md
