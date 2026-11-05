@@ -26,13 +26,16 @@ final class ExternalDisplay: ObservableObject {
         window.isHidden = false
         self.window = window
         isConnected = true
-        GameLog.shared.note("TV conectada: \(Int(scene.screen.bounds.width))×\(Int(scene.screen.bounds.height)) pt, escala \(scene.screen.scale)")
+        let detail = "\(Int(scene.screen.bounds.width))×\(Int(scene.screen.bounds.height)) pt, escala \(scene.screen.scale)"
+        GameLog.shared.note("TV conectada: \(detail)")
+        EmberTrail("TV conectada: \(detail)")
         print("[ember-tv] connected", scene.screen.bounds, scene.screen.scale)
     }
 
     func disconnect() {
         print("[ember-tv] disconnected")
         GameLog.shared.note("TV desconectada")
+        EmberTrail("TV desconectada")
         window?.isHidden = true
         window = nil
         isConnected = false

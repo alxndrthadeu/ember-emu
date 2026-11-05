@@ -17,6 +17,21 @@
 @end
 
 @implementation EmberAppDelegate
+
+// Picks the scene configuration (Info.plist) for each role: the app's
+// window, or the TV's (AirPlay screen mirroring or a cable). Answering
+// here, instead of leaving it to the plist alone, makes sure iOS hands
+// Ember the TV instead of mirroring the iPhone.
+- (UISceneConfiguration *)application:(UIApplication *)application
+    configurationForConnectingSceneSession:(UISceneSession *)session
+                                   options:(UISceneConnectionOptions *)options {
+    EmberTrail([NSString stringWithFormat:@"scene pedida: %@", session.role]);
+    if ([session.role isEqualToString:UIWindowSceneSessionRoleExternalDisplayNonInteractive]) {
+        return [[UISceneConfiguration alloc] initWithName:@"TV" sessionRole:session.role];
+    }
+    return [[UISceneConfiguration alloc] initWithName:@"Default Configuration" sessionRole:session.role];
+}
+
 @end
 
 static int gArgc;
@@ -24,6 +39,28 @@ static char **gArgv;
 
 int EmberRunEngine(void) {
     return mkxp_run_app(gArgc, gArgv);
+}
+
+void EmberTrail(NSString *line) {
+    // Library/Application Support/Logs/system.log: app events outside a
+    // game session (TV connections), readable from the Mac.
+    NSURL *support = [NSFileManager.defaultManager URLsForDirectory:NSApplicationSupportDirectory
+                                                          inDomains:NSUserDomainMask].firstObject;
+    NSURL *folder = [support URLByAppendingPathComponent:@"Logs" isDirectory:YES];
+    [NSFileManager.defaultManager createDirectoryAtURL:folder withIntermediateDirectories:YES attributes:nil error:nil];
+    NSURL *file = [folder URLByAppendingPathComponent:@"system.log"];
+    NSString *stamp = [NSDateFormatter localizedStringFromDate:NSDate.date
+                                                     dateStyle:NSDateFormatterShortStyle
+                                                     timeStyle:NSDateFormatterMediumStyle];
+    NSData *data = [[NSString stringWithFormat:@"%@ %@\n", stamp, line] dataUsingEncoding:NSUTF8StringEncoding];
+    NSFileHandle *handle = [NSFileHandle fileHandleForWritingAtPath:file.path];
+    if (!handle) {
+        [data writeToURL:file atomically:YES];
+        return;
+    }
+    [handle seekToEndOfFile];
+    [handle writeData:data];
+    [handle closeFile];
 }
 
 void EmberNotifyViewResized(int width, int height) {

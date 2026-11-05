@@ -14,6 +14,12 @@ int EmberRunEngine(void);
 void alListenerf(int param, float value);
 void alGetListenerf(int param, float *value);
 
+#ifdef __OBJC__
+#import <Foundation/Foundation.h>
+// Appends a line to Library/Application Support/Logs/system.log.
+void EmberTrail(NSString *line);
+#endif
+
 // Tells the engine its view now has this size in points (moved to or
 // from a TV): the same window event a rotation sends, through SDL's
 // public SDL_PushEvent.
