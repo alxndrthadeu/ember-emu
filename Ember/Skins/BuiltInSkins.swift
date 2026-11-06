@@ -310,6 +310,12 @@ struct BuiltInSkinArt: View {
                     background(isPortrait: isPortrait)
                 }
 
+                // Book posture: the game's page reads as a screen of its
+                // own, like a handheld with two screens.
+                if layer != .controls, !isPortrait, let fold = layout.fold {
+                    gamePage(width: fold * sx - 1, height: geo.size.height)
+                }
+
                 if layer != .controls, let screen = layout.screen {
                     // Tela cheia gets the thin frame, also when a wide screen
                     // (an open iPhone Duo) keeps the picture off the edges.
@@ -387,6 +393,23 @@ struct BuiltInSkinArt: View {
                 .frame(width: screen.width, height: screen.height)
                 .position(x: screen.midX, y: screen.midY)
         }
+    }
+
+    private func gamePage(width: CGFloat, height: CGFloat) -> some View {
+        Theme.controllerBackground
+            .frame(width: width, height: height)
+            .overlay(alignment: .bottom) {
+                HStack(spacing: 6) {
+                    Image(systemName: "flame.fill")
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundStyle(Color(hex: 0xF7B538))
+                    Text("ember")
+                        .font(.system(size: 13, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color(hex: 0xF4E9D8).opacity(0.6))
+                }
+                .padding(.bottom, 22)
+            }
+            .position(x: width / 2, y: height / 2)
     }
 
     /// A soft groove where an iPhone Duo folds, so the two halves read
