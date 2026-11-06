@@ -61,6 +61,7 @@ class TitleScene < DemoScene
     @text = Sprite.new
     @text.bitmap = Bitmap.new(w, h)
     @text.z = 10
+    @saved = Demo.saved_game
     @index = 0
     @frame = 0
     draw_text
@@ -84,7 +85,7 @@ class TitleScene < DemoScene
     b.font.size = 22
     items.each_with_index do |label, i|
       y = 150 + i * 34
-      enabled = i != 1
+      enabled = i != 1 || @saved
       selected = i == @index
       if selected
         Pix.round_rect(b, b.width / 2 - 90, y - 2, 180, 32, Pix.c(0xF7B538, 230), 8)
@@ -101,12 +102,13 @@ class TitleScene < DemoScene
     if Input.repeat?(Input::DOWN) || Input.repeat?(Input::UP)
       step = Input.repeat?(Input::DOWN) ? 1 : -1
       @index = (@index + step) % 3
-      @index = (@index + step) % 3 if @index == 1
+      @index = (@index + step) % 3 if @index == 1 && !@saved
       draw_text
     end
     if Input.trigger?(Input::C)
       case @index
       when 0 then $scene = MapScene.new
+      when 1 then $scene = MapScene.new(@saved)
       when 2 then $scene = nil
       end
     end
@@ -155,7 +157,14 @@ class MapScene < DemoScene
     bitmap
   end
 
+  attr_reader :hx, :hy, :facing
+
+  def initialize(saved = nil)
+    @saved = saved
+  end
+
   def start
+    $demo_map = self
     @ground = Sprite.new
     @ground.bitmap = build_ground
 
@@ -172,8 +181,12 @@ class MapScene < DemoScene
     @hero = Sprite.new
     @hero.bitmap = Art.hero_sheet
     @hx, @hy = 9, 11
-    @px, @py = @hx * 32, @hy * 32
     @facing = :up
+    if @saved
+      @hx, @hy = @saved['x'].to_i, @saved['y'].to_i
+      @facing = @saved['facing'].to_sym if SHEET_ROW.key?(@saved['facing'].to_s.to_sym)
+    end
+    @px, @py = @hx * 32, @hy * 32
     @step = 0
     @moving = 0
 
@@ -248,7 +261,7 @@ class MapScene < DemoScene
     MAP[y][x, 1]
   end
 
-  def update
+  def update_scene
     @frame += 1
     @fire.src_rect.x = ((@frame / 6) % 3) * 32
     @cat.src_rect.x = ((@frame / 40) % 2) * 32
@@ -284,6 +297,13 @@ class MapScene < DemoScene
     elsif Input.trigger?(Input::B)
       @menu = GameMenu.new
     end
+  end
+
+  def update
+    update_scene
+    # Tells Ember when the map is free of menus and messages: pictures
+    # for save thumbnails come from these moments.
+    $ember_quiet_map = @menu.nil? && !@message.active?
   end
 
   def update_walk
@@ -533,6 +553,7 @@ class GameMenu
     elsif Input.trigger?(Input::C)
       case @commands[@index]
       when :save
+        Demo.save_game($demo_map) if $demo_map
         @toast = 90
         redraw
       when :close

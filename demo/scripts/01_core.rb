@@ -78,6 +78,26 @@ module Demo
   def self.talk(key)
     TALK[key][LANG]
   end
+
+  # A real save file, like any RPG Maker VX Ace game: Save01.rvdata2 in
+  # the game folder, so Ember's saves screen, export and AirDrop work.
+  SAVE_FILE = 'Save01.rvdata2'
+
+  def self.save_game(map)
+    data = { 'version' => 1, 'x' => map.hx, 'y' => map.hy, 'facing' => map.facing.to_s }
+    File.open(SAVE_FILE, 'wb') { |f| Marshal.dump(data, f) }
+    true
+  rescue Exception
+    false
+  end
+
+  def self.saved_game
+    return nil unless File.exist?(SAVE_FILE)
+    data = File.open(SAVE_FILE, 'rb') { |f| Marshal.load(f) }
+    data.is_a?(Hash) && data['version'] == 1 ? data : nil
+  rescue Exception
+    nil
+  end
 end
 
 # Colors and drawing helpers.

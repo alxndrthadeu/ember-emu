@@ -48,6 +48,8 @@ final class EngineSession: ObservableObject {
     private var sessionID: UUID?
     private var resumeSlotForLog: String?
     private var historyTimer: Timer?
+    /// Pictures for the game's own saves as they are written.
+    private let saveWatcher = SaveWatcher()
 
     private func touchSession() {
         if let sessionID { PlayHistory.touch(sessionID) }
@@ -157,6 +159,7 @@ final class EngineSession: ObservableObject {
         historyTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { _ in
             MainActor.assumeIsolated { EngineSession.shared.touchSession() }
         }
+        saveWatcher.start(game)
         GameLayout.shared.observeEngine()
         observeMessages()
         PauseSnapshot.shared.observeEngine()
@@ -181,6 +184,7 @@ final class EngineSession: ObservableObject {
         touchSession()
         historyTimer?.invalidate()
         historyTimer = nil
+        saveWatcher.stop()
         sessionID = nil
         windowWatcher?.invalidate()
         windowWatcher = nil

@@ -72,6 +72,7 @@ enum StateStore {
     static func prepareEnvironment(gameID: String, resumeSlot: String?) {
         let dir = folder(for: gameID)
         try? FileManager.default.removeItem(at: dir.appendingPathComponent("request"))
+        try? FileManager.default.removeItem(at: dir.appendingPathComponent("thumb_request"))
         try? FileManager.default.removeItem(at: dir.appendingPathComponent("response"))
         setenv("EMBER_STATE_DIR", dir.path, 1)
         setenv("EMBER_AUTOSTATE_SECONDS", "\(autoSeconds)", 1)

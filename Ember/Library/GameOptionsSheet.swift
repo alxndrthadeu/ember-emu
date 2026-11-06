@@ -15,7 +15,7 @@ struct GameOptionsSheet: View {
     @State private var newTitle = ""
     @State private var photo: PhotosPickerItem?
     @State private var exportFile: ExportFile?
-    @State private var importingSaves = false
+    @State private var showingSaves = false
     @State private var confirmingDelete = false
     @State private var confirmingArchive = false
     @State private var toast: String?
@@ -50,11 +50,30 @@ struct GameOptionsSheet: View {
                 quickActions
 
                 group(String(localized: "Saves")) {
-                    SheetRow(icon: "square.and.arrow.up", title: String(localized: "Exportar saves (.zip)")) { exportSaves() }
-                    Divider().padding(.leading, 48)
-                    SheetRow(icon: "square.and.arrow.down", title: String(localized: "Importar saves")) { importingSaves = true }
-                    Divider().padding(.leading, 48)
-                    savesList
+                    if !saves.isEmpty {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 12) {
+                                ForEach(saves.prefix(8)) { save in
+                                    Button { showingSaves = true } label: {
+                                        SaveCard(game: current,
+                                                 image: SaveThumbnails.image(for: save, gameID: current.id),
+                                                 title: SaveThumbnails.displayName(save),
+                                                 detail: save.modified.formatted(.relative(presentation: .named)),
+                                                 compact: true)
+                                        .frame(width: 124)
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            }
+                            .padding(14)
+                        }
+                        Divider().padding(.leading, 48)
+                    }
+                    SheetRow(icon: "square.stack", title: saves.isEmpty ? String(localized: "Importar ou ver saves")
+                                                                         : String(localized: "Ver todos os saves"),
+                             value: saves.isEmpty ? nil : "\(saves.count)", chevron: "chevron.right") {
+                        showingSaves = true
+                    }
                 }
 
                 group(String(localized: "Ajustes deste jogo")) {
@@ -143,7 +162,13 @@ struct GameOptionsSheet: View {
                     .transition(.opacity)
             }
         }
-        .onAppear(perform: refreshSaves)
+        .onAppear {
+            refreshSaves()
+            #if DEBUG
+            // Development aid: EMBER_SHOW=saves opens the saves screen.
+            if ProcessInfo.processInfo.environment["EMBER_SHOW"] == "saves" { showingSaves = true }
+            #endif
+        }
         .onChange(of: photo) { loadPhoto() }
         .alert("Renomear", isPresented: $renaming) {
             TextField(current.originalTitle, text: $newTitle)
@@ -152,11 +177,8 @@ struct GameOptionsSheet: View {
         } message: {
             Text("Muda só o nome na biblioteca. A pasta e os saves continuam iguais.")
         }
-        .fileImporter(isPresented: $importingSaves,
-                      allowedContentTypes: [.zip, .folder, .data],
-                      allowsMultipleSelection: true) { result in
-            guard case .success(let urls) = result, !urls.isEmpty else { return }
-            importSaves(urls)
+        .sheet(isPresented: $showingSaves, onDismiss: refreshSaves) {
+            SavesView(game: current)
         }
         .sheet(isPresented: $showingLogs) {
             LogsView(game: current)
@@ -245,36 +267,6 @@ struct GameOptionsSheet: View {
         }
     }
 
-    @ViewBuilder
-    private var savesList: some View {
-        if saves.isEmpty {
-            Text("Nenhum save ainda. Para continuar de onde parou em outro aparelho, importe os arquivos do jogo (.rxdata, .rvdata ou .rvdata2) ou um .zip deles.")
-                .font(.footnote)
-                .foregroundStyle(Theme.secondaryText)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(14)
-        } else {
-            ForEach(saves) { save in
-                HStack {
-                    Image(systemName: "doc.fill")
-                        .foregroundStyle(Theme.secondaryText)
-                        .frame(width: 22)
-                    Text(save.id)
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(Theme.primaryText)
-                        .lineLimit(1)
-                    Spacer()
-                    Text(save.modified.formatted(.relative(presentation: .named)))
-                        .font(.caption)
-                        .foregroundStyle(Theme.secondaryText)
-                }
-                .padding(.horizontal, 14)
-                .padding(.vertical, 10)
-                if save.id != saves.last?.id { Divider().padding(.leading, 48) }
-            }
-        }
-    }
-
     // MARK: Actions
 
     private func refreshSaves() {
@@ -293,21 +285,6 @@ struct GameOptionsSheet: View {
         }
     }
 
-    private func exportSaves() {
-        let game = current
-        working = true
-        Task.detached(priority: .userInitiated) {
-            let result = Result { try SaveManager.export(game) }
-            await MainActor.run {
-                working = false
-                switch result {
-                case .success(let url): exportFile = ExportFile(url: url)
-                case .failure(let error): show(error.localizedDescription)
-                }
-            }
-        }
-    }
-
     /// Saves for another iPhone: an .embersave package in the share
     /// sheet. Bringing two iPhones together there starts AirDrop.
     private func shareSaves() {
@@ -321,24 +298,6 @@ struct GameOptionsSheet: View {
                 case .success(let url): exportFile = ExportFile(url: url)
                 case .failure(let error): show(error.localizedDescription)
                 }
-            }
-        }
-    }
-
-    private func importSaves(_ urls: [URL]) {
-        let game = current
-        working = true
-        Task.detached(priority: .userInitiated) {
-            let result = Result { try SaveManager.importSaves(from: urls, into: game) }
-            await MainActor.run {
-                working = false
-                switch result {
-                case .success(let count):
-                    show(count == 1 ? String(localized: "1 save importado") : String(localized: "\(count) saves importados"))
-                case .failure(let error):
-                    show(error.localizedDescription)
-                }
-                refreshSaves()
             }
         }
     }
@@ -400,6 +359,8 @@ private struct SheetQuickActionLabel: View {
 private struct SheetRow: View {
     let icon: String
     let title: String
+    var value: String?
+    var chevron: String?
     var destructive = false
     let action: () -> Void
 
@@ -408,7 +369,7 @@ private struct SheetRow: View {
             Haptics.tap()
             action()
         } label: {
-            SheetRowLabel(icon: icon, title: title, destructive: destructive)
+            SheetRowLabel(icon: icon, title: title, value: value, destructive: destructive, chevron: chevron)
         }
         .buttonStyle(.plain)
     }

@@ -174,6 +174,12 @@ enum SaveManager {
     /// Before a game is deleted: its game-folder saves would go with
     /// it, so they move to Backups. UserData stays and is found again
     /// if the game comes back under the same name.
+    /// Deletes one save: it goes to Documents/Backups/<id>/<date>/ first.
+    static func delete(_ save: SaveFile, of game: GameEntry) throws {
+        try backUp(save.url, relativeID: save.id, of: game, stamp: stamp(), move: true)
+        SaveThumbnails.remove(save, gameID: game.id)
+    }
+
     static func stashGameFolderSaves(of game: GameEntry) {
         let stamp = Self.stamp()
         for save in gameFolderSaves(game) {

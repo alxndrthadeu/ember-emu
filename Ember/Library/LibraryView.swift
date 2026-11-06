@@ -304,7 +304,7 @@ struct LibraryView: View {
         switch environment["EMBER_SHOW"] {
         case "history": showingHistory = true
         case "controls": showingControls = true
-        case "options": optionsFor = library.games.first
+        case "options", "saves": optionsFor = library.games.first
         case "import", "computer", "rtp": AppRouter.shared.tab = .importGames
         case "settings": AppRouter.shared.tab = .settings
         default: break

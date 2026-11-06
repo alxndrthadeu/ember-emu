@@ -14,6 +14,9 @@
 #   request   written by the app: "save:<slot>" or "load:<slot>"
 #   response  written here: "ok:<verb>:<slot>", "busy:<reason>", "error:<message>"
 #   <slot>.state / <slot>.png   the state and its screenshot
+#   thumb_request   written by the app when the game wrote a save: one
+#                   PNG path per line, filled here with the last quiet
+#                   map frame (the save screen itself says little)
 # EMBER_AUTOSTATE_SECONDS: save slot "auto" that often, when quiet.
 # EMBER_RESUME_SLOT: load that slot instead of showing the title screen.
 #
@@ -23,6 +26,9 @@ module EmberState
   DIR = ENV['EMBER_STATE_DIR'].to_s
   AUTO_SECONDS = ENV['EMBER_AUTOSTATE_SECONDS'].to_i
   POLL_FRAMES = 10
+  # How often the last quiet map frame is kept for save thumbnails
+  # (a GPU copy, no encoding until a save asks for it).
+  SNAP_FRAMES = 180
 
   @frame = 0
   @last_auto = Time.now
@@ -58,6 +64,8 @@ module EmberState
       begin
         install_title_hooks unless @hooked
         install_map_hook unless @map_hooked
+        handle_thumbs
+        keep_map_frame
         handle_request
         autosave
       rescue Exception => e
@@ -93,6 +101,43 @@ module EmberState
           @pending_load = [slot, payload]
         else
           respond("error:no state #{slot}")
+        end
+      end
+    end
+
+    # --- Save thumbnails --------------------------------------------------
+
+    def keep_map_frame
+      return unless @frame % SNAP_FRAMES == 0
+      # A game with its own scenes (Ember's demo) can say when its map
+      # is free of menus and messages through $ember_quiet_map.
+      if $ember_quiet_map.nil?
+        return if quiet_reason
+      else
+        return unless $ember_quiet_map
+      end
+      return unless Graphics.respond_to?(:snap_to_bitmap)
+      frame = Graphics.snap_to_bitmap
+      @map_frame.dispose if @map_frame && !@map_frame.disposed?
+      @map_frame = frame
+    rescue Exception
+    end
+
+    def handle_thumbs
+      path = File.join(DIR, 'thumb_request')
+      return unless File.exist?(path)
+      targets = File.open(path, 'rb') { |f| f.read }.to_s.split("\n")
+      File.delete(path) rescue nil
+      targets.each do |target|
+        target = target.strip
+        next if target.empty?
+        begin
+          if @map_frame && !@map_frame.disposed? && @map_frame.respond_to?(:to_file)
+            @map_frame.to_file(target)
+          elsif Graphics.respond_to?(:screenshot)
+            Graphics.screenshot(target)
+          end
+        rescue Exception
         end
       end
     end

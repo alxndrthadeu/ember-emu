@@ -1838,6 +1838,22 @@
         }
       }
     },
+    "Compartilhar arquivo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share file"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compartir archivo"
+          }
+        }
+      }
+    },
     "Conectando ao iPhone…" : {
       "localizations" : {
         "en" : {
@@ -2448,6 +2464,22 @@
         }
       }
     },
+    "Enviar para outro iPhone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send to another iPhone"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar a otro iPhone"
+          }
+        }
+      }
+    },
     "Enviar pelo Wi-Fi" : {
       "localizations" : {
         "en" : {
@@ -2706,6 +2738,22 @@
         }
       }
     },
+    "Estados do Ember" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember save states"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estados de Ember"
+          }
+        }
+      }
+    },
     "Estados salvos" : {
       "localizations" : {
         "en" : {
@@ -2836,6 +2884,7 @@
       }
     },
     "Exportar saves (.zip)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2847,6 +2896,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Exportar partidas (.zip)"
+          }
+        }
+      }
+    },
+    "Exportar todos (.zip)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export all (.zip)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportar todas (.zip)"
           }
         }
       }
@@ -3191,6 +3256,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Importar juego"
+          }
+        }
+      }
+    },
+    "Importar ou ver saves" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import or view saves"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar o ver partidas"
           }
         }
       }
@@ -4356,7 +4437,24 @@
         }
       }
     },
+    "Nenhum save ainda" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No saves yet"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aún no hay partidas"
+          }
+        }
+      }
+    },
     "Nenhum save ainda. Para continuar de onde parou em outro aparelho, importe os arquivos do jogo (.rxdata, .rvdata ou .rvdata2) ou um .zip deles." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4610,6 +4708,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El archivo está protegido con contraseña. Extráelo en el ordenador e importa la carpeta o un .zip."
+          }
+        }
+      }
+    },
+    "O arquivo sai do jogo e fica guardado em Backups, no app Arquivos." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The file leaves the game and is kept in Backups, in the Files app."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El archivo sale del juego y se guarda en Backups, en la app Archivos."
           }
         }
       }
@@ -5015,6 +5129,22 @@
         }
       }
     },
+    "Os mesmos arquivos do PC. A imagem é o mapa de quando o jogo salvou; saves de antes desta versão ou importados mostram a capa." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The same files as on PC. The picture is the map from when the game saved; older or imported saves show the cover."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los mismos archivos que en PC. La imagen es el mapa de cuando el juego guardó; las partidas anteriores o importadas muestran la portada."
+          }
+        }
+      }
+    },
     "Os perfis prontos não mudam. Duplique para criar o seu a partir deste." : {
       "localizations" : {
         "en" : {
@@ -5091,6 +5221,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estándar sirve para Pokémon Essentials v19 o más nuevo y juegos en Ruby 3. Clásico sirve para juegos antiguos: Start abre el menú y mantener Select hace correr. Cada juego usa uno automáticamente, y puedes cambiarlo en el panel del juego."
+          }
+        }
+      }
+    },
+    "Para carregar um estado, abra o jogo e use Estados no menu." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To load a save state, open the game and use States in the menu."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para cargar un estado, abre el juego y usa Estados en el menú."
           }
         }
       }
@@ -5689,6 +5835,22 @@
         }
       }
     },
+    "Salve dentro do jogo e ele aparece aqui. Para continuar de outro aparelho, importe os arquivos (.rxdata, .rvdata ou .rvdata2) ou um .zip deles." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save inside the game and it shows up here. To continue from another device, import the files (.rxdata, .rvdata or .rvdata2) or a .zip of them."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guarda dentro del juego y aparecerá aquí. Para continuar desde otro dispositivo, importa los archivos (.rxdata, .rvdata o .rvdata2) o un .zip con ellos."
+          }
+        }
+      }
+    },
     "Salvo em Fotos" : {
       "localizations" : {
         "en" : {
@@ -5717,6 +5879,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Partidas"
+          }
+        }
+      }
+    },
+    "Saves do jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game saves"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partidas del juego"
           }
         }
       }
@@ -6574,6 +6752,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Velocidad"
+          }
+        }
+      }
+    },
+    "Ver todos os saves" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View all saves"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver todas las partidas"
           }
         }
       }
