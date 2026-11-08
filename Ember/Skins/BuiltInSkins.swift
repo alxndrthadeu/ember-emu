@@ -261,6 +261,47 @@ enum BuiltInSkins {
         return copy
     }
 
+    /// Landscape, lying flat: held like a handheld console (Switch Lite,
+    /// PS Vita). Both hands grip the sides, so the controls sit in a
+    /// column on each side at thumb height and the game gets the middle,
+    /// with nothing over it.
+    static func handheldLandscape(_ layout: SkinLayout, viewAspect: CGFloat, gameAspect: CGFloat?) -> SkinLayout {
+        let height = layout.mappingSize.height
+        let width = (height * viewAspect).rounded()
+        let side: CGFloat = 116
+        var copy = layout
+        copy.mappingSize = CGSize(width: width, height: height)
+        copy.translucent = false
+        copy.fold = nil
+
+        let ratio = max(gameAspect ?? 4 / 3, 0.5)
+        copy.screen = fit(ratio, in: CGRect(x: side + 8, y: 14, width: width - 2 * side - 16, height: height - 28))
+
+        let right = width - side
+        copy.items = layout.items.map { item in
+            var item = item
+            func place(_ x: CGFloat, _ y: CGFloat, _ w: CGFloat, _ h: CGFloat) {
+                item.frame = CGRect(x: x, y: y, width: w, height: h)
+            }
+            switch item.inputs.first {
+            // Shoulders at the top corners, flat against the edge.
+            case .key(.l): place(0, 14, side - 10, 40)
+            case .key(.r): place(right + 10, 14, side - 10, 40)
+            case .menu: place(side / 2 - 20, 74, 40, 40)
+            case .keyboard: place(right + side / 2 - 20, 74, 40, 40)
+            // Where the thumbs rest: a little below the middle.
+            case .key(.up): place(6, 176, side - 12, side - 12)
+            case .key(.confirm): place(width - 64, 170, 58, 58)
+            case .key(.back): place(right + 4, 232, 58, 58)
+            case .key(.select): place(side / 2 - 38, 356, 76, 28)
+            case .key(.start): place(right + side / 2 - 38, 356, 76, 28)
+            default: break
+            }
+            return item
+        }
+        return copy
+    }
+
     private static func fit(_ ratio: CGFloat, in area: CGRect) -> CGRect {
         var w = area.width
         var h = w / ratio

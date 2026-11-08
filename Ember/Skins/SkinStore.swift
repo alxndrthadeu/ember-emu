@@ -34,13 +34,16 @@ final class SkinStore: ObservableObject {
         if let viewAspect = GameLayout.shared.viewAspect, viewAspect < BuiltInSkins.wideBelow {
             // Split (the default): game on one half, controller on the
             // other, nothing on the crease.
-            // Lying flat in landscape the halves are taller than wide and
-            // a game is wider than tall: one big picture works better
-            // there (Apple's own advice for video). Half folded like a
-            // book, the game takes the left page and the controller the
-            // right one.
+            // Lying flat in landscape it is held like a handheld console:
+            // game in the middle, controls beside it at thumb height.
+            // Half folded like a book, the game takes the left page and
+            // the controller the right one (the middle is the fold).
             let partial = GameLayout.shared.hingePartiallyOpen
-            if duoSplit && (portrait || partial) {
+            if duoSplit && !portrait && !partial {
+                return BuiltInSkins.handheldLandscape(adapted, viewAspect: viewAspect,
+                                                      gameAspect: GameLayout.shared.aspect)
+            }
+            if duoSplit {
                 let gap = BuiltInSkins.foldGap(partiallyOpen: partial)
                 return portrait
                     ? BuiltInSkins.splitPortrait(adapted, viewAspect: viewAspect,
