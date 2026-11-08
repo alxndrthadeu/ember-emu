@@ -269,6 +269,10 @@ final class SkinTouchView: UIView {
             }
         case .menu: onMenu?()
         case .keyboard: onKeyboard?()
+        case .swapScreens:
+            MainActor.assumeIsolated {
+                withAnimation(.snappy) { SkinStore.shared.duoGameBelow.toggle() }
+            }
         case .fastForward: mkxp_setFastForwardMultiplier(Int32(AppSettings.fastForwardSpeed))
         case .toggleFastForward:
             let on = mkxp_getFastForwardMultiplier() > 1

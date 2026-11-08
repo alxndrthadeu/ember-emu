@@ -132,6 +132,7 @@ final class GameViewController: UIViewController {
         }
         screenModeObservation = SkinStore.shared.$portraitFullWidth.map { _ in () }
             .merge(with: SkinStore.shared.$duoSplit.map { _ in () },
+                   SkinStore.shared.$duoGameBelow.map { _ in () },
                    GameLayout.shared.$hingePartiallyOpen.map { _ in () })
             .sink { [weak self] in
                 DispatchQueue.main.async { self?.updateViewport() }

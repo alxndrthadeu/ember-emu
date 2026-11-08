@@ -6643,6 +6643,22 @@
         }
       }
     },
+    "Trocar o jogo de tela" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Move the game to the other screen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambiar el juego de pantalla"
+          }
+        }
+      }
+    },
     "TV" : {
       "localizations" : {
         "en" : {

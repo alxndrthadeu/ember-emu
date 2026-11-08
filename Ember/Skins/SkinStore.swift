@@ -47,7 +47,8 @@ final class SkinStore: ObservableObject {
                 let gap = BuiltInSkins.foldGap(partiallyOpen: partial)
                 return portrait
                     ? BuiltInSkins.splitPortrait(adapted, viewAspect: viewAspect,
-                                                 gameAspect: GameLayout.shared.aspect, gap: gap)
+                                                 gameAspect: GameLayout.shared.aspect, gap: gap,
+                                                 gameBelow: duoGameBelow)
                     : BuiltInSkins.splitLandscape(adapted, viewAspect: viewAspect,
                                                   gameAspect: GameLayout.shared.aspect, gap: gap)
             }
@@ -69,6 +70,12 @@ final class SkinStore: ObservableObject {
     /// (true) or one big picture with the controller around it.
     @Published var duoSplit = (UserDefaults.standard.object(forKey: "settings.duoSplit") as? Bool ?? true) {
         didSet { UserDefaults.standard.set(duoSplit, forKey: "settings.duoSplit") }
+    }
+
+    /// iPhone Duo DS layout: the game on the bottom window instead of
+    /// the top screen.
+    @Published var duoGameBelow = UserDefaults.standard.bool(forKey: "settings.duoGameBelow") {
+        didSet { UserDefaults.standard.set(duoGameBelow, forKey: "settings.duoGameBelow") }
     }
 
     private init() {

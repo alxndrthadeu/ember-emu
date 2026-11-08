@@ -89,6 +89,8 @@ enum SkinInput: Hashable {
     /// Opens the system keyboard, for games that poll a PC keyboard.
     /// Shown for every game (ControlsOverlay).
     case keyboard
+    /// iPhone Duo DS layout: moves the game to the other screen.
+    case swapScreens
     /// Fast forward while held.
     case fastForward
     /// Fast forward on until pressed again.

@@ -172,10 +172,13 @@ enum BuiltInSkins {
     /// folded, where the halves meet at an angle.
     static func foldGap(partiallyOpen: Bool) -> CGFloat { partiallyOpen ? 40 : 26 }
 
-    /// Portrait, unfolded (the fold runs across): the game on the top
-    /// half, the controller on the bottom half, nothing on the crease.
+    /// Portrait, unfolded (the fold runs across): a Nintendo DS. Each
+    /// half is close to 4:3, like a DS screen. The game fills the top
+    /// half; the bottom half holds the controller around a 4:3 window,
+    /// where the player can move the game (`gameBelow`). The free
+    /// screen is a `.swapScreens` item: tapping it moves the game there.
     static func splitPortrait(_ layout: SkinLayout, viewAspect: CGFloat, gameAspect: CGFloat?,
-                              gap: CGFloat) -> SkinLayout {
+                              gap: CGFloat, gameBelow: Bool = false) -> SkinLayout {
         let width = layout.mappingSize.width
         let height = (width * viewAspect).rounded()
         let fold = (height / 2).rounded()
@@ -184,36 +187,44 @@ enum BuiltInSkins {
         copy.fold = fold
         copy.translucent = false
 
-        // Top half: the biggest picture in the game's shape, centered
-        // under the status bar.
         let ratio = max(gameAspect ?? 4 / 3, 0.5)
-        let area = CGRect(x: 10, y: 46, width: width - 20, height: fold - gap / 2 - 8 - 46)
-        copy.screen = fit(ratio, in: area)
+        // Top half: the whole half is the screen.
+        let upper = fit(ratio, in: CGRect(x: 8, y: 14, width: width - 16, height: fold - gap / 2 - 8 - 14))
 
-        // Bottom half: the phone controller, drawn for about 270 points
-        // of height and squeezed evenly if there is less.
+        // Bottom half, drawn for about 250 points of height and squeezed
+        // evenly if there is less.
         let top = fold + gap / 2
-        let room = height - 18 - top
-        let squeeze = min(1, room / 262)
+        let room = height - 14 - top
+        let squeeze = min(1, room / 250)
+        func y(_ value: CGFloat) -> CGFloat { top + value * squeeze }
+        let windowWidth: CGFloat = 176 * squeeze
+        let window = fit(ratio, in: CGRect(x: (width - windowWidth) / 2, y: y(48),
+                                           width: windowWidth, height: windowWidth * 3 / 4))
+
+        copy.screen = gameBelow ? window : upper
         copy.items = layout.items.map { item in
             var item = item
-            let x = item.frame.minX
-            func place(_ x: CGFloat, _ y: CGFloat, _ w: CGFloat, _ h: CGFloat) {
-                item.frame = CGRect(x: x, y: top + y * squeeze, width: w, height: h)
+            func place(_ x: CGFloat, _ top: CGFloat, _ w: CGFloat, _ h: CGFloat) {
+                item.frame = CGRect(x: x, y: y(top), width: w, height: h)
             }
+            let d = 104 * squeeze, ab = 54 * squeeze
             switch item.inputs.first {
-            case .key(.l): place(0, 6, 112, 40)
-            case .key(.r): place(width - 112, 6, 112, 40)
-            case .menu, .keyboard: place(x, 6, 40, 40)
-            case .key(.up): place(28, 64, 144 * squeeze, 144 * squeeze)
-            case .key(.confirm): place(width - 112, 66, 76 * squeeze, 76 * squeeze)
-            case .key(.back): place(width - 196, 126, 76 * squeeze, 76 * squeeze)
-            case .key(.select): place(width / 2 - 83, 230, 76, 28)
-            case .key(.start): place(width / 2 + 7, 230, 76, 28)
+            case .key(.l): place(0, 4, 100, 36)
+            case .key(.r): place(width - 100, 4, 100, 36)
+            case .key(.up): place(10, 62, d, d)
+            case .key(.confirm): place(width - ab - 8, 56, ab, ab)
+            case .key(.back): place(width - 2 * ab - 4, 110, ab, ab)
+            case .menu: place(18, 196, 40, 40)
+            case .keyboard: place(width - 58, 196, 40, 40)
+            case .key(.select): place(width / 2 - 80, 204, 72, 26)
+            case .key(.start): place(width / 2 + 8, 204, 72, 26)
             default: break
             }
             return item
         }
+        // The free screen: tap to bring the game there.
+        copy.items.append(SkinItem(kind: .button, inputs: [.swapScreens],
+                                   frame: gameBelow ? upper : window))
         return copy
     }
 
@@ -508,6 +519,7 @@ struct BuiltInSkinArt: View {
             case .key(.select): pill("SELECT", pressed: isPressed)
             case .menu: gear(pressed: isPressed)
             case .keyboard: keyboardKey(pressed: isPressed)
+            case .swapScreens: spareScreen(pressed: isPressed)
             default: EmptyView()
             }
         }
@@ -580,6 +592,28 @@ struct BuiltInSkinArt: View {
                 .font(.system(size: 17, weight: .semibold))
                 .foregroundStyle(label)
         }
+    }
+
+    /// The free screen of the DS layout: dark, with a hint to bring
+    /// the game over.
+    private func spareScreen(pressed: Bool) -> some View {
+        RoundedRectangle(cornerRadius: 8, style: .continuous)
+            .fill(Theme.controllerBackground.opacity(pressed ? 0.8 : 1))
+            .overlay {
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .strokeBorder(Color(hex: 0x2B211C), lineWidth: 4)
+            }
+            .overlay {
+                VStack(spacing: 4) {
+                    Image(systemName: "flame.fill")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(Color(hex: 0xF7B538).opacity(0.8))
+                    Image(systemName: "arrow.up.arrow.down")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(label.opacity(0.5))
+                }
+            }
+            .accessibilityLabel(Text("Trocar o jogo de tela"))
     }
 
     private func keyboardKey(pressed: Bool) -> some View {
