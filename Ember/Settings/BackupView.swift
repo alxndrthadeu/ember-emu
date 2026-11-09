@@ -106,7 +106,7 @@ struct BackupBuilderView: View {
                 HStack {
                     Text("Jogos")
                     Spacer()
-                    Button(options.games.count == library.games.count ? "Nenhum" : "Todos") {
+                    Button(options.games.count == library.games.count ? String(localized: "Nenhum") : String(localized: "Todos")) {
                         options.games = options.games.count == library.games.count ? [] : Set(library.games.map(\.id))
                     }
                     .font(.caption.weight(.semibold))

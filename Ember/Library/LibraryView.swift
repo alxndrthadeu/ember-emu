@@ -188,9 +188,13 @@ struct LibraryView: View {
         if let name = library.importing.first {
             Banner {
                 ProgressView()
-                Text(library.importing.count > 1
-                     ? "Importando \(library.importing.count) jogos…"
-                     : "Importando \(name)…")
+                // A choice between two literals is a String, which SwiftUI
+                // does not translate: each branch is its own Text.
+                if library.importing.count > 1 {
+                    Text("Importando \(library.importing.count) jogos…")
+                } else {
+                    Text("Importando \(name)…")
+                }
             }
         } else if case .failed(let message) = session.state {
             Banner {

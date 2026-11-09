@@ -24,6 +24,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Delta skins drawn for the bottom of the screen sit at the bottom with the game above, instead of stretching.
 - The demo game's Save and Continue work for real.
 
+### Fixed
+- Texts that stayed in Portuguese in English and Spanish (import progress, "All/None" in backups, the copy button's spoken label, the restore folder's name).
+
 ## [1.0.0] - 2026-11-06
 
 First release on the App Store.
