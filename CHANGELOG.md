@@ -4,7 +4,9 @@ What changed in each version of Ember. The newest version is on top; `Unreleased
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follow [Semantic Versioning](https://semver.org/): a new feature bumps the minor number (1.1.0), a fix the patch number (1.0.1).
 
-## [1.1.0] - Unreleased
+## [1.2.0] - Unreleased
+
+## [1.1.0] - 2026-11-09
 
 ### Added
 - Controller types for each game: Classic 2 buttons, Classic 4 buttons (X and Y) and Modern (analog stick, X, Y, L2, R2). Ember reads the game's scripts on import, also inside encrypted RGSS archives, suggests one, and asks once ("How do you want to play?").
@@ -40,5 +42,6 @@ First release on the App Store.
 - The sample game "A Última Brasa".
 - iOS 17 or later; Portuguese, English and Spanish.
 
-[1.1.0]: https://github.com/alxndrthadeu/ember-emu/compare/v1.0.0...release/1.1.0
+[1.2.0]: https://github.com/alxndrthadeu/ember-emu/compare/v1.1.0...release/1.2.0
+[1.1.0]: https://github.com/alxndrthadeu/ember-emu/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/alxndrthadeu/ember-emu/releases/tag/v1.0.0
