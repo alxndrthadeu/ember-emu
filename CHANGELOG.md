@@ -4,6 +4,10 @@ What changed in each version of Ember. The newest version is on top; `Unreleased
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follow [Semantic Versioning](https://semver.org/): a new feature bumps the minor number (1.1.0), a fix the patch number (1.0.1).
 
+## [1.2.0] - Unreleased
+
+Nothing yet.
+
 ## [1.1.0] - Unreleased
 
 ### Added
@@ -37,5 +41,6 @@ First release on the App Store.
 - The sample game "A Última Brasa".
 - iOS 17 or later; Portuguese, English and Spanish.
 
+[1.2.0]: https://github.com/alxndrthadeu/ember-emu/compare/release/1.1.0...release/1.2.0
 [1.1.0]: https://github.com/alxndrthadeu/ember-emu/compare/v1.0.0...release/1.1.0
 [1.0.0]: https://github.com/alxndrthadeu/ember-emu/releases/tag/v1.0.0
