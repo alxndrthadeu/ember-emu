@@ -15,7 +15,7 @@ enum QuickAction: String {
     /// `library` is passed by the store itself while it starts up
     /// (reading LibraryStore.shared then would recurse into its init).
     @MainActor
-    static func refresh(_ library: LibraryStore = .shared) {
+    static func refresh(_ library: LibraryStore) {
         var items: [UIApplicationShortcutItem] = []
         if let recent = library.recent {
             items.append(UIApplicationShortcutItem(

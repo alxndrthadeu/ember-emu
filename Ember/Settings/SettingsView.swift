@@ -1,3 +1,4 @@
+import StoreKit
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -17,6 +18,8 @@ struct SettingsView: View {
     @State private var pauseOnBackground = AppSettings.pauseOnBackground
     @State private var deleteArchive = AppSettings.deleteArchiveAfterImport
 
+    @Environment(\.requestReview) private var requestReview
+    @State private var openingReview = false
     @State private var importingSkin = false
     @State private var pendingDelete: Skin?
     @State private var skinError: String?
@@ -123,6 +126,7 @@ struct SettingsView: View {
                 RTPSection()
 
                 aboutSection
+                rateSection
             }
             .scrollContentBackground(.hidden)
             .background(Theme.background.ignoresSafeArea())
@@ -219,6 +223,32 @@ struct SettingsView: View {
             Text("Skins")
         } footer: {
             Text("Escolha uma skin para cada tipo de controle. O Ember lê skins do Delta e do Manic EMU (.deltaskin, .manicskin) de qualquer console: GBA para 2 botões, SNES para 4 botões, N64 ou PlayStation para o Moderno. Ao importar, a skin vira um pacote .ember: os botões do artista são recortados e remontados no iPhone Duo e nas orientações que a skin não tem. Segure uma skin para apagar.")
+        }
+    }
+
+    // MARK: Rating
+
+    /// Last in Ajustes: a rating helps other players find Ember.
+    private var rateSection: some View {
+        Section {
+            Button {
+                openingReview = true
+                Task {
+                    // The store page at "Write a Review"; if it cannot open,
+                    // the system rating prompt.
+                    if !(await AppStoreReview.openWriteReview()) { requestReview() }
+                    openingReview = false
+                }
+            } label: {
+                HStack {
+                    Label("Avaliar o Ember na App Store", systemImage: "star.fill")
+                    Spacer()
+                    if openingReview { ProgressView() }
+                }
+            }
+            .disabled(openingReview)
+        } footer: {
+            Text("Uma avaliação ajuda outras pessoas a encontrar o Ember.")
         }
     }
 

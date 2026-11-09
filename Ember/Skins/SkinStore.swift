@@ -97,6 +97,13 @@ final class SkinStore: ObservableObject {
         imported = folders
             .compactMap { try? SkinParser.parse(folder: $0) }
             .sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        // Skins imported before the converter (or by an older format) get
+        // their .ember package now, off the main thread, not at the first
+        // game.
+        let skins = imported
+        Task.detached(priority: .utility) {
+            for skin in skins { _ = EmberSkinConverter.package(for: skin) }
+        }
     }
 
     /// Imports a .deltaskin / .manicskin (zip) or an unpacked skin

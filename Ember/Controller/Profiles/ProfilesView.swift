@@ -90,7 +90,7 @@ struct ProfileEditor: View {
                     TextField("Nome do perfil", text: $profile.name)
                 }
             }
-            section(String(localized: "Na tela e no controle"), buttons: ControlButton.allCases)
+            section(String(localized: "Botões"), buttons: ControlButton.allCases)
 
             if profile.isBuiltIn {
                 Section {

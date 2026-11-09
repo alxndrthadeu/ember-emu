@@ -39,8 +39,8 @@ enum GameKey: Hashable {
         case .r: Int32(MKXP_SCANCODE_W)
         case .x: Int32(MKXP_SCANCODE_A)
         case .y: Int32(MKXP_SCANCODE_S)
-        case .l2: Int32(MKXP_SCANCODE_D)
-        case .r2: Int32(MKXP_SCANCODE_F9)
+        case .l2: Int32(MKXP_SCANCODE_F9)
+        case .r2: Int32(MKXP_SCANCODE_F10)
         case .backspace: Int32(MKXP_SCANCODE_BACKSPACE)
         }
     }

@@ -23,10 +23,6 @@ enum ControlButton: String, Codable, CaseIterable, Identifiable {
         }
     }
 
-    /// Every button is on screen in some controller type (X and Y in
-    /// Clássico 4 botões, L2 and R2 in Moderno) and on game controllers.
-    var isOnScreen: Bool { true }
-
     /// The skin button behind a GameKey (skins speak GameKey).
     init?(skinKey key: GameKey) {
         switch key {
@@ -130,7 +126,15 @@ struct ControlProfile: Codable, Identifiable, Hashable {
         mapping: [.a: .confirm, .b: .back, .x: .action, .y: .x, .l: .l, .r: .r,
                   .l2: .special, .r2: .fastForward, .start: .back, .select: .action])
 
-    static let builtIns = [standard, classic]
+    /// Games that use Input::X and Input::Y (Clássico 4 botões and
+    /// Moderno controllers): Clássico, with X and Y sending the game's
+    /// own X and Y (the A and S keys on a PC).
+    static let fourButtons = ControlProfile(
+        id: "builtin.quatro", name: String(localized: "4 botões"),
+        mapping: [.a: .confirm, .b: .back, .x: .x, .y: .y, .l: .l, .r: .r,
+                  .l2: .special, .r2: .fastForward, .start: .back, .select: .action])
+
+    static let builtIns = [standard, classic, fourButtons]
 }
 
 /// The profiles, and which one each game uses.
@@ -154,8 +158,9 @@ final class ProfileStore: ObservableObject {
         assignments = UserDefaults.standard.dictionary(forKey: Self.assignmentKey) as? [String: String] ?? [:]
     }
 
-    /// The profile chosen for the game, or the automatic one: Clássico
-    /// for old games (Ruby 1.8 / 1.9), Padrão for the rest.
+    /// The profile chosen for the game, or the automatic one: 4 botões
+    /// for games with a 4-button or modern controller, Clássico for old
+    /// games (Ruby 1.8 / 1.9), Padrão for the rest.
     func profile(for game: GameEntry) -> ControlProfile {
         if let id = assignments[game.id], let chosen = all.first(where: { $0.id == id }) {
             return chosen
@@ -164,7 +169,8 @@ final class ProfileStore: ObservableObject {
     }
 
     func automaticProfile(for game: GameEntry) -> ControlProfile {
-        game.wantsKeyboardButton ? .classic : .standard
+        if ControllerTypeStore.type(for: game) != .classic2 { return .fourButtons }
+        return game.wantsKeyboardButton ? .classic : .standard
     }
 
     func isAutomatic(_ game: GameEntry) -> Bool {

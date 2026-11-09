@@ -2,7 +2,6 @@ import GameController
 import SwiftUI
 import UIKit
 
-
 /// A skin on screen: its artwork, cut open where the game picture is,
 /// and a touch layer that turns fingers into game input.
 struct SkinControllerView: View {
@@ -22,7 +21,7 @@ struct SkinControllerView: View {
     var body: some View {
         GeometryReader { geo in
             ZStack {
-                artwork(size: geo.size)
+                artwork
                     .opacity(opacity)
                     .mask {
                         HoleShape(hole: pictureRect)
@@ -56,7 +55,7 @@ struct SkinControllerView: View {
     }
 
     @ViewBuilder
-    private func artwork(size: CGSize) -> some View {
+    private var artwork: some View {
         switch skin.source {
         case .builtIn(let style):
             BuiltInSkinArt(style: style, layout: layout, pressed: touches.pressed, held: touches.held,

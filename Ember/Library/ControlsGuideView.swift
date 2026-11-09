@@ -23,7 +23,7 @@ struct ControlsGuideView: View {
 
                 Section("Na tela") {
                     ControlRow(symbol: "dpad.fill", name: String(localized: "Direcional"), action: String(localized: "Andar e navegar nos menus"))
-                    ForEach(ControlButton.allCases.filter(\.isOnScreen)) { button in
+                    ForEach(ControlButton.allCases) { button in
                         ControlRow(label: button.label.uppercased(), name: button.label,
                                    action: profile.action(for: button).title)
                     }
