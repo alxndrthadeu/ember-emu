@@ -1081,22 +1081,6 @@
         }
       }
     },
-    "Arredondado" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rounded"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Redondeado"
-          }
-        }
-      }
-    },
     "Áudio" : {
       "localizations" : {
         "en" : {
@@ -1883,22 +1867,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Continuar %@"
-          }
-        }
-      }
-    },
-    "Contornos da pixel art arredondados (xBRZ). Usa mais bateria." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rounded pixel art edges (xBRZ). Uses more battery."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bordes del pixel art redondeados (xBRZ). Usa más batería."
           }
         }
       }

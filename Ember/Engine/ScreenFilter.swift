@@ -9,8 +9,7 @@ enum ScreenFilter: Int, CaseIterable, Identifiable {
     case smooth = 1
     /// Sharp but smooth (Lanczos).
     case sharp = 3
-    /// Rounded pixel art (xBRZ).
-    case xbrz = 4
+    // xBRZ (4) is left out: the iOS engine is built without its shader.
 
     var id: Int { rawValue }
 
@@ -19,7 +18,6 @@ enum ScreenFilter: Int, CaseIterable, Identifiable {
         case .pixel: String(localized: "Pixel")
         case .smooth: String(localized: "Suave")
         case .sharp: String(localized: "Nítido")
-        case .xbrz: String(localized: "Arredondado")
         }
     }
 
@@ -28,7 +26,6 @@ enum ScreenFilter: Int, CaseIterable, Identifiable {
         case .pixel: String(localized: "Pixels retos, como no PC.")
         case .smooth: String(localized: "Imagem suavizada.")
         case .sharp: String(localized: "Suave nas bordas, sem perder detalhe.")
-        case .xbrz: String(localized: "Contornos da pixel art arredondados (xBRZ). Usa mais bateria.")
         }
     }
 
@@ -46,7 +43,7 @@ enum ScreenFilter: Int, CaseIterable, Identifiable {
 
     /// Engine config for a session (EngineConfig's overlay).
     static var overlay: [String: Any] {
-        ["smoothScaling": current.rawValue, "xbrzScalingFactor": 4]
+        ["smoothScaling": current.rawValue]
     }
 
     /// Changes the filter of the running game (ember_quicksave.rb reads

@@ -116,23 +116,34 @@ module EmberState
       path = File.join(DIR, 'cheat_request')
       return unless File.exist?(path)
       File.delete(path) rescue nil
-      load_cheat_menu unless defined?(Scene_Cheat)
+      name = cheat_menu_name
+      load_cheat_menu(name) unless @cheat_menu == name
+    end
+
+    # The menu for the game as it is now. Same choice as the engine's
+    # ScriptBootstrap, made late: games that load their scripts at run
+    # time (Pokémon Flux) look like plain RPG Maker XP to the engine.
+    def cheat_menu_name
+      if defined?(GameData) || defined?(PBItems) then 'cheat_pe19'
+      elsif defined?(SceneManager) then 'cheat_rpgmvxace'
+      elsif defined?(Window_Base) && Window_Base.method_defined?(:draw_currency_value) then 'cheat_rpgmvx'
+      else 'cheat_rpgmxp'
+      end
     end
 
     # The engine loads its cheat menu right before a game's last script
-    # section; games whose loop starts earlier (The Witch's House) never
-    # get there. Same choice as the engine's ScriptBootstrap.
-    def load_cheat_menu
+    # section, with what it knows then: games whose loop starts earlier
+    # never get one (The Witch's House), and games that load Essentials
+    # later get the plain one, never hooked (Pokémon Flux). Loading the
+    # right one again is safe: the menus reopen the same classes and
+    # guard their hooks.
+    def load_cheat_menu(name)
       dir = ENV['EMBER_POSTLOAD_DIR'].to_s
       return if dir.empty?
-      name = if defined?(GameData) || defined?(PBItems) then 'cheat_pe19'
-             elsif defined?(SceneManager) then 'cheat_rpgmvxace'
-             elsif defined?(Window_Base) && Window_Base.method_defined?(:draw_currency_value) then 'cheat_rpgmvx'
-             else 'cheat_rpgmxp'
-             end
       file = File.join(dir, name + '.rb')
       return unless File.exist?(file)
       eval(File.open(file, 'rb') { |f| f.read }, TOPLEVEL_BINDING, name + '.rb')
+      @cheat_menu = name
       puts "[ember-state] cheat menu loaded late: #{name}"
     rescue Exception => e
       puts "[ember-state] cheat menu failed: #{e.class}: #{e.message}"
@@ -145,8 +156,14 @@ module EmberState
       return unless File.exist?(path)
       value = File.open(path, 'rb') { |f| f.read }.to_i
       File.delete(path) rescue nil
-      Graphics.smooth_scaling = value if Graphics.respond_to?(:smooth_scaling=)
-    rescue Exception
+      if Graphics.respond_to?(:smooth_scaling=)
+        Graphics.smooth_scaling = value
+        puts "[ember-state] filter #{value}"
+      else
+        puts "[ember-state] filter: Graphics.smooth_scaling= missing"
+      end
+    rescue Exception => e
+      puts "[ember-state] filter failed: #{e.class}: #{e.message}"
     end
 
     # --- Save thumbnails --------------------------------------------------
