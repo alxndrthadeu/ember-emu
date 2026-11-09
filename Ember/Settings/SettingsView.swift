@@ -173,10 +173,9 @@ struct SettingsView: View {
             }
             .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
 
-            Picker("Tela no modo retrato", selection: $skins.portraitMode) {
-                ForEach(SkinStore.PortraitMode.allCases) { mode in
-                    Text(mode.title).tag(mode)
-                }
+            Picker("Tela no modo retrato", selection: $skins.portraitFullWidth) {
+                Text("Clássica").tag(false)
+                Text("Tela cheia").tag(true)
             }
             if Self.isWideScreen {
                 // An iPhone Duo: the inner screen is far wider than a phone's.

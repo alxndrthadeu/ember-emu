@@ -2850,22 +2850,6 @@
         }
       }
     },
-    "Esticada" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stretched"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Estirada"
-          }
-        }
-      }
-    },
     "Experimentar o jogo de exemplo" : {
       "localizations" : {
         "en" : {

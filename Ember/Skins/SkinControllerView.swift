@@ -25,23 +25,13 @@ struct SkinControllerView: View {
 
     @StateObject private var touches = SkinTouchState()
 
-    /// Where the picture shows. Esticada stretches the game view after
-    /// the engine reports the picture, so its hole grows by the same
-    /// amount, down from the top.
-    private func hole(in size: CGSize) -> CGRect {
-        guard layout.stretch > 1.001, !pictureRect.isEmpty else { return pictureRect }
-        var rect = pictureRect
-        rect.size.height *= layout.stretch
-        return rect
-    }
-
     var body: some View {
         GeometryReader { geo in
             ZStack {
                 artwork(size: geo.size)
                     .opacity(opacity)
                     .mask {
-                        HoleShape(hole: hole(in: geo.size))
+                        HoleShape(hole: pictureRect)
                             .fill(style: FillStyle(eoFill: true))
                     }
                 // Built-in controls stay visible when they sit over the

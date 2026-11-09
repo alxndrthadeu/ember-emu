@@ -104,68 +104,6 @@ enum BuiltInSkins {
         return copy
     }
 
-    /// Most a game may be stretched vertically in Esticada.
-    static let maxStretch: CGFloat = 1.3
-
-    /// Tela cheia and Esticada on a phone: the game nearly edge to edge
-    /// right under the Dynamic Island, the controller packed at the
-    /// bottom where the thumbs are. Width is the limit for a game in its
-    /// own proportion; Esticada stretches it down into the free space.
-    static func compactPortrait(_ layout: SkinLayout, aspect: CGFloat?, stretched: Bool) -> SkinLayout {
-        guard layout.mappingSize.height > layout.mappingSize.width, layout.screen != nil else { return layout }
-        let width = layout.mappingSize.width
-        let height = layout.mappingSize.height
-        let ratio = max(aspect ?? 4 / 3, 0.5)
-
-        // The controller, from the bottom up (above the home indicator).
-        let d: CGFloat = 172, a: CGFloat = 86
-        let selectY = height - 36 - 28
-        let dpadY = selectY - 22 - d
-        let shoulderY = dpadY - 16 - 44
-
-        // The game.
-        let top: CGFloat = 62
-        let w = width - 2 * thinBezel
-        let natural = w / ratio
-        let room = shoulderY - 14 - top
-        var screen: CGRect
-        var stretch: CGFloat = 1
-        if natural > room {
-            // A tall game: fit by height.
-            screen = CGRect(x: (width - room * ratio) / 2, y: top, width: room * ratio, height: room)
-        } else if stretched {
-            let h = min(natural * maxStretch, room)
-            stretch = h / natural
-            screen = CGRect(x: thinBezel, y: top, width: w, height: h)
-        } else {
-            screen = CGRect(x: thinBezel, y: top, width: w, height: natural)
-        }
-
-        var copy = layout
-        copy.screen = screen
-        copy.stretch = stretch
-        copy.items = layout.items.map { item in
-            var item = item
-            let x = item.frame.minX
-            func place(_ x: CGFloat, _ y: CGFloat, _ w: CGFloat, _ h: CGFloat) {
-                item.frame = CGRect(x: x, y: y, width: w, height: h)
-            }
-            switch item.inputs.first {
-            case .key(.l): place(0, shoulderY, 112, 44)
-            case .key(.r): place(width - 112, shoulderY, 112, 44)
-            case .menu, .keyboard: place(x, shoulderY + 2, 40, 40)
-            case .key(.up): place(22, dpadY, d, d)
-            case .key(.confirm): place(width - 20 - a, dpadY + 4, a, a)
-            case .key(.back): place(width - 20 - a * 2.05, dpadY + d - a - 2, a, a)
-            case .key(.select): place(width / 2 - 84, selectY, 76, 28)
-            case .key(.start): place(width / 2 + 8, selectY, 76, 28)
-            default: break
-            }
-            return item
-        }
-        return copy
-    }
-
     /// Height / width below which a portrait screen counts as wide (an
     /// open iPhone Duo is about 1.46; phones are about 2.17).
     static let wideBelow: CGFloat = 1.75
@@ -451,8 +389,7 @@ struct BuiltInSkinArt: View {
                     crease(at: fold, isPortrait: isPortrait, size: geo.size, sx: sx, sy: sy)
                 }
 
-                if layer != .controls && style == .ember && isPortrait && layout.fold == nil
-                    && !SkinStore.shared.portraitFullWidth {
+                if layer != .controls && style == .ember && isPortrait && layout.fold == nil {
                     grille
                         .position(x: geo.size.width - 64 * sx, y: geo.size.height - 108 * sy)
                 }

@@ -72,10 +72,10 @@ struct GameMenuView: View {
                         skins.duoSplit.toggle()
                     }
                 } else {
-                    MenuTile(icon: skins.portraitMode.icon,
+                    MenuTile(icon: skins.portraitFullWidth ? "rectangle.inset.filled" : "rectangle.center.inset.filled",
                              title: String(localized: "Tela"),
-                             value: skins.portraitMode.title) {
-                        skins.portraitMode = skins.portraitMode.next
+                             value: skins.portraitFullWidth ? String(localized: "Tela cheia") : String(localized: "Clássica")) {
+                        skins.portraitFullWidth.toggle()
                     }
                 }
                 MenuTile(icon: audio.soundOn ? "speaker.wave.2.fill" : "speaker.slash.fill",

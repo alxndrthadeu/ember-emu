@@ -67,9 +67,6 @@ final class GameViewController: UIViewController {
     private var aspectObservation: AnyCancellable?
     private var screenModeObservation: AnyCancellable?
     private weak var gameView: UIView?
-    /// Holds SDL's view. Esticada stretches this one: SDL's view is a
-    /// view controller's root view, and UIKit resets its transform.
-    private let gameContainer = UIView()
     private let textField = GameTextField()
 
     /// The game asked for text (or stopped asking): show or hide the
@@ -136,7 +133,6 @@ final class GameViewController: UIViewController {
         screenModeObservation = SkinStore.shared.$portraitFullWidth.map { _ in () }
             .merge(with: SkinStore.shared.$duoSplit.map { _ in () },
                    SkinStore.shared.$duoGameBelow.map { _ in () },
-                   SkinStore.shared.$portraitStretch.map { _ in () },
                    GameLayout.shared.$hingePartiallyOpen.map { _ in () })
             .sink { [weak self] in
                 DispatchQueue.main.async { self?.updateViewport() }
@@ -147,14 +143,9 @@ final class GameViewController: UIViewController {
     func adopt(gameWindow window: UIWindow) -> Bool {
         guard let gameView = window.rootViewController?.view else { return false }
         gameView.removeFromSuperview()
-        gameContainer.transform = .identity
-        gameContainer.frame = view.bounds
-        gameContainer.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        gameContainer.backgroundColor = .black
-        view.insertSubview(gameContainer, at: 0)
-        gameView.frame = gameContainer.bounds
+        gameView.frame = view.bounds
         gameView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        gameContainer.addSubview(gameView)
+        view.insertSubview(gameView, at: 0)
         self.gameView = gameView
 
         window.isHidden = true
@@ -179,24 +170,6 @@ final class GameViewController: UIViewController {
     /// Portrait: the picture spans the full width under the safe area,
     /// and the controller takes the rest. Landscape: the engine fits
     /// the picture to the screen and the controls float over it.
-    /// Esticada: stretches the game view vertically, keeping the top of
-    /// the picture in place. Identity everywhere else.
-    private func applyStretch(_ layout: SkinLayout, size: CGSize) {
-        let box = gameContainer
-        // Resizing a transformed view (rotation) leaves a wrong frame:
-        // reset to the plain frame first, then stretch again.
-        if !box.transform.isIdentity || box.frame != view.bounds {
-            box.transform = .identity
-            box.frame = view.bounds
-        }
-        guard layout.stretch > 1.001, let screen = layout.screen else { return }
-        let k = layout.stretch
-        let topY = screen.minY / layout.mappingSize.height * size.height
-        let center = box.bounds.height / 2
-        let target = CGAffineTransform(a: 1, b: 0, c: 0, d: k, tx: 0, ty: (topY - center) * (1 - k))
-        box.transform = target
-    }
-
     private func updateViewport() {
         let size = view.bounds.size
         guard size.width > 0, size.height > 0 else { return }
@@ -207,16 +180,12 @@ final class GameViewController: UIViewController {
         // The skin says where the game goes, in its own point space,
         // stretched to the screen like the artwork.
         let layout = SkinStore.shared.layout(portrait: portrait)
-        applyStretch(layout, size: size)
         if let screen = layout.screen {
             let mapping = layout.mappingSize
-            // Esticada: the engine draws the game in proportion at the
-            // top of the screen rect; applyStretch stretches it down.
-            let drawnHeight = screen.height / layout.stretch
             mkxp_setHostViewportRegion(Float(screen.minX / mapping.width),
                                        Float(screen.minY / mapping.height),
                                        Float(screen.width / mapping.width),
-                                       Float(drawnHeight / mapping.height),
+                                       Float(screen.height / mapping.height),
                                        portrait)
             return
         }
