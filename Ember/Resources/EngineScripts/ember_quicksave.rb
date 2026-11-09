@@ -14,6 +14,9 @@
 #   request   written by the app: "save:<slot>" or "load:<slot>"
 #   response  written here: "ok:<verb>:<slot>", "busy:<reason>", "error:<message>"
 #   <slot>.state / <slot>.png   the state and its screenshot
+#   cheat_request   written by the app before it presses Input::HOME: the
+#                   engine's cheat menu is loaded here if the engine has
+#                   not (games that start before their last script runs)
 #   thumb_request   written by the app when the game wrote a save: one
 #                   PNG path per line, filled here with the last quiet
 #                   map frame (the save screen itself says little)
@@ -65,6 +68,8 @@ module EmberState
         install_title_hooks unless @hooked
         install_map_hook unless @map_hooked
         handle_thumbs
+        handle_cheat_request
+        handle_filter_request
         keep_map_frame
         handle_request
         autosave
@@ -103,6 +108,45 @@ module EmberState
           respond("error:no state #{slot}")
         end
       end
+    end
+
+    # --- Cheats -----------------------------------------------------------
+
+    def handle_cheat_request
+      path = File.join(DIR, 'cheat_request')
+      return unless File.exist?(path)
+      File.delete(path) rescue nil
+      load_cheat_menu unless defined?(Scene_Cheat)
+    end
+
+    # The engine loads its cheat menu right before a game's last script
+    # section; games whose loop starts earlier (The Witch's House) never
+    # get there. Same choice as the engine's ScriptBootstrap.
+    def load_cheat_menu
+      dir = ENV['EMBER_POSTLOAD_DIR'].to_s
+      return if dir.empty?
+      name = if defined?(GameData) || defined?(PBItems) then 'cheat_pe19'
+             elsif defined?(SceneManager) then 'cheat_rpgmvxace'
+             elsif defined?(Window_Base) && Window_Base.method_defined?(:draw_currency_value) then 'cheat_rpgmvx'
+             else 'cheat_rpgmxp'
+             end
+      file = File.join(dir, name + '.rb')
+      return unless File.exist?(file)
+      eval(File.open(file, 'rb') { |f| f.read }, TOPLEVEL_BINDING, name + '.rb')
+      puts "[ember-state] cheat menu loaded late: #{name}"
+    rescue Exception => e
+      puts "[ember-state] cheat menu failed: #{e.class}: #{e.message}"
+    end
+
+    # --- Screen filter ----------------------------------------------------
+
+    def handle_filter_request
+      path = File.join(DIR, 'filter_request')
+      return unless File.exist?(path)
+      value = File.open(path, 'rb') { |f| f.read }.to_i
+      File.delete(path) rescue nil
+      Graphics.smooth_scaling = value if Graphics.respond_to?(:smooth_scaling=)
+    rescue Exception
     end
 
     # --- Save thumbnails --------------------------------------------------

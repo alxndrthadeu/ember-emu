@@ -22,6 +22,8 @@ enum EngineConfig {
         let gamePostloads = gameConfig["postloadScript"] as? [String] ?? []
         var overlay: [String: Any] = ["preloadScript": gamePreloads + emberPreloads,
                                       "postloadScript": gamePostloads + emberPostloads]
+        // The player's screen filter.
+        overlay.merge(ScreenFilter.overlay) { _, ember in ember }
         // MIDI instruments, unless the game brings its own soundfont.
         if (gameConfig["midiSoundFont"] as? String ?? "").isEmpty,
            let soundFont = Bundle.main.url(forResource: "GeneralUser-GS", withExtension: "sf2") {

@@ -6,6 +6,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 
 ## [1.2.0] - Unreleased
 
+### Added
+- Cheats from the game menu: level up, money and items in RPG Maker XP, VX and VX Ace; heal the party, items and walk through walls in Pokémon Essentials. Also in games where the engine could not load them before (The Witch's House).
+- Screen filters: Pixel, Smooth, Sharp (Lanczos) and Rounded (xBRZ), in Settings and switchable mid-game from the game menu.
+
 ## [1.1.0] - 2026-11-09
 
 ### Added

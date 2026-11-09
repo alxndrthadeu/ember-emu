@@ -1081,6 +1081,22 @@
         }
       }
     },
+    "Arredondado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rounded"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redondeado"
+          }
+        }
+      }
+    },
     "Áudio" : {
       "localizations" : {
         "en" : {
@@ -1519,6 +1535,22 @@
         }
       }
     },
+    "Cheats" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cheats"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trucos"
+          }
+        }
+      }
+    },
     "Clássica" : {
       "localizations" : {
         "en" : {
@@ -1851,6 +1883,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Continuar %@"
+          }
+        }
+      }
+    },
+    "Contornos da pixel art arredondados (xBRZ). Usa mais bateria." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rounded pixel art edges (xBRZ). Uses more battery."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bordes del pixel art redondeados (xBRZ). Usa más batería."
           }
         }
       }
@@ -2901,6 +2949,38 @@
         }
       }
     },
+    "Filtro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtro"
+          }
+        }
+      }
+    },
+    "Filtro da imagem" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Screen filter"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtro de imagen"
+          }
+        }
+      }
+    },
     "FluidSynth" : {
       "localizations" : {
         "en" : {
@@ -3009,6 +3089,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Como el de 2 botones, más X e Y, para juegos que usan más teclas."
+          }
+        }
+      }
+    },
+    "Imagem suavizada." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A softened picture."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imagen suavizada."
           }
         }
       }
@@ -4283,6 +4379,22 @@
         }
       }
     },
+    "Nítido" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sharp"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nítido"
+          }
+        }
+      }
+    },
     "No app, escolha o iPhone e abra Arquivos. Selecione o Ember." : {
       "localizations" : {
         "en" : {
@@ -4327,6 +4439,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "En iCloud"
+          }
+        }
+      }
+    },
+    "No mapa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On the map"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En el mapa"
           }
         }
       }
@@ -5127,6 +5255,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Perfiles de control"
+          }
+        }
+      }
+    },
+    "Pixel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pixel"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Píxel"
+          }
+        }
+      }
+    },
+    "Pixels retos, como no PC." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crisp pixels, as on a PC."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Píxeles nítidos, como en PC."
           }
         }
       }
@@ -6007,6 +6167,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tu estantería está vacía"
+          }
+        }
+      }
+    },
+    "Suave" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smooth"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suave"
+          }
+        }
+      }
+    },
+    "Suave nas bordas, sem perder detalhe." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smooth edges without losing detail."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bordes suaves sin perder detalle."
           }
         }
       }

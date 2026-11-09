@@ -363,6 +363,10 @@ private func runKeyScript(_ script: String) async {
             let slot = parts.count > 2 ? parts[2] : StateStore.autoSlot
             let outcome = await EngineSession.shared.requestState(parts[1], slot: slot)
             print("[ember-keys] \(parts[1]) \(slot): \(outcome)")
+        case "cheat":
+            // As the Cheats tile in the game menu does.
+            await CheatMenu.open()
+            print("[ember-keys] cheat")
         default:
             if let key = keys[parts[1]] {
                 key.press()
