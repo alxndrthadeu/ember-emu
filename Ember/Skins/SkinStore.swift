@@ -56,6 +56,10 @@ final class SkinStore: ObservableObject {
                 ? BuiltInSkins.reshaped(adapted, viewAspect: viewAspect)
                 : BuiltInSkins.reshapedLandscape(adapted, viewAspect: viewAspect, gameAspect: GameLayout.shared.aspect)
         }
+        if portrait && portraitFullWidth {
+            return BuiltInSkins.compactPortrait(adapted, aspect: GameLayout.shared.aspect,
+                                                stretched: portraitStretch)
+        }
         return BuiltInSkins.fitted(adapted, aspect: GameLayout.shared.aspect,
                                    fullWidth: portraitFullWidth)
     }
@@ -64,6 +68,46 @@ final class SkinStore: ObservableObject {
     /// frame (the default: the biggest picture), or in a thin frame.
     @Published var portraitFullWidth = (UserDefaults.standard.object(forKey: "settings.portraitFullWidth") as? Bool ?? true) {
         didSet { UserDefaults.standard.set(portraitFullWidth, forKey: "settings.portraitFullWidth") }
+    }
+
+    /// Tela cheia stretched down into the free space (Esticada).
+    @Published var portraitStretch = UserDefaults.standard.bool(forKey: "settings.portraitStretch") {
+        didSet { UserDefaults.standard.set(portraitStretch, forKey: "settings.portraitStretch") }
+    }
+
+    /// The three portrait modes on a phone, over the two settings.
+    enum PortraitMode: String, CaseIterable, Identifiable {
+        case classic, full, stretched
+        var id: String { rawValue }
+        var title: String {
+            switch self {
+            case .classic: String(localized: "Clássica")
+            case .full: String(localized: "Tela cheia")
+            case .stretched: String(localized: "Esticada")
+            }
+        }
+        var icon: String {
+            switch self {
+            case .classic: "rectangle.center.inset.filled"
+            case .full: "rectangle.inset.filled"
+            case .stretched: "arrow.up.and.down.square.fill"
+            }
+        }
+        var next: PortraitMode {
+            switch self {
+            case .classic: .full
+            case .full: .stretched
+            case .stretched: .classic
+            }
+        }
+    }
+
+    var portraitMode: PortraitMode {
+        get { !portraitFullWidth ? .classic : portraitStretch ? .stretched : .full }
+        set {
+            portraitStretch = newValue == .stretched
+            portraitFullWidth = newValue != .classic
+        }
     }
 
     /// iPhone Duo unfolded: game and controller on separate halves

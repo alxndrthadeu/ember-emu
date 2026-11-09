@@ -51,6 +51,10 @@ struct SkinLayout: Equatable {
     /// landscape. Set only by the split layouts, which keep the game and
     /// the controls on their own half.
     var fold: CGFloat? = nil
+    /// How much the game picture is stretched vertically inside `screen`
+    /// (1: its own proportion). The engine draws it in proportion at
+    /// height `screen.height / stretch`; the game view stretches it.
+    var stretch: CGFloat = 1
 
     var hasMenuButton: Bool {
         items.contains { $0.inputs.contains(.menu) }
