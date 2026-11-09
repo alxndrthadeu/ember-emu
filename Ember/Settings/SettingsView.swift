@@ -1,8 +1,10 @@
+import StoreKit
 import SwiftUI
 import UniformTypeIdentifiers
 
 /// The Ajustes tab: skins, controls, game and app settings.
 struct SettingsView: View {
+    @State private var skinType: ControllerType = .classic2
     @ObservedObject private var skins = SkinStore.shared
     @ObservedObject private var library = LibraryStore.shared
     @ObservedObject private var performance = PerformanceModel.shared
@@ -16,14 +18,24 @@ struct SettingsView: View {
     @State private var pauseOnBackground = AppSettings.pauseOnBackground
     @State private var deleteArchive = AppSettings.deleteArchiveAfterImport
 
+    @Environment(\.requestReview) private var requestReview
+    @State private var openingReview = false
     @State private var importingSkin = false
     @State private var pendingDelete: Skin?
     @State private var skinError: String?
 
+    private static func missingText(_ type: ControllerType) -> String {
+        switch type {
+        case .classic2: String(localized: "Sem A e B")
+        case .classic4: String(localized: "Sem X e Y")
+        case .modern: String(localized: "Sem analógico")
+        }
+    }
+
     /// The screen is wider than a phone's (an open iPhone Duo).
     private static var isWideScreen: Bool {
         let size = UIScreen.main.bounds.size
-        return max(size.width, size.height) / max(min(size.width, size.height), 1) < BuiltInSkins.wideBelow
+        return max(size.width, size.height) / max(min(size.width, size.height), 1) < ControllerLayouts.wideBelow
     }
 
     var body: some View {
@@ -114,6 +126,7 @@ struct SettingsView: View {
                 RTPSection()
 
                 aboutSection
+                rateSection
             }
             .scrollContentBackground(.hidden)
             .background(Theme.background.ignoresSafeArea())
@@ -152,13 +165,27 @@ struct SettingsView: View {
 
     private var skinsSection: some View {
         Section {
+            // One skin per controller type: a GBA skin for 2 buttons, a
+            // SNES one for 4, an N64 or PlayStation one for Moderno.
+            Picker("Controle", selection: $skinType) {
+                ForEach(ControllerType.allCases) { type in
+                    Text(type.shortTitle).tag(type)
+                }
+            }
+            .pickerStyle(.segmented)
+            .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 4, trailing: 16))
+
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 14) {
                     ForEach(skins.all) { skin in
-                        SkinTile(skin: skin, selected: skin.id == skins.selectedID)
+                        let fits = skin.covers.contains(skinType)
+                        SkinTile(skin: skin, selected: skin.id == skins.skinID(for: skinType),
+                                 missing: fits ? nil : Self.missingText(skinType))
+                            .opacity(fits ? 1 : 0.45)
                             .onTapGesture {
+                                guard fits else { return }
                                 Haptics.tap()
-                                skins.selectedID = skin.id
+                                skins.select(skin, for: skinType)
                             }
                             .contextMenu {
                                 if !skin.isBuiltIn {
@@ -195,7 +222,33 @@ struct SettingsView: View {
         } header: {
             Text("Skins")
         } footer: {
-            Text("O Ember lê skins do Delta e do Manic EMU (.deltaskin, .manicskin). Procure por “GBA deltaskin”: há muitas, de graça e pagas, feitas por artistas independentes. Toque numa skin para usar, ou segure para apagar uma importada. Skins sem paisagem usam a Ember Laranja quando o iPhone deita.")
+            Text("Escolha uma skin para cada tipo de controle. O Ember lê skins do Delta e do Manic EMU (.deltaskin, .manicskin) de qualquer console: GBA para 2 botões, SNES para 4 botões, N64 ou PlayStation para o Moderno. Ao importar, a skin vira um pacote .ember: os botões do artista são recortados e remontados no iPhone Duo e nas orientações que a skin não tem. Segure uma skin para apagar.")
+        }
+    }
+
+    // MARK: Rating
+
+    /// Last in Ajustes: a rating helps other players find Ember.
+    private var rateSection: some View {
+        Section {
+            Button {
+                openingReview = true
+                Task {
+                    // The store page at "Write a Review"; if it cannot open,
+                    // the system rating prompt.
+                    if !(await AppStoreReview.openWriteReview()) { requestReview() }
+                    openingReview = false
+                }
+            } label: {
+                HStack {
+                    Label("Avaliar o Ember na App Store", systemImage: "star.fill")
+                    Spacer()
+                    if openingReview { ProgressView() }
+                }
+            }
+            .disabled(openingReview)
+        } footer: {
+            Text("Uma avaliação ajuda outras pessoas a encontrar o Ember.")
         }
     }
 
@@ -214,6 +267,7 @@ struct SettingsView: View {
 private struct SkinTile: View {
     let skin: Skin
     let selected: Bool
+    var missing: String?
 
     var body: some View {
         VStack(spacing: 8) {
@@ -228,7 +282,7 @@ private struct SkinTile: View {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundStyle(Theme.accent)
                 }
-                Text(skin.name)
+                Text(missing ?? skin.name)
                     .lineLimit(1)
                     .minimumScaleFactor(0.75)
             }
@@ -253,11 +307,11 @@ private struct SkinTile: View {
                     .frame(width: 92, height: 199)
             }
         case .imported:
-            if let url = layout?.artwork, let image = SkinArtwork.image(url, size: CGSize(width: 184, height: 398)) {
-                Image(uiImage: image).resizable()
-            } else {
-                Theme.surface2
-            }
+            // As it shows in a game on a phone, in portrait.
+            let type = ControllerType.allCases.first(where: skin.covers.contains) ?? .classic2
+            let context = ControllerContext(device: .phone, portrait: true, type: type, gameAspect: 4 / 3)
+            ImportedSkinArt(layout: ControllerLayouts.layout(for: skin, in: context))
+                .background(Color.black)
         }
     }
 }

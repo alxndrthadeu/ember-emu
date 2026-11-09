@@ -21,7 +21,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let item = connectionOptions.shortcutItem {
             AppRouter.shared.quickAction = QuickAction(rawValue: item.type)
         }
-        QuickAction.refresh()
+        QuickAction.refresh(.shared)
     }
 
     /// A quick action from the app icon while the app was running.
@@ -33,7 +33,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
-        QuickAction.refresh()
+        QuickAction.refresh(.shared)
     }
 
     /// "Open in Ember" from the Files app or the share sheet.

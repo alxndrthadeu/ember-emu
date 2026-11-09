@@ -124,6 +124,12 @@ DEVELOPMENT_TEAM = ABCDE12345
 | `scripts/build-demo.rb` | Monta o jogo de exemplo (`demo/scripts` → `demo/game`). |
 | `scripts/store-screenshots.sh` | Tira as capturas da App Store num simulador limpo, em português, inglês e espanhol. |
 | `scripts/compose-screenshots.swift` | Monta as capturas com legenda, fundo e moldura de iPhone, nas cores do Ember. |
+| `scripts/bump-version.sh` | Muda a versão e o build no `project.yml` (`scripts/bump-version.sh 1.2.0`). |
+| `scripts/release.sh` | Depois do merge de uma versão: cria a tag `vX.Y.Z` e a release no GitHub com as notas do `CHANGELOG.md`. |
+
+## Versões
+
+Cada versão tem um branch (`release/1.2.0`) e um PR para a `main`, que é protegida. O que mudou em cada versão está no [CHANGELOG.md](CHANGELOG.md), e o fluxo completo no [CONTRIBUTING.md](CONTRIBUTING.md). O envio para a loja é pelo fastlane (`fastlane release`), com as notas de "Novidades" em `fastlane/release_notes/<versão>/`. O Ember está na [App Store](https://apps.apple.com/app/id6831097797).
 
 ## Patches no motor
 

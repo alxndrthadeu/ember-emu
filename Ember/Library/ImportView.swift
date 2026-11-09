@@ -198,7 +198,7 @@ struct ImportView: View {
                             .frame(width: 22, height: 22)
                     }
                     .emberGlassButton()
-                    .accessibilityLabel(copied ? "Copiado" : "Copiar endereço")
+                    .accessibilityLabel(copied ? String(localized: "Copiado") : String(localized: "Copiar endereço"))
                 }
                 .padding(14)
                 .background(

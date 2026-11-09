@@ -65,6 +65,10 @@ struct LibraryView: View {
                 requestReview()
             }
         }
+        .sheet(item: $library.chooseController) { game in
+            ControllerChoiceView(game: game)
+                .presentationDetents([.large])
+        }
         .sheet(item: $optionsFor) { game in
             GameOptionsSheet(game: game) { open(game) }
                 .presentationDetents([.medium, .large])
@@ -184,9 +188,13 @@ struct LibraryView: View {
         if let name = library.importing.first {
             Banner {
                 ProgressView()
-                Text(library.importing.count > 1
-                     ? "Importando \(library.importing.count) jogos…"
-                     : "Importando \(name)…")
+                // A choice between two literals is a String, which SwiftUI
+                // does not translate: each branch is its own Text.
+                if library.importing.count > 1 {
+                    Text("Importando \(library.importing.count) jogos…")
+                } else {
+                    Text("Importando \(name)…")
+                }
             }
         } else if case .failed(let message) = session.state {
             Banner {
@@ -305,6 +313,7 @@ struct LibraryView: View {
         case "history": showingHistory = true
         case "controls": showingControls = true
         case "options", "saves": optionsFor = library.games.first
+        case "controller": library.chooseController = library.games.first
         case "import", "computer", "rtp": AppRouter.shared.tab = .importGames
         case "settings": AppRouter.shared.tab = .settings
         default: break

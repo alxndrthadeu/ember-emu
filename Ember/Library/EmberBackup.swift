@@ -181,7 +181,7 @@ enum EmberBackup {
         guard archive[manifestName] != nil else { throw BackupError.notABackup }
 
         let fm = FileManager.default
-        let stash = documents.appendingPathComponent("Backups/Restauração \(stamp(Date()))", isDirectory: true)
+        let stash = documents.appendingPathComponent("Backups/\(String(localized: "Restauração")) \(stamp(Date()))", isDirectory: true)
         var summary = Summary()
         var restoredGames: Set<String> = []
 

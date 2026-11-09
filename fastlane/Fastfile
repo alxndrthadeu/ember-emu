@@ -1,0 +1,143 @@
+# Ember on the App Store.
+#
+#   fastlane build                  archive and export an App Store .ipa (no upload)
+#   fastlane beta                   build and send to TestFlight
+#   fastlane release                build, upload with "What's New", submit for review
+#   fastlane release submit:false   upload without submitting
+#
+# The engine must be built for iphoneos first (README). Credentials live
+# outside the repository: an App Store Connect API key, set in
+# fastlane/.env (see fastlane/.env.example).
+
+default_platform(:ios)
+
+ROOT = File.expand_path("..", __dir__)
+APP_ID = "com.alexandrethadeu.ember"
+
+platform :ios do
+  desc "Archive and export an App Store build into build/fastlane"
+  lane :build do
+    sh("cd '#{ROOT}' && xcodegen generate")
+    build_app(
+      project: File.join(ROOT, "Ember.xcodeproj"),
+      scheme: "Ember",
+      configuration: "Release",
+      export_method: "app-store",
+      output_directory: File.join(ROOT, "build/fastlane"),
+      output_name: "Ember-#{version_string}-#{build_number}.ipa",
+      archive_path: File.join(ROOT, "build/fastlane/Ember-#{version_string}-#{build_number}.xcarchive"),
+      # Cloud signing with the API key: Xcode makes the distribution
+      # certificate and an App Store profile with every capability (iCloud).
+      # gym passes xcargs to the export step too: once is enough.
+      xcargs: signing_args,
+      export_team_id: team_id,
+      clean: true
+    )
+  end
+
+  desc "Build and send to TestFlight"
+  lane :beta do
+    build
+    upload_to_testflight(api_key: api_key, skip_waiting_for_build_processing: true)
+  end
+
+  desc "Build, upload to the App Store with this version's notes, and submit for review"
+  lane :release do |options|
+    submit = options.fetch(:submit, true)
+    ensure_releasable
+    build
+    upload_to_app_store(
+      api_key: api_key,
+      app_version: version_string,
+      skip_screenshots: true,
+      skip_metadata: false,
+      metadata_path: release_notes_folder,
+      skip_app_version_update: false,
+      submit_for_review: submit,
+      automatic_release: true,
+      run_precheck_before_submit: false,
+      precheck_include_in_app_purchases: false,
+      force: true,
+      submission_information: { add_id_info_uses_idfa: false, export_compliance_uses_encryption: false }
+    )
+    UI.success("Ember #{version_string} (#{build_number}) uploaded#{submit ? ' and submitted for review' : ''}.")
+    UI.important("Next: merge the version's PR if not yet, then scripts/release.sh #{version_string}")
+  end
+end
+
+# MARK: Helpers
+
+def version_string
+  File.read(File.join(ROOT, "project.yml"))[/MARKETING_VERSION:\s*"?([0-9.]+)"?/, 1]
+end
+
+def build_number
+  File.read(File.join(ROOT, "project.yml"))[/CURRENT_PROJECT_VERSION:\s*"?([0-9]+)"?/, 1]
+end
+
+def team_id
+  local = File.join(ROOT, "Config/Signing.local.xcconfig")
+  id = File.exist?(local) ? File.read(local)[/DEVELOPMENT_TEAM\s*=\s*(\w+)/, 1] : nil
+  id || ENV["EMBER_TEAM_ID"] || UI.user_error!("No team ID: set DEVELOPMENT_TEAM in Config/Signing.local.xcconfig")
+end
+
+def key_settings
+  key_id = ENV["EMBER_ASC_KEY_ID"]
+  issuer = ENV["EMBER_ASC_ISSUER_ID"]
+  path = ENV["EMBER_ASC_KEY_PATH"] && File.expand_path(ENV["EMBER_ASC_KEY_PATH"])
+  unless key_id && issuer && path && File.exist?(path)
+    UI.user_error!("App Store Connect API key missing: copy fastlane/.env.example to fastlane/.env and fill it in")
+  end
+  [key_id, issuer, path]
+end
+
+def api_key
+  @api_key ||= begin
+    key_id, issuer, path = key_settings
+    app_store_connect_api_key(key_id: key_id, issuer_id: issuer, key_filepath: path, in_house: false)
+  end
+end
+
+def signing_args
+  key_id, issuer, path = key_settings
+  "-allowProvisioningUpdates -authenticationKeyPath '#{path}' " \
+    "-authenticationKeyID #{key_id} -authenticationKeyIssuerID #{issuer}"
+end
+
+# Releases are cut from a clean main, as the version's PR merged.
+def ensure_releasable
+  branch = sh("git -C '#{ROOT}' rev-parse --abbrev-ref HEAD", log: false).strip
+  UI.user_error!("Release from main (now on #{branch}): merge the version's PR first") unless branch == "main" || ENV["EMBER_ALLOW_BRANCH"]
+  dirty = sh("git -C '#{ROOT}' status --porcelain", log: false).strip
+  UI.user_error!("Uncommitted changes:\n#{dirty}") unless dirty.empty?
+  notes = Dir[File.join(ROOT, "fastlane/release_notes/#{version_string}/*.txt")]
+  UI.user_error!("No release notes in fastlane/release_notes/#{version_string}/") if notes.empty?
+end
+
+# deliver reads metadata from <folder>/<locale>/release_notes.txt and only
+# touches the fields present. Notes go only to the languages the live
+# version already has, so no new store language is created by mistake.
+def release_notes_folder
+  source = File.join(ROOT, "fastlane/release_notes/#{version_string}")
+  live = live_locales
+  target = File.join(ROOT, "build/fastlane/metadata")
+  FileUtils.rm_rf(target)
+  Dir[File.join(source, "*.txt")].each do |file|
+    locale = File.basename(file, ".txt")
+    next if live && !live.include?(locale)
+    FileUtils.mkdir_p(File.join(target, locale))
+    FileUtils.cp(file, File.join(target, locale, "release_notes.txt"))
+  end
+  UI.message("What's New for: #{Dir.children(target).sort.join(', ')}")
+  target
+end
+
+def live_locales
+  Spaceship::ConnectAPI.token = Spaceship::ConnectAPI::Token.from(hash: api_key)
+  app = Spaceship::ConnectAPI::App.find(APP_ID)
+  version = app&.get_live_app_store_version
+  version&.get_app_store_version_localizations&.map(&:locale)
+rescue StandardError => e
+  UI.important("Could not read the store's languages (#{e.message}); sending every note")
+  nil
+end

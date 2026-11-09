@@ -18,6 +18,10 @@ enum GameKey: Hashable {
     case select
     /// Input::L and Input::R (AUX1 / AUX2 in Essentials v19+).
     case l, r
+    /// The 4-button and modern controllers' extra buttons. They always
+    /// go through the control profile (ControlButton); the keys here
+    /// are only a fallback.
+    case x, y, l2, r2
     /// Text entry only.
     case enter, backspace
 
@@ -33,6 +37,10 @@ enum GameKey: Hashable {
         case .select: Int32(MKXP_SCANCODE_D)
         case .l: Int32(MKXP_SCANCODE_Q)
         case .r: Int32(MKXP_SCANCODE_W)
+        case .x: Int32(MKXP_SCANCODE_A)
+        case .y: Int32(MKXP_SCANCODE_S)
+        case .l2: Int32(MKXP_SCANCODE_F9)
+        case .r2: Int32(MKXP_SCANCODE_F10)
         case .backspace: Int32(MKXP_SCANCODE_BACKSPACE)
         }
     }

@@ -28,6 +28,7 @@ targets:
       - path: Ember
         excludes:
           - "Vendor/**/*.md"
+          - "Controller/**/*.md"
     dependencies:
       - package: ZIPFoundation
     configFiles:

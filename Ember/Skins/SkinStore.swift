@@ -16,38 +16,47 @@ final class SkinStore: ObservableObject {
 
     var all: [Skin] { BuiltInSkins.all + imported }
 
-    var current: Skin {
-        all.first { $0.id == selectedID } ?? BuiltInSkins.ember
+    /// The skin chosen for each controller type. Clássico 2 botões keeps
+    /// the old single choice (`selectedID`); the others have their own.
+    @Published private var typeChoices: [String: String] =
+        UserDefaults.standard.dictionary(forKey: "skins.selectedByType") as? [String: String] ?? [:] {
+        didSet { UserDefaults.standard.set(typeChoices, forKey: "skins.selectedByType") }
     }
+
+    func skinID(for type: ControllerType) -> String {
+        type == .classic2 ? selectedID : (typeChoices[type.rawValue] ?? BuiltInSkins.ember.id)
+    }
+
+    func skin(for type: ControllerType) -> Skin {
+        all.first { $0.id == skinID(for: type) } ?? BuiltInSkins.ember
+    }
+
+    func select(_ skin: Skin, for type: ControllerType) {
+        if type == .classic2 { selectedID = skin.id } else { typeChoices[type.rawValue] = skin.id }
+    }
+
+    /// The skin chosen for the game being played (Clássico 2 botões
+    /// outside a game).
+    var current: Skin { skin(for: controllerType) }
 
     /// The layout for an orientation. A skin without that orientation
     /// falls back to Ember Laranja's. `keyboard`: the game needs the
     /// keyboard button (built-in skins draw it next to the gear).
+    /// The controller type of the game being played (Clássico 2 botões
+    /// outside a game).
+    var controllerType: ControllerType {
+        EngineSession.shared.currentGame.map(ControllerTypeStore.type(for:)) ?? .classic2
+    }
+
+    /// The skin on screen (ControllerLayouts.effectiveSkin).
+    var effectiveSkin: Skin {
+        ControllerLayouts.effectiveSkin(current, type: controllerType)
+    }
+
+    /// The layout of the game screen now (ControllerLayouts has the rules).
     func layout(portrait: Bool, keyboard: Bool = false) -> SkinLayout {
-        let own = current.layout(portrait: portrait)
-        let layout = own ?? BuiltInSkins.ember.layout(portrait: portrait)!
-        let builtIn = own == nil || current.isBuiltIn
-        guard builtIn else { return layout }
-        var adapted = BuiltInSkins.adapted(layout, keyboard: keyboard)
-        // Screens wider than a phone (an open iPhone Duo): drawn in their
-        // own proportions instead of a stretched phone layout.
-        if let viewAspect = GameLayout.shared.viewAspect, viewAspect < BuiltInSkins.wideBelow {
-            // Split (the default): game on one half, controller on the
-            // other, nothing on the crease.
-            if duoSplit {
-                let gap = BuiltInSkins.foldGap(partiallyOpen: GameLayout.shared.hingePartiallyOpen)
-                return portrait
-                    ? BuiltInSkins.splitPortrait(adapted, viewAspect: viewAspect,
-                                                 gameAspect: GameLayout.shared.aspect, gap: gap)
-                    : BuiltInSkins.splitLandscape(adapted, viewAspect: viewAspect,
-                                                  gameAspect: GameLayout.shared.aspect, gap: gap)
-            }
-            adapted = portrait
-                ? BuiltInSkins.reshaped(adapted, viewAspect: viewAspect)
-                : BuiltInSkins.reshapedLandscape(adapted, viewAspect: viewAspect, gameAspect: GameLayout.shared.aspect)
-        }
-        return BuiltInSkins.fitted(adapted, aspect: GameLayout.shared.aspect,
-                                   fullWidth: portraitFullWidth)
+        let context = ControllerContext.current(portrait: portrait, keyboard: keyboard, type: controllerType)
+        return ControllerLayouts.layout(for: effectiveSkin, in: context)
     }
 
     /// Built-in skins in portrait: the game across the full width, no
@@ -60,6 +69,12 @@ final class SkinStore: ObservableObject {
     /// (true) or one big picture with the controller around it.
     @Published var duoSplit = (UserDefaults.standard.object(forKey: "settings.duoSplit") as? Bool ?? true) {
         didSet { UserDefaults.standard.set(duoSplit, forKey: "settings.duoSplit") }
+    }
+
+    /// iPhone Duo DS layout: the game on the bottom window instead of
+    /// the top screen.
+    @Published var duoGameBelow = UserDefaults.standard.bool(forKey: "settings.duoGameBelow") {
+        didSet { UserDefaults.standard.set(duoGameBelow, forKey: "settings.duoGameBelow") }
     }
 
     private init() {
@@ -82,6 +97,13 @@ final class SkinStore: ObservableObject {
         imported = folders
             .compactMap { try? SkinParser.parse(folder: $0) }
             .sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        // Skins imported before the converter (or by an older format) get
+        // their .ember package now, off the main thread, not at the first
+        // game.
+        let skins = imported
+        Task.detached(priority: .utility) {
+            for skin in skins { _ = EmberSkinConverter.package(for: skin) }
+        }
     }
 
     /// Imports a .deltaskin / .manicskin (zip) or an unpacked skin
@@ -118,7 +140,15 @@ final class SkinStore: ObservableObject {
 
         reload()
         let skin = try SkinParser.parse(folder: target)
-        selectedID = skin.id
+        // Converted right away (Converted.ember), so the first game with it
+        // starts without the wait.
+        EmberSkinConverter.forget(skin)
+        _ = EmberSkinConverter.package(for: skin)
+        // In use for the most capable type it fits: a SNES skin for
+        // Clássico 4 botões, an N64 or PlayStation one for Moderno.
+        let covers = skin.covers
+        let type: ControllerType = covers.contains(.modern) ? .modern : covers.contains(.classic4) ? .classic4 : .classic2
+        select(skin, for: type)
         return skin
     }
 
@@ -126,6 +156,8 @@ final class SkinStore: ObservableObject {
         guard case .imported(let folder) = skin.source else { return }
         try? FileManager.default.removeItem(at: folder)
         if selectedID == skin.id { selectedID = BuiltInSkins.ember.id }
+        for (type, id) in typeChoices where id == skin.id { typeChoices[type] = nil }
+        EmberSkinConverter.forget(skin)
         reload()
     }
 

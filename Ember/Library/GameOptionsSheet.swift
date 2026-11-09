@@ -16,6 +16,7 @@ struct GameOptionsSheet: View {
     @State private var photo: PhotosPickerItem?
     @State private var exportFile: ExportFile?
     @State private var showingSaves = false
+    @State private var choosingController = false
     @State private var confirmingDelete = false
     @State private var confirmingArchive = false
     @State private var toast: String?
@@ -77,6 +78,13 @@ struct GameOptionsSheet: View {
                 }
 
                 group(String(localized: "Ajustes deste jogo")) {
+                    SheetRow(icon: ControllerTypeStore.type(for: current).icon,
+                             title: String(localized: "Controle na tela"),
+                             value: ControllerTypeStore.type(for: current).title,
+                             chevron: "chevron.right") {
+                        choosingController = true
+                    }
+                    Divider().padding(.leading, 48)
                     Menu {
                         Picker("Controles", selection: Binding(
                             get: { ProfileStore.shared.isAutomatic(current) ? nil : ProfileStore.shared.profile(for: current).id },
@@ -176,6 +184,9 @@ struct GameOptionsSheet: View {
             Button("Salvar") { library.rename(current, to: newTitle) }
         } message: {
             Text("Muda só o nome na biblioteca. A pasta e os saves continuam iguais.")
+        }
+        .sheet(isPresented: $choosingController, onDismiss: { library.reload() }) {
+            ControllerChoiceView(game: current)
         }
         .sheet(isPresented: $showingSaves, onDismiss: refreshSaves) {
             SavesView(game: current)

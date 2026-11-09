@@ -90,6 +90,14 @@ final class GameViewController: UIViewController {
     /// iPhone Duo (iOS 27.1+): follows the hinge so the split layouts
     /// can widen the gap when the device is half folded.
     private func watchHinge() {
+        #if DEBUG
+        // Development aid: EMBER_HINGE=partial acts as a half-folded Duo
+        // (the simulator does not fold).
+        if ProcessInfo.processInfo.environment["EMBER_HINGE"] == "partial" {
+            GameLayout.shared.hingePartiallyOpen = true
+            return
+        }
+        #endif
         guard #available(iOS 27.1, *) else { return }
         let interaction = UIHingeInteraction { _, update in
             let partial = update.hinge?.status == .partiallyOpen
@@ -124,6 +132,7 @@ final class GameViewController: UIViewController {
         }
         screenModeObservation = SkinStore.shared.$portraitFullWidth.map { _ in () }
             .merge(with: SkinStore.shared.$duoSplit.map { _ in () },
+                   SkinStore.shared.$duoGameBelow.map { _ in () },
                    GameLayout.shared.$hingePartiallyOpen.map { _ in () })
             .sink { [weak self] in
                 DispatchQueue.main.async { self?.updateViewport() }
