@@ -129,7 +129,7 @@ DEVELOPMENT_TEAM = ABCDE12345
 
 ## Versões
 
-Cada versão tem um branch (`release/1.2.0`) e um PR para a `main`, que é protegida. O que mudou em cada versão está no [CHANGELOG.md](CHANGELOG.md), e o fluxo completo no [CONTRIBUTING.md](CONTRIBUTING.md). O Ember está na [App Store](https://apps.apple.com/app/id6831097797).
+Cada versão tem um branch (`release/1.2.0`) e um PR para a `main`, que é protegida. O que mudou em cada versão está no [CHANGELOG.md](CHANGELOG.md), e o fluxo completo no [CONTRIBUTING.md](CONTRIBUTING.md). O envio para a loja é pelo fastlane (`fastlane release`), com as notas de "Novidades" em `fastlane/release_notes/<versão>/`. O Ember está na [App Store](https://apps.apple.com/app/id6831097797).
 
 ## Patches no motor
 

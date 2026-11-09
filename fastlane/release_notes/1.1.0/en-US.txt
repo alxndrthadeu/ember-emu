@@ -1,0 +1,8 @@
+• Pick how you play each game: Classic 2 buttons, Classic 4 buttons (X and Y) or Modern (analog stick and triggers). Ember suggests one when you import a game.
+• Diagonal movement with the D-pad, the stick and game controllers, for games that walk in eight directions.
+• Skins for any console: Delta and Manic EMU skins of any system work, one per controller type, and adapt to every screen.
+• iPhone Duo: a dual-screen layout in portrait and a handheld layout in landscape.
+• Play on your TV or computer through its web browser, with sound.
+• Back up what you choose, archive games to iCloud and bring them back with a tap.
+• A saves screen with a picture of where each save was made, and saves sent to another iPhone by AirDrop.
+• Quick actions on the app icon, a redesigned game panel, and fixes.

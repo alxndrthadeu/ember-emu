@@ -1,0 +1,8 @@
+• Escolha como jogar cada jogo: Clássico 2 botões, Clássico 4 botões (X e Y) ou Moderno (analógico e gatilhos). O Ember sugere um ao importar o jogo.
+• Movimento na diagonal com o D-pad, o analógico e os controles, nos jogos que andam em oito direções.
+• Skins de qualquer console: skins do Delta e do Manic EMU de qualquer sistema funcionam, uma por tipo de controle, e se adaptam a cada tela.
+• iPhone Duo: layout de duas telas em pé e de console portátil deitado.
+• Jogue na TV ou no computador pelo navegador, com som.
+• Backup do que você escolher, jogos arquivados no iCloud e de volta com um toque.
+• Tela de saves com a imagem de onde cada save foi feito, e saves enviados para outro iPhone por AirDrop.
+• Atalhos no ícone do app, painel do jogo redesenhado e correções.

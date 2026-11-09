@@ -1,0 +1,3 @@
+# The team ID is read from Config/Signing.local.xcconfig (kept out of
+# the public repository), in the Fastfile.
+app_identifier("com.alexandrethadeu.ember")
