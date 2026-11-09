@@ -23,41 +23,21 @@ final class SkinStore: ObservableObject {
     /// The layout for an orientation. A skin without that orientation
     /// falls back to Ember Laranja's. `keyboard`: the game needs the
     /// keyboard button (built-in skins draw it next to the gear).
+    /// The controller type of the game being played (Clássico 2 botões
+    /// outside a game).
+    var controllerType: ControllerType {
+        EngineSession.shared.currentGame.map(ControllerTypeStore.type(for:)) ?? .classic2
+    }
+
+    /// The skin on screen (ControllerLayouts.effectiveSkin).
+    var effectiveSkin: Skin {
+        ControllerLayouts.effectiveSkin(current, type: controllerType)
+    }
+
+    /// The layout of the game screen now (ControllerLayouts has the rules).
     func layout(portrait: Bool, keyboard: Bool = false) -> SkinLayout {
-        let own = current.layout(portrait: portrait)
-        let layout = own ?? BuiltInSkins.ember.layout(portrait: portrait)!
-        let builtIn = own == nil || current.isBuiltIn
-        guard builtIn else { return layout }
-        var adapted = BuiltInSkins.adapted(layout, keyboard: keyboard)
-        // Screens wider than a phone (an open iPhone Duo): drawn in their
-        // own proportions instead of a stretched phone layout.
-        if let viewAspect = GameLayout.shared.viewAspect, viewAspect < BuiltInSkins.wideBelow {
-            // Split (the default): game on one half, controller on the
-            // other, nothing on the crease.
-            // Lying flat in landscape it is held like a handheld console:
-            // game in the middle, controls beside it at thumb height.
-            // Half folded like a book, the game takes the left page and
-            // the controller the right one (the middle is the fold).
-            let partial = GameLayout.shared.hingePartiallyOpen
-            if duoSplit && !portrait && !partial {
-                return BuiltInSkins.handheldLandscape(adapted, viewAspect: viewAspect,
-                                                      gameAspect: GameLayout.shared.aspect)
-            }
-            if duoSplit {
-                let gap = BuiltInSkins.foldGap(partiallyOpen: partial)
-                return portrait
-                    ? BuiltInSkins.splitPortrait(adapted, viewAspect: viewAspect,
-                                                 gameAspect: GameLayout.shared.aspect, gap: gap,
-                                                 gameBelow: duoGameBelow)
-                    : BuiltInSkins.splitLandscape(adapted, viewAspect: viewAspect,
-                                                  gameAspect: GameLayout.shared.aspect, gap: gap)
-            }
-            adapted = portrait
-                ? BuiltInSkins.reshaped(adapted, viewAspect: viewAspect)
-                : BuiltInSkins.reshapedLandscape(adapted, viewAspect: viewAspect, gameAspect: GameLayout.shared.aspect)
-        }
-        return BuiltInSkins.fitted(adapted, aspect: GameLayout.shared.aspect,
-                                   fullWidth: portraitFullWidth)
+        let context = ControllerContext.current(portrait: portrait, keyboard: keyboard, type: controllerType)
+        return ControllerLayouts.layout(for: effectiveSkin, in: context)
     }
 
     /// Built-in skins in portrait: the game across the full width, no

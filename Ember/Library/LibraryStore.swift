@@ -24,6 +24,8 @@ final class LibraryStore: ObservableObject {
     /// A confirmation to show after an import that is not a game (an
     /// RTP, saves from another iPhone).
     @Published var importNotice: Notice?
+    /// A game just imported: Ember asks which controller it gets.
+    @Published var chooseController: GameEntry?
 
     struct Notice: Equatable {
         let title: String
@@ -62,6 +64,9 @@ final class LibraryStore: ObservableObject {
         archived = GameArchive.records().filter { record in !games.contains { $0.id == record.id } }
         watchUploads()
         QuickAction.refresh(self)
+        // Games imported before controller types: read their scripts.
+        let current = games
+        Task { await ControllerTypeStore.detect(current) }
         // Packs iCloud already has no longer need their local copy.
         if !archived.isEmpty {
             Task.detached(priority: .utility) { GameArchive.evictUploaded() }
@@ -144,6 +149,18 @@ final class LibraryStore: ObservableObject {
                         break
                     }
                     self.reload()
+                    if case .success(.game(let id)) = result,
+                       let game = self.games.first(where: { $0.id == id }) {
+                        Task {
+                            await ControllerTypeStore.detect([game])
+                            if url.lastPathComponent == "EmberDemo" {
+                                // The demo needs two buttons; no question.
+                                ControllerTypeStore.markAsked(game.id)
+                            } else if ControllerTypeStore.needsChoice(game) {
+                                self.chooseController = game
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -293,6 +310,7 @@ final class LibraryStore: ObservableObject {
     /// Backups first; saves in UserData/<id> stay, and come back if the
     /// game is imported again under the same name.
     func delete(_ game: GameEntry) {
+        ControllerTypeStore.forget(game.id)
         // Plain RPG Maker games save inside their own folder.
         SaveManager.stashGameFolderSaves(of: game)
         do {

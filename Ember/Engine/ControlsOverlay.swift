@@ -29,7 +29,7 @@ struct ControlsOverlay: View {
 
             ZStack(alignment: .topLeading) {
                 if !hideButtons {
-                    SkinControllerView(skin: skins.current, layout: skinLayout,
+                    SkinControllerView(skin: skins.effectiveSkin, layout: skinLayout,
                                        pictureRect: layout.onTV ? .zero : layout.pictureRect,
                                        opacity: opacity, showKeyboard: wantsKeyboard,
                                        onMenu: openMenu, onKeyboard: session.openKeyboard)

@@ -814,6 +814,22 @@
         }
       }
     },
+    "Analógico, A, B, X, Y e quatro gatilhos, para jogos de ação." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stick, A, B, X, Y and four triggers, for action games."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stick, A, B, X, Y y cuatro gatillos, para juegos de acción."
+          }
+        }
+      }
+    },
     "Andar" : {
       "localizations" : {
         "en" : {
@@ -1675,6 +1691,38 @@
         }
       }
     },
+    "Clássico 2 botões" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Classic 2 buttons"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clásico 2 botones"
+          }
+        }
+      }
+    },
+    "Clássico 4 botões" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Classic 4 buttons"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clásico 4 botones"
+          }
+        }
+      }
+    },
     "Clique ou aperte OK para tela cheia" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1818,6 +1866,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cómo crear tu propia skin"
+          }
+        }
+      }
+    },
+    "Como você quer jogar?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How do you want to play?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Cómo quieres jugar?"
           }
         }
       }
@@ -1998,6 +2062,22 @@
         }
       }
     },
+    "Controle na tela" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On-screen controller"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Control en pantalla"
+          }
+        }
+      }
+    },
     "Controles" : {
       "localizations" : {
         "en" : {
@@ -2107,6 +2187,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Copiar error"
+          }
+        }
+      }
+    },
+    "D-pad, A, B, L, R, Start e Select. Serve para a maioria dos jogos." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D-pad, A, B, L, R, Start and Select. Fits most games."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D-pad, A, B, L, R, Start y Select. Sirve para la mayoría de los juegos."
+          }
+        }
+      }
+    },
+    "Dá para trocar depois, no painel do jogo (segure a capa na estante). Os botões seguem o perfil de controle do jogo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can change it later in the game’s panel (press and hold its cover in the library). Buttons follow the game’s control profile."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puedes cambiarlo después en el panel del juego (mantén pulsada su portada en la biblioteca). Los botones siguen el perfil de control del juego."
           }
         }
       }
@@ -3163,6 +3275,22 @@
         }
       }
     },
+    "Igual ao de 2 botões, mais X e Y, para jogos que usam mais teclas." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Like 2 buttons, plus X and Y, for games that use more keys."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Como el de 2 botones, más X e Y, para juegos que usan más teclas."
+          }
+        }
+      }
+    },
     "Importação" : {
       "localizations" : {
         "en" : {
@@ -3995,6 +4123,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Menú rápido de objetos registrados (D, Input::Z)"
+          }
+        }
+      }
+    },
+    "Moderno" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modern"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moderno"
           }
         }
       }
@@ -5563,6 +5707,22 @@
         }
       }
     },
+    "Recomendado para este jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recommended for this game"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recomendado para este juego"
+          }
+        }
+      }
+    },
     "Registros" : {
       "localizations" : {
         "en" : {
@@ -6110,6 +6270,7 @@
       }
     },
     "Só no controle" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6703,6 +6864,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Única"
+          }
+        }
+      }
+    },
+    "Usar %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar %@"
           }
         }
       }

@@ -70,6 +70,9 @@ struct SkinItem: Equatable {
         case button
         /// Split into directions by where the finger is.
         case dpad
+        /// An analog stick: eight directions from where the thumb drags
+        /// the knob (inputs: up, down, left, right).
+        case stick
     }
 
     var kind: Kind
@@ -106,6 +109,10 @@ enum SkinInput: Hashable {
         case "select": self = .key(.select)
         case "l": self = .key(.l)
         case "r": self = .key(.r)
+        case "x": self = .key(.x)
+        case "y": self = .key(.y)
+        case "l2", "zl": self = .key(.l2)
+        case "r2", "zr": self = .key(.r2)
         case "up": self = .key(.up)
         case "down": self = .key(.down)
         case "left": self = .key(.left)

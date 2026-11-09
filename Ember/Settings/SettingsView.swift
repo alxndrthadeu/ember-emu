@@ -23,7 +23,7 @@ struct SettingsView: View {
     /// The screen is wider than a phone's (an open iPhone Duo).
     private static var isWideScreen: Bool {
         let size = UIScreen.main.bounds.size
-        return max(size.width, size.height) / max(min(size.width, size.height), 1) < BuiltInSkins.wideBelow
+        return max(size.width, size.height) / max(min(size.width, size.height), 1) < ControllerLayouts.wideBelow
     }
 
     var body: some View {

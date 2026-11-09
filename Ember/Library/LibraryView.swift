@@ -65,6 +65,10 @@ struct LibraryView: View {
                 requestReview()
             }
         }
+        .sheet(item: $library.chooseController) { game in
+            ControllerChoiceView(game: game)
+                .presentationDetents([.large])
+        }
         .sheet(item: $optionsFor) { game in
             GameOptionsSheet(game: game) { open(game) }
                 .presentationDetents([.medium, .large])
@@ -305,6 +309,7 @@ struct LibraryView: View {
         case "history": showingHistory = true
         case "controls": showingControls = true
         case "options", "saves": optionsFor = library.games.first
+        case "controller": library.chooseController = library.games.first
         case "import", "computer", "rtp": AppRouter.shared.tab = .importGames
         case "settings": AppRouter.shared.tab = .settings
         default: break
