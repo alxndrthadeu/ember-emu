@@ -28,8 +28,8 @@ platform :ios do
       archive_path: File.join(ROOT, "build/fastlane/Ember-#{version_string}-#{build_number}.xcarchive"),
       # Cloud signing with the API key: Xcode makes the distribution
       # certificate and an App Store profile with every capability (iCloud).
+      # gym passes xcargs to the export step too: once is enough.
       xcargs: signing_args,
-      export_xcargs: signing_args,
       export_team_id: team_id,
       clean: true
     )
