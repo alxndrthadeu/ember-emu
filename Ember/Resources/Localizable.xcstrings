@@ -1482,22 +1482,6 @@
         }
       }
     },
-    "Brasa" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ember Red"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ember Rojo"
-          }
-        }
-      }
-    },
     "Cada jogo usa Padrão ou Clássico automaticamente (Clássico nos jogos antigos). Troque no painel do jogo, segurando a capa, ou crie o seu em Ajustes › Perfis de controle." : {
       "localizations" : {
         "en" : {
@@ -3211,22 +3195,6 @@
         }
       }
     },
-    "Fumê" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ember Smoke"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ember Humo"
-          }
-        }
-      }
-    },
     "Funciona com smart TVs (LG, Samsung e outras), computadores e tablets: qualquer aparelho com navegador no mesmo Wi-Fi." : {
       "localizations" : {
         "en" : {
@@ -4267,22 +4235,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Muchos juegos cuentan con los gráficos y sonidos estándar de RPG Maker (el RTP), que Ember no incluye. Importa la carpeta del RTP, o un .zip de ella, desde la pestaña Importar: Ember reconoce la versión y todos los juegos de esa versión la usan. En Windows está en Archivos comunes › Enterbrain › RGSS."
-          }
-        }
-      }
-    },
-    "Musgo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ember Moss"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ember Musgo"
           }
         }
       }
@@ -7251,54 +7203,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ZIPFoundation"
-          }
-        }
-      }
-    },
-    "Ember Brasa" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ember Red"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ember Rojo"
-          }
-        }
-      }
-    },
-    "Ember Musgo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ember Moss"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ember Musgo"
-          }
-        }
-      }
-    },
-    "Ember Fumê" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ember Smoke"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ember Humo"
           }
         }
       }

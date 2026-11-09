@@ -58,6 +58,10 @@ struct BuiltInSkinArt: View {
                     crease(at: fold, isPortrait: isPortrait, size: geo.size, sx: sx, sy: sy)
                 }
 
+                if layer != .controls && style == .ember && isPortrait && layout.fold == nil {
+                    grille
+                        .position(x: geo.size.width - 64 * sx, y: geo.size.height - 108 * sy)
+                }
             }
         }
         .ignoresSafeArea()
@@ -66,29 +70,17 @@ struct BuiltInSkinArt: View {
 
     // MARK: Body
 
-    private var palette: ShellPalette { style.palette }
-
     @ViewBuilder
     private func background(isPortrait: Bool) -> some View {
-        if style.isShell {
-            ZStack {
-                // Tinted plastic, lighter where the light comes in.
-                LinearGradient(colors: [palette.light, palette.base, palette.deep],
-                               startPoint: .top, endPoint: .bottom)
-                // The board and parts seen through the shell.
-                ShellInternals(palette: palette, mapping: layout.mappingSize, screen: layout.screen)
-                // Haze and shine of clear plastic.
-                RadialGradient(colors: [.white.opacity(0.22), .clear],
-                               center: UnitPoint(x: 0.2, y: 0.05), startRadius: 0, endRadius: 520)
-                LinearGradient(colors: [.clear, .black.opacity(0.18)], startPoint: .center, endPoint: .bottom)
-            }
-            .overlay {
-                // The molded rim.
-                Rectangle()
-                    .strokeBorder(LinearGradient(colors: [.white.opacity(0.35), .white.opacity(0.05), .black.opacity(0.25)],
-                                                 startPoint: .top, endPoint: .bottom), lineWidth: 3)
-            }
-        } else {
+        switch style {
+        case .ember:
+            LinearGradient(colors: [Color(hex: 0xF7A04B), Color(hex: 0xEE6A2A), Color(hex: 0xE05A24)],
+                           startPoint: .top, endPoint: .bottom)
+                .overlay(
+                    // A soft shine across the shell.
+                    LinearGradient(colors: [.white.opacity(0.18), .clear],
+                                   startPoint: .topLeading, endPoint: .center))
+        case .glass:
             Theme.controllerBackground
         }
     }
@@ -96,17 +88,11 @@ struct BuiltInSkinArt: View {
     /// `thin`: the frame width in Tela cheia (no logo strip).
     @ViewBuilder
     private func bezel(_ screen: CGRect, isPortrait: Bool, thin: CGFloat? = nil) -> some View {
-        if style.isShell {
+        if style == .ember {
             let pad: CGFloat = thin ?? 12
             let bottom: CGFloat = thin ?? (isPortrait ? 30 : 12)
-            let shape = RoundedRectangle(cornerRadius: thin == nil ? 22 : 12, style: .continuous)
-            shape
-                .fill(LinearGradient(colors: [Color(hex: 0x2A2224), Color(hex: 0x161113)],
-                                     startPoint: .top, endPoint: .bottom))
-                .overlay {
-                    shape.strokeBorder(LinearGradient(colors: [.white.opacity(0.22), .clear, .black.opacity(0.4)],
-                                                      startPoint: .top, endPoint: .bottom), lineWidth: 1.5)
-                }
+            RoundedRectangle(cornerRadius: thin == nil ? 22 : 10, style: .continuous)
+                .fill(Color(hex: 0x2B211C))
                 .overlay(alignment: .bottom) {
                     if isPortrait && thin == nil {
                         HStack(spacing: 6) {
@@ -120,7 +106,7 @@ struct BuiltInSkinArt: View {
                         .padding(.bottom, 8)
                     }
                 }
-                .shadow(color: .black.opacity(0.35), radius: 8, y: 4)
+                .shadow(color: .black.opacity(0.25), radius: 6, y: 3)
                 .frame(width: screen.width + pad * 2, height: screen.height + pad + bottom)
                 .position(x: screen.midX, y: screen.midY + (bottom - pad) / 2)
             Rectangle()
@@ -150,8 +136,8 @@ struct BuiltInSkinArt: View {
     /// A soft groove where an iPhone Duo folds, so the two halves read
     /// as two parts of one handheld.
     private func crease(at fold: CGFloat, isPortrait: Bool, size: CGSize, sx: CGFloat, sy: CGFloat) -> some View {
-        let dark = style.isShell ? palette.deep.opacity(0.9) : Color.white.opacity(0.08)
-        let light = style.isShell ? Color.white.opacity(0.22) : Color.black.opacity(0.4)
+        let dark = style == .ember ? Color(hex: 0xB9481C) : Color.white.opacity(0.08)
+        let light = style == .ember ? Color.white.opacity(0.22) : Color.black.opacity(0.4)
         return Group {
             if isPortrait {
                 VStack(spacing: 0) {
@@ -169,6 +155,19 @@ struct BuiltInSkinArt: View {
                 .position(x: fold * sx, y: size.height / 2)
             }
         }
+    }
+
+    private var grille: some View {
+        VStack(spacing: 7) {
+            ForEach(0..<4) { _ in
+                HStack(spacing: 7) {
+                    ForEach(0..<4) { _ in
+                        Circle().fill(Color(hex: 0xB9481C)).frame(width: 5, height: 5)
+                    }
+                }
+            }
+        }
+        .rotationEffect(.degrees(-20))
     }
 
     // MARK: Controls
@@ -201,40 +200,13 @@ struct BuiltInSkinArt: View {
         }
     }
 
+    private var ink: Color { style == .ember ? Color(hex: 0x2B211C) : .clear }
     private var label: Color { Color(hex: 0xF4E9D8).opacity(0.9) }
-
-    /// A molded button: charcoal plastic with a soft top light, a rim and
-    /// a shadow under it; pressed, it sinks.
-    private func dome<S: Shape>(_ shape: S, pressed: Bool) -> some View {
-        shape
-            .fill(LinearGradient(colors: [palette.buttonLight, palette.button],
-                                 startPoint: .top, endPoint: .bottom))
-            .overlay {
-                shape.fill(RadialGradient(colors: [.white.opacity(pressed ? 0.04 : 0.2), .clear],
-                                          center: UnitPoint(x: 0.35, y: 0.2), startRadius: 0, endRadius: 60))
-            }
-            .overlay {
-                shape.stroke(LinearGradient(colors: [.white.opacity(0.2), .black.opacity(0.35)],
-                                            startPoint: .top, endPoint: .bottom), lineWidth: 1.2)
-            }
-            .shadow(color: .black.opacity(pressed ? 0.15 : 0.42), radius: pressed ? 1 : 4, y: pressed ? 1 : 3)
-            .scaleEffect(pressed ? 0.95 : 1)
-    }
-
-    /// The recess a button sits in, molded into the shell.
-    private func well<S: Shape>(_ shape: S) -> some View {
-        shape
-            .fill(palette.deep.opacity(0.45))
-            .overlay {
-                shape.stroke(LinearGradient(colors: [.black.opacity(0.35), .white.opacity(0.28)],
-                                            startPoint: .top, endPoint: .bottom), lineWidth: 1.5)
-            }
-    }
 
     @ViewBuilder
     private func surface<S: Shape>(_ shape: S, pressed: Bool, fill: Color) -> some View {
         switch style {
-        case .ember, .brasa, .musgo, .fume:
+        case .ember:
             Group {
                 if #available(iOS 18, *), !EmberCompat.forceLegacy {
                     shape.fill(pressed ? fill.mix(with: .black, by: 0.3) : fill)
@@ -251,97 +223,49 @@ struct BuiltInSkinArt: View {
         }
     }
 
-    @ViewBuilder
     private func roundButton(_ title: String, pressed: Bool) -> some View {
-        if style.isShell {
-            GeometryReader { geo in
-                let side = min(geo.size.width, geo.size.height)
-                ZStack {
-                    well(Circle()).frame(width: side * 1.14, height: side * 1.14)
-                    dome(Circle(), pressed: pressed).frame(width: side, height: side)
-                    Text(title)
-                        .font(.system(size: side * 0.36, weight: .semibold, design: .rounded))
-                        .foregroundStyle(palette.label)
-                        .scaleEffect(pressed ? 0.95 : 1)
-                }
-                .frame(width: geo.size.width, height: geo.size.height)
-            }
-        } else {
-            ZStack {
-                surface(Circle(), pressed: pressed, fill: Color(hex: 0x3A2F28))
-                Text(title)
-                    .font(.system(size: 22, weight: .bold, design: .rounded))
-                    .foregroundStyle(label)
-            }
-            .scaleEffect(pressed ? 0.94 : 1)
+        ZStack {
+            surface(Circle(), pressed: pressed, fill: Color(hex: 0x3A2F28))
+            Text(title)
+                .font(.system(size: 22, weight: .bold, design: .rounded))
+                .foregroundStyle(label)
         }
+        .scaleEffect(pressed ? 0.94 : 1)
     }
 
-    @ViewBuilder
     private func shoulder(_ title: String, pressed: Bool, leading: Bool) -> some View {
-        if style.isShell {
-            GeometryReader { geo in
-                ZStack {
-                    dome(Capsule(), pressed: pressed)
-                    Text(title)
-                        .font(.system(size: min(17, geo.size.height * 0.42), weight: .semibold, design: .rounded))
-                        .foregroundStyle(palette.label)
-                }
-                .padding(.horizontal, 6)
-                .padding(.vertical, 3)
-            }
-        } else {
-            ZStack {
+        let shape = UnevenRoundedRectangle(
+            topLeadingRadius: leading ? 0 : 18, bottomLeadingRadius: leading ? 0 : 18,
+            bottomTrailingRadius: leading ? 18 : 0, topTrailingRadius: leading ? 18 : 0,
+            style: .continuous)
+        return ZStack {
+            if style == .ember {
+                surface(shape, pressed: pressed, fill: Color(hex: 0xC8501E))
+            } else {
                 surface(Capsule(), pressed: pressed, fill: .clear)
-                Text(title)
-                    .font(.system(size: 17, weight: .bold, design: .rounded))
-                    .foregroundStyle(label)
             }
+            Text(title)
+                .font(.system(size: 17, weight: .bold, design: .rounded))
+                .foregroundStyle(style == .ember ? Color(hex: 0xF4E9D8) : label)
         }
     }
 
-    @ViewBuilder
     private func pill(_ title: String, pressed: Bool) -> some View {
-        if style.isShell {
-            ZStack {
-                dome(Capsule(), pressed: pressed)
-                    .padding(.vertical, 3)
-                Text(title)
-                    .font(.system(size: 9.5, weight: .semibold, design: .rounded))
-                    .tracking(0.8)
-                    .foregroundStyle(palette.label.opacity(0.8))
-            }
-        } else {
-            ZStack {
-                surface(Capsule(), pressed: pressed, fill: Color(hex: 0x2B211C))
-                Text(title)
-                    .font(.system(size: 10, weight: .bold, design: .rounded))
-                    .tracking(0.5)
-                    .foregroundStyle(label)
-            }
+        ZStack {
+            surface(Capsule(), pressed: pressed, fill: Color(hex: 0x2B211C))
+            Text(title)
+                .font(.system(size: 10, weight: .bold, design: .rounded))
+                .tracking(0.5)
+                .foregroundStyle(label)
         }
     }
 
     private func gear(pressed: Bool) -> some View {
-        smallRound(icon: "gearshape.fill", size: 17, pressed: pressed)
-    }
-
-    @ViewBuilder
-    private func smallRound(icon: String, size: CGFloat, pressed: Bool) -> some View {
-        if style.isShell {
-            ZStack {
-                dome(Circle(), pressed: pressed)
-                Image(systemName: icon)
-                    .font(.system(size: size - 1, weight: .semibold))
-                    .foregroundStyle(palette.label.opacity(0.85))
-            }
-        } else {
-            ZStack {
-                surface(Circle(), pressed: pressed, fill: Color(hex: 0x2B211C))
-                Image(systemName: icon)
-                    .font(.system(size: size, weight: .semibold))
-                    .foregroundStyle(label)
-            }
+        ZStack {
+            surface(Circle(), pressed: pressed, fill: Color(hex: 0x2B211C))
+            Image(systemName: "gearshape.fill")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(label)
         }
     }
 
@@ -368,85 +292,48 @@ struct BuiltInSkinArt: View {
     }
 
     private func keyboardKey(pressed: Bool) -> some View {
-        smallRound(icon: "keyboard.fill", size: 15, pressed: pressed)
+        ZStack {
+            surface(Circle(), pressed: pressed, fill: Color(hex: 0x2B211C))
+            Image(systemName: "keyboard.fill")
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(label)
+        }
     }
 
-    /// An analog stick: a recess and a knob with grip rings that follows
-    /// the thumb.
+    /// An analog stick: a dark well and a knob that follows the thumb.
     private func stick(knob: CGPoint, active: Bool, size: CGSize) -> some View {
         let side = min(size.width, size.height)
-        let knobSize = side * 0.52
+        let knobSize = side * 0.5
         let travel = (side - knobSize) / 2
         return ZStack {
-            if style.isShell {
-                well(Circle())
+            surface(Circle(), pressed: false, fill: Color(hex: 0x2B211C))
+            Circle()
+                .strokeBorder(label.opacity(0.12), lineWidth: 2)
+                .padding(side * 0.08)
+            ZStack {
+                surface(Circle(), pressed: active, fill: Color(hex: 0x3A2F28))
                 Circle()
-                    .stroke(palette.deep.opacity(0.5), lineWidth: 1)
-                    .padding(side * 0.1)
-                ZStack {
-                    dome(Circle(), pressed: active)
-                    ForEach([0.62, 0.36], id: \.self) { ratio in
-                        Circle()
-                            .stroke(Color.black.opacity(0.28), lineWidth: 1.5)
-                            .frame(width: knobSize * ratio, height: knobSize * ratio)
-                    }
-                    if active {
-                        Circle().stroke(Theme.highlight.opacity(0.7), lineWidth: 2)
-                    }
-                }
-                .frame(width: knobSize, height: knobSize)
-                .offset(x: knob.x * travel, y: knob.y * travel)
-            } else {
-                surface(Circle(), pressed: false, fill: Color(hex: 0x2B211C))
-                ZStack {
-                    surface(Circle(), pressed: active, fill: Color(hex: 0x3A2F28))
-                    Circle()
-                        .strokeBorder(active ? Theme.highlight.opacity(0.8) : label.opacity(0.15), lineWidth: 2)
-                }
-                .frame(width: knobSize, height: knobSize)
-                .offset(x: knob.x * travel, y: knob.y * travel)
+                    .strokeBorder(active ? Theme.highlight.opacity(0.8) : label.opacity(0.15), lineWidth: 2)
             }
+            .frame(width: knobSize, height: knobSize)
+            .offset(x: knob.x * travel, y: knob.y * travel)
         }
         .frame(width: side, height: side)
     }
 
-    @ViewBuilder
     private func dpad(held: Set<GameKey>, size: CGSize) -> some View {
-        let side = min(size.width, size.height)
-        let arm = side * 0.34
-        if style.isShell {
-            let cross = PlusShape(arm: arm, radius: arm * 0.22)
-            ZStack {
-                // A round recess, the cross molded in it.
-                well(Circle()).frame(width: side * 1.06, height: side * 1.06)
-                dome(cross, pressed: false)
-                    .frame(width: side * 0.86, height: side * 0.86)
-                // A shallow dish in the middle.
-                Circle()
-                    .fill(LinearGradient(colors: [.black.opacity(0.35), .white.opacity(0.08)],
-                                         startPoint: .top, endPoint: .bottom))
-                    .frame(width: arm * 0.5, height: arm * 0.5)
-                ForEach([GameKey.up, .down, .left, .right], id: \.self) { key in
-                    let lit = held.contains(key)
-                    Capsule()
-                        .fill(lit ? Theme.highlight : palette.label.opacity(0.55))
-                        .frame(width: key == .up || key == .down ? 2.5 : arm * 0.32,
-                               height: key == .up || key == .down ? arm * 0.32 : 2.5)
-                        .shadow(color: lit ? Theme.highlight.opacity(0.8) : .clear, radius: 4)
-                        .offset(arrowOffset(key, size: CGSize(width: side * 0.86, height: side * 0.86)))
-                }
+        let arm = min(size.width, size.height) * 0.36
+        let cross = PlusShape(arm: arm, radius: style == .ember ? 8 : 14)
+        return ZStack {
+            surface(cross, pressed: false, fill: Color(hex: 0x2B211C))
+            if style == .ember {
+                Circle().fill(Color(hex: 0x3A2F28)).frame(width: arm * 0.55, height: arm * 0.55)
             }
-            .frame(width: size.width, height: size.height)
-        } else {
-            let cross = PlusShape(arm: side * 0.36, radius: 14)
-            ZStack {
-                surface(cross, pressed: false, fill: Color(hex: 0x2B211C))
-                ForEach([GameKey.up, .down, .left, .right], id: \.self) { key in
-                    Image(systemName: "arrowtriangle.\(arrowName(key)).fill")
-                        .font(.system(size: 13))
-                        .foregroundStyle(held.contains(key) ? Theme.highlight : label.opacity(0.7))
-                        .offset(arrowOffset(key, size: size))
-                }
+            ForEach([GameKey.up, .down, .left, .right], id: \.self) { key in
+                Image(systemName: "arrowtriangle.\(arrowName(key)).fill")
+                    .font(.system(size: 13))
+                    .foregroundStyle(held.contains(key) ? Theme.highlight : label.opacity(0.7))
+                    .offset(arrowOffset(key, size: size))
             }
         }
     }

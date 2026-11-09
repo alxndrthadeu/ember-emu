@@ -56,8 +56,7 @@ extension BuiltInSkins {
                 let leading = frame.midX < copy.mappingSize.width / 2
                 let w = frame.width * 0.8, h = frame.height * 0.82
                 var spot = CGRect(x: leading ? frame.minX : frame.maxX - w, y: frame.maxY + 6, width: w, height: h)
-                // Other controls and the game picture are in the way.
-                let others = copy.items.map(\.frame) + [copy.screen].compactMap { $0?.insetBy(dx: -6, dy: -6) }
+                let others = copy.items.map(\.frame)
                 if others.contains(where: { $0.intersects(spot) }) || spot.maxY > copy.mappingSize.height {
                     // No room below: beside it, toward the middle.
                     let sw = frame.width * 0.62
