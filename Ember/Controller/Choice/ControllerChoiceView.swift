@@ -150,13 +150,16 @@ struct ControllerPreview: View {
         let screen = UIScreen.main.bounds.size
         var context = ControllerContext.current(portrait: screen.height >= screen.width, keyboard: true, type: type)
         context.gameAspect = 4 / 3
-        let layout = ControllerLayouts.layout(for: BuiltInSkins.ember, in: context)
+        // The player's built-in skin when it is one, else Ember Laranja.
+        let skin = SkinStore.shared.current.isBuiltIn ? SkinStore.shared.current : BuiltInSkins.ember
+        let style: BuiltInStyle = { if case .builtIn(let style) = skin.source { return style }; return .ember }()
+        let layout = ControllerLayouts.layout(for: skin, in: context)
         let crop = Self.controlsArea(of: layout)
         return Color.clear
             .aspectRatio(crop.width / crop.height, contentMode: .fit)
             .overlay(alignment: .topLeading) {
                 GeometryReader { geo in
-                    BuiltInSkinArt(style: .ember, layout: layout, pressed: [], held: [:])
+                    BuiltInSkinArt(style: style, layout: layout, pressed: [], held: [:])
                         .frame(width: layout.mappingSize.width, height: layout.mappingSize.height)
                         .offset(x: -crop.minX, y: -crop.minY)
                         .scaleEffect(geo.size.width / crop.width, anchor: .topLeading)
