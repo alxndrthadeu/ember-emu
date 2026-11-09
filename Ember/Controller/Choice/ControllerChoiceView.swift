@@ -150,14 +150,22 @@ struct ControllerPreview: View {
         let screen = UIScreen.main.bounds.size
         var context = ControllerContext.current(portrait: screen.height >= screen.width, keyboard: true, type: type)
         context.gameAspect = 4 / 3
-        let layout = ControllerLayouts.layout(for: BuiltInSkins.ember, in: context)
+        // The skin the player picked for this type, as the game will show it.
+        let skin = ControllerLayouts.effectiveSkin(SkinStore.shared.skin(for: type), type: type)
+        let layout = ControllerLayouts.layout(for: skin, in: context)
         let crop = Self.controlsArea(of: layout)
         return Color.clear
             .aspectRatio(crop.width / crop.height, contentMode: .fit)
             .overlay(alignment: .topLeading) {
                 GeometryReader { geo in
-                    BuiltInSkinArt(style: .ember, layout: layout, pressed: [], held: [:])
-                        .frame(width: layout.mappingSize.width, height: layout.mappingSize.height)
+                    Group {
+                        if case .builtIn(let style) = skin.source {
+                            BuiltInSkinArt(style: style, layout: layout, pressed: [], held: [:])
+                        } else {
+                            ImportedSkinArt(layout: layout)
+                        }
+                    }
+                    .frame(width: layout.mappingSize.width, height: layout.mappingSize.height)
                         .offset(x: -crop.minX, y: -crop.minY)
                         .scaleEffect(geo.size.width / crop.width, anchor: .topLeading)
                 }

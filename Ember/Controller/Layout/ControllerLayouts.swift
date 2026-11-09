@@ -26,6 +26,8 @@ struct ControllerContext: Equatable {
     var duoSplit = true
     /// The Duo's DS layout with the game on the bottom window.
     var duoGameBelow = false
+    /// Long side / short side of the screen (a phone is about 2.17).
+    var screenAspect: CGFloat = 2.17
 
     /// The device a screen of this size is.
     static func device(for size: CGSize, partiallyOpen: Bool = false) -> Device {
@@ -40,16 +42,15 @@ struct ControllerContext: Equatable {
     static func current(portrait: Bool, keyboard: Bool, type: ControllerType) -> ControllerContext {
         let skins = SkinStore.shared
         let layout = GameLayout.shared
-        let device: Device
-        if let aspect = layout.viewAspect {
-            device = aspect < ControllerLayouts.wideBelow
-                ? .duo(viewAspect: aspect, partiallyOpen: layout.hingePartiallyOpen) : .phone
-        } else {
-            device = Self.device(for: UIScreen.main.bounds.size, partiallyOpen: layout.hingePartiallyOpen)
-        }
+        let screen = UIScreen.main.bounds.size
+        let aspect = layout.viewAspect
+            ?? (max(screen.width, screen.height) / max(min(screen.width, screen.height), 1))
+        let device: Device = aspect < ControllerLayouts.wideBelow
+            ? .duo(viewAspect: aspect, partiallyOpen: layout.hingePartiallyOpen) : .phone
         return ControllerContext(device: device, portrait: portrait, type: type, keyboard: keyboard,
                                  gameAspect: layout.aspect, fullWidth: skins.portraitFullWidth,
-                                 duoSplit: skins.duoSplit, duoGameBelow: skins.duoGameBelow)
+                                 duoSplit: skins.duoSplit, duoGameBelow: skins.duoGameBelow,
+                                 screenAspect: aspect)
     }
 }
 
@@ -64,25 +65,26 @@ enum ControllerLayouts {
     /// iPhone Duo is about 1.46; phones are about 2.17).
     static let wideBelow: CGFloat = 1.75
 
-    /// The skin to draw: the chosen one, unless it lacks buttons the
-    /// controller type needs (an imported GBA skin for a 4-button game);
-    /// then Ember Laranja, which draws every type.
+    /// The skin to draw: the chosen one when it has the buttons of the
+    /// controller type, else Ember Laranja (which draws every type).
     static func effectiveSkin(_ chosen: Skin, type: ControllerType) -> Skin {
-        guard type != .classic2, !chosen.isBuiltIn else { return chosen }
-        let inputs = Set((chosen.portrait?.items ?? []).flatMap(\.inputs))
-        switch type {
-        case .classic2: return chosen
-        case .classic4: return [SkinInput.key(.x), .key(.y)].allSatisfy(inputs.contains) ? chosen : BuiltInSkins.ember
-        // Imported skins have no stick.
-        case .modern: return BuiltInSkins.ember
-        }
+        chosen.covers.contains(type) ? chosen : BuiltInSkins.ember
     }
 
     static func layout(for skin: Skin, in context: ControllerContext) -> SkinLayout {
-        let own = skin.layout(portrait: context.portrait)
-        guard own == nil || skin.isBuiltIn else { return own! }
-        let phone = own ?? BuiltInSkins.ember.layout(portrait: context.portrait)!
-        return BuiltInSkins.typed(builtIn(phone, in: context), type: context.type)
+        if skin.isBuiltIn {
+            let phone = skin.layout(portrait: context.portrait) ?? BuiltInSkins.ember.layout(portrait: context.portrait)!
+            return BuiltInSkins.typed(builtIn(phone, in: context), type: context.type)
+        }
+        // An imported skin on the phone it was drawn for: as drawn.
+        if context.device == .phone, let own = skin.layout(portrait: context.portrait) {
+            if own.screen != nil || !context.portrait { return own }
+            // Drawn for the bottom of the screen only (Delta's own skins).
+            return SkinRecomposer.anchoredAtBottom(own, skin: skin, in: context)
+        }
+        // A device or orientation the artist did not draw: Ember's layout
+        // with the skin's own buttons and colors.
+        return SkinRecomposer.recompose(skin, in: context)
     }
 
     /// A built-in phone layout, adapted to the game and the device.

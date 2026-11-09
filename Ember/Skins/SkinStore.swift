@@ -16,9 +16,28 @@ final class SkinStore: ObservableObject {
 
     var all: [Skin] { BuiltInSkins.all + imported }
 
-    var current: Skin {
-        all.first { $0.id == selectedID } ?? BuiltInSkins.ember
+    /// The skin chosen for each controller type. Clássico 2 botões keeps
+    /// the old single choice (`selectedID`); the others have their own.
+    @Published private var typeChoices: [String: String] =
+        UserDefaults.standard.dictionary(forKey: "skins.selectedByType") as? [String: String] ?? [:] {
+        didSet { UserDefaults.standard.set(typeChoices, forKey: "skins.selectedByType") }
     }
+
+    func skinID(for type: ControllerType) -> String {
+        type == .classic2 ? selectedID : (typeChoices[type.rawValue] ?? BuiltInSkins.ember.id)
+    }
+
+    func skin(for type: ControllerType) -> Skin {
+        all.first { $0.id == skinID(for: type) } ?? BuiltInSkins.ember
+    }
+
+    func select(_ skin: Skin, for type: ControllerType) {
+        if type == .classic2 { selectedID = skin.id } else { typeChoices[type.rawValue] = skin.id }
+    }
+
+    /// The skin chosen for the game being played (Clássico 2 botões
+    /// outside a game).
+    var current: Skin { skin(for: controllerType) }
 
     /// The layout for an orientation. A skin without that orientation
     /// falls back to Ember Laranja's. `keyboard`: the game needs the
@@ -114,7 +133,15 @@ final class SkinStore: ObservableObject {
 
         reload()
         let skin = try SkinParser.parse(folder: target)
-        selectedID = skin.id
+        // Converted right away (Converted.ember), so the first game with it
+        // starts without the wait.
+        EmberSkinConverter.forget(skin)
+        _ = EmberSkinConverter.package(for: skin)
+        // In use for the most capable type it fits: a SNES skin for
+        // Clássico 4 botões, an N64 or PlayStation one for Moderno.
+        let covers = skin.covers
+        let type: ControllerType = covers.contains(.modern) ? .modern : covers.contains(.classic4) ? .classic4 : .classic2
+        select(skin, for: type)
         return skin
     }
 
@@ -122,6 +149,8 @@ final class SkinStore: ObservableObject {
         guard case .imported(let folder) = skin.source else { return }
         try? FileManager.default.removeItem(at: folder)
         if selectedID == skin.id { selectedID = BuiltInSkins.ember.id }
+        for (type, id) in typeChoices where id == skin.id { typeChoices[type] = nil }
+        EmberSkinConverter.forget(skin)
         reload()
     }
 

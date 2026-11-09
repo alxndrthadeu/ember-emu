@@ -10,7 +10,11 @@ ControllerContext            device (phone / Duo + posture), orientation,
         ▼
 ControllerLayouts.layout(for: skin, in: context)
         │
-        ├─ imported skin with that orientation → used as drawn
+        ├─ imported skin, phone, with that orientation → as drawn
+        │    (a bottom-only Delta skin: anchored at the bottom, game above)
+        ├─ imported skin elsewhere (iPhone Duo, missing orientation)
+        │    → SkinRecomposer: Ember's layout, the skin's own buttons
+        │      and colors from its .ember package
         │
         └─ built-in skin:
              PhoneLayouts   phone layout (414 × 896 / 896 × 414 points)
@@ -35,6 +39,7 @@ The game screen (`SkinStore.layout`) and the previews in "Como você quer jogar?
 | `Input/` | Touch on the skin (D-pad and stick with 8 directions), physical controllers and keyboards |
 | `Profiles/` | Control profiles: what each button does (remapping) |
 | `Choice/` | The "Como você quer jogar?" screen |
+| `Conversion/` | Imported skins into `.ember` packages (`EmberSkinConverter`) and drawn on other devices (`SkinRecomposer`) |
 
 ## Adding a controller type
 
@@ -53,3 +58,13 @@ The game screen (`SkinStore.layout`) and the previews in "Como você quer jogar?
 - Directions: a diagonal holds two arrows. Games that read `Input.dir8` walk diagonally; the rest read four directions. The D-pad's diagonals are narrow (30°) so four-way games feel the same; the stick's are even.
 - Never put controls on an iPhone Duo's fold or under its front camera (`DuoLayouts`).
 - Buttons go through the game's control profile (`ControlMapper`); directions go straight to the engine.
+
+## Imported skins and `.ember`
+
+Each controller type has its own skin (Ajustes › Skins): a GBA skin for Clássico 2 botões, a SNES (or DS) skin for 4 botões, an N64 or PlayStation skin for Moderno. `Skin.covers` says which types a skin has the buttons for; a skin that does not fit the game's type gives way to Ember Laranja.
+
+On import, `EmberSkinConverter` takes the skin apart into `Converted.ember/` next to it: `ember.json` (format, console, the shell's colors) and one PNG per button, cut from the artwork (the shell around it cleared by a flood fill from the edges; round pieces masked to a circle) or rendered from the skin's own button assets, plus the stick's knob. Bump `EmberSkinConverter.format` when conversion changes; old packages are made again.
+
+`SkinRecomposer` uses the package where the artist did not draw: Ember's layout for the device, each button from its PNG, the background in the skin's colors, plain Ember keys for what the skin has no picture of (keyboard, the DS window). `ImportedSkinArt` draws all of it.
+
+Skins belong to their artists: Ember converts them on the device, from what the player imported, and never ships or shares them.

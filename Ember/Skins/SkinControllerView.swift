@@ -63,25 +63,7 @@ struct SkinControllerView: View {
                            knobs: touches.knobs,
                            layer: .shell)
         case .imported:
-            ZStack(alignment: .topLeading) {
-                if let url = layout.artwork, let image = SkinArtwork.image(url, size: size) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .frame(width: size.width, height: size.height)
-                }
-                // Imported art is flat: show presses with a soft glow.
-                let sx = size.width / layout.mappingSize.width
-                let sy = size.height / layout.mappingSize.height
-                ForEach(Array(touches.pressed), id: \.self) { index in
-                    if index < layout.items.count {
-                        let rect = layout.items[index].frame.applying(.init(scaleX: sx, y: sy))
-                        Ellipse()
-                            .fill(.white.opacity(0.28))
-                            .frame(width: rect.width, height: rect.height)
-                            .position(x: rect.midX, y: rect.midY)
-                    }
-                }
-            }
+            ImportedSkinArt(layout: layout, pressed: touches.pressed, knobs: touches.knobs)
         }
     }
 }

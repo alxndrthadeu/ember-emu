@@ -345,6 +345,22 @@
         }
       }
     },
+    "2 botões" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2 buttons"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2 botones"
+          }
+        }
+      }
+    },
     "2x" : {
       "localizations" : {
         "en" : {
@@ -373,6 +389,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "3x"
+          }
+        }
+      }
+    },
+    "4 botões" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4 buttons"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4 botones"
           }
         }
       }
@@ -2046,6 +2078,22 @@
         }
       }
     },
+    "Controle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controller"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Control"
+          }
+        }
+      }
+    },
     "Controle físico" : {
       "localizations" : {
         "en" : {
@@ -2702,6 +2750,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Elige un juego en el iPhone"
+          }
+        }
+      }
+    },
+    "Escolha uma skin para cada tipo de controle. O Ember lê skins do Delta e do Manic EMU (.deltaskin, .manicskin) de qualquer console: GBA para 2 botões, SNES para 4 botões, N64 ou PlayStation para o Moderno. Ao importar, a skin vira um pacote .ember: os botões do artista são recortados e remontados no iPhone Duo e nas orientações que a skin não tem. Segure uma skin para apagar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick a skin for each controller type. Ember reads Delta and Manic EMU skins (.deltaskin, .manicskin) for any console: GBA for 2 buttons, SNES for 4 buttons, N64 or PlayStation for Modern. When imported, a skin becomes an .ember package: the artist’s buttons are cut out and rearranged on iPhone Duo and in orientations the skin lacks. Press and hold a skin to delete it."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige una skin para cada tipo de control. Ember lee skins de Delta y Manic EMU (.deltaskin, .manicskin) de cualquier consola: GBA para 2 botones, SNES para 4 botones, N64 o PlayStation para el Moderno. Al importarla, la skin se convierte en un paquete .ember: los botones del artista se recortan y se recolocan en el iPhone Duo y en las orientaciones que la skin no tiene. Mantén pulsada una skin para borrarla."
           }
         }
       }
@@ -3774,6 +3838,22 @@
         }
       }
     },
+    "L" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L"
+          }
+        }
+      }
+    },
     "L do jogo" : {
       "localizations" : {
         "en" : {
@@ -3786,6 +3866,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "L del juego"
+          }
+        }
+      }
+    },
+    "L2" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L2"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L2"
           }
         }
       }
@@ -4953,6 +5049,7 @@
       }
     },
     "O Ember lê skins do Delta e do Manic EMU (.deltaskin, .manicskin). Procure por “GBA deltaskin”: há muitas, de graça e pagas, feitas por artistas independentes. Toque numa skin para usar, ou segure para apagar uma importada. Skins sem paisagem usam a Ember Laranja quando o iPhone deita." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5675,6 +5772,22 @@
         }
       }
     },
+    "R" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "R"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "R"
+          }
+        }
+      }
+    },
     "R do jogo" : {
       "localizations" : {
         "en" : {
@@ -5687,6 +5800,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "R del juego"
+          }
+        }
+      }
+    },
+    "R2" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "R2"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "R2"
           }
         }
       }
@@ -6140,6 +6269,54 @@
         }
       }
     },
+    "SELECT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SELECT"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SELECT"
+          }
+        }
+      }
+    },
+    "Sem A e B" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No A and B"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin A y B"
+          }
+        }
+      }
+    },
+    "Sem analógico" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No stick"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin stick"
+          }
+        }
+      }
+    },
     "Sem cabo de rede nem app extra: o Finder copia direto para o Ember." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -6169,6 +6346,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sin permiso para guardar en Fotos"
+          }
+        }
+      }
+    },
+    "Sem X e Y" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No X and Y"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin X e Y"
           }
         }
       }
@@ -6362,6 +6555,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Start"
+          }
+        }
+      }
+    },
+    "START" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "START"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "START"
           }
         }
       }
@@ -7159,6 +7368,22 @@
         }
       }
     },
+    "X" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "X"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "X"
+          }
+        }
+      }
+    },
     "X / Quadrado" : {
       "localizations" : {
         "en" : {
@@ -7171,6 +7396,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "X / Cuadrado"
+          }
+        }
+      }
+    },
+    "Y" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Y"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Y"
           }
         }
       }

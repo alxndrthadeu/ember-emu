@@ -20,6 +20,26 @@ struct Skin: Identifiable, Hashable {
     let source: Source
     let portrait: SkinLayout?
     let landscape: SkinLayout?
+    /// The console the skin was drawn for (Delta's gameTypeIdentifier,
+    /// e.g. com.rileytestut.delta.game.snes). Nil for built-in skins.
+    var gameType: String? = nil
+
+    /// The controller types this skin has the buttons for. Built-in
+    /// skins draw every type.
+    var covers: Set<ControllerType> {
+        guard !isBuiltIn else { return Set(ControllerType.allCases) }
+        let items = (portrait?.items ?? []) + (landscape?.items ?? [])
+        let inputs = Set(items.flatMap(\.inputs))
+        let directions = items.contains { $0.kind == .dpad || $0.kind == .stick }
+        let stick = items.contains { $0.kind == .stick }
+        var result = Set<ControllerType>()
+        guard directions, inputs.contains(.key(.confirm)), inputs.contains(.key(.back)) else { return result }
+        result.insert(.classic2)
+        let fourButtons = inputs.contains(.key(.x)) && inputs.contains(.key(.y))
+        if fourButtons { result.insert(.classic4) }
+        if fourButtons && stick { result.insert(.modern) }
+        return result
+    }
 
     var isBuiltIn: Bool {
         if case .builtIn = source { return true }
@@ -51,6 +71,14 @@ struct SkinLayout: Equatable {
     /// landscape. Set only by the split layouts, which keep the game and
     /// the controls on their own half.
     var fold: CGFloat? = nil
+    /// Where the artwork goes, in mapping points (nil: all of it). A
+    /// Delta skin drawn for the bottom of the screen only is placed
+    /// there, with the game above.
+    var artworkFrame: CGRect? = nil
+    /// A recomposed skin (SkinRecomposer): no single artwork, a
+    /// background in the skin's own colors and each button drawn from
+    /// its cut-out sprite.
+    var backdrop: SkinBackdrop? = nil
 
     var hasMenuButton: Bool {
         items.contains { $0.inputs.contains(.menu) }
@@ -82,6 +110,21 @@ struct SkinItem: Equatable {
     var frame: CGRect
     /// Overrides the layout's extendedEdges when set.
     var extendedEdges: UIEdgeInsets?
+    /// The button's own picture, drawn in its frame: an asset of the
+    /// skin (Delta's item "asset") or a piece cut out of its artwork.
+    var sprite: URL? = nil
+    /// A stick's knob picture (Delta's "thumbstick"), and its size in
+    /// mapping points.
+    var thumb: URL? = nil
+    var thumbSize: CGSize? = nil
+}
+
+/// The look of a recomposed skin around its buttons.
+struct SkinBackdrop: Equatable {
+    var top: UIColor
+    var bottom: UIColor
+    /// The frame around the game picture.
+    var bezel: UIColor
 }
 
 /// What a skin button does in Ember.
@@ -113,6 +156,19 @@ enum SkinInput: Hashable {
         case "y": self = .key(.y)
         case "l2", "zl": self = .key(.l2)
         case "r2", "zr": self = .key(.r2)
+        // Nintendo 64: C buttons and Z become the modern controller's
+        // extra buttons.
+        case "cup": self = .key(.x)
+        case "cleft": self = .key(.y)
+        case "z": self = .key(.l2)
+        case "cright": self = .key(.r2)
+        // PlayStation (Manic EMU): cross and circle confirm and cancel.
+        case "cross": self = .key(.confirm)
+        case "circle": self = .key(.back)
+        case "square": self = .key(.y)
+        case "triangle": self = .key(.x)
+        case "l1": self = .key(.l)
+        case "r1": self = .key(.r)
         case "up": self = .key(.up)
         case "down": self = .key(.down)
         case "left": self = .key(.left)
@@ -163,7 +219,8 @@ enum SkinParser {
         guard portrait != nil || landscape != nil else { throw ParseError.noIPhoneLayout(name) }
 
         return Skin(id: identifier, name: name, source: .imported(folder),
-                    portrait: portrait, landscape: landscape)
+                    portrait: portrait, landscape: landscape,
+                    gameType: info["gameTypeIdentifier"] as? String)
     }
 
     private static func layout(_ json: [String: Any], in folder: URL) -> SkinLayout? {
@@ -175,7 +232,7 @@ enum SkinParser {
             artwork = name.map { folder.appendingPathComponent($0) }
         }
 
-        let items = (json["items"] as? [[String: Any]] ?? []).compactMap(item)
+        let items = (json["items"] as? [[String: Any]] ?? []).compactMap { item($0, in: folder) }
 
         var screen: CGRect?
         if let screens = json["screens"] as? [[String: Any]], let first = screens.first {
@@ -189,21 +246,29 @@ enum SkinParser {
                           translucent: json["translucent"] as? Bool ?? false)
     }
 
-    private static func item(_ json: [String: Any]) -> SkinItem? {
+    private static func item(_ json: [String: Any], in folder: URL) -> SkinItem? {
         guard let frame = rect(json["frame"]) else { return nil }
         let extended = edges(json["extendedEdges"])
+        // Newer skins draw some buttons as separate pictures.
+        let sprite = ((json["asset"] as? [String: Any])?["name"] as? String).map { folder.appendingPathComponent($0) }
         if let list = json["inputs"] as? [String] {
             return SkinItem(kind: .button, inputs: list.map(SkinInput.init(deltaName:)),
-                            frame: frame, extendedEdges: extended)
+                            frame: frame, extendedEdges: extended, sprite: sprite)
         }
         if let map = json["inputs"] as? [String: String],
            let up = map["up"], let down = map["down"], let left = map["left"], let right = map["right"] {
             // A thumbstick's analogStick* names read as directions too.
+            let analog = up.hasPrefix("analogStick") || json["thumbstick"] != nil
             let names = [up, down, left, right].map { name -> String in
                 name.hasPrefix("analogStick") ? String(name.dropFirst("analogStick".count)) : name
             }
-            return SkinItem(kind: .dpad, inputs: names.map(SkinInput.init(deltaName:)),
-                            frame: frame, extendedEdges: extended)
+            var item = SkinItem(kind: analog ? .stick : .dpad, inputs: names.map(SkinInput.init(deltaName:)),
+                                frame: frame, extendedEdges: extended, sprite: sprite)
+            if let thumb = json["thumbstick"] as? [String: Any], let file = thumb["name"] as? String {
+                item.thumb = folder.appendingPathComponent(file)
+                item.thumbSize = size(thumb)
+            }
+            return item
         }
         return nil
     }

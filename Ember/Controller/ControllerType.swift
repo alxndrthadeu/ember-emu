@@ -16,6 +16,15 @@ enum ControllerType: String, CaseIterable, Identifiable, Codable {
         }
     }
 
+    /// For a segmented control.
+    var shortTitle: String {
+        switch self {
+        case .classic2: String(localized: "2 botões")
+        case .classic4: String(localized: "4 botões")
+        case .modern: String(localized: "Moderno")
+        }
+    }
+
     var detail: String {
         switch self {
         case .classic2: String(localized: "D-pad, A, B, L, R, Start e Select. Serve para a maioria dos jogos.")
