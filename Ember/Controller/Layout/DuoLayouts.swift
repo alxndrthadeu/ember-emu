@@ -196,15 +196,17 @@ extension BuiltInSkins {
                 item.frame = CGRect(x: x, y: y, width: w, height: h)
             }
             switch item.inputs.first {
-            // Shoulders at the top corners, flat against the edge.
-            case .key(.l): place(0, 14, side - 10, 40)
-            case .key(.r): place(right + 10, 14, side - 10, 40)
-            case .menu: place(side / 2 - 20, 74, 40, 40)
-            case .keyboard: place(right + side / 2 - 20, 74, 40, 40)
+            // Shoulders near the top corners, below the front camera (it
+            // sits in a top corner of the inner screen); room under them
+            // for L2 and R2 (Moderno).
+            case .key(.l): place(0, 64, side - 10, 40)
+            case .key(.r): place(right + 10, 64, side - 10, 40)
+            case .menu: place(side / 2 - 20, 152, 40, 40)
+            case .keyboard: place(right + side / 2 - 20, 152, 40, 40)
             // Where the thumbs rest: a little below the middle.
-            case .key(.up): place(6, 176, side - 12, side - 12)
-            case .key(.confirm): place(width - 64, 170, 58, 58)
-            case .key(.back): place(right + 4, 232, 58, 58)
+            case .key(.up): place(6, 204, side - 12, side - 12)
+            case .key(.confirm): place(width - 64, 204, 58, 58)
+            case .key(.back): place(right + 4, 266, 58, 58)
             case .key(.select): place(side / 2 - 38, 356, 76, 28)
             case .key(.start): place(right + side / 2 - 38, 356, 76, 28)
             default: break
