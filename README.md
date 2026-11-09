@@ -80,21 +80,14 @@ cd <este repositório>
 scripts/patch-engine.sh
 
 cd ~/Developer/ember-engine
-tools/build-deps-ios.sh iphonesimulator          # e iphoneos, para o aparelho
+tools/build-deps-ios.sh iphonesimulator          # e iphoneos, para o aparelho (inclui o FluidSynth do MIDI)
 (cd deps && make -f iphonesimulator.make mkxp-merged mkxp-core)
+tools/fetch-soundfont.sh                         # soundfont GeneralUser GS do MIDI
 ```
 
 O `build-deps-ios.sh` termina com código 0 mesmo quando falha. Confira o log antes de seguir.
 
-### 2. MIDI
-
-```sh
-cd <este repositório>
-scripts/build-fluidsynth.sh                      # FluidSynth estático e o soundfont
-scripts/build-engine-midi.sh iphonesimulator     # e iphoneos
-```
-
-### 3. App
+### 2. App
 
 ```sh
 xcodegen generate
@@ -116,8 +109,6 @@ DEVELOPMENT_TEAM = ABCDE12345
 | Script | O que faz |
 | --- | --- |
 | `scripts/patch-engine.sh` | Aplica os patches de `engine-patches/` no motor. Pode rodar de novo sem problema. |
-| `scripts/build-fluidsynth.sh` | Compila o FluidSynth para iOS e baixa o soundfont. |
-| `scripts/build-engine-midi.sh` | Recompila o core do motor chamando o FluidSynth direto. |
 | `scripts/embed-engine.sh` | Fase do build: copia shaders, fontes, scripts e a biblioteca do Ruby para o app. Falha se encontrar dados de jogo ou RTP no pacote. |
 | `scripts/compat-test.sh` | Teste de compatibilidade no simulador: abre cada jogo com o som desligado, tira capturas e escreve um relatório. |
 | `scripts/make-app-icon.py` | Gera o ícone em pixel art (claro, escuro e tinted). |
@@ -159,7 +150,7 @@ RPG Maker é marca registrada dos respectivos donos. O Ember não tem relação 
 
 Ember is an iPhone player for RPG Maker XP, VX and VX Ace games, built on the [mkxp-z-apple-mobile](https://github.com/mateo-m/mkxp-z-apple-mobile) engine. Import a game (.zip, .rar, .7z, self-extracting .exe or a folder, from Files, a browser over Wi-Fi, the clipboard, drag and drop or a computer by cable) and play. It has on-screen and Bluetooth/USB controls, skins, quick saves with auto-resume, MIDI music, per-game logs and a performance overlay. It ships with no games and no RTP.
 
-Building: see the steps above (engine at `~/Developer/ember-engine`, then `scripts/patch-engine.sh`, `scripts/build-fluidsynth.sh`, `scripts/build-engine-midi.sh`, `xcodegen generate`).
+Building: see the steps above (engine at `~/Developer/ember-engine`, then `scripts/patch-engine.sh`, the engine's `tools/fetch-soundfont.sh`, `xcodegen generate`).
 
 License: GPL-3.0-or-later. Ember contains a modified version of mkxp-z-apple-mobile, Copyright (C) 2026 Mateo M., https://github.com/mateo-m/mkxp-z-apple-mobile (GPL-3.0 with additional terms), based on mkxp-z. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 

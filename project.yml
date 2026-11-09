@@ -89,8 +89,7 @@ targets:
           - -lc++
           # .rar and .7z import: the system libarchive (see Ember/Vendor/libarchive).
           - -larchive
-          # MIDI: static FluidSynth (scripts/build-fluidsynth.sh), called
-          # by a core built with SHARED_FLUID (scripts/build-engine-midi.sh).
+          # MIDI: the engine's static FluidSynth (deps, since engine v14).
           - -lfluidsynth
           - -lANGLE_static
           - -lEGL_static

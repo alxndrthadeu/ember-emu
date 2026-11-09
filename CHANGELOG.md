@@ -11,6 +11,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Screen filters: Pixel, Smooth, Sharp (Lanczos) and Rounded (xBRZ), in Settings and switchable mid-game from the game menu.
 - "Keyboard key" as a button action in control profiles: any letter, number, Space, Tab, Ctrl, Alt, F3–F11 and more, for games that read keys beyond the RGSS buttons.
 
+### Changed
+- Engine updated to mkxp-z-apple-mobile v14: fixes the black screen after PikaTaxi in Pokémon Insurgence and finding files a game writes while it runs; MIDI now comes with the engine.
+
 ## [1.1.0] - 2026-11-09
 
 ### Added
