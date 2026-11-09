@@ -10,6 +10,11 @@
   2. `scripts/release.sh 1.2.0`: tags the merge commit (`v1.2.0`) and publishes a GitHub Release with the changelog notes. Version tags are protected and never move.
 - fastlane needs an App Store Connect API key (Admin, for cloud signing), set in `fastlane/.env` from `fastlane/.env.example`. The key and `.env` never go into the repository.
 
+## Checks and tests
+
+- `scripts/check.sh`: translations, Ruby and shell syntax, changelog, no credentials in git. It runs on every PR in GitHub Actions.
+- `EmberTests`: unit tests for script detection, controller layouts (iPhone and Duo), skins, profiles and keys. They need the engine, so they run on the Mac: `xcodebuild test -project Ember.xcodeproj -scheme Ember -destination 'platform=iOS Simulator,name=iPhone 17 Pro'`.
+
 ## Building
 
 See the README for the engine build. The engine lives outside the repository (`~/Developer/ember-engine`, linked as `engine/`) because its makefiles do not handle spaces in paths.

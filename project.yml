@@ -122,3 +122,31 @@ targets:
       - name: Embed engine assets and games
         script: '"$SRCROOT/scripts/embed-engine.sh"'
         basedOnDependencyAnalysis: false
+
+  EmberTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: EmberTests
+    dependencies:
+      - target: Ember
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/Ember.app/Ember
+        BUNDLE_LOADER: $(TEST_HOST)
+        SWIFT_VERSION: "5.0"
+        # @testable import Ember sees the engine bridge too.
+        HEADER_SEARCH_PATHS: $(EMBER_ENGINE)/src $(SRCROOT)/Ember/Vendor/libarchive
+        ARCHS: arm64
+        TARGETED_DEVICE_FAMILY: "1"
+
+schemes:
+  Ember:
+    build:
+      targets:
+        Ember: all
+        EmberTests: [test]
+    test:
+      targets:
+        - EmberTests

@@ -115,6 +115,7 @@ DEVELOPMENT_TEAM = ABCDE12345
 | `scripts/build-demo.rb` | Monta o jogo de exemplo (`demo/scripts` → `demo/game`). |
 | `scripts/store-screenshots.sh` | Tira as capturas da App Store num simulador limpo, em português, inglês e espanhol. |
 | `scripts/compose-screenshots.swift` | Monta as capturas com legenda, fundo e moldura de iPhone, nas cores do Ember. |
+| `scripts/check.sh` | Checagens rápidas (traduções, sintaxe, changelog, credenciais); roda em cada PR no GitHub. |
 | `scripts/bump-version.sh` | Muda a versão e o build no `project.yml` (`scripts/bump-version.sh 1.2.0`). |
 | `scripts/release.sh` | Depois do merge de uma versão: cria a tag `vX.Y.Z` e a release no GitHub com as notas do `CHANGELOG.md`. |
 

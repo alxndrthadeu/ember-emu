@@ -13,6 +13,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 
 ### Changed
 - Engine updated to mkxp-z-apple-mobile v14: fixes the black screen after PikaTaxi in Pokémon Insurgence and finding files a game writes while it runs; MIDI now comes with the engine.
+- Unit tests and checks on every pull request.
 
 ## [1.1.0] - 2026-11-09
 
