@@ -137,7 +137,7 @@ struct ProfileEditor: View {
                             .frame(width: 56, height: 30)
                             .emberGlass(.regular, in: Capsule())
                         VStack(alignment: .leading, spacing: 1) {
-                            Text(profile.action(for: button).title)
+                            Text(profile.title(for: button))
                                 .foregroundStyle(Theme.primaryText)
                             Text(profile.action(for: button).detail)
                                 .font(.caption2)
@@ -148,6 +148,20 @@ struct ProfileEditor: View {
                 }
                 .pickerStyle(.navigationLink)
                 .disabled(profile.isBuiltIn)
+                if profile.action(for: button) == .key {
+                    Picker(String(localized: "Tecla"), selection: Binding(
+                        get: { profile.key(for: button) },
+                        set: { key in
+                            var keys = profile.keys ?? [:]
+                            keys[button] = key
+                            profile.keys = keys
+                        })) {
+                        ForEach(KeyboardKey.all) { Text(verbatim: $0.name).tag($0) }
+                    }
+                    .pickerStyle(.navigationLink)
+                    .disabled(profile.isBuiltIn)
+                    .padding(.leading, 68)
+                }
             }
         }
     }

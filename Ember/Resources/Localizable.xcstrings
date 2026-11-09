@@ -2591,6 +2591,22 @@
         }
       }
     },
+    "Espaço" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Space"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espacio"
+          }
+        }
+      }
+    },
     "Especial" : {
       "localizations" : {
         "en" : {
@@ -6219,6 +6235,38 @@
         }
       }
     },
+    "Tecla" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tecla"
+          }
+        }
+      }
+    },
+    "Tecla %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tecla %@"
+          }
+        }
+      }
+    },
     "Tecla A do PC (Input::X)" : {
       "localizations" : {
         "en" : {
@@ -6231,6 +6279,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tecla A del PC (Input::X)"
+          }
+        }
+      }
+    },
+    "Tecla do teclado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keyboard key"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tecla del teclado"
           }
         }
       }
@@ -6583,6 +6647,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Una valoración ayuda a otras personas a encontrar Ember."
+          }
+        }
+      }
+    },
+    "Uma tecla do PC, para jogos que usam números ou letras" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A PC key, for games that use numbers or letters"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una tecla de PC, para juegos que usan números o letras"
           }
         }
       }

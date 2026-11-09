@@ -46,6 +46,8 @@ enum ControlButton: String, Codable, CaseIterable, Identifiable {
 enum GameAction: String, Codable, CaseIterable, Identifiable {
     case confirm, back, action, special, x, y, l, r
     case emberMenu, fastForward, keyboard, none
+    /// Any PC key, chosen per button (ControlProfile.keys).
+    case key
 
     var id: String { rawValue }
 
@@ -63,6 +65,7 @@ enum GameAction: String, Codable, CaseIterable, Identifiable {
         case .fastForward: String(localized: "Avanço rápido (segurar)")
         case .keyboard: String(localized: "Teclado")
         case .none: String(localized: "Nada")
+        case .key: String(localized: "Tecla do teclado")
         }
     }
 
@@ -82,6 +85,7 @@ enum GameAction: String, Codable, CaseIterable, Identifiable {
         case .fastForward: String(localized: "Acelera enquanto estiver apertado")
         case .keyboard: String(localized: "Abre o teclado do iPhone")
         case .none: String(localized: "O botão não faz nada")
+        case .key: String(localized: "Uma tecla do PC, para jogos que usam números ou letras")
         }
     }
 
@@ -105,8 +109,27 @@ struct ControlProfile: Codable, Identifiable, Hashable {
     var id: String
     var name: String
     var mapping: [ControlButton: GameAction]
+    /// The key of each button set to "Tecla do teclado" (absent in
+    /// profiles saved before 1.2).
+    var keys: [ControlButton: KeyboardKey]? = nil
 
     var isBuiltIn: Bool { id.hasPrefix("builtin.") }
+
+    func key(for button: ControlButton) -> KeyboardKey {
+        keys?[button] ?? .space
+    }
+
+    /// The key a button sends, if its action is a key.
+    func scancode(for button: ControlButton) -> Int32? {
+        let action = action(for: button)
+        return action == .key ? key(for: button).scancode : action.scancode
+    }
+
+    /// What a button does, for lists: the key's name for "Tecla do teclado".
+    func title(for button: ControlButton) -> String {
+        let action = action(for: button)
+        return action == .key ? String(localized: "Tecla \(key(for: button).name)") : action.title
+    }
 
     func action(for button: ControlButton) -> GameAction {
         mapping[button] ?? .none
@@ -224,6 +247,7 @@ final class ControlMapper {
 
     private var counts: [ControlButton: Int] = [:]
     private var active: [ControlButton: GameAction] = [:]
+    private var activeKeys: [ControlButton: Int32] = [:]
 
     private init() {}
 
@@ -233,7 +257,8 @@ final class ControlMapper {
         guard count == 0 else { return }
         let action = profile.action(for: button)
         active[button] = action
-        if let scancode = action.scancode {
+        if let scancode = profile.scancode(for: button) {
+            activeKeys[button] = scancode
             mkxp_injectKeyEvent(scancode, 1)
             return
         }
@@ -250,7 +275,8 @@ final class ControlMapper {
         guard count > 0 else { return }
         counts[button] = count - 1
         guard count == 1, let action = active.removeValue(forKey: button) else { return }
-        if let scancode = action.scancode {
+        // The key pressed, even if the profile changed meanwhile.
+        if let scancode = activeKeys.removeValue(forKey: button) {
             mkxp_injectKeyEvent(scancode, 0)
         } else if action == .fastForward {
             GameSettings.apply()
