@@ -107,11 +107,18 @@ enum PlayHistory {
     private static let sessionsKey = "history.sessions"
     private static let limit = 500
 
+    /// Decoded once: the library asks for every game's last session.
+    nonisolated(unsafe) private static var cache: [PlaySession]?
+    private static let lock = NSLock()
+
     static var sessions: [PlaySession] {
-        guard let data = UserDefaults.standard.data(forKey: sessionsKey),
-              let sessions = try? JSONDecoder().decode([PlaySession].self, from: data)
-        else { return [] }
-        return sessions
+        lock.withLock {
+            if let cache { return cache }
+            let decoded = UserDefaults.standard.data(forKey: sessionsKey)
+                .flatMap { try? JSONDecoder().decode([PlaySession].self, from: $0) } ?? []
+            cache = decoded
+            return decoded
+        }
     }
 
     static func lastPlayed(_ id: String) -> Date? {
@@ -140,11 +147,13 @@ enum PlayHistory {
     }
 
     static func clear() {
+        lock.withLock { cache = [] }
         UserDefaults.standard.removeObject(forKey: sessionsKey)
     }
 
     private static func save(_ sessions: [PlaySession]) {
         let trimmed = Array(sessions.prefix(limit))
+        lock.withLock { cache = trimmed }
         if let data = try? JSONEncoder().encode(trimmed) {
             UserDefaults.standard.set(data, forKey: sessionsKey)
         }

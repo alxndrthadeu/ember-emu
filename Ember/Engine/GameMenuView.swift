@@ -28,12 +28,12 @@ struct GameMenuView: View {
     let onQuit: () -> Void
 
     @Environment(\.dismiss) private var dismiss
-    @ObservedObject private var pause = PauseSnapshot.shared
-    @ObservedObject private var performance = PerformanceModel.shared
-    @ObservedObject private var tv = TVStream.shared
+    @Bindable private var pause = PauseSnapshot.shared
+    @Bindable private var performance = PerformanceModel.shared
+    @Bindable private var tv = TVStream.shared
     @State private var showingTV = false
-    @ObservedObject private var skins = SkinStore.shared
-    @ObservedObject private var audio = GameAudio.shared
+    @Bindable private var skins = SkinStore.shared
+    @Bindable private var audio = GameAudio.shared
     @State private var speed = GameSettings.speed
     @State private var filter = ScreenFilter.current
     @State private var confirmingQuit = false
@@ -250,10 +250,11 @@ private struct MenuTile: View {
 
 /// The frame the engine captured when it paused, as a UIImage.
 @MainActor
-final class PauseSnapshot: ObservableObject {
+@Observable
+final class PauseSnapshot {
     static let shared = PauseSnapshot()
 
-    @Published private(set) var image: UIImage?
+    private(set) var image: UIImage?
 
     private init() {}
 

@@ -3,7 +3,7 @@ import SwiftUI
 /// Ajustes › Perfis de controle: the ready-made profiles and the
 /// player's own.
 struct ProfilesView: View {
-    @ObservedObject private var store = ProfileStore.shared
+    @Bindable private var store = ProfileStore.shared
     @State private var editing: ControlProfile?
 
     var body: some View {
@@ -74,7 +74,7 @@ private struct ProfileRow: View {
 /// One profile's buttons. Ready-made profiles are read-only; "Duplicar"
 /// makes an editable copy.
 struct ProfileEditor: View {
-    @ObservedObject private var store = ProfileStore.shared
+    @Bindable private var store = ProfileStore.shared
     @Environment(\.dismiss) private var dismiss
     @State private var profile: ControlProfile
     @State private var copy: ControlProfile?

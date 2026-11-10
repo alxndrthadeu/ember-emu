@@ -3,7 +3,7 @@ import SwiftUI
 /// What each button does, read from the control profiles.
 struct ControlsGuideView: View {
     @Environment(\.dismiss) private var dismiss
-    @ObservedObject private var store = ProfileStore.shared
+    @Bindable private var store = ProfileStore.shared
     @State private var profileID = ControlProfile.standard.id
 
     private var profile: ControlProfile {

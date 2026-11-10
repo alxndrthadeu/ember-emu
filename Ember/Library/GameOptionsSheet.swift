@@ -9,7 +9,7 @@ struct GameOptionsSheet: View {
     let onPlay: () -> Void
 
     @Environment(\.dismiss) private var dismiss
-    @ObservedObject private var library = LibraryStore.shared
+    @Bindable private var library = LibraryStore.shared
     @State private var saves: [SaveManager.SaveFile] = []
     @State private var renaming = false
     @State private var newTitle = ""

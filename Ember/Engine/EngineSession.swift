@@ -9,7 +9,8 @@ import UIKit
 /// the same process is not safe. Phase 1 moves each game into its own
 /// process, the way Empo does with ExtensionKit.
 @MainActor
-final class EngineSession: ObservableObject {
+@Observable
+final class EngineSession {
     static let shared = EngineSession()
 
     enum State: Equatable {
@@ -20,12 +21,12 @@ final class EngineSession: ObservableObject {
         case failed(String)
     }
 
-    @Published private(set) var state: State = .idle
+    private(set) var state: State = .idle
     /// The game being played, from launch to the end of the session.
-    @Published private(set) var currentGame: GameEntry?
+    private(set) var currentGame: GameEntry?
 
     /// The library window, shown again when the game ends.
-    weak var launcherWindow: UIWindow?
+    @ObservationIgnored weak var launcherWindow: UIWindow?
 
     private var gameScreen: GameViewController?
     private var libraryRoot: UIViewController?

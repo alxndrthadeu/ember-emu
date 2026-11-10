@@ -1,14 +1,16 @@
+import Observation
 import Foundation
 import ZIPFoundation
 
 /// The skins Ember knows: its own and the ones the player imported,
 /// and which one is in use.
 @MainActor
-final class SkinStore: ObservableObject {
+@Observable
+final class SkinStore {
     static let shared = SkinStore()
 
-    @Published private(set) var imported: [Skin] = []
-    @Published var selectedID: String {
+    private(set) var imported: [Skin] = []
+    var selectedID: String {
         didSet { UserDefaults.standard.set(selectedID, forKey: Self.selectedKey) }
     }
 
@@ -18,7 +20,7 @@ final class SkinStore: ObservableObject {
 
     /// The skin chosen for each controller type. Clássico 2 botões keeps
     /// the old single choice (`selectedID`); the others have their own.
-    @Published private var typeChoices: [String: String] =
+    private var typeChoices: [String: String] =
         UserDefaults.standard.dictionary(forKey: "skins.selectedByType") as? [String: String] ?? [:] {
         didSet { UserDefaults.standard.set(typeChoices, forKey: "skins.selectedByType") }
     }
@@ -61,19 +63,19 @@ final class SkinStore: ObservableObject {
 
     /// Built-in skins in portrait: the game across the full width, no
     /// frame (the default: the biggest picture), or in a thin frame.
-    @Published var portraitFullWidth = (UserDefaults.standard.object(forKey: "settings.portraitFullWidth") as? Bool ?? true) {
+    var portraitFullWidth = (UserDefaults.standard.object(forKey: "settings.portraitFullWidth") as? Bool ?? true) {
         didSet { UserDefaults.standard.set(portraitFullWidth, forKey: "settings.portraitFullWidth") }
     }
 
     /// iPhone Duo unfolded: game and controller on separate halves
     /// (true) or one big picture with the controller around it.
-    @Published var duoSplit = (UserDefaults.standard.object(forKey: "settings.duoSplit") as? Bool ?? true) {
+    var duoSplit = (UserDefaults.standard.object(forKey: "settings.duoSplit") as? Bool ?? true) {
         didSet { UserDefaults.standard.set(duoSplit, forKey: "settings.duoSplit") }
     }
 
     /// iPhone Duo DS layout: the game on the bottom window instead of
     /// the top screen.
-    @Published var duoGameBelow = UserDefaults.standard.bool(forKey: "settings.duoGameBelow") {
+    var duoGameBelow = UserDefaults.standard.bool(forKey: "settings.duoGameBelow") {
         didSet { UserDefaults.standard.set(duoGameBelow, forKey: "settings.duoGameBelow") }
     }
 

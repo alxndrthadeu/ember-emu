@@ -1,31 +1,31 @@
-import Combine
 import Foundation
 import SwiftUI
 import UIKit
 
 /// The games in Documents/Games, and the imports into it.
 @MainActor
-final class LibraryStore: ObservableObject {
+@Observable
+final class LibraryStore {
     static let shared = LibraryStore()
 
-    @Published private(set) var games: [GameEntry] = []
+    private(set) var games: [GameEntry] = []
     /// Games archived in iCloud (Arquivar no iCloud).
-    @Published private(set) var archived: [ArchivedGame] = []
+    private(set) var archived: [ArchivedGame] = []
     /// What an archive or restore is doing right now, by game id.
-    @Published private(set) var archiveStatus: [String: String] = [:]
+    private(set) var archiveStatus: [String: String] = [:]
     /// Its progress (0...1), when known.
-    @Published private(set) var archiveProgress: [String: Double] = [:]
-    private var cloudWatch: AnyCancellable?
+    private(set) var archiveProgress: [String: Double] = [:]
+    @ObservationIgnored private var cloudWatch: ObservationLoop?
     /// Names of the items being imported right now.
-    @Published private(set) var importing: [String] = []
-    @Published var lastError: String?
+    private(set) var importing: [String] = []
+    var lastError: String?
     /// Set when a skin arrived through an import, for a confirmation.
-    @Published var importedSkinName: String?
+    var importedSkinName: String?
     /// A confirmation to show after an import that is not a game (an
     /// RTP, saves from another iPhone).
-    @Published var importNotice: Notice?
+    var importNotice: Notice?
     /// A game just imported: Ember asks which controller it gets.
-    @Published var chooseController: GameEntry?
+    var chooseController: GameEntry?
 
     struct Notice: Equatable {
         let title: String
@@ -56,7 +56,7 @@ final class LibraryStore: ObservableObject {
     func reload() {
         let folder = GameImporter.gamesFolder
         let folders = (try? FileManager.default.contentsOfDirectory(
-            at: folder, includingPropertiesForKeys: [.isDirectoryKey, .creationDateKey],
+            at: folder, includingPropertiesForKeys: [.isDirectoryKey],
             options: [.skipsHiddenFiles])) ?? []
         games = folders
             .compactMap(GameEntry.init(folder:))
@@ -233,27 +233,32 @@ final class LibraryStore: ObservableObject {
             archiveStatus[record.id] = String(localized: "Enviando ao iCloud…")
         }
         guard cloudWatch == nil, !pending.isEmpty else { return }
-        cloudWatch = CloudProgress.shared.$items.sink { [weak self] items in
-            guard let self else { return }
-            var stillUploading = false
-            for record in self.archived {
-                guard let item = items[record.archiveName] else { continue }
-                if item.isUploaded {
-                    if self.archiveStatus[record.id] == String(localized: "Enviando ao iCloud…") {
-                        withAnimation {
-                            self.archiveStatus[record.id] = nil
-                            self.archiveProgress[record.id] = nil
-                        }
+        cloudWatch = ObservationLoop(read: { _ = CloudProgress.shared.items }) { [weak self] in
+            self?.showUploads(CloudProgress.shared.items)
+        }
+        showUploads(CloudProgress.shared.items)
+    }
+
+    private func showUploads(_ items: [String: CloudProgress.Item]) {
+        var stillUploading = false
+        for record in archived {
+            guard let item = items[record.archiveName] else { continue }
+            if item.isUploaded {
+                if archiveStatus[record.id] == String(localized: "Enviando ao iCloud…") {
+                    withAnimation {
+                        archiveStatus[record.id] = nil
+                        archiveProgress[record.id] = nil
                     }
-                } else {
-                    stillUploading = true
-                    self.archiveProgress[record.id] = item.uploaded.map { $0 / 100 }
                 }
+            } else {
+                stillUploading = true
+                archiveProgress[record.id] = item.uploaded.map { $0 / 100 }
             }
-            if !stillUploading {
-                Task.detached(priority: .utility) { GameArchive.evictUploaded() }
-                self.cloudWatch = nil
-            }
+        }
+        if !stillUploading {
+            Task.detached(priority: .utility) { GameArchive.evictUploaded() }
+            cloudWatch?.cancel()
+            cloudWatch = nil
         }
     }
 

@@ -1,16 +1,18 @@
+import Observation
 import AVFoundation
 import Foundation
 
 /// The game's sound, and how it shares the speaker with other apps.
 @MainActor
-final class GameAudio: ObservableObject {
+@Observable
+final class GameAudio {
     static let shared = GameAudio()
 
     /// OpenAL's AL_GAIN.
     private static let alGain: Int32 = 0x100A
 
     /// The game's sound on or off. Applies at once.
-    @Published var soundOn = UserDefaults.standard.object(forKey: "settings.gameSound") as? Bool ?? true {
+    var soundOn = UserDefaults.standard.object(forKey: "settings.gameSound") as? Bool ?? true {
         didSet {
             UserDefaults.standard.set(soundOn, forKey: "settings.gameSound")
             apply()
@@ -18,7 +20,7 @@ final class GameAudio: ObservableObject {
     }
 
     /// Let music from other apps keep playing under the game.
-    @Published var mixWithOthers = UserDefaults.standard.bool(forKey: "settings.mixAudio") {
+    var mixWithOthers = UserDefaults.standard.bool(forKey: "settings.mixAudio") {
         didSet {
             UserDefaults.standard.set(mixWithOthers, forKey: "settings.mixAudio")
             configureSession()

@@ -6,11 +6,11 @@ import UniformTypeIdentifiers
 struct SettingsView: View {
     @State private var skinType: ControllerType = .classic2
     @State private var filterTick = false
-    @ObservedObject private var skins = SkinStore.shared
-    @ObservedObject private var library = LibraryStore.shared
-    @ObservedObject private var performance = PerformanceModel.shared
-    @ObservedObject private var controllers = ControllerMonitor.shared
-    @ObservedObject private var audio = GameAudio.shared
+    @Bindable private var skins = SkinStore.shared
+    @Bindable private var library = LibraryStore.shared
+    @Bindable private var performance = PerformanceModel.shared
+    @Bindable private var controllers = ControllerMonitor.shared
+    @Bindable private var audio = GameAudio.shared
 
     @State private var haptics = AppSettings.haptics
     @State private var landscapeOpacity = AppSettings.landscapeOpacity

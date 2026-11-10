@@ -2,8 +2,8 @@ import StoreKit
 import SwiftUI
 
 struct LibraryView: View {
-    @ObservedObject private var session = EngineSession.shared
-    @ObservedObject private var library = LibraryStore.shared
+    @Bindable private var session = EngineSession.shared
+    @Bindable private var library = LibraryStore.shared
     @Environment(\.requestReview) private var requestReview
     @State private var optionsFor: GameEntry?
     @State private var showingHistory = false
@@ -54,7 +54,9 @@ struct LibraryView: View {
         } message: {
             Text(library.importNotice?.message ?? "")
         }
-        .onReceive(AppRouter.shared.$quickAction.compactMap { $0 }) { handle($0) }
+        .onChange(of: AppRouter.shared.quickAction, initial: true) { _, action in
+            if let action { handle(action) }
+        }
         .onChange(of: session.state) { _, state in
             // A good moment to ask for a rating: a long session just
             // ended well (see ReviewPrompt).

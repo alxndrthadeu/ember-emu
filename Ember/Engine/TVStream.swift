@@ -14,16 +14,17 @@ import UniformTypeIdentifiers
 /// browser shows in an <img> with no buffering: a frame shows as soon
 /// as it arrives, so the delay stays around a tenth of a second.
 @MainActor
-final class TVStream: ObservableObject {
+@Observable
+final class TVStream {
     static let shared = TVStream()
 
-    @Published private(set) var isOn = false
-    @Published private(set) var address: String?
+    private(set) var isOn = false
+    private(set) var address: String?
     /// Browsers showing the game right now.
-    @Published private(set) var viewers = 0 {
+    private(set) var viewers = 0 {
         didSet { GameLayout.shared.onTV = viewers > 0 }
     }
-    @Published var lastError: String?
+    var lastError: String?
 
     private var listener: NWListener?
     private var streamer: FrameStreamer?
@@ -410,7 +411,7 @@ private enum TVPage {
 /// The game menu's sheet: turn the TV on, the address to open, and how
 /// many screens are watching.
 struct TVSheet: View {
-    @ObservedObject private var tv = TVStream.shared
+    @Bindable private var tv = TVStream.shared
     @State private var copied = false
 
     var body: some View {

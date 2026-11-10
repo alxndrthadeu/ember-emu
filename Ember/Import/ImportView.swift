@@ -5,8 +5,8 @@ import UniformTypeIdentifiers
 /// Files app), the browser transfer over Wi-Fi, a short list of other
 /// roads and a drop zone. Dropping files anywhere on the screen works.
 struct ImportView: View {
-    @ObservedObject private var library = LibraryStore.shared
-    @ObservedObject private var wifi = WifiTransfer.shared
+    @Bindable private var library = LibraryStore.shared
+    @Bindable private var wifi = WifiTransfer.shared
     @State private var showingPicker = false
     @State private var sheet: InfoSheet?
     @State private var notice: String?

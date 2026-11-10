@@ -1,3 +1,4 @@
+import Observation
 import Foundation
 import GameController
 
@@ -162,11 +163,12 @@ struct ControlProfile: Codable, Identifiable, Hashable {
 
 /// The profiles, and which one each game uses.
 @MainActor
-final class ProfileStore: ObservableObject {
+@Observable
+final class ProfileStore {
     static let shared = ProfileStore()
 
-    @Published private(set) var custom: [ControlProfile] = []
-    @Published private(set) var assignments: [String: String] = [:]
+    private(set) var custom: [ControlProfile] = []
+    private(set) var assignments: [String: String] = [:]
 
     private static let customKey = "controls.profiles"
     private static let assignmentKey = "controls.assignments"

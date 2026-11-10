@@ -1,3 +1,4 @@
+import Observation
 import AppleArchive
 import Foundation
 import System
@@ -287,7 +288,8 @@ enum GameArchive {
 /// Upload and download percentages of Ember's packs in iCloud, from
 /// the system's metadata query (URL resource values have no percent).
 @MainActor
-final class CloudProgress: ObservableObject {
+@Observable
+final class CloudProgress {
     static let shared = CloudProgress()
 
     struct Item: Equatable {
@@ -297,7 +299,7 @@ final class CloudProgress: ObservableObject {
     }
 
     /// By file name.
-    @Published private(set) var items: [String: Item] = [:]
+    private(set) var items: [String: Item] = [:]
     private let query = NSMetadataQuery()
 
     private init() {

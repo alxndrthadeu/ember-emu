@@ -6,7 +6,7 @@ struct HistoryView: View {
     let onOpen: (GameEntry) -> Void
 
     @Environment(\.dismiss) private var dismiss
-    @ObservedObject private var library = LibraryStore.shared
+    @Bindable private var library = LibraryStore.shared
     @State private var sessions = PlayHistory.sessions
     @State private var confirmingClear = false
 
