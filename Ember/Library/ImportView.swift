@@ -546,6 +546,7 @@ private struct Step: View {
 
 // MARK: - Item providers (clipboard, drag and drop)
 
+@MainActor
 enum ProviderImport {
     static let acceptedTypes: [UTType] = [.fileURL, .folder] + UTType.importable + [.deltaSkin, .manicSkin]
 

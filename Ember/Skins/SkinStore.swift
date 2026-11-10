@@ -178,7 +178,7 @@ final class SkinStore: ObservableObject {
 
 /// Settings from the Ajustes tab.
 enum AppSettings {
-    private static let defaults = UserDefaults.standard
+    private static var defaults: UserDefaults { .standard }
 
     /// Light taps on button presses.
     static var haptics: Bool {

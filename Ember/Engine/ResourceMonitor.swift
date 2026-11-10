@@ -41,17 +41,17 @@ enum ResourceMonitor {
     }
 
     #if DEBUG
-    private static var timer: Timer?
+    @MainActor private static var timer: Timer?
 
     /// Development aid (EMBER_METRICS=1): logs a sample every 5 seconds.
-    static func startIfRequested() {
+    @MainActor static func startIfRequested() {
         guard ProcessInfo.processInfo.environment["EMBER_METRICS"] != nil, timer == nil else { return }
         timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
             print("[ember-metrics] \(sample().line)")
         }
     }
     #else
-    static func startIfRequested() {}
+    @MainActor static func startIfRequested() {}
     #endif
 
     private static func footprintMB() -> Double {

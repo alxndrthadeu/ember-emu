@@ -46,6 +46,8 @@ targets:
         GENERATE_INFOPLIST_FILE: NO
         TARGETED_DEVICE_FAMILY: "1"
         SWIFT_VERSION: "5.0"
+        # Swift 6 checks as warnings, kept at zero.
+        SWIFT_STRICT_CONCURRENCY: complete
         # Português is the source language; en and es come from
         # Ember/Resources/Localizable.xcstrings.
         SWIFT_EMIT_LOC_STRINGS: YES
@@ -119,7 +121,7 @@ targets:
           - -weak_framework
           - OpenGLES
     postBuildScripts:
-      - name: Embed engine assets and games
+      - name: Embed engine assets and the demo game
         script: '"$SRCROOT/scripts/embed-engine.sh"'
         basedOnDependencyAnalysis: false
 

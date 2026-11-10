@@ -306,12 +306,12 @@ final class EngineSession: ObservableObject {
     /// SDL creates its window once the engine is up. The engine pumps
     /// the main run loop, so a timer still fires while it runs.
     private func watchForGameWindow() {
-        windowWatcher = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { timer in
+        windowWatcher = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
             MainActor.assumeIsolated {
                 guard let pointer = mkxp_getGameWindow(), let gameScreen = self.gameScreen else { return }
                 let window = Unmanaged<UIWindow>.fromOpaque(pointer).takeUnretainedValue()
                 guard gameScreen.adopt(gameWindow: window) else { return }
-                timer.invalidate()
+                self.windowWatcher?.invalidate()
                 self.windowWatcher = nil
             }
         }
