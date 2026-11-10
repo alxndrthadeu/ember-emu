@@ -25,7 +25,7 @@ struct ControlsGuideView: View {
                     ControlRow(symbol: "dpad.fill", name: String(localized: "Direcional"), action: String(localized: "Andar e navegar nos menus"))
                     ForEach(ControlButton.allCases) { button in
                         ControlRow(label: button.label.uppercased(), name: button.label,
-                                   action: profile.action(for: button).title)
+                                   action: profile.title(for: button))
                     }
                     ControlRow(symbol: "gearshape.fill", name: String(localized: "Engrenagem"), action: String(localized: "Pausa: velocidade, captura, teclado, sair"))
                     ControlRow(symbol: "keyboard.fill", name: String(localized: "Teclado"), action: String(localized: "Aparece nos jogos antigos, para digitar nomes"))
@@ -35,7 +35,7 @@ struct ControlsGuideView: View {
                     ControlRow(symbol: "l.joystick.fill", name: String(localized: "Direcional e analógico"), action: String(localized: "Andar"))
                     ForEach(ControlButton.allCases) { button in
                         ControlRow(label: button.label.uppercased(), name: physicalName(button),
-                                   action: profile.action(for: button).title)
+                                   action: profile.title(for: button))
                     }
                 } header: {
                     Text("Controle físico")

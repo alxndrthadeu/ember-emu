@@ -73,9 +73,16 @@ enum StateStore {
         let dir = folder(for: gameID)
         try? FileManager.default.removeItem(at: dir.appendingPathComponent("request"))
         try? FileManager.default.removeItem(at: dir.appendingPathComponent("thumb_request"))
+        try? FileManager.default.removeItem(at: dir.appendingPathComponent("cheat_request"))
+        try? FileManager.default.removeItem(at: dir.appendingPathComponent("filter_request"))
         try? FileManager.default.removeItem(at: dir.appendingPathComponent("response"))
         setenv("EMBER_STATE_DIR", dir.path, 1)
         setenv("EMBER_AUTOSTATE_SECONDS", "\(autoSeconds)", 1)
+        // The engine's cheat menus, loaded on demand by ember_quicksave.rb.
+        if let postload = Bundle.main.url(forResource: "Assets", withExtension: "bundle")?
+            .appendingPathComponent("Postload") {
+            setenv("EMBER_POSTLOAD_DIR", postload.path, 1)
+        }
         if let resumeSlot {
             setenv("EMBER_RESUME_SLOT", resumeSlot, 1)
         } else {

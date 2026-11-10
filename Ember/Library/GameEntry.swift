@@ -11,7 +11,6 @@ struct GameEntry: Identifiable, Hashable {
     let originalTitle: String
     /// The game's root (the folder with Game.ini, Data/, ...).
     let folder: URL
-    let addedAt: Date
     /// The cover image, when there is one (see GameCovers).
     let coverURL: URL?
     let lastPlayed: Date?
@@ -22,9 +21,6 @@ struct GameEntry: Identifiable, Hashable {
         self.folder = folder
         self.originalTitle = GameFolder.title(in: folder) ?? folder.lastPathComponent
         self.title = TitleOverrides.title(for: folder.lastPathComponent) ?? originalTitle
-        GameCovers.migrateLegacyCover(forGameID: folder.lastPathComponent)
-        let values = try? folder.resourceValues(forKeys: [.creationDateKey])
-        self.addedAt = values?.creationDate ?? .distantPast
         self.coverURL = GameCovers.url(forGameID: id, folder: folder)
         self.lastPlayed = PlayHistory.lastPlayed(id)
     }

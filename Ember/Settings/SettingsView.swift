@@ -5,6 +5,7 @@ import UniformTypeIdentifiers
 /// The Ajustes tab: skins, controls, game and app settings.
 struct SettingsView: View {
     @State private var skinType: ControllerType = .classic2
+    @State private var filterTick = false
     @ObservedObject private var skins = SkinStore.shared
     @ObservedObject private var library = LibraryStore.shared
     @ObservedObject private var performance = PerformanceModel.shared
@@ -200,6 +201,11 @@ struct SettingsView: View {
             }
             .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
 
+            Picker("Filtro da imagem", selection: Binding(get: { ScreenFilter.current },
+                                                           set: { ScreenFilter.current = $0; filterTick.toggle() })) {
+                ForEach(ScreenFilter.allCases) { Text($0.title).tag($0) }
+            }
+            .id(filterTick)
             Picker("Tela no modo retrato", selection: $skins.portraitFullWidth) {
                 Text("Clássica").tag(false)
                 Text("Tela cheia").tag(true)

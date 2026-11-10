@@ -27,12 +27,12 @@ final class ControllerMonitor: ObservableObject {
                                           .GCKeyboardDidConnect, .GCKeyboardDidDisconnect]
         for name in names {
             center.addObserver(forName: name, object: nil, queue: .main) { note in
+                let connected = note.name == .GCControllerDidConnect
+                    ? (note.object as? GCController).map { $0.vendorName ?? "Controle" } : nil
                 MainActor.assumeIsolated {
                     let monitor = ControllerMonitor.shared
                     monitor.refresh()
-                    if note.name == .GCControllerDidConnect, let controller = note.object as? GCController {
-                        monitor.justConnected = controller.vendorName ?? "Controle"
-                    }
+                    if let connected { monitor.justConnected = connected }
                 }
             }
         }

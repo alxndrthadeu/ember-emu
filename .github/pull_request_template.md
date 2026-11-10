@@ -12,6 +12,8 @@
 
 - [ ] `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` bumped (`scripts/bump-version.sh`)
 - [ ] `CHANGELOG.md` has this version's section
+- [ ] `scripts/check.sh` passes (also runs on the PR)
+- [ ] `EmberTests` pass on the simulator
 - [ ] New strings translated (English and Spanish)
 - [ ] Built and played on the simulator; installed on a real iPhone
 - [ ] iPhone Duo checked, if layouts changed

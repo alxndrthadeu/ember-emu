@@ -309,7 +309,8 @@ enum SkinParser {
 
 /// Renders a skin's PDF or PNG artwork at a given size, cached.
 enum SkinArtwork {
-    private static let cache = NSCache<NSString, UIImage>()
+    /// NSCache is thread-safe.
+    nonisolated(unsafe) private static let cache = NSCache<NSString, UIImage>()
 
     static func image(_ url: URL, size: CGSize) -> UIImage? {
         let key = "\(url.path)|\(Int(size.width))x\(Int(size.height))" as NSString

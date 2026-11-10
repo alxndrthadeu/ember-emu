@@ -4,7 +4,18 @@ What changed in each version of Ember. The newest version is on top; `Unreleased
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follow [Semantic Versioning](https://semver.org/): a new feature bumps the minor number (1.1.0), a fix the patch number (1.0.1).
 
-## [1.1.0] - Unreleased
+## [1.2.0] - Unreleased
+
+### Added
+- Cheats from the game menu: level up, money and items in RPG Maker XP, VX and VX Ace; heal the party, items and walk through walls in Pokémon Essentials. Also in games where the engine could not load them, or loaded the wrong one (The Witch's House, Pokémon Flux).
+- Screen filters: Pixel, Smooth and Sharp (Lanczos), in Settings and switchable mid-game from the game menu.
+- "Keyboard key" as a button action in control profiles: any letter, number, Space, Tab, Ctrl, Alt, F3–F11 and more, for games that read keys beyond the RGSS buttons.
+
+### Changed
+- Engine updated to mkxp-z-apple-mobile v14: fixes the black screen after PikaTaxi in Pokémon Insurgence and finding files a game writes while it runs; MIDI now comes with the engine.
+- Unit tests and checks on every pull request.
+
+## [1.1.0] - 2026-11-09
 
 ### Added
 - Controller types for each game: Classic 2 buttons, Classic 4 buttons (X and Y) and Modern (analog stick, X, Y, L2, R2). Ember reads the game's scripts on import, also inside encrypted RGSS archives, suggests one, and asks once ("How do you want to play?").
@@ -40,5 +51,6 @@ First release on the App Store.
 - The sample game "A Última Brasa".
 - iOS 17 or later; Portuguese, English and Spanish.
 
-[1.1.0]: https://github.com/alxndrthadeu/ember-emu/compare/v1.0.0...release/1.1.0
+[1.2.0]: https://github.com/alxndrthadeu/ember-emu/compare/v1.1.0...release/1.2.0
+[1.1.0]: https://github.com/alxndrthadeu/ember-emu/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/alxndrthadeu/ember-emu/releases/tag/v1.0.0

@@ -35,6 +35,7 @@ struct GameMenuView: View {
     @ObservedObject private var skins = SkinStore.shared
     @ObservedObject private var audio = GameAudio.shared
     @State private var speed = GameSettings.speed
+    @State private var filter = ScreenFilter.current
     @State private var confirmingQuit = false
     @State private var toast: String?
 
@@ -94,6 +95,22 @@ struct GameMenuView: View {
                     Task {
                         try? await Task.sleep(for: .milliseconds(450))
                         EngineSession.shared.openKeyboard()
+                    }
+                }
+                MenuTile(icon: "camera.filters", title: String(localized: "Filtro"),
+                         value: filter.title, highlighted: filter != .pixel) {
+                    filter = filter.next
+                    ScreenFilter.apply(filter)
+                }
+                MenuTile(icon: "wand.and.stars", title: String(localized: "Cheats"),
+                         value: String(localized: "No mapa")) {
+                    dismiss()
+                    // The engine's cheat menus (level, money, items; heal and
+                    // walk through walls in Essentials) open on Input::HOME on
+                    // the map, once the game runs again.
+                    Task {
+                        try? await Task.sleep(for: .milliseconds(500))
+                        await CheatMenu.open()
                     }
                 }
                 MenuTile(icon: tv.viewers > 0 ? "tv.fill" : "tv", title: String(localized: "TV"),
