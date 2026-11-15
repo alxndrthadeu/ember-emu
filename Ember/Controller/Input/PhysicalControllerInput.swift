@@ -106,8 +106,13 @@ final class PhysicalControllerInput {
 
     private func apply() {
         let wanted = held.values.reduce(into: Set<GameKey>()) { $0.formUnion($1) }
-        for key in pressedDirections.subtracting(wanted) { key.release() }
-        for key in wanted.subtracting(pressedDirections) { key.press() }
+        // Through the game's mapping, which can send other keys than the arrows.
+        for key in pressedDirections.subtracting(wanted) {
+            if let direction = ControlDirection(key) { ControlMapper.shared.release(direction) }
+        }
+        for key in wanted.subtracting(pressedDirections) {
+            if let direction = ControlDirection(key) { ControlMapper.shared.press(direction) }
+        }
         pressedDirections = wanted
     }
 

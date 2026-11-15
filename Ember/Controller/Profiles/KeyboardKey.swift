@@ -25,6 +25,10 @@ struct KeyboardKey: Codable, Hashable, Identifiable {
         case 75: "Page Up"
         case 77: "End"
         case 78: "Page Down"
+        case 79: "→"
+        case 80: "←"
+        case 81: "↓"
+        case 82: "↑"
         case 224: "Ctrl"
         case 225: "Shift"
         case 226: "Alt"
@@ -34,7 +38,7 @@ struct KeyboardKey: Codable, Hashable, Identifiable {
 
     static let all: [KeyboardKey] = {
         var codes: [Int32] = Array(4...29) + Array(30...39)
-        codes += [44, 40, 41, 42, 43, 225, 224, 226, 75, 78, 74, 77]
+        codes += [44, 40, 41, 42, 43, 225, 224, 226, 75, 78, 74, 77, 82, 81, 80, 79]
         codes += Array(60...68)  // F3–F11
         return codes.map(KeyboardKey.init(scancode:))
     }()

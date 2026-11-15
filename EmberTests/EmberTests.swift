@@ -264,4 +264,36 @@ final class SmallThingsTests: XCTestCase {
         XCTAssertEqual(profile.buttons(sending: f5), [.l2])
         XCTAssertEqual(profile.buttons(sending: KeyboardKey(scancode: 40)), [.a])  // Enter is Confirmar
     }
+
+    // MARK: Keyboard mode
+
+    func testKeyboardModeKeepsWhatEachButtonSends() {
+        let simple = ControlProfile.standard
+        var keyboard = simple
+        keyboard.switchToKeyboard()
+        XCTAssertTrue(keyboard.isKeyboardMode)
+        for button in ControlButton.allCases {
+            XCTAssertEqual(keyboard.scancode(for: button), simple.scancode(for: button), button.rawValue)
+        }
+        XCTAssertEqual(keyboard.action(for: .r2), .fastForward)  // Ember actions stay
+        keyboard.switchToActions()
+        XCTAssertEqual(keyboard.mapping, simple.mapping)
+        XCTAssertFalse(keyboard.isKeyboardMode)
+    }
+
+    func testDirectionKeys() {
+        var profile = ControlProfile.standard
+        XCTAssertEqual(profile.key(for: .up).scancode, 82)
+        profile.put(ControlDirection.up.wasd, on: .up)
+        XCTAssertEqual(profile.key(for: .up).name, "W")
+        profile.put(ControlDirection.up.arrow, on: .up)
+        XCTAssertNil(profile.directionKeys)
+    }
+
+    func testProfilesFromBeforeKeyboardModeStillDecode() throws {
+        let old = #"{"id":"x","name":"Old","mapping":["a","confirm"]}"#
+        let profile = try JSONDecoder().decode(ControlProfile.self, from: Data(old.utf8))
+        XCTAssertFalse(profile.isKeyboardMode)
+        XCTAssertEqual(profile.key(for: .left).scancode, 80)
+    }
 }
