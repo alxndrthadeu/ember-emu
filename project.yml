@@ -38,7 +38,7 @@ targets:
       base:
         PRODUCT_NAME: Ember
         PRODUCT_BUNDLE_IDENTIFIER: com.alexandrethadeu.ember
-        MARKETING_VERSION: "1.2.0"
+        MARKETING_VERSION: "1.2.1"
         CURRENT_PROJECT_VERSION: "5"
         INFOPLIST_FILE: Ember/Resources/Info.plist
         CODE_SIGN_ENTITLEMENTS: Ember/Resources/Ember.entitlements

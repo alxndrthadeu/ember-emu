@@ -1,5 +1,4 @@
 • Controles por juego: cambia cualquier botón solo para ese juego. Ember encuentra las teclas que usa el juego (F5, números, Ctrl…) y pone una en un botón con un toque.
-• Modo Teclado, para juegos hechos para ordenador: cada botón y dirección pulsa la tecla que elijas en un teclado en pantalla.
 • Trucos desde el menú del juego: subir de nivel, dinero, objetos, curar al grupo y atravesar paredes, según el juego.
 • Filtros de pantalla: Píxel, Suave y Nítido, también durante la partida.
 • Cualquier tecla del teclado como acción de un botón.
