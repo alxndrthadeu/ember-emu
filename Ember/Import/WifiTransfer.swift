@@ -1,3 +1,4 @@
+import Observation
 import Foundation
 import Network
 import UIKit
@@ -13,14 +14,15 @@ import UIKit
 /// Off by default; it stops when the app leaves the screen, and keeps
 /// the phone awake while on.
 @MainActor
-final class WifiTransfer: ObservableObject {
+@Observable
+final class WifiTransfer {
     static let shared = WifiTransfer()
 
-    @Published private(set) var isOn = false
-    @Published private(set) var address: String?
+    private(set) var isOn = false
+    private(set) var address: String?
     /// The file arriving right now, for the card.
-    @Published private(set) var receiving: String?
-    @Published var lastError: String?
+    private(set) var receiving: String?
+    var lastError: String?
 
     private var listener: NWListener?
     private let queue = DispatchQueue(label: "ember.wifi-transfer")

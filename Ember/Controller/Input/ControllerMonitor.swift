@@ -5,7 +5,8 @@ import SwiftUI
 
 /// The game controllers and keyboards connected, by Bluetooth or USB.
 @MainActor
-final class ControllerMonitor: ObservableObject {
+@Observable
+final class ControllerMonitor {
     static let shared = ControllerMonitor()
 
     struct Device: Identifiable, Hashable {
@@ -15,10 +16,10 @@ final class ControllerMonitor: ObservableObject {
         let battery: String?
     }
 
-    @Published private(set) var connected = !GCController.controllers().isEmpty
-    @Published private(set) var devices: [Device] = []
+    private(set) var connected = !GCController.controllers().isEmpty
+    private(set) var devices: [Device] = []
     /// The name of the controller that just connected, for a notice.
-    @Published var justConnected: String?
+    var justConnected: String?
 
     private init() {
         refresh()
@@ -27,12 +28,12 @@ final class ControllerMonitor: ObservableObject {
                                           .GCKeyboardDidConnect, .GCKeyboardDidDisconnect]
         for name in names {
             center.addObserver(forName: name, object: nil, queue: .main) { note in
+                let connected = note.name == .GCControllerDidConnect
+                    ? (note.object as? GCController).map { $0.vendorName ?? "Controle" } : nil
                 MainActor.assumeIsolated {
                     let monitor = ControllerMonitor.shared
                     monitor.refresh()
-                    if note.name == .GCControllerDidConnect, let controller = note.object as? GCController {
-                        monitor.justConnected = controller.vendorName ?? "Controle"
-                    }
+                    if let connected { monitor.justConnected = connected }
                 }
             }
         }

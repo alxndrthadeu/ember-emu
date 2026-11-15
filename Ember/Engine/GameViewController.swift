@@ -1,26 +1,26 @@
-import Combine
 import SwiftUI
 import UIKit
 
 /// Where the game picture sits, as the engine reports it.
 @MainActor
-final class GameLayout: ObservableObject {
+@Observable
+final class GameLayout {
     static let shared = GameLayout()
 
     /// The picture's frame in the game screen, in points.
-    @Published private(set) var pictureRect: CGRect = .zero
+    private(set) var pictureRect: CGRect = .zero
     /// Width / height of the game's own resolution (608x416 -> 1.46).
-    @Published private(set) var aspect: CGFloat?
+    private(set) var aspect: CGFloat?
     /// Height / width of the game screen itself (2.17 on most iPhones,
     /// about 1.46 on an open iPhone Duo). Built-in skins reshape for
     /// screens wider than a phone.
-    @Published private(set) var viewAspect: CGFloat?
+    private(set) var viewAspect: CGFloat?
     /// The game shows on a TV or computer browser (TVStream); the
     /// iPhone shows only the controller.
-    @Published var onTV = false
+    var onTV = false
     /// An iPhone Duo half folded (tabletop or book posture): the split
     /// layouts keep a wider gap around the fold.
-    @Published var hingePartiallyOpen = false
+    var hingePartiallyOpen = false
 
     /// Called on every layout of the game screen; publishes only real
     /// changes (folding, unfolding, rotating), so layout cannot loop.
@@ -64,8 +64,7 @@ final class GameLayout: ObservableObject {
 /// indicator under Ember's control.
 final class GameViewController: UIViewController {
     private let controls = UIHostingController(rootView: ControlsOverlay())
-    private var aspectObservation: AnyCancellable?
-    private var screenModeObservation: AnyCancellable?
+    private var screenObservation: ObservationLoop?
     private weak var gameView: UIView?
     private let textField = GameTextField()
 
@@ -127,16 +126,14 @@ final class GameViewController: UIViewController {
         textField.frame = CGRect(x: 0, y: 0, width: 1, height: 1)
         view.addSubview(textField)
 
-        aspectObservation = GameLayout.shared.$aspect.sink { [weak self] _ in
-            DispatchQueue.main.async { self?.updateViewport() }
-        }
-        screenModeObservation = SkinStore.shared.$portraitFullWidth.map { _ in () }
-            .merge(with: SkinStore.shared.$duoSplit.map { _ in () },
-                   SkinStore.shared.$duoGameBelow.map { _ in () },
-                   GameLayout.shared.$hingePartiallyOpen.map { _ in () })
-            .sink { [weak self] in
-                DispatchQueue.main.async { self?.updateViewport() }
-            }
+        // The picture moves with the game's proportion and the screen modes.
+        screenObservation = ObservationLoop(read: {
+            _ = GameLayout.shared.aspect
+            _ = GameLayout.shared.hingePartiallyOpen
+            _ = SkinStore.shared.portraitFullWidth
+            _ = SkinStore.shared.duoSplit
+            _ = SkinStore.shared.duoGameBelow
+        }) { [weak self] in self?.updateViewport() }
     }
 
     /// Moves SDL's view out of SDL's window and under the controls.

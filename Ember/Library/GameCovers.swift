@@ -41,22 +41,6 @@ enum GameCovers {
         try? FileManager.default.removeItem(at: customURL(forGameID: id))
     }
 
-    /// Covers written by earlier builds sat in UserData, next to the
-    /// saves. Move them out.
-    static func migrateLegacyCover(forGameID id: String) {
-        let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let legacy = documents.appendingPathComponent("UserData/\(id)/cover.jpg")
-        guard FileManager.default.fileExists(atPath: legacy.path) else { return }
-        let target = snapshotURL(forGameID: id)
-        try? FileManager.default.createDirectory(at: target.deletingLastPathComponent(),
-                                                 withIntermediateDirectories: true)
-        if FileManager.default.fileExists(atPath: target.path) {
-            try? FileManager.default.removeItem(at: legacy)
-        } else {
-            try? FileManager.default.moveItem(at: legacy, to: target)
-        }
-    }
-
     // MARK: Files
 
     private static var folder: URL {
@@ -73,7 +57,7 @@ enum GameCovers {
     }
 
     private static func write(_ image: UIImage, to url: URL, async: Bool = true) {
-        let work = {
+        let work: @Sendable () -> Void = {
             guard let data = image.jpegData(compressionQuality: 0.85) else { return }
             try? FileManager.default.createDirectory(at: url.deletingLastPathComponent(),
                                                      withIntermediateDirectories: true)
@@ -121,21 +105,24 @@ struct PlaySession: Codable, Identifiable, Hashable {
 /// Every session played, newest first, and the last time each game ran.
 enum PlayHistory {
     private static let sessionsKey = "history.sessions"
-    private static let legacyKey = "library.lastPlayed"
     private static let limit = 500
 
+    /// Decoded once: the library asks for every game's last session.
+    nonisolated(unsafe) private static var cache: [PlaySession]?
+    private static let lock = NSLock()
+
     static var sessions: [PlaySession] {
-        guard let data = UserDefaults.standard.data(forKey: sessionsKey),
-              let sessions = try? JSONDecoder().decode([PlaySession].self, from: data)
-        else { return [] }
-        return sessions
+        lock.withLock {
+            if let cache { return cache }
+            let decoded = UserDefaults.standard.data(forKey: sessionsKey)
+                .flatMap { try? JSONDecoder().decode([PlaySession].self, from: $0) } ?? []
+            cache = decoded
+            return decoded
+        }
     }
 
     static func lastPlayed(_ id: String) -> Date? {
-        let fromSessions = sessions.first { $0.gameID == id }?.end
-        let legacy = (UserDefaults.standard.dictionary(forKey: legacyKey) as? [String: Double])?[id]
-            .map(Date.init(timeIntervalSince1970:))
-        return [fromSessions, legacy].compactMap { $0 }.max()
+        sessions.first { $0.gameID == id }?.end
     }
 
     static func totalTime(_ id: String) -> TimeInterval {
@@ -160,12 +147,13 @@ enum PlayHistory {
     }
 
     static func clear() {
+        lock.withLock { cache = [] }
         UserDefaults.standard.removeObject(forKey: sessionsKey)
-        UserDefaults.standard.removeObject(forKey: legacyKey)
     }
 
     private static func save(_ sessions: [PlaySession]) {
         let trimmed = Array(sessions.prefix(limit))
+        lock.withLock { cache = trimmed }
         if let data = try? JSONEncoder().encode(trimmed) {
             UserDefaults.standard.set(data, forKey: sessionsKey)
         }

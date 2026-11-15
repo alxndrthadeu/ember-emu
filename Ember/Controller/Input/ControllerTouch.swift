@@ -3,11 +3,12 @@ import UIKit
 
 /// What the player is pressing on the skin, for the artwork to show.
 @MainActor
-final class SkinTouchState: ObservableObject {
-    @Published var pressed: Set<Int> = []
-    @Published var held: [Int: Set<GameKey>] = [:]
+@Observable
+final class SkinTouchState {
+    var pressed: Set<Int> = []
+    var held: [Int: Set<GameKey>] = [:]
     /// Where each analog stick's knob is, from -1 to 1 on each axis.
-    @Published var knobs: [Int: CGPoint] = [:]
+    var knobs: [Int: CGPoint] = [:]
 }
 
 // MARK: - Touch

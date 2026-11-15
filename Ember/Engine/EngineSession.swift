@@ -9,7 +9,8 @@ import UIKit
 /// the same process is not safe. Phase 1 moves each game into its own
 /// process, the way Empo does with ExtensionKit.
 @MainActor
-final class EngineSession: ObservableObject {
+@Observable
+final class EngineSession {
     static let shared = EngineSession()
 
     enum State: Equatable {
@@ -20,12 +21,12 @@ final class EngineSession: ObservableObject {
         case failed(String)
     }
 
-    @Published private(set) var state: State = .idle
+    private(set) var state: State = .idle
     /// The game being played, from launch to the end of the session.
-    @Published private(set) var currentGame: GameEntry?
+    private(set) var currentGame: GameEntry?
 
     /// The library window, shown again when the game ends.
-    weak var launcherWindow: UIWindow?
+    @ObservationIgnored weak var launcherWindow: UIWindow?
 
     private var gameScreen: GameViewController?
     private var libraryRoot: UIViewController?
@@ -306,12 +307,12 @@ final class EngineSession: ObservableObject {
     /// SDL creates its window once the engine is up. The engine pumps
     /// the main run loop, so a timer still fires while it runs.
     private func watchForGameWindow() {
-        windowWatcher = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { timer in
+        windowWatcher = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
             MainActor.assumeIsolated {
                 guard let pointer = mkxp_getGameWindow(), let gameScreen = self.gameScreen else { return }
                 let window = Unmanaged<UIWindow>.fromOpaque(pointer).takeUnretainedValue()
                 guard gameScreen.adopt(gameWindow: window) else { return }
-                timer.invalidate()
+                self.windowWatcher?.invalidate()
                 self.windowWatcher = nil
             }
         }

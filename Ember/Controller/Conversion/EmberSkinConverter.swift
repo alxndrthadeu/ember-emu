@@ -68,7 +68,8 @@ enum EmberSkinConverter {
     /// Bumped when conversion changes: older packages are made again.
     static let format = 3
     private static let scale: CGFloat = 3
-    private static var cache: [String: EmberSkinPackage] = [:]
+    /// Guarded by `lock`.
+    nonisolated(unsafe) private static var cache: [String: EmberSkinPackage] = [:]
     private static let lock = NSLock()
 
     /// The key of an item's part.

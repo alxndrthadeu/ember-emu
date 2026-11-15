@@ -24,6 +24,8 @@ enum GameKey: Hashable {
     case x, y, l2, r2
     /// Text entry only.
     case enter, backspace
+    /// Input::HOME: opens the engine's cheat menu (when cheats are on).
+    case home
 
     var scancode: Int32 {
         switch self {
@@ -42,6 +44,7 @@ enum GameKey: Hashable {
         case .l2: Int32(MKXP_SCANCODE_F9)
         case .r2: Int32(MKXP_SCANCODE_F10)
         case .backspace: Int32(MKXP_SCANCODE_BACKSPACE)
+        case .home: Int32(MKXP_SCANCODE_HOME)
         }
     }
 

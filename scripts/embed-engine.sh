@@ -38,13 +38,13 @@ rsync -a --delete "$TREE/ruby-stdlib/" "$APP/Ruby/"
 # The engine's license notices, for Ajustes > Licenças.
 rsync -a "$TREE/licenses.json" "$APP/EngineLicenses.json"
 
-# MIDI: the soundfont FluidSynth plays (scripts/build-fluidsynth.sh
-# downloads it). Without it the game runs with MIDI music silent.
+# MIDI: the soundfont FluidSynth plays (the engine's
+# tools/fetch-soundfont.sh downloads it). Without it the game runs with MIDI music silent.
 SOUNDFONT="$ENGINE/deps/downloads/GeneralUser-GS.sf2"
 if [ -f "$SOUNDFONT" ]; then
     rsync -a "$SOUNDFONT" "$APP/GeneralUser-GS.sf2"
 else
-    echo "warning: no soundfont; MIDI music will be silent. Run scripts/build-fluidsynth.sh" >&2
+    echo "warning: no soundfont; MIDI music will be silent. Run tools/fetch-soundfont.sh in the engine" >&2
 fi
 
 # Builds from before the import flow bundled games/ here.

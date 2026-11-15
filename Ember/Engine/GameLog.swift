@@ -33,6 +33,7 @@ final class GameLog: @unchecked Sendable {
 
     // MARK: Session
 
+    @MainActor
     func begin(game: GameEntry, details: [String]) {
         end()
         let folder = Self.folder(for: game.id)

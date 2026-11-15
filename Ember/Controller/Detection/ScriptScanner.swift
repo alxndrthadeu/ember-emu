@@ -7,12 +7,6 @@ import Foundation
 /// Data/Scripts and Plugins. Encrypted games hide their scripts: they
 /// get the 2-button controller.
 enum ScriptScanner {
-    static func suggestion(for folder: URL) -> ControllerType {
-        let code = scripts(in: folder)
-        guard !code.isEmpty else { return .classic2 }
-        return suggestion(forCode: code)
-    }
-
     static func suggestion(forCode code: String) -> ControllerType {
         // A real stick (games made for mkxp-z) or an action battle system.
         let modern = [#"axes_left"#, #"axes_right"#, #"\bXAS\b"#, #"Falcao"#, #"\bPearl\b.*\bABS\b"#,

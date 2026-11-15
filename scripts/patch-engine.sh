@@ -1,7 +1,7 @@
 #!/bin/sh
 # Applies Ember's engine patches (engine-patches/*.patch) to the
 # engine checkout. Safe to run again: a patch already in place is
-# skipped. Rebuild the core afterwards (scripts/build-engine-midi.sh).
+# skipped. Rebuild the core afterwards: (cd deps && make -f <sdk>.make mkxp-core).
 set -eu
 
 ENGINE="${EMBER_ENGINE:-$HOME/Developer/ember-engine}"

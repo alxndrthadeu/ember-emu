@@ -4,10 +4,10 @@ import UIKit
 /// Everything on top of the game: the skin (artwork and touch), the
 /// loading screen, and the in-game menu.
 struct ControlsOverlay: View {
-    @ObservedObject private var layout = GameLayout.shared
-    @ObservedObject private var session = EngineSession.shared
-    @ObservedObject private var skins = SkinStore.shared
-    @ObservedObject private var controllers = ControllerMonitor.shared
+    @Bindable private var layout = GameLayout.shared
+    @Bindable private var session = EngineSession.shared
+    @Bindable private var skins = SkinStore.shared
+    @Bindable private var controllers = ControllerMonitor.shared
     @State private var showingMenu = false
     @State private var quitting = false
     @State private var showingStates = false

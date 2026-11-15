@@ -8,7 +8,7 @@ extension UTType {
 
 /// Ajustes › Backup: the two actions.
 struct BackupSection: View {
-    @ObservedObject private var library = LibraryStore.shared
+    @Bindable private var library = LibraryStore.shared
     @State private var picking = false
     @State private var restoring: URL?
     @State private var working = false
@@ -78,7 +78,7 @@ struct BackupSection: View {
 
 /// Picks what goes into a backup, shows the size, and saves the file.
 struct BackupBuilderView: View {
-    @ObservedObject private var library = LibraryStore.shared
+    @Bindable private var library = LibraryStore.shared
     @State private var options = EmberBackup.Options()
     @State private var sizes: (games: [String: Int64], saves: Int64, states: Int64,
                                covers: Int64, rtp: Int64, skins: Int64)?

@@ -41,17 +41,17 @@ enum ResourceMonitor {
     }
 
     #if DEBUG
-    private static var timer: Timer?
+    @MainActor private static var timer: Timer?
 
     /// Development aid (EMBER_METRICS=1): logs a sample every 5 seconds.
-    static func startIfRequested() {
+    @MainActor static func startIfRequested() {
         guard ProcessInfo.processInfo.environment["EMBER_METRICS"] != nil, timer == nil else { return }
         timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
             print("[ember-metrics] \(sample().line)")
         }
     }
     #else
-    static func startIfRequested() {}
+    @MainActor static func startIfRequested() {}
     #endif
 
     private static func footprintMB() -> Double {
@@ -92,16 +92,17 @@ enum ResourceMonitor {
 
 /// Samples once a second while the HUD shows.
 @MainActor
-final class PerformanceModel: ObservableObject {
+@Observable
+final class PerformanceModel {
     static let shared = PerformanceModel()
 
-    @Published var enabled = AppSettings.showPerformance {
+    var enabled = AppSettings.showPerformance {
         didSet {
             AppSettings.showPerformance = enabled
             enabled ? start() : stop()
         }
     }
-    @Published private(set) var sample: ResourceMonitor.Sample?
+    private(set) var sample: ResourceMonitor.Sample?
 
     private var timer: Timer?
 
@@ -123,7 +124,7 @@ final class PerformanceModel: ObservableObject {
 
 /// The on-screen readout, PC-game style: small, in a corner, monospaced.
 struct PerformanceHUD: View {
-    @ObservedObject private var model = PerformanceModel.shared
+    @Bindable private var model = PerformanceModel.shared
 
     var body: some View {
         if model.enabled, let sample = model.sample {

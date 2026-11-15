@@ -16,7 +16,7 @@ struct SkinControllerView: View {
     let onMenu: () -> Void
     var onKeyboard: () -> Void = {}
 
-    @StateObject private var touches = SkinTouchState()
+    @State private var touches = SkinTouchState()
 
     var body: some View {
         GeometryReader { geo in

@@ -1,3 +1,4 @@
+import Observation
 import Foundation
 import GameController
 
@@ -46,6 +47,8 @@ enum ControlButton: String, Codable, CaseIterable, Identifiable {
 enum GameAction: String, Codable, CaseIterable, Identifiable {
     case confirm, back, action, special, x, y, l, r
     case emberMenu, fastForward, keyboard, none
+    /// Any PC key, chosen per button (ControlProfile.keys).
+    case key
 
     var id: String { rawValue }
 
@@ -63,6 +66,7 @@ enum GameAction: String, Codable, CaseIterable, Identifiable {
         case .fastForward: String(localized: "Avanço rápido (segurar)")
         case .keyboard: String(localized: "Teclado")
         case .none: String(localized: "Nada")
+        case .key: String(localized: "Tecla do teclado")
         }
     }
 
@@ -82,6 +86,7 @@ enum GameAction: String, Codable, CaseIterable, Identifiable {
         case .fastForward: String(localized: "Acelera enquanto estiver apertado")
         case .keyboard: String(localized: "Abre o teclado do iPhone")
         case .none: String(localized: "O botão não faz nada")
+        case .key: String(localized: "Uma tecla do PC, para jogos que usam números ou letras")
         }
     }
 
@@ -105,11 +110,44 @@ struct ControlProfile: Codable, Identifiable, Hashable {
     var id: String
     var name: String
     var mapping: [ControlButton: GameAction]
+    /// The key of each button set to "Tecla do teclado" (absent in
+    /// profiles saved before 1.2).
+    var keys: [ControlButton: KeyboardKey]? = nil
 
     var isBuiltIn: Bool { id.hasPrefix("builtin.") }
 
+    func key(for button: ControlButton) -> KeyboardKey {
+        keys?[button] ?? .space
+    }
+
+    /// The key a button sends, if its action is a key.
+    func scancode(for button: ControlButton) -> Int32? {
+        let action = action(for: button)
+        return action == .key ? key(for: button).scancode : action.scancode
+    }
+
+    /// What a button does, for lists: the key's name for "Tecla do teclado".
+    func title(for button: ControlButton) -> String {
+        let action = action(for: button)
+        return action == .key ? String(localized: "Tecla \(key(for: button).name)") : action.title
+    }
+
     func action(for button: ControlButton) -> GameAction {
         mapping[button] ?? .none
+    }
+
+    /// The buttons that press this key, by its own action or as a game
+    /// button bound to it (Enter for Confirmar).
+    func buttons(sending key: KeyboardKey) -> [ControlButton] {
+        ControlButton.allCases.filter { scancode(for: $0) == key.scancode }
+    }
+
+    /// Puts the key on a button ("Tecla do teclado").
+    mutating func put(_ key: KeyboardKey, on button: ControlButton) {
+        mapping[button] = .key
+        var keys = self.keys ?? [:]
+        keys[button] = key
+        self.keys = keys
     }
 
     /// Pokémon Essentials v19 and newer, and most games on Ruby 3.
@@ -137,16 +175,22 @@ struct ControlProfile: Codable, Identifiable, Hashable {
     static let builtIns = [standard, classic, fourButtons]
 }
 
-/// The profiles, and which one each game uses.
+/// The profiles, and which one each game uses. A game can also have its
+/// own mapping, edited in its controls screen: a copy of its profile
+/// that only that game uses.
 @MainActor
-final class ProfileStore: ObservableObject {
+@Observable
+final class ProfileStore {
     static let shared = ProfileStore()
 
-    @Published private(set) var custom: [ControlProfile] = []
-    @Published private(set) var assignments: [String: String] = [:]
+    private(set) var custom: [ControlProfile] = []
+    private(set) var assignments: [String: String] = [:]
+    /// Own mappings, by game id.
+    private(set) var gameMappings: [String: ControlProfile] = [:]
 
     private static let customKey = "controls.profiles"
     private static let assignmentKey = "controls.assignments"
+    private static let gameMappingKey = "controls.gameMappings"
 
     var all: [ControlProfile] { ControlProfile.builtIns + custom }
 
@@ -156,16 +200,46 @@ final class ProfileStore: ObservableObject {
             custom = profiles
         }
         assignments = UserDefaults.standard.dictionary(forKey: Self.assignmentKey) as? [String: String] ?? [:]
+        if let data = UserDefaults.standard.data(forKey: Self.gameMappingKey),
+           let mappings = try? JSONDecoder().decode([String: ControlProfile].self, from: data) {
+            gameMappings = mappings
+        }
+    }
+
+    /// What the game plays with: its own mapping, or its profile.
+    func profile(for game: GameEntry) -> ControlProfile {
+        gameMappings[game.id] ?? baseProfile(for: game)
     }
 
     /// The profile chosen for the game, or the automatic one: 4 botões
     /// for games with a 4-button or modern controller, Clássico for old
     /// games (Ruby 1.8 / 1.9), Padrão for the rest.
-    func profile(for game: GameEntry) -> ControlProfile {
+    func baseProfile(for game: GameEntry) -> ControlProfile {
         if let id = assignments[game.id], let chosen = all.first(where: { $0.id == id }) {
             return chosen
         }
         return automaticProfile(for: game)
+    }
+
+    func hasOwnMapping(_ game: GameEntry) -> Bool {
+        gameMappings[game.id] != nil
+    }
+
+    /// Saves the game's own mapping (and uses it now if the game is open).
+    func setMapping(_ profile: ControlProfile, for game: GameEntry) {
+        var own = profile
+        own.id = "game.\(game.id)"
+        own.name = game.title
+        gameMappings[game.id] = own
+        saveMappings()
+        applyIfPlaying(game)
+    }
+
+    /// Back to the game's profile.
+    func resetMapping(for game: GameEntry) {
+        gameMappings[game.id] = nil
+        saveMappings()
+        applyIfPlaying(game)
     }
 
     func automaticProfile(for game: GameEntry) -> ControlProfile {
@@ -177,9 +251,25 @@ final class ProfileStore: ObservableObject {
         assignments[game.id] == nil
     }
 
+    /// Picks the game's profile; its own mapping, if any, gives way.
     func assign(_ profile: ControlProfile?, to game: GameEntry) {
         assignments[game.id] = profile?.id
         UserDefaults.standard.set(assignments, forKey: Self.assignmentKey)
+        gameMappings[game.id] = nil
+        saveMappings()
+        applyIfPlaying(game)
+    }
+
+    private func applyIfPlaying(_ game: GameEntry) {
+        guard EngineSession.shared.currentGame?.id == game.id else { return }
+        ControlMapper.shared.releaseAll()
+        ControlMapper.shared.profile = profile(for: game)
+    }
+
+    private func saveMappings() {
+        if let data = try? JSONEncoder().encode(gameMappings) {
+            UserDefaults.standard.set(data, forKey: Self.gameMappingKey)
+        }
     }
 
     /// A new profile, copied from another, named "<name> (cópia)".
@@ -224,6 +314,7 @@ final class ControlMapper {
 
     private var counts: [ControlButton: Int] = [:]
     private var active: [ControlButton: GameAction] = [:]
+    private var activeKeys: [ControlButton: Int32] = [:]
 
     private init() {}
 
@@ -233,7 +324,8 @@ final class ControlMapper {
         guard count == 0 else { return }
         let action = profile.action(for: button)
         active[button] = action
-        if let scancode = action.scancode {
+        if let scancode = profile.scancode(for: button) {
+            activeKeys[button] = scancode
             mkxp_injectKeyEvent(scancode, 1)
             return
         }
@@ -250,7 +342,8 @@ final class ControlMapper {
         guard count > 0 else { return }
         counts[button] = count - 1
         guard count == 1, let action = active.removeValue(forKey: button) else { return }
-        if let scancode = action.scancode {
+        // The key pressed, even if the profile changed meanwhile.
+        if let scancode = activeKeys.removeValue(forKey: button) {
             mkxp_injectKeyEvent(scancode, 0)
         } else if action == .fastForward {
             GameSettings.apply()

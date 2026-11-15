@@ -1,0 +1,6 @@
+• Controls per game: change any button for that game only. Ember finds the keys the game uses (F5, numbers, Ctrl…) and puts one on a button with a tap.
+• Cheats from the game menu: level up, money, items, heal the party and walk through walls, depending on the game.
+• Screen filters: Pixel, Smooth and Sharp, also while you play.
+• Any keyboard key as a button action.
+• Updated engine: fixes a black screen in some games and improves MIDI music.
+• Lighter and more stable.

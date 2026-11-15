@@ -24,9 +24,9 @@ final class PhysicalControllerInput {
             MainActor.assumeIsolated { PhysicalControllerInput.shared.bindKeyboard() }
         })
         let center = NotificationCenter.default
-        observers.append(center.addObserver(forName: .GCControllerDidConnect, object: nil, queue: .main) { note in
-            guard let controller = note.object as? GCController else { return }
-            MainActor.assumeIsolated { PhysicalControllerInput.shared.bind(controller) }
+        observers.append(center.addObserver(forName: .GCControllerDidConnect, object: nil, queue: .main) { _ in
+            // Binding sets the same handlers again, so every controller is safe to rebind.
+            MainActor.assumeIsolated { GCController.controllers().forEach(PhysicalControllerInput.shared.bind) }
         })
         observers.append(center.addObserver(forName: .GCControllerDidDisconnect, object: nil, queue: .main) { _ in
             MainActor.assumeIsolated {

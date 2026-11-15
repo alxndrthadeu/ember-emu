@@ -1,0 +1,15 @@
+diff --git a/src/audio/sharedmidistate.h b/src/audio/sharedmidistate.h
+index 1ba6b7b..0f3a72f 100644
+--- a/src/audio/sharedmidistate.h
++++ b/src/audio/sharedmidistate.h
+@@ -81,6 +81,10 @@ struct SharedMidiState
+ 		fluid_settings_setnum(flSettings, "synth.sample-rate", SYNTH_SAMPLERATE);
+ 		fluid_settings_setint(flSettings, "synth.chorus.active", conf.midi.chorus);
+ 		fluid_settings_setint(flSettings, "synth.reverb.active", conf.midi.reverb);
++		/* Ember: load each instrument's samples only when a song plays
++		 * it. GeneralUser GS is 32 MB of samples; most games use a few
++		 * dozen instruments (Ao Oni: +44 MB instead of +70 MB). */
++		fluid_settings_setint(flSettings, "synth.dynamic-sample-loading", 1);
+ 
+ 		fluid_synth_t *syn = new_fluid_synth(flSettings);
+ 		const std::string candidates[] = { conf.midi.soundFont, bundledSoundFont() };

@@ -1519,6 +1519,22 @@
         }
       }
     },
+    "Cheats" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cheats"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trucos"
+          }
+        }
+      }
+    },
     "Clássica" : {
       "localizations" : {
         "en" : {
@@ -1627,6 +1643,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pegar del portapapeles"
+          }
+        }
+      }
+    },
+    "Colocar %@ em" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Put %@ on"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poner %@ en"
           }
         }
       }
@@ -2111,6 +2143,22 @@
         }
       }
     },
+    "Desfazer as mudanças deste jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Undo this game's changes"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deshacer los cambios de este juego"
+          }
+        }
+      }
+    },
     "Desligada" : {
       "localizations" : {
         "en" : {
@@ -2139,6 +2187,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Desactivado"
+          }
+        }
+      }
+    },
+    "Deste jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personalizado"
           }
         }
       }
@@ -2283,6 +2347,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ember Naranja"
+          }
+        }
+      }
+    },
+    "Encontradas nos scripts do jogo. Toque numa tecla para colocá-la em um botão. Algumas podem ser só de teste do criador." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Found in the game's scripts. Tap a key to put it on a button. Some may only be for the creator's testing."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encontradas en los scripts del juego. Toca una tecla para ponerla en un botón. Algunas pueden ser solo para las pruebas del creador."
           }
         }
       }
@@ -2539,6 +2619,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ocultar botones con mando"
+          }
+        }
+      }
+    },
+    "Espaço" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Space"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espacio"
           }
         }
       }
@@ -2901,6 +2997,38 @@
         }
       }
     },
+    "Filtro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtro"
+          }
+        }
+      }
+    },
+    "Filtro da imagem" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Screen filter"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtro de imagen"
+          }
+        }
+      }
+    },
     "FluidSynth" : {
       "localizations" : {
         "en" : {
@@ -3009,6 +3137,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Como el de 2 botones, más X e Y, para juegos que usan más teclas."
+          }
+        }
+      }
+    },
+    "Imagem suavizada." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A softened picture."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imagen suavizada."
           }
         }
       }
@@ -4283,6 +4427,22 @@
         }
       }
     },
+    "Nítido" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sharp"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nítido"
+          }
+        }
+      }
+    },
     "No app, escolha o iPhone e abra Arquivos. Selecione o Ember." : {
       "localizations" : {
         "en" : {
@@ -4327,6 +4487,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "En iCloud"
+          }
+        }
+      }
+    },
+    "No mapa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On the map"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En el mapa"
           }
         }
       }
@@ -4651,6 +4827,22 @@
         }
       }
     },
+    "O jogo começa com este perfil. O que você mudar abaixo vale só para este jogo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The game starts from this profile. What you change below applies to this game only."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El juego empieza con este perfil. Lo que cambies abajo vale solo para este juego."
+          }
+        }
+      }
+    },
     "O jogo encontrou um erro" : {
       "localizations" : {
         "en" : {
@@ -4839,6 +5031,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Los archivos del juego salen del iPhone. Las partidas quedan guardadas en Ember: importa el juego de nuevo y vuelven."
+          }
+        }
+      }
+    },
+    "Os botões abaixo foram mudados e valem só para este jogo. Trocar o perfil desfaz as mudanças." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The buttons below were changed and apply to this game only. Picking another profile undoes the changes."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los botones de abajo se cambiaron y valen solo para este juego. Cambiar el perfil deshace los cambios."
           }
         }
       }
@@ -5127,6 +5335,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Perfiles de control"
+          }
+        }
+      }
+    },
+    "Pixel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pixel"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Píxel"
+          }
+        }
+      }
+    },
+    "Pixels retos, como no PC." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crisp pixels, as on a PC."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Píxeles nítidos, como en PC."
           }
         }
       }
@@ -5771,6 +6011,22 @@
         }
       }
     },
+    "Sem botão" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No button"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin botón"
+          }
+        }
+      }
+    },
     "Sem permissão para salvar em Fotos" : {
       "localizations" : {
         "en" : {
@@ -6011,6 +6267,38 @@
         }
       }
     },
+    "Suave" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smooth"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suave"
+          }
+        }
+      }
+    },
+    "Suave nas bordas, sem perder detalhe." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smooth edges without losing detail."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bordes suaves sin perder detalle."
+          }
+        }
+      }
+    },
     "Também servem RTP, skins e saves. O jogo pode estar dentro de subpastas." : {
       "localizations" : {
         "en" : {
@@ -6027,6 +6315,38 @@
         }
       }
     },
+    "Tecla" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tecla"
+          }
+        }
+      }
+    },
+    "Tecla %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tecla %@"
+          }
+        }
+      }
+    },
     "Tecla A do PC (Input::X)" : {
       "localizations" : {
         "en" : {
@@ -6039,6 +6359,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tecla A del PC (Input::X)"
+          }
+        }
+      }
+    },
+    "Tecla do teclado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keyboard key"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tecla del teclado"
           }
         }
       }
@@ -6119,6 +6455,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Teclado propio del juego"
+          }
+        }
+      }
+    },
+    "Teclas que este jogo usa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keys this game uses"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teclas que usa este juego"
           }
         }
       }
@@ -6247,6 +6599,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sonar junto con otras apps"
+          }
+        }
+      }
+    },
+    "Todas as teclas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All keys"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas las teclas"
           }
         }
       }
@@ -6395,6 +6763,22 @@
         }
       }
     },
+    "Uma tecla do PC, para jogos que usam números ou letras" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A PC key, for games that use numbers or letters"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una tecla de PC, para juegos que usan números o letras"
+          }
+        }
+      }
+    },
     "Única" : {
       "localizations" : {
         "en" : {
@@ -6407,6 +6791,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Única"
+          }
+        }
+      }
+    },
+    "Usadas por este jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used by this game"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usadas por este juego"
           }
         }
       }

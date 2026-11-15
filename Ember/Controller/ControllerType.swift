@@ -85,15 +85,24 @@ enum ControllerTypeStore {
     }
 
     /// Reads the scripts of games not read yet, off the main thread
-    /// (a big game takes a second or two).
+    /// (a big game takes a second or two): the controller type and the
+    /// PC keys the game uses (`GameKeyStore`).
     static func detect(_ games: [GameEntry]) async {
-        let pending = games.filter { detected(for: $0.id) == nil }.map { ($0.id, $0.folder) }
+        let pending = games.filter { detected(for: $0.id) == nil || GameKeyStore.keys(for: $0.id) == nil }
+            .map { ($0.id, $0.folder) }
         guard !pending.isEmpty else { return }
         let found = await Task.detached(priority: .utility) {
-            pending.map { ($0.0, ScriptScanner.suggestion(for: $0.1)) }
+            pending.map { id, folder in
+                let code = ScriptScanner.scripts(in: folder)
+                let type = code.isEmpty ? ControllerType.classic2 : ScriptScanner.suggestion(forCode: code)
+                return (id, type, GameKeyScanner.keys(inCode: code))
+            }
         }.value
-        for (id, type) in found {
-            UserDefaults.standard.set(type.rawValue, forKey: detectedKey(id))
+        for (id, type, keys) in found {
+            if detected(for: id) == nil {
+                UserDefaults.standard.set(type.rawValue, forKey: detectedKey(id))
+            }
+            GameKeyStore.set(keys, for: id)
         }
     }
 
@@ -110,5 +119,6 @@ enum ControllerTypeStore {
         for key in [chosenKey(id), detectedKey(id), askedKey(id)] {
             UserDefaults.standard.removeObject(forKey: key)
         }
+        GameKeyStore.forget(id)
     }
 }
