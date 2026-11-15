@@ -9,7 +9,8 @@ extension LibraryView {
     ///   EMBER_AUTOQUIT=<seconds>  then quits it, as the menu's Sair does
     ///   EMBER_AUTOREOPEN=1        then taps the game again
     ///   EMBER_AUTOMENU=<seconds>  opens the in-game menu (ControlsOverlay)
-    ///   EMBER_SHOW=history|controls|options|import  opens that screen
+    ///   EMBER_SHOW=history|controls|options|saves|gamecontrols|import  opens that screen
+    ///   EMBER_GAME=<id>           the game EMBER_SHOW opens (default: the first)
     ///   EMBER_KEYS="3:enter,1:down,2:save:t1,2:load:t1,1:snap"  drives the
     ///   game: wait N seconds, then press a key / save or load a state
     ///   EMBER_RESUME=1            starts from the auto state
@@ -23,6 +24,7 @@ extension LibraryView {
     ///   EMBER_MAKE_BACKUP=<id>    writes a backup with that whole game (logs the path)
     ///   EMBER_ARCHIVE=<id> / EMBER_UNARCHIVE=<id>  archives or brings back a game
     ///   EMBER_FAKE_CLOUD=1        a local folder stands in for iCloud
+    ///   EMBER_DUMP_SCRIPTS=<id>   writes the game's script text to tmp (logs the path)
     func developmentHooks() {
         let environment = ProcessInfo.processInfo.environment
         if let paths = environment["EMBER_IMPORT"] {
@@ -57,6 +59,11 @@ extension LibraryView {
                 if let record = library.archived.first(where: { $0.id == id }) { library.unarchive(record) }
             }
         }
+        if let id = environment["EMBER_DUMP_SCRIPTS"], let game = library.games.first(where: { $0.id == id }) {
+            let url = FileManager.default.temporaryDirectory.appendingPathComponent("\(id)-scripts.rb")
+            try? ScriptScanner.scripts(in: game.folder).write(to: url, atomically: true, encoding: .utf8)
+            print("[ember-scripts]", url.path, GameKeyScanner.keys(inCode: ScriptScanner.scripts(in: game.folder)).map(\.name))
+        }
         if let quick = environment["EMBER_QUICK"] {
             let map: [String: QuickAction] = ["continue": .continueLast, "import": .importGame, "wifi": .wifi]
             AppRouter.shared.quickAction = map[quick]
@@ -74,7 +81,9 @@ extension LibraryView {
         switch environment["EMBER_SHOW"] {
         case "history": showingHistory = true
         case "controls": showingControls = true
-        case "options", "saves": optionsFor = library.games.first
+        case "options", "saves", "gamecontrols":
+            let id = environment["EMBER_GAME"]
+            optionsFor = library.games.first { id == nil || $0.id == id }
         case "controller": library.chooseController = library.games.first
         case "import", "computer", "rtp": AppRouter.shared.tab = .importGames
         case "settings": AppRouter.shared.tab = .settings

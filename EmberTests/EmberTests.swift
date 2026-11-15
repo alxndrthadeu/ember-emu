@@ -230,4 +230,38 @@ final class SmallThingsTests: XCTestCase {
         XCTAssertEqual(Set(seen), Set(ScreenFilter.allCases))
         XCTAssertEqual(filter, .pixel)
     }
+
+    // MARK: Keys a game reads
+
+    func testGameKeysFromScripts() {
+        let code = """
+        RESIZE_KEY = Input::F5
+        if Input.triggerex?(:NUMBER_1) then use_skill(1) end
+        return if Input.pressex?(0x51) # Q
+        x = GetAsyncKeyState.call(0x74)
+        if Input.trigger?(Input::F5) && cutscene
+        """
+        XCTAssertEqual(GameKeyScanner.keys(inCode: code).map(\.name), ["F5", "Q", "1"])  // ties by scancode
+    }
+
+    func testGameKeysSkipTestPlayCommentsAndTables() {
+        let code = """
+        return true if $DEBUG and Input.press?(Input::CTRL)
+        if $TEST and Input.press?(Input::F9)
+        # when F6 is pressed: Input::F6
+          when Input::F7 then 0x76
+        Input.triggerex?(:UP)
+        Input.triggerex?(:F12)
+        """
+        XCTAssertTrue(GameKeyScanner.keys(inCode: code).isEmpty)
+    }
+
+    func testPutKeyOnButton() {
+        var profile = ControlProfile.standard
+        let f5 = KeyboardKey(scancode: 62)
+        XCTAssertTrue(profile.buttons(sending: f5).isEmpty)
+        profile.put(f5, on: .l2)
+        XCTAssertEqual(profile.buttons(sending: f5), [.l2])
+        XCTAssertEqual(profile.buttons(sending: KeyboardKey(scancode: 40)), [.a])  // Enter is Confirmar
+    }
 }

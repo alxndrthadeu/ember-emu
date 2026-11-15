@@ -32,12 +32,12 @@ The game screen (`SkinStore.layout`) and the previews in "Como você quer jogar?
 | Folder | What |
 | --- | --- |
 | `ControllerType.swift` | Clássico 2 botões, Clássico 4 botões, Moderno; which one each game uses (`ControllerTypeStore`) |
-| `Detection/` | Reads a game's scripts (also inside Game.rgssad/.rgss3a) and suggests a type |
+| `Detection/` | Reads a game's scripts (also inside Game.rgssad/.rgss3a): suggests a type (`ScriptScanner`) and finds the PC keys it reads, such as F5 or numbers (`GameKeyScanner`) |
 | `Layout/` | The layout rules above |
 | `Art/` | Draws built-in skins (Ember Laranja, Vidro): shell, D-pad, stick, buttons |
 | `BuiltInSkins.swift` | The list of built-in skins |
 | `Input/` | Touch on the skin (D-pad and stick with 8 directions), physical controllers and keyboards |
-| `Profiles/` | Control profiles: what each button does (remapping) |
+| `Profiles/` | Control profiles: what each button does (remapping); a game's own mapping (`GameControlsView`, `ProfileStore.gameMappings`) |
 | `Choice/` | The "Como você quer jogar?" screen |
 | `Skins/` | The skin model and Delta/Manic parser (`Skin`), the chosen skins and app settings (`SkinStore`), the view that shows a skin over the game (`SkinControllerView`) |
 | `Conversion/` | Imported skins into `.ember` packages (`EmberSkinConverter`) and drawn on other devices (`SkinRecomposer`) |

@@ -90,7 +90,7 @@ struct ProfileEditor: View {
                     TextField("Nome do perfil", text: $profile.name)
                 }
             }
-            section(String(localized: "Botões"), buttons: ControlButton.allCases)
+            ButtonMappingSection(profile: $profile, disabled: profile.isBuiltIn)
 
             if profile.isBuiltIn {
                 Section {
@@ -118,10 +118,18 @@ struct ProfileEditor: View {
         .onChange(of: profile) { store.update(profile) }
         .navigationDestination(item: $copy) { ProfileEditor(profile: $0) }
     }
+}
 
-    private func section(_ title: String, buttons: [ControlButton]) -> some View {
-        Section(title) {
-            ForEach(buttons) { button in
+/// Each button and what it does, editable: an action, or a PC key. The
+/// keys a game was found to use (`gameKeys`) come first in the key list.
+struct ButtonMappingSection: View {
+    @Binding var profile: ControlProfile
+    var gameKeys: [KeyboardKey] = []
+    var disabled = false
+
+    var body: some View {
+        Section(String(localized: "Botões")) {
+            ForEach(ControlButton.allCases) { button in
                 Picker(selection: Binding(
                     get: { profile.action(for: button) },
                     set: { profile.mapping[button] = $0 })
@@ -131,11 +139,7 @@ struct ProfileEditor: View {
                     }
                 } label: {
                     HStack(spacing: 12) {
-                        Text(button.label)
-                            .font(.system(size: button.label.count > 2 ? 11 : 15, weight: .bold, design: .rounded))
-                            .foregroundStyle(Theme.primaryText)
-                            .frame(width: 56, height: 30)
-                            .emberGlass(.regular, in: Capsule())
+                        ButtonBadge(button: button)
                         VStack(alignment: .leading, spacing: 1) {
                             Text(profile.title(for: button))
                                 .foregroundStyle(Theme.primaryText)
@@ -147,22 +151,42 @@ struct ProfileEditor: View {
                     }
                 }
                 .pickerStyle(.navigationLink)
-                .disabled(profile.isBuiltIn)
+                .disabled(disabled)
                 if profile.action(for: button) == .key {
                     Picker(String(localized: "Tecla"), selection: Binding(
                         get: { profile.key(for: button) },
-                        set: { key in
-                            var keys = profile.keys ?? [:]
-                            keys[button] = key
-                            profile.keys = keys
-                        })) {
-                        ForEach(KeyboardKey.all) { Text(verbatim: $0.name).tag($0) }
+                        set: { profile.put($0, on: button) })) {
+                        if gameKeys.isEmpty {
+                            ForEach(KeyboardKey.all) { Text(verbatim: $0.name).tag($0) }
+                        } else {
+                            Section("Usadas por este jogo") {
+                                ForEach(gameKeys) { Text(verbatim: $0.name).tag($0) }
+                            }
+                            Section("Todas as teclas") {
+                                ForEach(KeyboardKey.all.filter { !gameKeys.contains($0) }) {
+                                    Text(verbatim: $0.name).tag($0)
+                                }
+                            }
+                        }
                     }
                     .pickerStyle(.navigationLink)
-                    .disabled(profile.isBuiltIn)
+                    .disabled(disabled)
                     .padding(.leading, 68)
                 }
             }
         }
+    }
+}
+
+/// A button's name in a capsule, as in the profile lists.
+struct ButtonBadge: View {
+    let button: ControlButton
+
+    var body: some View {
+        Text(button.label)
+            .font(.system(size: button.label.count > 2 ? 11 : 15, weight: .bold, design: .rounded))
+            .foregroundStyle(Theme.primaryText)
+            .frame(width: 56, height: 30)
+            .emberGlass(.regular, in: Capsule())
     }
 }

@@ -17,6 +17,7 @@ struct GameOptionsSheet: View {
     @State private var exportFile: ExportFile?
     @State private var showingSaves = false
     @State private var choosingController = false
+    @State private var editingControls = false
     @State private var confirmingDelete = false
     @State private var confirmingArchive = false
     @State private var toast: String?
@@ -85,25 +86,12 @@ struct GameOptionsSheet: View {
                         choosingController = true
                     }
                     Divider().padding(.leading, 48)
-                    Menu {
-                        Picker("Controles", selection: Binding(
-                            get: { ProfileStore.shared.isAutomatic(current) ? nil : ProfileStore.shared.profile(for: current).id },
-                            set: { id in
-                                ProfileStore.shared.assign(ProfileStore.shared.all.first { $0.id == id }, to: current)
-                                library.reload()
-                                show(String(localized: "Vale na próxima vez que o jogo abrir"))
-                            })) {
-                            Text("Automático (\(ProfileStore.shared.automaticProfile(for: current).name))")
-                                .tag(String?.none)
-                            ForEach(ProfileStore.shared.all) { profile in
-                                Text(profile.name).tag(String?.some(profile.id))
-                            }
-                        }
-                    } label: {
-                        SheetRowLabel(icon: "gamecontroller", title: String(localized: "Controles"),
-                                      value: ProfileStore.shared.profile(for: current).name, chevron: "chevron.up.chevron.down")
+                    SheetRow(icon: "gamecontroller", title: String(localized: "Controles"),
+                             value: ProfileStore.shared.hasOwnMapping(current)
+                                ? String(localized: "Deste jogo") : ProfileStore.shared.profile(for: current).name,
+                             chevron: "chevron.right") {
+                        editingControls = true
                     }
-                    .buttonStyle(.plain)
                     Divider().padding(.leading, 48)
                     Menu {
                         Picker("Ruby", selection: Binding(
@@ -173,8 +161,12 @@ struct GameOptionsSheet: View {
         .onAppear {
             refreshSaves()
             #if DEBUG
-            // Development aid: EMBER_SHOW=saves opens the saves screen.
-            if ProcessInfo.processInfo.environment["EMBER_SHOW"] == "saves" { showingSaves = true }
+            // Development aid: EMBER_SHOW=saves|gamecontrols opens that screen.
+            switch ProcessInfo.processInfo.environment["EMBER_SHOW"] {
+            case "saves": showingSaves = true
+            case "gamecontrols": editingControls = true
+            default: break
+            }
             #endif
         }
         .onChange(of: photo) { loadPhoto() }
@@ -187,6 +179,9 @@ struct GameOptionsSheet: View {
         }
         .sheet(isPresented: $choosingController, onDismiss: { library.reload() }) {
             ControllerChoiceView(game: current)
+        }
+        .sheet(isPresented: $editingControls, onDismiss: { library.reload() }) {
+            GameControlsView(game: current)
         }
         .sheet(isPresented: $showingSaves, onDismiss: refreshSaves) {
             SavesView(game: current)

@@ -1647,6 +1647,22 @@
         }
       }
     },
+    "Colocar %@ em" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Put %@ on"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poner %@ en"
+          }
+        }
+      }
+    },
     "Com libimobiledevice e ifuse instalados, esse comando monta a pasta do Ember. Copie o jogo para dentro dela, desmonte com fusermount -u ~/ember e abra o Ember." : {
       "localizations" : {
         "en" : {
@@ -2127,6 +2143,22 @@
         }
       }
     },
+    "Desfazer as mudanças deste jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Undo this game's changes"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deshacer los cambios de este juego"
+          }
+        }
+      }
+    },
     "Desligada" : {
       "localizations" : {
         "en" : {
@@ -2155,6 +2187,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Desactivado"
+          }
+        }
+      }
+    },
+    "Deste jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personalizado"
           }
         }
       }
@@ -2299,6 +2347,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ember Naranja"
+          }
+        }
+      }
+    },
+    "Encontradas nos scripts do jogo. Toque numa tecla para colocá-la em um botão. Algumas podem ser só de teste do criador." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Found in the game's scripts. Tap a key to put it on a button. Some may only be for the creator's testing."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encontradas en los scripts del juego. Toca una tecla para ponerla en un botón. Algunas pueden ser solo para las pruebas del creador."
           }
         }
       }
@@ -4763,6 +4827,22 @@
         }
       }
     },
+    "O jogo começa com este perfil. O que você mudar abaixo vale só para este jogo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The game starts from this profile. What you change below applies to this game only."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El juego empieza con este perfil. Lo que cambies abajo vale solo para este juego."
+          }
+        }
+      }
+    },
     "O jogo encontrou um erro" : {
       "localizations" : {
         "en" : {
@@ -4951,6 +5031,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Los archivos del juego salen del iPhone. Las partidas quedan guardadas en Ember: importa el juego de nuevo y vuelven."
+          }
+        }
+      }
+    },
+    "Os botões abaixo foram mudados e valem só para este jogo. Trocar o perfil desfaz as mudanças." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The buttons below were changed and apply to this game only. Picking another profile undoes the changes."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los botones de abajo se cambiaron y valen solo para este juego. Cambiar el perfil deshace los cambios."
           }
         }
       }
@@ -5915,6 +6011,22 @@
         }
       }
     },
+    "Sem botão" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No button"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin botón"
+          }
+        }
+      }
+    },
     "Sem permissão para salvar em Fotos" : {
       "localizations" : {
         "en" : {
@@ -6347,6 +6459,22 @@
         }
       }
     },
+    "Teclas que este jogo usa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keys this game uses"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teclas que usa este juego"
+          }
+        }
+      }
+    },
     "Tela" : {
       "localizations" : {
         "en" : {
@@ -6471,6 +6599,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sonar junto con otras apps"
+          }
+        }
+      }
+    },
+    "Todas as teclas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All keys"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas las teclas"
           }
         }
       }
@@ -6647,6 +6791,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Única"
+          }
+        }
+      }
+    },
+    "Usadas por este jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used by this game"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usadas por este juego"
           }
         }
       }

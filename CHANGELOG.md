@@ -10,10 +10,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Cheats from the game menu: level up, money and items in RPG Maker XP, VX and VX Ace; heal the party, items and walk through walls in Pokémon Essentials. Also in games where the engine could not load them, or loaded the wrong one (The Witch's House, Pokémon Flux).
 - Screen filters: Pixel, Smooth and Sharp (Lanczos), in Settings and switchable mid-game from the game menu.
 - "Keyboard key" as a button action in control profiles: any letter, number, Space, Tab, Ctrl, Alt, F3–F11 and more, for games that read keys beyond the RGSS buttons.
+- Controls per game (game panel › Controls): start from a profile and change any button for that game only. Ember reads the game's scripts for the PC keys it uses (F5, numbers, Ctrl…), lists them first with the button that sends each one, and puts one on a button with a tap.
 
 ### Changed
 - Engine updated to mkxp-z-apple-mobile v14: fixes the black screen after PikaTaxi in Pokémon Insurgence and finding files a game writes while it runs; MIDI now comes with the engine.
 - Unit tests and checks on every pull request.
+- Code cleanup: Swift 6 concurrency checks at zero, Observation instead of ObservableObject, sources grouped by feature, the play history read once per library load.
 
 ## [1.1.0] - 2026-11-09
 
