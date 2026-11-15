@@ -383,6 +383,25 @@ final class ProfileStore {
         }
     }
 
+    /// Turns a game's own mapping into a profile other games can use; the
+    /// game then plays with that profile.
+    @discardableResult
+    func saveAsProfile(_ game: GameEntry, name: String) -> ControlProfile? {
+        guard var profile = gameMappings[game.id] else { return nil }
+        profile.id = UUID().uuidString
+        profile.name = name
+        custom.append(profile)
+        save()
+        assign(profile, to: game)
+        return profile
+    }
+
+    /// The games that play with this profile (chosen, or automatic for
+    /// a ready-made one), leaving out those with their own mapping.
+    func games(using profile: ControlProfile, in games: [GameEntry]) -> [GameEntry] {
+        games.filter { !hasOwnMapping($0) && baseProfile(for: $0).id == profile.id }
+    }
+
     /// A new profile, copied from another, named "<name> (cópia)".
     @discardableResult
     func duplicate(_ profile: ControlProfile) -> ControlProfile {

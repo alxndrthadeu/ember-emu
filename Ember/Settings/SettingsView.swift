@@ -21,6 +21,7 @@ struct SettingsView: View {
 
     @Environment(\.requestReview) private var requestReview
     @State private var openingReview = false
+    @State private var showingProfiles = false
     @State private var importingSkin = false
     @State private var pendingDelete: Skin?
     @State private var skinError: String?
@@ -132,6 +133,13 @@ struct SettingsView: View {
             .scrollContentBackground(.hidden)
             .background(Theme.background.ignoresSafeArea())
             .navigationTitle("Ajustes")
+            .navigationDestination(isPresented: $showingProfiles) { ProfilesView() }
+            #if DEBUG
+            // Development aid: EMBER_SHOW=profiles opens Perfis de controle.
+            .onAppear {
+                if ProcessInfo.processInfo.environment["EMBER_SHOW"] == "profiles" { showingProfiles = true }
+            }
+            #endif
         }
         .onChange(of: haptics) { AppSettings.haptics = haptics }
         .onChange(of: landscapeOpacity) { AppSettings.landscapeOpacity = landscapeOpacity }

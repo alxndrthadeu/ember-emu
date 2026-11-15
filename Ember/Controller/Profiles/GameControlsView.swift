@@ -2,32 +2,19 @@ import SwiftUI
 
 /// Painel do jogo › Controles: what each button does in this game. It
 /// starts from a profile; any change becomes the game's own mapping
-/// (`ProfileStore.setMapping`). The PC keys found in the game's scripts
-/// (`GameKeyStore`) are listed first, each with the button that sends it.
-///
-/// Two ways to set it up: Simples (each button does a game action) and
-/// Teclado (each button and direction presses a PC key, picked on a
-/// drawn keyboard), for games made for a computer.
+/// (`ProfileStore.setMapping`), which can be saved as a profile for
+/// other games. The PC keys found in the game's scripts (`GameKeyStore`)
+/// are listed first, each with the button that sends it. The mapping
+/// itself is edited by `ControlMappingEditor`, as in a profile.
 struct GameControlsView: View {
     let game: GameEntry
     @Bindable private var store = ProfileStore.shared
     @Environment(\.dismiss) private var dismiss
     @State private var profile: ControlProfile
-    @State private var picking: PickTarget?
+    @State private var naming = false
+    @State private var newName = ""
+    @State private var savedName: String?
     private let gameKeys: [KeyboardKey]?
-
-    /// What the keyboard picker is setting.
-    private enum PickTarget: Identifiable {
-        case button(ControlButton)
-        case direction(ControlDirection)
-
-        var id: String {
-            switch self {
-            case .button(let button): "b.\(button.rawValue)"
-            case .direction(let direction): "d.\(direction.rawValue)"
-            }
-        }
-    }
 
     init(game: GameEntry) {
         self.game = game
@@ -46,17 +33,11 @@ struct GameControlsView: View {
     var body: some View {
         NavigationStack {
             Form {
-                modeSection
                 baseSection
                 if let gameKeys, !gameKeys.isEmpty {
                     keysSection(gameKeys)
                 }
-                if profile.isKeyboardMode {
-                    keyboardButtonsSection
-                    directionsSection
-                } else {
-                    ButtonMappingSection(profile: editable, gameKeys: gameKeys ?? [])
-                }
+                ControlMappingEditor(profile: editable, gameKeys: gameKeys ?? [], initialPick: developmentPick)
             }
             .scrollContentBackground(.hidden)
             .background(Theme.background.ignoresSafeArea())
@@ -67,139 +48,21 @@ struct GameControlsView: View {
                     Button("OK") { dismiss() }
                 }
             }
-            .sheet(item: $picking) { target in
-                picker(for: target)
-                    .presentationDetents([.large])
+            .alert("Salvar como perfil", isPresented: $naming) {
+                TextField("Nome do perfil", text: $newName)
+                Button("Cancelar", role: .cancel) {}
+                Button("Salvar") {
+                    let name = newName.trimmingCharacters(in: .whitespaces)
+                    guard let saved = store.saveAsProfile(game, name: name.isEmpty ? game.title : name) else { return }
+                    profile = saved
+                    savedName = saved.name
+                }
+            } message: {
+                Text("O perfil aparece em Ajustes › Perfis de controle e pode ser usado em outros jogos.")
             }
             #if DEBUG
             .onAppear(perform: developmentHooks)
             #endif
-        }
-    }
-
-    // MARK: - Mode
-
-    private var modeSection: some View {
-        Section {
-            Picker("Modo", selection: Binding(
-                get: { profile.isKeyboardMode },
-                set: { keyboard in
-                    var edited = profile
-                    if keyboard { edited.switchToKeyboard() } else { edited.switchToActions() }
-                    editable.wrappedValue = edited
-                })) {
-                Text("Simples").tag(false)
-                Text("Teclado").tag(true)
-            }
-            .pickerStyle(.segmented)
-            .listRowBackground(Color.clear)
-            .listRowInsets(EdgeInsets())
-        } footer: {
-            if profile.isKeyboardMode {
-                Text("Cada botão aperta a tecla do PC que você escolher, como num teclado. Bom para jogos feitos para computador.")
-            } else {
-                Text("Cada botão faz uma ação do jogo: confirmar, voltar, abrir o menu.")
-            }
-        }
-    }
-
-    // MARK: - Keyboard mode
-
-    private var keyboardButtonsSection: some View {
-        Section("Botões") {
-            ForEach(ControlButton.allCases) { button in
-                Button {
-                    picking = .button(button)
-                } label: {
-                    mappingRow(badge: ButtonBadge(button: button), value: valueTitle(for: button))
-                }
-            }
-        }
-    }
-
-    private var directionsSection: some View {
-        Section {
-            ForEach(ControlDirection.allCases) { direction in
-                Button {
-                    picking = .direction(direction)
-                } label: {
-                    mappingRow(badge: Image(systemName: direction.symbol)
-                                .font(.system(size: 14, weight: .bold))
-                                .foregroundStyle(Theme.primaryText)
-                                .frame(width: 56, height: 30)
-                                .emberGlass(.regular, in: Capsule()),
-                               value: profile.key(for: direction).name)
-                }
-            }
-            Menu {
-                Button("Setas") { setDirections(\.arrow) }
-                Button("W A S D") { setDirections(\.wasd) }
-            } label: {
-                Label("Usar setas ou WASD", systemImage: "arrow.up.and.down.and.arrow.left.and.right")
-            }
-        } header: {
-            Text("Direcional")
-        } footer: {
-            Text("O direcional e o analógico apertam estas teclas. A maioria dos jogos anda com as setas.")
-        }
-    }
-
-    private func mappingRow(badge: some View, value: String) -> some View {
-        HStack(spacing: 12) {
-            badge
-            Text(verbatim: value)
-                .foregroundStyle(Theme.primaryText)
-            Spacer()
-            Image(systemName: "keyboard")
-                .foregroundStyle(Theme.secondaryText)
-        }
-        .contentShape(Rectangle())
-    }
-
-    /// The key a button presses, or the Ember action it does.
-    private func valueTitle(for button: ControlButton) -> String {
-        if let key = profile.pressedKey(for: button) { return key.name }
-        return profile.action(for: button).title
-    }
-
-    private func setDirections(_ key: KeyPath<ControlDirection, KeyboardKey>) {
-        var edited = profile
-        for direction in ControlDirection.allCases { edited.put(direction[keyPath: key], on: direction) }
-        editable.wrappedValue = edited
-    }
-
-    /// Button labels on each key, for the drawn keyboard.
-    private var usedBy: [Int32: [String]] {
-        var used: [Int32: [String]] = [:]
-        for button in ControlButton.allCases {
-            if let key = profile.pressedKey(for: button) { used[key.scancode, default: []].append(button.shortLabel) }
-        }
-        // Directions only where they left their arrow (W for ↑).
-        for direction in ControlDirection.allCases where profile.key(for: direction) != direction.arrow {
-            used[profile.key(for: direction).scancode, default: []].append(direction.arrow.name)
-        }
-        return used
-    }
-
-    @ViewBuilder
-    private func picker(for target: PickTarget) -> some View {
-        switch target {
-        case .button(let button):
-            let special = profile.pressedKey(for: button) == nil ? profile.action(for: button) : nil
-            KeyboardPicker(title: button.label, selected: profile.pressedKey(for: button),
-                           gameKeys: gameKeys ?? [], usedBy: usedBy,
-                           specials: [.emberMenu, .fastForward, .keyboard, .none],
-                           selectedSpecial: special,
-                           onKey: { key in editable.wrappedValue.put(key, on: button) },
-                           onSpecial: { action in
-                               var edited = profile
-                               edited.mapping[button] = action
-                               editable.wrappedValue = edited
-                           })
-        case .direction(let direction):
-            KeyboardPicker(title: direction.label, selected: profile.key(for: direction),
-                           gameKeys: gameKeys ?? [], usedBy: usedBy,
-                           onKey: { key in editable.wrappedValue.put(key, on: direction) })
         }
     }
 
@@ -212,6 +75,7 @@ struct GameControlsView: View {
                 set: { id in
                     store.assign(store.all.first { $0.id == id }, to: game)
                     profile = store.profile(for: game)
+                    savedName = nil
                 })) {
                 Text("Automático (\(store.automaticProfile(for: game).name))").tag(String?.none)
                 ForEach(store.all) { profile in
@@ -219,14 +83,22 @@ struct GameControlsView: View {
                 }
             }
             if store.hasOwnMapping(game) {
+                Button {
+                    newName = game.title
+                    naming = true
+                } label: {
+                    Label("Salvar como perfil", systemImage: "square.and.arrow.down")
+                }
                 Button("Desfazer as mudanças deste jogo", role: .destructive) {
                     store.resetMapping(for: game)
                     profile = store.profile(for: game)
                 }
             }
         } footer: {
-            if store.hasOwnMapping(game) {
-                Text("Os botões abaixo foram mudados e valem só para este jogo. Trocar o perfil desfaz as mudanças.")
+            if let savedName {
+                Text("Salvo como “\(savedName)”. Este jogo agora usa esse perfil; mudanças aqui viram de novo só deste jogo.")
+            } else if store.hasOwnMapping(game) {
+                Text("Os botões abaixo foram mudados e valem só para este jogo. Salve como perfil para usar em outros jogos, ou troque o perfil para desfazer.")
             } else {
                 Text("O jogo começa com este perfil. O que você mudar abaixo vale só para este jogo.")
             }
@@ -284,17 +156,24 @@ struct GameControlsView: View {
         .contentShape(Rectangle())
     }
 
+    // MARK: - Development
+
+    /// EMBER_CONTROLS=keyboard shows the Teclado mode; =pick also opens
+    /// the keyboard for the A button.
+    private var developmentPick: ControlMappingEditor.PickTarget? {
+        #if DEBUG
+        ProcessInfo.processInfo.environment["EMBER_CONTROLS"] == "pick" ? .button(.a) : nil
+        #else
+        nil
+        #endif
+    }
+
     #if DEBUG
-    /// Development aid: EMBER_CONTROLS=keyboard shows the Teclado mode,
-    /// EMBER_CONTROLS=pick also opens the keyboard for the A button.
     private func developmentHooks() {
-        guard let mode = ProcessInfo.processInfo.environment["EMBER_CONTROLS"] else { return }
-        if !profile.isKeyboardMode {
-            var edited = profile
-            edited.switchToKeyboard()
-            editable.wrappedValue = edited
-        }
-        if mode == "pick" { picking = .button(.a) }
+        guard ProcessInfo.processInfo.environment["EMBER_CONTROLS"] != nil, !profile.isKeyboardMode else { return }
+        var edited = profile
+        edited.switchToKeyboard()
+        editable.wrappedValue = edited
     }
     #endif
 }
