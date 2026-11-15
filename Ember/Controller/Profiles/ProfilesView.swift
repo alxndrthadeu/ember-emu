@@ -1,33 +1,29 @@
 import SwiftUI
 
-/// Ajustes › Perfis de controle: the ready-made profiles and the
-/// player's own.
+/// Ajustes › Perfis de controle: every mapping in one place. The
+/// player's profiles, the ready-made ones, and the games with their own
+/// controls (which can become a profile). Each profile says which games
+/// use it.
 struct ProfilesView: View {
     @Bindable private var store = ProfileStore.shared
+    @Bindable private var library = LibraryStore.shared
     @State private var editing: ControlProfile?
+    @State private var gameControls: GameEntry?
+    @State private var naming: GameEntry?
+    @State private var newName = ""
+
+    private var gamesWithOwn: [GameEntry] {
+        library.games.filter(store.hasOwnMapping)
+    }
 
     var body: some View {
         List {
             Section {
-                ForEach(ControlProfile.builtIns) { profile in
-                    NavigationLink {
-                        ProfileEditor(profile: profile)
-                    } label: {
-                        ProfileRow(profile: profile)
-                    }
-                }
-            } header: {
-                Text("Prontos")
-            } footer: {
-                Text("Padrão serve para Pokémon Essentials v19 ou mais novo e jogos em Ruby 3. Clássico serve para jogos antigos: Start abre o menu e segurar Select faz correr. Cada jogo usa um deles automaticamente, e você pode trocar no painel do jogo.")
-            }
-
-            Section("Seus perfis") {
                 ForEach(store.custom) { profile in
                     NavigationLink {
                         ProfileEditor(profile: profile)
                     } label: {
-                        ProfileRow(profile: profile)
+                        ProfileRow(profile: profile, games: store.games(using: profile, in: library.games))
                     }
                 }
                 .onDelete { offsets in
@@ -38,6 +34,63 @@ struct ProfilesView: View {
                 } label: {
                     Label("Novo perfil", systemImage: "plus")
                 }
+            } header: {
+                Text("Seus perfis")
+            } footer: {
+                Text("Crie aqui ou salve os controles de um jogo como perfil. Escolha o perfil de cada jogo no painel do jogo › Controles.")
+            }
+
+            if !gamesWithOwn.isEmpty {
+                Section {
+                    ForEach(gamesWithOwn) { game in
+                        Button {
+                            gameControls = game
+                        } label: {
+                            HStack {
+                                ProfileRow(profile: store.profile(for: game), title: game.title, games: [])
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.footnote.weight(.semibold))
+                                    .foregroundStyle(Theme.secondaryText.opacity(0.6))
+                            }
+                        }
+                        .swipeActions {
+                            Button {
+                                newName = game.title
+                                naming = game
+                            } label: {
+                                Label("Salvar como perfil", systemImage: "square.and.arrow.down")
+                            }
+                            .tint(Theme.active)
+                        }
+                        .contextMenu {
+                            Button {
+                                newName = game.title
+                                naming = game
+                            } label: {
+                                Label("Salvar como perfil", systemImage: "square.and.arrow.down")
+                            }
+                        }
+                    }
+                } header: {
+                    Text("Controles de jogos")
+                } footer: {
+                    Text("Jogos com botões mudados só para eles. Deslize para salvar como perfil e usar em outros jogos.")
+                }
+            }
+
+            Section {
+                ForEach(ControlProfile.builtIns) { profile in
+                    NavigationLink {
+                        ProfileEditor(profile: profile)
+                    } label: {
+                        ProfileRow(profile: profile, games: store.games(using: profile, in: library.games))
+                    }
+                }
+            } header: {
+                Text("Prontos")
+            } footer: {
+                Text("Padrão serve para Pokémon Essentials v19 ou mais novo e jogos em Ruby 3. Clássico serve para jogos antigos: Start abre o menu e segurar Select faz correr. 4 botões usa X e Y do jogo. Cada jogo usa um deles automaticamente.")
             }
         }
         .scrollContentBackground(.hidden)
@@ -46,35 +99,69 @@ struct ProfilesView: View {
         .navigationDestination(item: $editing) { profile in
             ProfileEditor(profile: profile)
         }
-    }
-}
-
-private struct ProfileRow: View {
-    let profile: ControlProfile
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(profile.name)
-                .font(.body.weight(.semibold))
-                .foregroundStyle(Theme.primaryText)
-            Text(summary)
-                .font(.caption)
-                .foregroundStyle(Theme.secondaryText)
-                .lineLimit(1)
+        .sheet(item: $gameControls) { game in
+            GameControlsView(game: game)
+        }
+        .alert("Salvar como perfil", isPresented: Binding(get: { naming != nil }, set: { if !$0 { naming = nil } })) {
+            TextField("Nome do perfil", text: $newName)
+            Button("Cancelar", role: .cancel) {}
+            Button("Salvar") {
+                guard let game = naming else { return }
+                let name = newName.trimmingCharacters(in: .whitespaces)
+                store.saveAsProfile(game, name: name.isEmpty ? game.title : name)
+            }
+        } message: {
+            Text("O jogo passa a usar o perfil novo, e outros jogos também podem usá-lo.")
         }
     }
+}
 
-    private var summary: String {
-        [ControlButton.a, .b, .start, .select]
-            .map { "\($0.label): \(profile.action(for: $0).title)" }
-            .joined(separator: " · ")
+/// A profile in a list: its name, what the main buttons do, and the games
+/// that use it.
+private struct ProfileRow: View {
+    let profile: ControlProfile
+    var title: String?
+    let games: [GameEntry]
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: profile.isKeyboardMode ? "keyboard" : "gamecontroller")
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(Theme.accent)
+                .frame(width: 32, height: 32)
+                .background(Circle().fill(Theme.accent.opacity(0.14)))
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: title ?? profile.name)
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(Theme.primaryText)
+                Text(verbatim: profile.summary)
+                    .font(.caption)
+                    .foregroundStyle(Theme.secondaryText)
+                    .lineLimit(1)
+                if !games.isEmpty {
+                    Text(usedIn)
+                        .font(.caption2.weight(.medium))
+                        .foregroundStyle(Theme.active)
+                        .lineLimit(1)
+                }
+            }
+        }
+        .padding(.vertical, 2)
+    }
+
+    private var usedIn: String {
+        games.count == 1
+            ? String(localized: "Usado em \(games[0].title)")
+            : String(localized: "Usado em \(games.count) jogos")
     }
 }
 
-/// One profile's buttons. Ready-made profiles are read-only; "Duplicar"
-/// makes an editable copy.
+/// One profile: its name, its mapping (the same editor as a game's
+/// controls) and the games that use it. Ready-made profiles are
+/// read-only; "Duplicar" makes an editable copy.
 struct ProfileEditor: View {
     @Bindable private var store = ProfileStore.shared
+    @Bindable private var library = LibraryStore.shared
     @Environment(\.dismiss) private var dismiss
     @State private var profile: ControlProfile
     @State private var copy: ControlProfile?
@@ -84,13 +171,23 @@ struct ProfileEditor: View {
     }
 
     var body: some View {
+        let games = store.games(using: profile, in: library.games)
         Form {
             if !profile.isBuiltIn {
                 Section("Nome") {
                     TextField("Nome do perfil", text: $profile.name)
                 }
             }
-            ButtonMappingSection(profile: $profile, disabled: profile.isBuiltIn)
+            ControlMappingEditor(profile: $profile, disabled: profile.isBuiltIn)
+
+            if !games.isEmpty {
+                Section("Jogos com este perfil") {
+                    ForEach(games) { game in
+                        Text(verbatim: game.title)
+                            .foregroundStyle(Theme.primaryText)
+                    }
+                }
+            }
 
             if profile.isBuiltIn {
                 Section {
@@ -104,9 +201,18 @@ struct ProfileEditor: View {
                 }
             } else {
                 Section {
+                    Button {
+                        copy = store.duplicate(profile)
+                    } label: {
+                        Label("Duplicar", systemImage: "plus.square.on.square")
+                    }
                     Button("Apagar perfil", role: .destructive) {
                         store.delete(profile)
                         dismiss()
+                    }
+                } footer: {
+                    if !games.isEmpty {
+                        Text("Os jogos com este perfil voltam ao automático se ele for apagado.")
                     }
                 }
             }

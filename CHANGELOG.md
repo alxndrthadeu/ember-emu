@@ -7,10 +7,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 ## [1.2.1] - Unreleased
 
 ### Added
+- Save a game's controls as a profile, from the game's controls or from Settings › Control profiles, to use them in other games.
 - Keyboard mode in a game's controls, for games made for a computer: each button and each direction presses the PC key you pick on a drawn keyboard (Z on A, Enter on B, Ctrl on Y, WASD to walk), with the keys the game uses marked.
 
 ### Changed
 - Directions from the D-pad, the stick and game controllers go through the game's mapping, so they can press other keys than the arrows.
+- Control profiles redone: the same editor as a game's controls (Simple and Keyboard modes), the games that use each profile, and the games with their own controls in one list.
 
 ## [1.2.0] - 2026-11-15
 

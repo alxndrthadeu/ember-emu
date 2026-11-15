@@ -86,7 +86,7 @@ extension LibraryView {
             optionsFor = library.games.first { id == nil || $0.id == id }
         case "controller": library.chooseController = library.games.first
         case "import", "computer", "rtp": AppRouter.shared.tab = .importGames
-        case "settings": AppRouter.shared.tab = .settings
+        case "settings", "profiles": AppRouter.shared.tab = .settings
         default: break
         }
         guard let id = environment["EMBER_AUTOLAUNCH"],
