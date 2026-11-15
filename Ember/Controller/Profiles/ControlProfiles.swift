@@ -24,6 +24,17 @@ enum ControlButton: String, Codable, CaseIterable, Identifiable {
         }
     }
 
+    /// Two letters at most, for the corner of a keycap.
+    var shortLabel: String {
+        switch self {
+        case .l2: "L2"
+        case .r2: "R2"
+        case .start: "ST"
+        case .select: "SE"
+        default: label
+        }
+    }
+
     /// The skin button behind a GameKey (skins speak GameKey).
     init?(skinKey key: GameKey) {
         switch key {
@@ -38,6 +49,61 @@ enum ControlButton: String, Codable, CaseIterable, Identifiable {
         case .l2: self = .l2
         case .r2: self = .r2
         default: return nil
+        }
+    }
+}
+
+/// A direction of the D-pad or stick. It presses its arrow key, or the
+/// key the game's keyboard mapping gives it.
+enum ControlDirection: String, Codable, CaseIterable, Identifiable {
+    case up, down, left, right
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .up: String(localized: "Cima")
+        case .down: String(localized: "Baixo")
+        case .left: String(localized: "Esquerda")
+        case .right: String(localized: "Direita")
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .up: "arrowtriangle.up.fill"
+        case .down: "arrowtriangle.down.fill"
+        case .left: "arrowtriangle.left.fill"
+        case .right: "arrowtriangle.right.fill"
+        }
+    }
+
+    init?(_ key: GameKey) {
+        switch key {
+        case .up: self = .up
+        case .down: self = .down
+        case .left: self = .left
+        case .right: self = .right
+        default: return nil
+        }
+    }
+
+    var arrow: KeyboardKey {
+        switch self {
+        case .up: KeyboardKey(scancode: 82)
+        case .down: KeyboardKey(scancode: 81)
+        case .left: KeyboardKey(scancode: 80)
+        case .right: KeyboardKey(scancode: 79)
+        }
+    }
+
+    /// W, S, A, D.
+    var wasd: KeyboardKey {
+        switch self {
+        case .up: KeyboardKey(scancode: 26)
+        case .down: KeyboardKey(scancode: 22)
+        case .left: KeyboardKey(scancode: 4)
+        case .right: KeyboardKey(scancode: 7)
         }
     }
 }
@@ -113,8 +179,53 @@ struct ControlProfile: Codable, Identifiable, Hashable {
     /// The key of each button set to "Tecla do teclado" (absent in
     /// profiles saved before 1.2).
     var keys: [ControlButton: KeyboardKey]? = nil
+    /// Shown as a PC keyboard: every button is a key (Teclado mode of
+    /// the game's controls screen). Only how the screen shows it; the
+    /// mapping above is what plays.
+    var keyboardMode: Bool? = nil
+    /// Keys the D-pad presses instead of the arrows.
+    var directionKeys: [ControlDirection: KeyboardKey]? = nil
 
     var isBuiltIn: Bool { id.hasPrefix("builtin.") }
+
+    var isKeyboardMode: Bool { keyboardMode ?? false }
+
+    func key(for direction: ControlDirection) -> KeyboardKey {
+        directionKeys?[direction] ?? direction.arrow
+    }
+
+    mutating func put(_ key: KeyboardKey, on direction: ControlDirection) {
+        var keys = directionKeys ?? [:]
+        keys[direction] = key == direction.arrow ? nil : key
+        directionKeys = keys.isEmpty ? nil : keys
+    }
+
+    /// The key a button presses, for the keyboard view: its own key, or
+    /// the one its game action sends (Enter for Confirmar).
+    func pressedKey(for button: ControlButton) -> KeyboardKey? {
+        scancode(for: button).map(KeyboardKey.init(scancode:))
+    }
+
+    /// Every button as the key it already sends, so switching to the
+    /// keyboard view changes nothing until the player does.
+    mutating func switchToKeyboard() {
+        for button in ControlButton.allCases {
+            if action(for: button) != .key, let key = pressedKey(for: button) { put(key, on: button) }
+        }
+        keyboardMode = true
+    }
+
+    /// Keys that are a game action's key go back to that action.
+    mutating func switchToActions() {
+        let actions = GameAction.allCases.filter { $0.scancode != nil }
+        for button in ControlButton.allCases where action(for: button) == .key {
+            if let action = actions.first(where: { $0.scancode == key(for: button).scancode }) {
+                mapping[button] = action
+                keys?[button] = nil
+            }
+        }
+        keyboardMode = nil
+    }
 
     func key(for button: ControlButton) -> KeyboardKey {
         keys?[button] ?? .space
@@ -315,8 +426,30 @@ final class ControlMapper {
     private var counts: [ControlButton: Int] = [:]
     private var active: [ControlButton: GameAction] = [:]
     private var activeKeys: [ControlButton: Int32] = [:]
+    private var directionCounts: [ControlDirection: Int] = [:]
+    private var activeDirections: [ControlDirection: Int32] = [:]
 
     private init() {}
+
+    /// A direction from the D-pad, stick or a controller: its arrow, or
+    /// the key the game's mapping gives it. Counted, as two sources can
+    /// hold the same direction.
+    func press(_ direction: ControlDirection) {
+        let count = directionCounts[direction, default: 0]
+        directionCounts[direction] = count + 1
+        guard count == 0 else { return }
+        let scancode = profile.key(for: direction).scancode
+        activeDirections[direction] = scancode
+        mkxp_injectKeyEvent(scancode, 1)
+    }
+
+    func release(_ direction: ControlDirection) {
+        let count = directionCounts[direction, default: 0]
+        guard count > 0 else { return }
+        directionCounts[direction] = count - 1
+        guard count == 1, let scancode = activeDirections.removeValue(forKey: direction) else { return }
+        mkxp_injectKeyEvent(scancode, 0)
+    }
 
     func press(_ button: ControlButton) {
         let count = counts[button, default: 0]
@@ -354,6 +487,9 @@ final class ControlMapper {
     func releaseAll() {
         for button in Array(counts.keys) {
             while counts[button, default: 0] > 0 { release(button) }
+        }
+        for direction in Array(directionCounts.keys) {
+            while directionCounts[direction, default: 0] > 0 { release(direction) }
         }
     }
 }

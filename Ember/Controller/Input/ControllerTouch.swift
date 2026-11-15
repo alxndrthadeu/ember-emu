@@ -258,9 +258,11 @@ final class SkinTouchView: UIView {
         if AppSettings.haptics { Haptics.tap() }
         switch input {
         case .key(let key):
-            // Buttons follow the game's control profile; directions walk.
+            // Buttons and directions follow the game's control profile.
             if let button = ControlButton(skinKey: key) {
                 ControlMapper.shared.press(button)
+            } else if let direction = ControlDirection(key) {
+                ControlMapper.shared.press(direction)
             } else {
                 key.press()
             }
@@ -287,6 +289,8 @@ final class SkinTouchView: UIView {
         case .key(let key):
             if let button = ControlButton(skinKey: key) {
                 ControlMapper.shared.release(button)
+            } else if let direction = ControlDirection(key) {
+                ControlMapper.shared.release(direction)
             } else {
                 key.release()
             }

@@ -1,0 +1,7 @@
+• Controles por jogo: mude qualquer botão só para aquele jogo. O Ember descobre as teclas que o jogo usa (F5, números, Ctrl…) e coloca uma num botão com um toque.
+• Modo Teclado, para jogos feitos para computador: cada botão e direção aperta a tecla que você escolher num teclado na tela.
+• Cheats pelo menu do jogo: subir de nível, dinheiro, itens, curar o grupo e atravessar paredes, conforme o jogo.
+• Filtros de tela: Pixel, Suave e Nítido, também durante a partida.
+• Qualquer tecla do teclado como ação de um botão.
+• Motor atualizado: corrige uma tela preta em alguns jogos e melhora a música MIDI.
+• Mais leve e estável.

@@ -665,6 +665,22 @@
         }
       }
     },
+    "Ações do Ember" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember actions"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acciones de Ember"
+          }
+        }
+      }
+    },
     "Ainda não dá para importar “%@”. Use .zip, .rar, .7z, .exe autoextraível ou uma pasta." : {
       "localizations" : {
         "en" : {
@@ -1279,6 +1295,22 @@
         }
       }
     },
+    "Baixo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Down"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abajo"
+          }
+        }
+      }
+    },
     "Biblioteca" : {
       "localizations" : {
         "en" : {
@@ -1355,6 +1387,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Botones"
+          }
+        }
+      }
+    },
+    "Cada botão aperta a tecla do PC que você escolher, como num teclado. Bom para jogos feitos para computador." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Each button presses the PC key you choose, like a keyboard. Good for games made for computers."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cada botón pulsa la tecla de PC que elijas, como un teclado. Ideal para juegos hechos para computadora."
+          }
+        }
+      }
+    },
+    "Cada botão faz uma ação do jogo: confirmar, voltar, abrir o menu." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Each button does a game action: confirm, back, open the menu."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cada botón hace una acción del juego: confirmar, volver, abrir el menú."
           }
         }
       }
@@ -1531,6 +1595,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Trucos"
+          }
+        }
+      }
+    },
+    "Cima" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Up"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arriba"
           }
         }
       }
@@ -1887,6 +1967,22 @@
         }
       }
     },
+    "Contorno âmbar: teclas que este jogo usa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amber outline: keys this game uses"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contorno ámbar: teclas que usa este juego"
+          }
+        }
+      }
+    },
     "Controle" : {
       "localizations" : {
         "en" : {
@@ -2235,6 +2331,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cruceta y joystick"
+          }
+        }
+      }
+    },
+    "Direita" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Right"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Derecha"
           }
         }
       }
@@ -2667,6 +2779,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esperando que una pantalla abra la dirección"
+          }
+        }
+      }
+    },
+    "Esquerda" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Left"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izquierda"
           }
         }
       }
@@ -3973,6 +4101,22 @@
         }
       }
     },
+    "Modo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo"
+          }
+        }
+      }
+    },
     "morno" : {
       "localizations" : {
         "en" : {
@@ -4459,6 +4603,22 @@
         }
       }
     },
+    "No canto: botões que já apertam a tecla" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In the corner: buttons that already press the key"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En la esquina: botones que ya pulsan la tecla"
+          }
+        }
+      }
+    },
     "No Finder, escolha o iPhone na barra lateral e abra a aba Arquivos." : {
       "localizations" : {
         "en" : {
@@ -4695,6 +4855,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El botón no hace nada"
+          }
+        }
+      }
+    },
+    "O direcional e o analógico apertam estas teclas. A maioria dos jogos anda com as setas." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The D-pad and the stick press these keys. Most games walk with the arrows."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La cruceta y el stick pulsan estas teclas. La mayoría de los juegos caminan con las flechas."
           }
         }
       }
@@ -6075,6 +6251,22 @@
         }
       }
     },
+    "Setas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrows"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flechas"
+          }
+        }
+      }
+    },
     "Seus perfis" : {
       "localizations" : {
         "en" : {
@@ -6087,6 +6279,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tus perfiles"
+          }
+        }
+      }
+    },
+    "Simples" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simple"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simple"
           }
         }
       }
@@ -6827,6 +7035,22 @@
         }
       }
     },
+    "Usar setas ou WASD" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use arrows or WASD"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar flechas o WASD"
+          }
+        }
+      }
+    },
     "Use Salvar estado no menu, andando pelo mapa. O Ember também salva sozinho quando você sai do app." : {
       "localizations" : {
         "en" : {
@@ -7047,6 +7271,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vuelve a caminar por el mapa para guardar el estado"
+          }
+        }
+      }
+    },
+    "W A S D" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "W A S D"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "W A S D"
           }
         }
       }

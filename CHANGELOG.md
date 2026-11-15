@@ -4,7 +4,15 @@ What changed in each version of Ember. The newest version is on top; `Unreleased
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follow [Semantic Versioning](https://semver.org/): a new feature bumps the minor number (1.1.0), a fix the patch number (1.0.1).
 
-## [1.2.0] - Unreleased
+## [1.2.1] - Unreleased
+
+### Added
+- Keyboard mode in a game's controls, for games made for a computer: each button and each direction presses the PC key you pick on a drawn keyboard (Z on A, Enter on B, Ctrl on Y, WASD to walk), with the keys the game uses marked.
+
+### Changed
+- Directions from the D-pad, the stick and game controllers go through the game's mapping, so they can press other keys than the arrows.
+
+## [1.2.0] - 2026-11-15
 
 ### Added
 - Cheats from the game menu: level up, money and items in RPG Maker XP, VX and VX Ace; heal the party, items and walk through walls in Pokémon Essentials. Also in games where the engine could not load them, or loaded the wrong one (The Witch's House, Pokémon Flux).
@@ -53,6 +61,7 @@ First release on the App Store.
 - The sample game "A Última Brasa".
 - iOS 17 or later; Portuguese, English and Spanish.
 
-[1.2.0]: https://github.com/alxndrthadeu/ember-emu/compare/v1.1.0...release/1.2.0
+[1.2.1]: https://github.com/alxndrthadeu/ember-emu/compare/v1.2.0...release/1.2.1
+[1.2.0]: https://github.com/alxndrthadeu/ember-emu/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/alxndrthadeu/ember-emu/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/alxndrthadeu/ember-emu/releases/tag/v1.0.0
