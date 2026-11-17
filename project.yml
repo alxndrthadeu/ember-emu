@@ -44,7 +44,7 @@ targets:
         CODE_SIGN_ENTITLEMENTS: Ember/Resources/Ember.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         GENERATE_INFOPLIST_FILE: NO
-        TARGETED_DEVICE_FAMILY: "1,2"
+        TARGETED_DEVICE_FAMILY: "1"
         SWIFT_VERSION: "6.0"
         # Swift 6 checks as warnings, kept at zero.
         SWIFT_STRICT_CONCURRENCY: complete
@@ -141,7 +141,7 @@ targets:
         # @testable import Ember sees the engine bridge too.
         HEADER_SEARCH_PATHS: $(EMBER_ENGINE)/src $(SRCROOT)/Ember/Vendor/libarchive
         ARCHS: arm64
-        TARGETED_DEVICE_FAMILY: "1,2"
+        TARGETED_DEVICE_FAMILY: "1"
 
 schemes:
   Ember:

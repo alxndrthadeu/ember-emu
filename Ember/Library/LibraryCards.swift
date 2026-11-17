@@ -208,9 +208,6 @@ struct CardPress: ViewModifier {
             }, onPressingChanged: { pressed = $0 })
             .accessibilityElement(children: .combine)
             .accessibilityAddTraits(.isButton)
-            // Pointer on iPad and Mac: the card lifts under it.
-            .contentShape(.hoverEffect, RoundedRectangle(cornerRadius: Theme.cardRadius, style: .continuous))
-            .hoverEffect(.lift)
     }
 }
 
