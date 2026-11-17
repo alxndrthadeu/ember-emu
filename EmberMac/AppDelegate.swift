@@ -47,6 +47,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         guard !playing else { return }
         playing = true
+        #if DEBUG
+        EngineSession.shared.scriptForLaunch = items.first { $0.name == "script" }?.value
+        #endif
         NSApp.mainMenu = MainMenu.build(playing: true)
         startGame(id, resume: items.contains { $0.name == "resume" })
     }
@@ -124,11 +127,38 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         runState("load", slot: last.slot)
     }
 
-    @objc func cycleSpeed(_ sender: Any?) {
-        let steps = GameSettings.speedSteps
-        GameSettings.speed = steps[((steps.firstIndex(of: GameSettings.speed) ?? 0) + 1) % steps.count]
+    @objc func loadState(_ sender: NSMenuItem) {
+        guard let slot = sender.representedObject as? String else { return }
+        runState("load", slot: slot)
+    }
+
+    @objc func setSpeed(_ sender: NSMenuItem) {
+        GameSettings.speed = sender.tag
         GameSettings.apply()
-        if let item = sender as? NSMenuItem { item.title = MainMenu.speedTitle }
+    }
+
+    @objc func setFilter(_ sender: NSMenuItem) {
+        guard let filter = ScreenFilter(rawValue: sender.tag) else { return }
+        ScreenFilter.apply(filter)
+    }
+
+    @objc func toggleSound(_ sender: Any?) {
+        EngineSession.shared.soundOn.toggle()
+    }
+
+    @objc func openCheats(_ sender: Any?) {
+        Task { await CheatMenu.open() }
+    }
+
+    @objc func takeScreenshot(_ sender: Any?) {
+        EngineSession.shared.saveScreenshot { url in
+            guard let url else { return }
+            NSWorkspace.shared.activateFileViewerSelecting([url])
+        }
+    }
+
+    @objc func showSettings(_ sender: Any?) {
+        SettingsWindow.show()
     }
 
     private func runState(_ verb: String, slot: String) {
@@ -161,14 +191,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     #endif
 }
 
-/// The menu bar: App, File (import), Game (while a game plays), Window.
-enum MainMenu {
-    @MainActor
-    static var speedTitle: String {
-        String(localized: "Velocidade: \(GameSettings.speed)x")
-    }
+/// The menu bar: App, File (import), Game (while a game plays), View,
+/// Window. The Game menu fills its lists (states, speed, filter) each
+/// time it opens.
+@MainActor
+final class MainMenu: NSObject, NSMenuDelegate {
+    static let shared = MainMenu()
 
-    @MainActor
     static func build(playing: Bool) -> NSMenu {
         let main = NSMenu()
 
@@ -176,18 +205,15 @@ enum MainMenu {
         app.addItem(withTitle: String(localized: "Sobre o Ember"),
                     action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: "")
         app.addItem(.separator())
+        app.addItem(withTitle: String(localized: "Ajustes…"), action: #selector(AppDelegate.showSettings(_:)), keyEquivalent: ",")
+        app.addItem(.separator())
         app.addItem(withTitle: String(localized: "Ocultar o Ember"), action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
         app.addItem(withTitle: String(localized: "Encerrar o Ember"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         main.addItem(submenu(app, title: "Ember"))
 
         if playing {
             let game = NSMenu(title: String(localized: "Jogo"))
-            game.addItem(withTitle: String(localized: "Salvar estado"), action: #selector(AppDelegate.saveState(_:)), keyEquivalent: "s")
-            game.addItem(withTitle: String(localized: "Carregar o último estado"), action: #selector(AppDelegate.loadLastState(_:)), keyEquivalent: "l")
-            game.addItem(.separator())
-            game.addItem(withTitle: speedTitle, action: #selector(AppDelegate.cycleSpeed(_:)), keyEquivalent: "")
-            game.addItem(.separator())
-            game.addItem(withTitle: String(localized: "Sair do jogo"), action: #selector(AppDelegate.quitGame(_:)), keyEquivalent: "w")
+            game.delegate = shared
             main.addItem(submenu(game, title: String(localized: "Jogo")))
         } else {
             let file = NSMenu(title: String(localized: "Arquivo"))
@@ -209,7 +235,60 @@ enum MainMenu {
         return main
     }
 
-    private static func submenu(_ menu: NSMenu, title: String) -> NSMenuItem {
+    /// The Game menu, built as it opens.
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        menu.removeAllItems()
+        let session = EngineSession.shared
+        menu.addItem(withTitle: String(localized: "Salvar estado"), action: #selector(AppDelegate.saveState(_:)), keyEquivalent: "s")
+        menu.addItem(withTitle: String(localized: "Carregar o último estado"), action: #selector(AppDelegate.loadLastState(_:)), keyEquivalent: "l")
+
+        let states = NSMenu()
+        if let game = session.currentGame {
+            for state in StateStore.states(for: game.id).prefix(12) {
+                let title = state.isAuto
+                    ? String(localized: "Automático · \(state.date.formatted(date: .abbreviated, time: .shortened))")
+                    : state.date.formatted(date: .abbreviated, time: .shortened)
+                let item = NSMenuItem(title: title, action: #selector(AppDelegate.loadState(_:)), keyEquivalent: "")
+                item.representedObject = state.slot
+                states.addItem(item)
+            }
+        }
+        if states.items.isEmpty {
+            states.addItem(withTitle: String(localized: "Nenhum estado salvo"), action: nil, keyEquivalent: "")
+        }
+        menu.addItem(Self.submenu(states, title: String(localized: "Estados")))
+        menu.addItem(.separator())
+
+        let speed = NSMenu()
+        for step in GameSettings.speedSteps {
+            let item = NSMenuItem(title: "\(step)x", action: #selector(AppDelegate.setSpeed(_:)), keyEquivalent: "")
+            item.tag = step
+            item.state = GameSettings.speed == step ? .on : .off
+            speed.addItem(item)
+        }
+        menu.addItem(Self.submenu(speed, title: String(localized: "Velocidade")))
+
+        let filters = NSMenu()
+        for filter in ScreenFilter.allCases {
+            let item = NSMenuItem(title: filter.title, action: #selector(AppDelegate.setFilter(_:)), keyEquivalent: "")
+            item.tag = filter.rawValue
+            item.state = ScreenFilter.current == filter ? .on : .off
+            item.toolTip = filter.detail
+            filters.addItem(item)
+        }
+        menu.addItem(Self.submenu(filters, title: String(localized: "Filtro")))
+
+        let sound = NSMenuItem(title: String(localized: "Som do jogo"), action: #selector(AppDelegate.toggleSound(_:)), keyEquivalent: "")
+        sound.state = session.soundOn ? .on : .off
+        menu.addItem(sound)
+        menu.addItem(.separator())
+        menu.addItem(withTitle: String(localized: "Cheats"), action: #selector(AppDelegate.openCheats(_:)), keyEquivalent: "")
+        menu.addItem(withTitle: String(localized: "Captura de tela"), action: #selector(AppDelegate.takeScreenshot(_:)), keyEquivalent: "p")
+        menu.addItem(.separator())
+        menu.addItem(withTitle: String(localized: "Sair do jogo"), action: #selector(AppDelegate.quitGame(_:)), keyEquivalent: "w")
+    }
+
+    static func submenu(_ menu: NSMenu, title: String) -> NSMenuItem {
         let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
         menu.title = title
         item.submenu = menu

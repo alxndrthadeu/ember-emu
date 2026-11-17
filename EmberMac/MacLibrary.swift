@@ -58,6 +58,11 @@ final class MacLibrary {
         link.scheme = "ember-play"
         link.host = "play"
         link.queryItems = [URLQueryItem(name: "id", value: game.id)] + (resume ? [URLQueryItem(name: "resume", value: "1")] : [])
+        #if DEBUG
+        if let script = ProcessInfo.processInfo.environment["EMBER_SCRIPT"] {
+            link.queryItems?.append(URLQueryItem(name: "script", value: script))
+        }
+        #endif
         guard let url = link.url else { return }
         let configuration = NSWorkspace.OpenConfiguration()
         configuration.createsNewApplicationInstance = true
