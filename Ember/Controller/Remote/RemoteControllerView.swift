@@ -70,7 +70,7 @@ struct RemoteControllerView: View {
                     }
                     Spacer(minLength: 0)
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, 24)
                 .padding(.vertical, 12)
 
                 if typing {
@@ -104,7 +104,15 @@ struct RemoteControllerView: View {
                 }
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(Theme.controlLabel)
-                Text("Jogando no Mac").font(.caption).foregroundStyle(Theme.controlLabel.opacity(0.6))
+                Group {
+                    if let latency = client.latency {
+                        Text("Jogando no Mac · \(latency.formatted(.units(allowed: [.milliseconds], width: .narrow)))\(client.direct ? " · direto" : "")")
+                    } else {
+                        Text("Jogando no Mac")
+                    }
+                }
+                .font(.caption)
+                .foregroundStyle(Theme.controlLabel.opacity(0.6))
             case .connecting:
                 ProgressView().tint(Theme.controlLabel)
                 Text("Conectando…").font(.caption).foregroundStyle(Theme.controlLabel.opacity(0.7))
@@ -170,12 +178,12 @@ struct RemoteControllerView: View {
         } else {
             // Four in a diamond: Y left, X top, A right, B bottom.
             ZStack {
-                RemoteFace(button: .x, size: size * 0.92).offset(y: -unit * 0.85)
-                RemoteFace(button: .y, size: size * 0.92).offset(x: -unit * 0.85)
-                RemoteFace(button: .a, size: size * 0.92).offset(x: unit * 0.85)
-                RemoteFace(button: .b, size: size * 0.92).offset(y: unit * 0.85)
+                RemoteFace(button: .x, size: size * 0.85).offset(y: -unit * 0.78)
+                RemoteFace(button: .y, size: size * 0.85).offset(x: -unit * 0.78)
+                RemoteFace(button: .a, size: size * 0.85).offset(x: unit * 0.78)
+                RemoteFace(button: .b, size: size * 0.85).offset(y: unit * 0.78)
             }
-            .frame(width: unit * 2.6, height: unit * 2.6)
+            .frame(width: unit * 2.45, height: unit * 2.45)
         }
     }
 }
@@ -350,6 +358,17 @@ private struct RemoteKeyboardField: UIViewRepresentable {
         field.spellCheckingType = .no
         field.returnKeyType = .done
         field.onDone = onDone
+        // OK above the keyboard: Return goes to the game as Enter, so the
+        // keyboard needs its own way to close.
+        let bar = UIToolbar()
+        bar.sizeToFit()
+        bar.items = [
+            UIBarButtonItem(systemItem: .flexibleSpace),
+            UIBarButtonItem(title: String(localized: "OK"), primaryAction: UIAction { [weak field] _ in
+                field?.resignFirstResponder()
+            }),
+        ]
+        field.inputAccessoryView = bar
         DispatchQueue.main.async { field.becomeFirstResponder() }
         return field
     }

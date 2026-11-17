@@ -37,6 +37,10 @@ enum RemoteProtocol {
         /// mapping or the profile it plays with on the iPhone), so every
         /// button does on the Mac what it does on the iPhone.
         case profile = 11
+        /// iPhone → Mac every second, Mac → iPhone as the answer (the
+        /// same payload): keeps the link awake and measures its delay.
+        case ping = 12
+        case pong = 13
     }
 
     enum Command: String {
@@ -48,16 +52,28 @@ enum RemoteProtocol {
         case speed
     }
 
-    /// TCP without delay, peer-to-peer allowed: every press goes out at once.
-    static var parameters: NWParameters {
+    /// TCP without delay: every press goes out at once. `peerToPeer`
+    /// allows the direct link AirDrop uses (no shared Wi-Fi needed), which
+    /// hops channels and has delay spikes, so the iPhone tries the normal
+    /// network first and the direct link only when that does not answer.
+    static func parameters(peerToPeer: Bool = true) -> NWParameters {
         let tcp = NWProtocolTCP.Options()
         tcp.noDelay = true
         tcp.enableKeepalive = true
-        tcp.keepaliveInterval = 5
+        tcp.keepaliveInterval = 2
+        tcp.connectionTimeout = 3
         let parameters = NWParameters(tls: nil, tcp: tcp)
-        parameters.includePeerToPeer = true
+        parameters.includePeerToPeer = peerToPeer
+        parameters.serviceClass = .interactiveVideo
         return parameters
     }
+
+    static var parameters: NWParameters { parameters() }
+
+    /// A tap is held at least this long on the Mac: games read input once
+    /// a frame (RPG Maker XP at 40 fps), and a press and release that land
+    /// in the same frame are lost.
+    static let minimumHold: TimeInterval = 0.09
 
     static func encode(_ kind: Kind, _ payload: String = "") -> Data {
         let body = Data(payload.utf8)

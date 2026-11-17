@@ -15,6 +15,8 @@ final class RemoteControllerServer {
 
     private var listener: NWListener?
     private var connection: NWConnection?
+    /// When each held button or direction went down, for the minimum hold.
+    private var pressedAt: [String: Date] = [:]
     private let queue = DispatchQueue(label: "ember.remote-controller", qos: .userInteractive)
 
     private init() {}
@@ -57,6 +59,12 @@ final class RemoteControllerServer {
         connection = new
         new.start(queue: queue)
         RemoteProtocol.receive(on: new, { kind, payload in
+            // Answered right here, off the game's thread: the delay the
+            // iPhone shows is the network's.
+            if kind == .ping {
+                new.send(content: RemoteProtocol.encode(.pong, payload), completion: .idempotent)
+                return
+            }
             onMainRunLoop { RemoteControllerServer.shared.handle(kind, payload, from: new) }
         }, ended: {
             onMainRunLoop { RemoteControllerServer.shared.ended(new) }
@@ -72,7 +80,7 @@ final class RemoteControllerServer {
             ControlMapper.shared.profile = ProfileStore.shared.profile(for: game)
         }
         connection = nil
-        if let name = connectedName { GameLog.shared.note("controle remoto desconectado: \(name)") }
+        if let name = connectedName { GameLog.shared.note("controle remoto desconectado: \(name) (\(old.state))") }
         connectedName = nil
         onChange()
     }
@@ -86,13 +94,23 @@ final class RemoteControllerServer {
             GameLog.shared.note("controle remoto conectado: \(connectedName ?? "")")
             onChange()
         case .buttonDown:
-            if let button = ControlButton(rawValue: payload) { mapper.press(button) }
+            if let button = ControlButton(rawValue: payload) {
+                pressedAt["b." + payload] = Date()
+                mapper.press(button)
+            }
         case .buttonUp:
-            if let button = ControlButton(rawValue: payload) { mapper.release(button) }
+            if let button = ControlButton(rawValue: payload) {
+                afterMinimumHold("b." + payload) { mapper.release(button) }
+            }
         case .directionDown:
-            if let direction = ControlDirection(rawValue: payload) { mapper.press(direction) }
+            if let direction = ControlDirection(rawValue: payload) {
+                pressedAt["d." + payload] = Date()
+                mapper.press(direction)
+            }
         case .directionUp:
-            if let direction = ControlDirection(rawValue: payload) { mapper.release(direction) }
+            if let direction = ControlDirection(rawValue: payload) {
+                afterMinimumHold("d." + payload) { mapper.release(direction) }
+            }
         case .text:
             for character in payload { KeyTapper.type(character) }
         case .key:
@@ -106,8 +124,18 @@ final class RemoteControllerServer {
             mapper.releaseAll()
             mapper.profile = profile
             GameLog.shared.note("controle remoto: perfil do iPhone (\(profile.name))")
-        case .info:
+        case .info, .ping, .pong:
             break
+        }
+    }
+
+    /// Lets go now, or once the press has lasted the minimum hold.
+    private func afterMinimumHold(_ key: String, _ release: @escaping @MainActor () -> Void) {
+        let held = Date().timeIntervalSince(pressedAt.removeValue(forKey: key) ?? .distantPast)
+        let wait = RemoteProtocol.minimumHold - held
+        guard wait > 0 else { return release() }
+        Timer.scheduledTimer(withTimeInterval: wait, repeats: false) { _ in
+            MainActor.assumeIsolated { release() }
         }
     }
 

@@ -31,6 +31,9 @@ final class EngineSession {
     private var historyTimer: Timer?
     private var windowWatcher: Timer?
     private var coverTimer: Timer?
+    /// Keeps macOS from slowing the game (and the iPhone's link) down when
+    /// its window is not in front (App Nap).
+    private var activity: NSObjectProtocol?
     private var screenshotRequest: ((NSImage) -> Void)?
 
     private init() {}
@@ -69,6 +72,9 @@ final class EngineSession {
         }
         Self.observeMessages()
         state = .running
+        activity = ProcessInfo.processInfo.beginActivity(
+            options: [.userInitiated, .latencyCritical, .idleDisplaySleepDisabled],
+            reason: "Jogo rodando")
         watchForGameWindow()
         // An iPhone can be this game's controller.
         RemoteControllerServer.shared.onChange = { EngineSession.shared.showController() }

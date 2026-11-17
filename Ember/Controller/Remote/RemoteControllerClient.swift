@@ -64,48 +64,75 @@ final class RemoteControllerClient {
 
     // MARK: - Connecting
 
+    /// The link's round trip, from the pings (nil before the first).
+    private(set) var latency: Duration?
+    /// Whether the link went over the direct, AirDrop-like path.
+    private(set) var direct = false
+
+    private var retries = 0
+    private var attempt = 0
+    private var lastPong = Date()
+    private var pinger: Task<Void, Never>?
+
     func connect(to host: Host) {
         disconnect()
         profileSentFor = nil
         retries = 0
         target = host
         state = .connecting(host.name)
-        let connection = NWConnection(to: host.endpoint, using: RemoteProtocol.parameters)
+        UIApplication.shared.isIdleTimerDisabled = true
+        open(host, peerToPeer: false)
+    }
+
+    /// The normal network first; the direct link if it does not answer
+    /// within a couple of seconds (not on the same Wi-Fi).
+    private func open(_ host: Host, peerToPeer: Bool) {
+        connection?.cancel()
+        attempt += 1
+        let thisAttempt = attempt
+        direct = peerToPeer
+        let connection = NWConnection(to: host.endpoint, using: RemoteProtocol.parameters(peerToPeer: peerToPeer))
         connection.stateUpdateHandler = { state in
             Task { @MainActor in RemoteControllerClient.shared.connectionChanged(state, connection) }
         }
         RemoteProtocol.receive(on: connection, { kind, payload in
             Task { @MainActor in RemoteControllerClient.shared.received(kind, payload) }
         }, ended: {
-            Task { @MainActor in RemoteControllerClient.shared.lost(connection) }
+            Task { @MainActor in RemoteControllerClient.shared.dropped(connection, reason: "fim da conexão") }
         })
         connection.start(queue: queue)
         self.connection = connection
-        UIApplication.shared.isIdleTimerDisabled = true
+        guard !peerToPeer else { return }
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(2.5))
+            guard self.attempt == thisAttempt, case .connecting = self.state, self.target == host else { return }
+            self.open(host, peerToPeer: true)
+        }
     }
 
     func disconnect() {
         send(.releaseAll)
+        pinger?.cancel()
+        pinger = nil
         connection?.cancel()
         connection = nil
         target = nil
+        latency = nil
         state = .idle
         UIApplication.shared.isIdleTimerDisabled = false
     }
 
-    private var retries = 0
-
     /// After the link dropped (the Mac slept, the game ended): try again.
-    func reconnect(keepingRetries: Bool = false) {
+    func reconnect() {
         guard let target else { return }
-        let count = retries
-        connect(to: target)
-        if keepingRetries { retries = count }
+        retries = 0
+        state = .connecting(target.name)
+        open(target, peerToPeer: false)
     }
 
     private func connectionChanged(_ new: NWConnection.State, _ source: NWConnection) {
         #if DEBUG
-        print("[ember-remote] connection \(new)")
+        print("[ember-remote] connection \(new) direct=\(direct)")
         #endif
         guard source === connection, let target else { return }
         switch new {
@@ -113,33 +140,67 @@ final class RemoteControllerClient {
             retries = 0
             state = .connected(target.name)
             send(.hello, UIDevice.current.name)
-        case .failed:
-            // A stale link (the Mac restarted the game, the app was
-            // closed): try again on our own a few times.
-            if retries < 3 {
-                retries += 1
-                state = .connecting(target.name)
-                Task { @MainActor in
-                    try? await Task.sleep(for: .seconds(1))
-                    if self.target == target { self.reconnect(keepingRetries: true) }
-                }
-            } else {
-                state = .lost(target.name)
-            }
+            startPinging(source)
+        case .failed(let error):
+            dropped(source, reason: error.localizedDescription)
         case .waiting:
-            // Network.framework keeps trying by itself.
-            state = .connecting(target.name)
+            // Network.framework keeps trying; open() moves on to the
+            // direct link if this takes long.
+            if case .connected = state { state = .connecting(target.name) }
         default:
             break
         }
     }
 
-    private func lost(_ source: NWConnection) {
+    /// The link went away: try again by ourselves a few times, then let
+    /// the player tap Reconectar.
+    private func dropped(_ source: NWConnection, reason: String) {
         guard source === connection, let target else { return }
-        if case .connected = state { state = .lost(target.name) }
+        pinger?.cancel()
+        latency = nil
+        #if DEBUG
+        print("[ember-remote] dropped: \(reason)")
+        #endif
+        if retries < 4 {
+            retries += 1
+            state = .connecting(target.name)
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(600))
+                guard self.target == target, case .connecting = self.state else { return }
+                self.open(target, peerToPeer: false)
+            }
+        } else {
+            state = .lost(target.name)
+        }
+    }
+
+    /// A ping a second keeps the link (and the direct radio) awake and
+    /// measures the delay; four seconds without an answer means the link
+    /// is gone even if no one said so.
+    private func startPinging(_ source: NWConnection) {
+        pinger?.cancel()
+        lastPong = Date()
+        pinger = Task { @MainActor in
+            while !Task.isCancelled, source === self.connection {
+                self.send(.ping, String(Date().timeIntervalSince1970))
+                try? await Task.sleep(for: .seconds(1))
+                if Date().timeIntervalSince(self.lastPong) > 4 {
+                    source.cancel()
+                    self.dropped(source, reason: "sem resposta do Mac")
+                    return
+                }
+            }
+        }
     }
 
     private func received(_ kind: RemoteProtocol.Kind, _ payload: String) {
+        if kind == .pong {
+            lastPong = Date()
+            if let sent = Double(payload) {
+                latency = .milliseconds(Int((Date().timeIntervalSince1970 - sent) * 1000))
+            }
+            return
+        }
         guard kind == .info else { return }
         let parts = payload.split(separator: "|", maxSplits: 3, omittingEmptySubsequences: false).map(String.init)
         if let type = parts.first.flatMap(ControllerType.init(rawValue:)) { controllerType = type }
@@ -207,15 +268,16 @@ final class RemoteControllerClient {
                 guard parts.count >= 2, let seconds = Double(parts[0]) else { continue }
                 try? await Task.sleep(for: .seconds(seconds))
                 if let button = ControlButton(rawValue: parts[1]) {
+                    // A quick tap, as a thumb does it.
                     press(button)
-                    try? await Task.sleep(for: .milliseconds(120))
+                    try? await Task.sleep(for: .milliseconds(30))
                     release(button)
                 } else if let direction = ControlDirection(rawValue: parts[1]) {
                     press(direction)
                     try? await Task.sleep(for: .milliseconds(180))
                     release(direction)
                 }
-                print("[ember-remote] \(parts[1]) \(state)")
+                print("[ember-remote] \(parts[1]) \(state) latency \(latency.map { "\($0)" } ?? "?") direct \(direct)")
             }
         }
     }
