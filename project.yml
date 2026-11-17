@@ -182,6 +182,7 @@ targets:
         # Only the ember-play:// scheme; the rest is generated.
         INFOPLIST_FILE: EmberMac/Info.plist
         INFOPLIST_KEY_CFBundleDisplayName: Ember
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.role-playing-games
         INFOPLIST_KEY_NSPrincipalClass: NSApplication
         CODE_SIGN_ENTITLEMENTS: EmberMac/EmberMac.entitlements

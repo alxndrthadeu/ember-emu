@@ -11,6 +11,8 @@ struct LibraryWindow: View {
     @State private var importing = false
     @State private var dropping = false
     @State private var deleting: GameEntry?
+    @State private var selected: GameEntry.ID?
+    @State private var info: GameEntry?
 
     enum Shelf: Hashable {
         case all, recent
@@ -78,6 +80,7 @@ struct LibraryWindow: View {
         } message: {
             Text(library.notice ?? "")
         }
+        .sheet(item: $info) { GameInfoView(game: $0) }
         .confirmationDialog("Apagar “\(deleting?.title ?? "")”?", isPresented: Binding(
             get: { deleting != nil }, set: { if !$0 { deleting = nil } }), presenting: deleting) { game in
             Button("Apagar jogo", role: .destructive) { library.delete(game) }
@@ -105,11 +108,13 @@ struct LibraryWindow: View {
                 }
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 170, maximum: 230), spacing: 24)], spacing: 28) {
                     ForEach(shown) { game in
-                        MacGameCard(game: game)
+                        MacGameCard(game: game, selected: selected == game.id)
                             .onTapGesture(count: 2) { library.play(game) }
+                            .simultaneousGesture(TapGesture().onEnded { selected = game.id })
                             .contextMenu {
                                 Button("Jogar") { library.play(game) }
                                 Button("Continuar de onde parou") { library.play(game, resume: true) }
+                                Button("Informações") { info = game }
                                 Divider()
                                 Button("Mostrar no Finder") {
                                     NSWorkspace.shared.activateFileViewerSelecting([game.folder])
@@ -130,7 +135,28 @@ struct LibraryWindow: View {
                 }
             }
             .background(Theme.background)
+            .focusable()
+            .focusEffectDisabled()
+            .onKeyPress(.return) {
+                guard let game = selectedGame else { return .ignored }
+                library.play(game)
+                return .handled
+            }
+            .onKeyPress(.delete) {
+                guard let game = selectedGame else { return .ignored }
+                deleting = game
+                return .handled
+            }
+            .onKeyPress(characters: .init(charactersIn: "i"), phases: .down) { press in
+                guard press.modifiers.contains(.command), let game = selectedGame else { return .ignored }
+                info = game
+                return .handled
+            }
         }
+    }
+
+    private var selectedGame: GameEntry? {
+        library.games.first { $0.id == selected }
     }
 
     private var empty: some View {
@@ -167,6 +193,7 @@ struct LibraryWindow: View {
 /// A game on the shelf: its cover and title; it lifts under the pointer.
 private struct MacGameCard: View {
     let game: GameEntry
+    var selected = false
     @State private var hovering = false
 
     var body: some View {
@@ -174,6 +201,12 @@ private struct MacGameCard: View {
             MacCover(game: game)
                 .aspectRatio(4 / 3, contentMode: .fit)
                 .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                .overlay {
+                    if selected {
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .strokeBorder(Theme.accent, lineWidth: 3)
+                    }
+                }
                 .shadow(color: .black.opacity(hovering ? 0.25 : 0.1), radius: hovering ? 14 : 6, y: hovering ? 6 : 3)
                 .scaleEffect(hovering ? 1.03 : 1)
             Text(game.title)
