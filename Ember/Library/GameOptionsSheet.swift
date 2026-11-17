@@ -23,7 +23,6 @@ struct GameOptionsSheet: View {
     @State private var toast: String?
     @State private var working = false
     @State private var showingLogs = false
-    @State private var translating = false
 
     /// The entry as the library holds it now (title or cover may have
     /// changed while the sheet is open).
@@ -94,15 +93,6 @@ struct GameOptionsSheet: View {
                         editingControls = true
                     }
                     Divider().padding(.leading, 48)
-                    if GameTranslation.isSupported {
-                        SheetRow(icon: "character.bubble", title: String(localized: "Traduzir textos"),
-                                 value: GameTranslation.source(for: current.id) == nil
-                                    ? String(localized: "Desligado") : String(localized: "Ligado"),
-                                 chevron: "chevron.right") {
-                            translating = true
-                        }
-                        Divider().padding(.leading, 48)
-                    }
                     Menu {
                         Picker("Ruby", selection: Binding(
                             get: { RubyChoice.saved(for: current.id) },
@@ -195,11 +185,6 @@ struct GameOptionsSheet: View {
         }
         .sheet(isPresented: $showingSaves, onDismiss: refreshSaves) {
             SavesView(game: current)
-        }
-        .sheet(isPresented: $translating) {
-            if #available(iOS 26, *) {
-                GameTranslationView(game: current)
-            }
         }
         .sheet(isPresented: $showingLogs) {
             LogsView(game: current)

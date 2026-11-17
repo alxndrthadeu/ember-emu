@@ -9,7 +9,7 @@ enum EngineConfig {
     /// ember_quicksave is a preload, not a postload: the engine runs a
     /// config postloadScript only from rgss_main, which only VX Ace games
     /// call. The script hooks game classes lazily, once they exist.
-    private static var emberPreloads: [String] { scripts(["ember_quiet_warnings", "ember_quicksave", "ember_translate"]) }
+    private static var emberPreloads: [String] { scripts(["ember_quiet_warnings", "ember_quicksave"]) }
     private static var emberPostloads: [String] { [] }
 
     private static func scripts(_ names: [String]) -> [String] {

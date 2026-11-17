@@ -104,7 +104,6 @@ final class EngineSession {
         resumeSlotForLog = resumeSlot
         state = .preparing(game.title)
         StateStore.prepareEnvironment(gameID: game.id, resumeSlot: resumeSlot)
-        GameTranslation.prepareEnvironment(for: game)
         // Games live in Documents/Games, which is writable: the engine
         // runs them in place (it writes a path cache next to them).
         start(game, in: game.folder)
@@ -170,7 +169,6 @@ final class EngineSession {
         GameSettings.apply()
         state = .running
         watchForGameWindow()
-        if #available(iOS 26, *) { TranslationWorker.start(for: game) }
 
         // Not a main-queue block: EmberRunEngine holds the main thread
         // until the game ends (see EmberEngine.h).
@@ -201,7 +199,6 @@ final class EngineSession {
         libraryRoot = nil
         launcherWindow?.overrideUserInterfaceStyle = .unspecified
         currentGame = nil
-        if #available(iOS 26, *) { TranslationWorker.stop() }
         // New cover and "Continuar".
         LibraryStore.shared.reload()
         state = .finished
