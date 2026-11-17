@@ -83,6 +83,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         window.makeKeyAndOrderFront(nil)
         libraryWindow = window
         NSApp.activate()
+        // An iPhone nearby can send games here.
+        MacTransferServer.shared.start()
         #if DEBUG
         developmentHooks()
         #endif
@@ -184,8 +186,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func developmentHooks() {
         let environment = ProcessInfo.processInfo.environment
         if environment["EMBER_INSTALL_DEMO"] != nil { MacLibrary.shared.installDemo() }
-        if environment["EMBER_PLAY"] != nil, let first = MacLibrary.shared.games.first {
-            MacLibrary.shared.play(first)
+        // EMBER_PLAY=1 opens the first game; EMBER_PLAY=<start of an id>, that one.
+        if let wanted = environment["EMBER_PLAY"],
+           let game = MacLibrary.shared.games.first(where: { wanted == "1" || $0.id.hasPrefix(wanted) }) {
+            MacLibrary.shared.play(game)
         }
     }
     #endif

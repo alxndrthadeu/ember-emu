@@ -78,6 +78,28 @@ extension LibraryView {
                 print("[ember-wifi]", WifiTransfer.shared.address ?? "no address")
             }
         }
+        if let id = environment["EMBER_SENDMAC"] {
+            // Sends that game to the first Mac found.
+            showingSendToMac = true
+            GameSender.shared.browse()
+            Task {
+                while GameSender.shared.macs.isEmpty { try? await Task.sleep(for: .milliseconds(300)) }
+                if let game = library.games.first(where: { $0.id.hasPrefix(id) }) {
+                    GameSender.shared.send([game], to: GameSender.shared.macs[0])
+                    var last = ""
+                    for _ in 0..<600 {
+                        let now = "\(GameSender.shared.state)"
+                        if now != last { print("[ember-send] \(now)"); last = now }
+                        if case .done = GameSender.shared.state { break }
+                        if case .failed = GameSender.shared.state { break }
+                        try? await Task.sleep(for: .milliseconds(500))
+                    }
+                }
+            }
+        }
+        if let script = environment["EMBER_REMOTE"] {
+            RemoteControllerClient.shared.runDevelopmentScript(script)
+        }
         switch environment["EMBER_SHOW"] {
         case "history": showingHistory = true
         case "controls": showingControls = true
@@ -86,6 +108,7 @@ extension LibraryView {
             optionsFor = library.games.first { id == nil || $0.id == id }
         case "controller": library.chooseController = library.games.first
         case "remote": RemoteControllerScreen.present()
+        case "sendmac": showingSendToMac = true
         case "import", "computer", "rtp": AppRouter.shared.tab = .importGames
         case "settings", "profiles": AppRouter.shared.tab = .settings
         default: break
@@ -102,9 +125,6 @@ extension LibraryView {
                 try? await Task.sleep(for: .seconds(1))
                 print("[ember-tv]", TVStream.shared.address ?? "no address", TVStream.shared.isOn)
             }
-        }
-        if let script = environment["EMBER_REMOTE"] {
-            RemoteControllerClient.shared.runDevelopmentScript(script)
         }
         if let script = environment["EMBER_KEYS"] {
             Task { await runKeyScript(script) }

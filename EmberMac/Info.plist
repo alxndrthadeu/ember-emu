@@ -5,6 +5,7 @@
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_ember-ctl._tcp</string>
+		<string>_ember-xfer._tcp</string>
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Para o seu iPhone virar o controle do jogo.</string>

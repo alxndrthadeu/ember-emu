@@ -42,6 +42,7 @@ final class RemoteControllerClient {
 
     func browse() {
         guard browser == nil else { return }
+        GameSender.usedBefore = true
         let browser = NWBrowser(for: .bonjour(type: RemoteProtocol.serviceType, domain: nil),
                                 using: RemoteProtocol.parameters)
         browser.browseResultsChangedHandler = { results, _ in

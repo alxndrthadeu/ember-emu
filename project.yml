@@ -163,6 +163,7 @@ targets:
       - Ember/Controller/Profiles/KeyboardKey.swift
       - Ember/Controller/Profiles/ControlProfiles.swift
       - Ember/Controller/Remote/RemoteProtocol.swift
+      - Ember/Controller/Remote/TransferProtocol.swift
       - Ember/Engine/EngineConfig.swift
       - Ember/Engine/ScreenFilter.swift
       - Ember/Engine/StateStore.swift

@@ -9,6 +9,7 @@ struct LibraryView: View {
     @State var showingHistory = false
     @State var showingControls = false
     @State private var showingRemote = false
+    @State var showingSendToMac = false
     /// A game tapped after another one ended: the app must reopen.
     @State private var reopenFor: GameEntry?
     @State private var removingArchived: ArchivedGame?
@@ -30,6 +31,7 @@ struct LibraryView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Menu {
+                        Button("Enviar jogos para o Mac", systemImage: "arrow.up.forward.app") { showingSendToMac = true }
                         Button("Usar como controle do Mac", systemImage: "macbook.and.iphone") { showingRemote = true }
                         Button("Guia de controles", systemImage: "questionmark.circle") { showingControls = true }
                     } label: {
@@ -47,6 +49,12 @@ struct LibraryView: View {
             .safeAreaInset(edge: .bottom) { statusBanner }
         }
         .sheet(isPresented: $showingRemote) { RemoteHostsView() }
+        .sheet(isPresented: $showingSendToMac) { SendToMacView() }
+        .onAppear {
+            // Only once the player has used a Mac link: browsing asks for
+            // the local network permission.
+            if GameSender.usedBefore { GameSender.shared.browse() }
+        }
         .alert("Não deu certo",
                isPresented: Binding(get: { library.lastError != nil }, set: { if !$0 { library.lastError = nil } })) {
             Button("OK", role: .cancel) {}
@@ -125,8 +133,42 @@ struct LibraryView: View {
         reduceMotion ? .opacity : .scale(scale: 0.85).combined(with: .opacity)
     }
 
+    /// A Mac with Ember open nearby: offer to send games there.
+    @ViewBuilder
+    private var macNearby: some View {
+        if let mac = GameSender.shared.macs.first, !library.games.isEmpty {
+            Button {
+                showingSendToMac = true
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: "macbook")
+                        .font(.title3)
+                        .foregroundStyle(Theme.accent)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(verbatim: mac.name)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Theme.primaryText)
+                        Text("Está por perto com o Ember aberto")
+                            .font(.caption)
+                            .foregroundStyle(Theme.secondaryText)
+                    }
+                    Spacer()
+                    Text("Enviar jogos")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.accent)
+                }
+                .padding(14)
+                .background(Theme.surface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal, 20)
+            .padding(.top, 8)
+        }
+    }
+
     private var grid: some View {
         ScrollView {
+            macNearby
             if let recent = library.recent {
                 ContinueCard(game: recent, resumes: StateStore.autoState(for: recent.id) != nil)
                     .cardPress(onTap: { open(recent, resume: true) }, onLongPress: { showOptions(recent) })

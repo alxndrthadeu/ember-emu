@@ -28,7 +28,16 @@ struct LibraryWindow: View {
             }
             .navigationSplitViewColumnWidth(min: 180, ideal: 200)
             .safeAreaInset(edge: .bottom) {
-                if library.syncing {
+                if let incoming = MacTransferServer.shared.receiving {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Label("Recebendo do iPhone", systemImage: "iphone.and.arrow.forward")
+                            .font(.caption.weight(.semibold))
+                        Text(incoming.title).font(.caption).lineLimit(1)
+                        ProgressView(value: incoming.fraction)
+                    }
+                    .foregroundStyle(Theme.secondaryText)
+                    .padding(12)
+                } else if library.syncing {
                     Label("Sincronizando saves…", systemImage: "icloud")
                         .font(.caption)
                         .foregroundStyle(Theme.secondaryText)
