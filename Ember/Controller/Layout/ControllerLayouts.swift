@@ -28,6 +28,15 @@ struct ControllerContext: Equatable {
     var duoGameBelow = false
     /// Long side / short side of the screen (a phone is about 2.17).
     var screenAspect: CGFloat = 2.17
+    /// An iPad, or a Mac running the iPad app: a wide screen with no
+    /// fold, so never the Duo's split halves.
+    var tablet = false
+
+    /// iPad, and the app on a Mac ("Designed for iPad").
+    @MainActor
+    static var isTablet: Bool {
+        UIDevice.current.userInterfaceIdiom == .pad || ProcessInfo.processInfo.isiOSAppOnMac
+    }
 
     /// The device a screen of this size is.
     static func device(for size: CGSize, partiallyOpen: Bool = false) -> Device {
@@ -50,7 +59,7 @@ struct ControllerContext: Equatable {
         return ControllerContext(device: device, portrait: portrait, type: type, keyboard: keyboard,
                                  gameAspect: layout.aspect, fullWidth: skins.portraitFullWidth,
                                  duoSplit: skins.duoSplit, duoGameBelow: skins.duoGameBelow,
-                                 screenAspect: aspect)
+                                 screenAspect: aspect, tablet: isTablet)
     }
 }
 
@@ -90,6 +99,16 @@ enum ControllerLayouts {
     /// A built-in phone layout, adapted to the game and the device.
     private static func builtIn(_ phone: SkinLayout, in context: ControllerContext) -> SkinLayout {
         var adapted = BuiltInSkins.adapted(phone, keyboard: context.keyboard)
+        if context.tablet, case .duo(let viewAspect, _) = context.device {
+            // iPad and Mac: held like a console in landscape (game in the
+            // middle, controls at the sides), one big picture over the
+            // controls in portrait. No fold to keep clear.
+            if !context.portrait {
+                return BuiltInSkins.handheldLandscape(adapted, viewAspect: viewAspect, gameAspect: context.gameAspect)
+            }
+            adapted = BuiltInSkins.reshaped(adapted, viewAspect: viewAspect)
+            return BuiltInSkins.fitted(adapted, aspect: context.gameAspect, fullWidth: context.fullWidth)
+        }
         if case .duo(let viewAspect, let partial) = context.device {
             // Split (the default): game on one half, controller on the
             // other, nothing on the crease. Lying flat in landscape it is

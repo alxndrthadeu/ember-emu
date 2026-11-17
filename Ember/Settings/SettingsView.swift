@@ -38,6 +38,7 @@ struct SettingsView: View {
     private static var isWideScreen: Bool {
         let size = UIScreen.main.bounds.size
         return max(size.width, size.height) / max(min(size.width, size.height), 1) < ControllerLayouts.wideBelow
+            && !ControllerContext.isTablet
     }
 
     var body: some View {

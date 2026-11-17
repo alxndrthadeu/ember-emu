@@ -68,7 +68,7 @@ struct GameMenuView: View {
                 MenuTile(icon: "camera.fill", title: String(localized: "Captura")) {
                     saveScreenshot()
                 }
-                if (GameLayout.shared.viewAspect ?? 2) < ControllerLayouts.wideBelow {
+                if (GameLayout.shared.viewAspect ?? 2) < ControllerLayouts.wideBelow, !ControllerContext.isTablet {
                     // An open iPhone Duo: split halves or one big picture.
                     MenuTile(icon: skins.duoSplit ? "rectangle.split.1x2.fill" : "rectangle.fill",
                              title: String(localized: "Tela"),
