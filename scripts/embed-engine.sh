@@ -23,6 +23,11 @@ if [ ! -d "$TREE/ruby-stdlib" ]; then
 fi
 
 ASSETS="$APP/Assets.bundle"
+# On the Mac, NSBundle reads a bundle's files from Contents/Resources
+# (the engine looks its assets up through NSBundle); iOS bundles are flat.
+if [ "${PLATFORM_NAME:-}" = "macosx" ]; then
+    ASSETS="$APP/Assets.bundle/Contents/Resources"
+fi
 mkdir -p "$ASSETS/Shaders" "$ASSETS/Fonts" "$ASSETS/Preload" "$ASSETS/Postload"
 
 rsync -a --include='*.frag' --include='*.vert' --include='*.h' --exclude='*' \
