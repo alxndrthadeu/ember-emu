@@ -130,3 +130,36 @@ final class GameKeyScannerBlockTests: XCTestCase {
         XCTAssertEqual(GameKeyScanner.keys(inCode: code).map(\.name), ["F5"])
     }
 }
+
+final class GameUpdaterTests: XCTestCase {
+    private func makeGame(at folder: URL, title: String, scripts: String, save: String?) throws {
+        let fm = FileManager.default
+        try fm.createDirectory(at: folder.appendingPathComponent("Data"), withIntermediateDirectories: true)
+        try "[Game]\nTitle=\(title)\nLibrary=System\\RGSS301.dll\n".write(
+            to: folder.appendingPathComponent("Game.ini"), atomically: true, encoding: .utf8)
+        try scripts.write(to: folder.appendingPathComponent("Data/Scripts.rvdata2"), atomically: true, encoding: .utf8)
+        if let save {
+            try save.write(to: folder.appendingPathComponent("Save01.rvdata2"), atomically: true, encoding: .utf8)
+        }
+    }
+
+    func testNewVersionTakesTheOldPlaceAndKeepsSaves() throws {
+        let fm = FileManager.default
+        let root = fm.temporaryDirectory.appendingPathComponent("UpdaterTest-\(UUID().uuidString)")
+        defer { try? fm.removeItem(at: root) }
+        let old = root.appendingPathComponent("Updater Test Game")
+        let new = root.appendingPathComponent("Updater Test Game 2")
+        try makeGame(at: old, title: "Updater Test Game", scripts: "v1", save: "progress")
+        try makeGame(at: new, title: "Updater Test Game", scripts: "v2", save: nil)
+        let existing = try XCTUnwrap(GameEntry(folder: old))
+        let incoming = try XCTUnwrap(GameEntry(folder: new))
+        XCTAssertEqual(GameUpdater.existingVersion(of: incoming, in: [existing, incoming])?.id, existing.id)
+
+        let carried = try GameUpdater.update(GameUpdater.Offer(incoming: incoming, existing: existing))
+        XCTAssertEqual(carried, 1)
+        XCTAssertFalse(fm.fileExists(atPath: new.path))
+        XCTAssertEqual(try String(contentsOf: old.appendingPathComponent("Data/Scripts.rvdata2"), encoding: .utf8), "v2")
+        XCTAssertEqual(try String(contentsOf: old.appendingPathComponent("Save01.rvdata2"), encoding: .utf8), "progress")
+        try? fm.removeItem(at: SaveManager.backupsFolder(for: existing))
+    }
+}

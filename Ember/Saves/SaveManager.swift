@@ -199,6 +199,24 @@ enum SaveManager {
         }
     }
 
+    /// A new version of a game is replacing `game`'s files: its saves in
+    /// the game folder (Save1.rxdata, Save Data/) are copied into the new
+    /// folder, and kept in Backups too. UserData/<id> is not touched: the
+    /// game keeps its id.
+    static func carryGameFolderSaves(of game: GameEntry, into newFolder: URL) throws -> Int {
+        let fm = FileManager.default
+        let stamp = Self.stamp()
+        var count = 0
+        for save in gameFolderSaves(game) {
+            try backUp(save.url, relativeID: save.id, of: game, stamp: stamp)
+            let target = newFolder.appendingPathComponent(save.id)
+            try fm.createDirectory(at: target.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try replace(target, with: save.url)
+            count += 1
+        }
+        return count
+    }
+
     // MARK: Helpers
 
     private static var documents: URL {

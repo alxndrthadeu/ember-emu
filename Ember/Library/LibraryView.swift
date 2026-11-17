@@ -48,6 +48,18 @@ struct LibraryView: View {
         } message: {
             Text(library.lastError ?? "")
         }
+        .confirmationDialog(
+            "Versão nova de “\(library.updateOffer?.existing.title ?? "")”?",
+            isPresented: Binding(get: { library.updateOffer != nil },
+                                 set: { if !$0, let offer = library.updateOffer { library.keepBoth(offer) } }),
+            titleVisibility: .visible,
+            presenting: library.updateOffer
+        ) { offer in
+            Button("Atualizar o jogo") { library.applyUpdate(offer) }
+            Button("Manter os dois") { library.keepBoth(offer) }
+        } message: { _ in
+            Text("Ao atualizar, os arquivos novos substituem os antigos. Saves, estados, capa e controles continuam, e os saves ficam guardados também em Backups.")
+        }
         .alert(library.importNotice?.title ?? "",
                isPresented: Binding(get: { library.importNotice != nil }, set: { if !$0 { library.importNotice = nil } })) {
             Button("OK", role: .cancel) {}

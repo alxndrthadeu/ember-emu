@@ -26,6 +26,9 @@ final class LibraryStore {
     var importNotice: Notice?
     /// A game just imported: Ember asks which controller it gets.
     var chooseController: GameEntry?
+    /// A game just imported that looks like a new version of one on the
+    /// shelf: the library asks whether to update it.
+    var updateOffer: GameUpdater.Offer?
 
     struct Notice: Equatable {
         let title: String
@@ -165,6 +168,10 @@ final class LibraryStore {
                     self.reload()
                     if case .success(.game(let id)) = result,
                        let game = self.games.first(where: { $0.id == id }) {
+                        if let existing = GameUpdater.existingVersion(of: game, in: self.games) {
+                            self.updateOffer = GameUpdater.Offer(incoming: game, existing: existing)
+                            return
+                        }
                         Task {
                             await ControllerTypeStore.detect([game])
                             if url.lastPathComponent == "EmberDemo" {
@@ -203,6 +210,45 @@ final class LibraryStore {
         }
         if !candidates.isEmpty {
             importItems(candidates, removeSources: true)
+        }
+    }
+
+    /// Puts a new version in the old game's place (saves, states and
+    /// settings stay).
+    func applyUpdate(_ offer: GameUpdater.Offer) {
+        updateOffer = nil
+        importing.append(offer.incoming.title)
+        Task.detached(priority: .userInitiated) {
+            let result = Result { try GameUpdater.update(offer) }
+            await MainActor.run {
+                self.importing.removeAll { $0 == offer.incoming.title }
+                self.reload()
+                switch result {
+                case .success:
+                    // The new version's scripts may read other keys.
+                    ControllerTypeStore.forgetDetection(offer.existing.id)
+                    ControllerTypeStore.forget(offer.incoming.id)
+                    Haptics.success()
+                    self.importNotice = Notice(
+                        title: String(localized: "Jogo atualizado"),
+                        message: String(localized: "“\(offer.existing.title)” agora está na versão nova. Saves, estados e controles continuam."))
+                    if let game = self.games.first(where: { $0.id == offer.existing.id }) {
+                        Task { await ControllerTypeStore.detect([game]) }
+                    }
+                case .failure(let error):
+                    self.lastError = error.localizedDescription
+                }
+            }
+        }
+    }
+
+    /// Keeps both: the new version stays as its own game.
+    func keepBoth(_ offer: GameUpdater.Offer) {
+        updateOffer = nil
+        let game = offer.incoming
+        Task {
+            await ControllerTypeStore.detect([game])
+            if ControllerTypeStore.needsChoice(game) { self.chooseController = game }
         }
     }
 
