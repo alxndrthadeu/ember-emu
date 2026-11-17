@@ -4,7 +4,7 @@ What changed in each version of Ember. The newest version is on top; `Unreleased
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follow [Semantic Versioning](https://semver.org/): a new feature bumps the minor number (1.1.0), a fix the patch number (1.0.1).
 
-## [1.3.0] - Unreleased
+## [1.3.0] - 2026-11-17
 
 ### Fixed
 - A backup left in Ember's folder (AirDrop, Finder, "Save to Files") was restored again every time the app came back, and two restores in the same minute could lose the copy of the saves it replaced. Each backup is now restored once and removed, and the replaced saves are always kept.

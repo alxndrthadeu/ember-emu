@@ -1,0 +1,7 @@
+• Saves in iCloud: each game's saves and save states go to iCloud on their own and come back on another iPhone with the same game. If they change on both, the newest stays and the other goes to Backups.
+• Update a game without losing anything: import a new version of a game on your shelf and Ember swaps the files, keeping saves, save states, cover and controls.
+• Siri and Shortcuts: "Continue in Ember", play a game from your shelf, or turn on the Wi-Fi transfer.
+• If a game shows an error typical of the wrong Ruby version, switch versions with one tap right in the alert.
+• Important fix: a backup left in Ember's folder could be restored again when you came back to the app. It is now restored only once, and replaced saves are always kept.
+• Save states work in the demo game; keys shared by two buttons, error alerts and Wi-Fi transfer are more reliable.
+• Lighter while you play, Play on TV uses less battery, and better accessibility (VoiceOver, text size, contrast, Reduce Motion).
