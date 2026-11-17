@@ -53,7 +53,8 @@ final class EngineSession {
     private let saveWatcher = SaveWatcher()
 
     private func touchSession() {
-        if let sessionID { PlayHistory.touch(sessionID) }
+        // Rewrites the history list: off the main thread, the game's.
+        if let sessionID { Task.detached(priority: .utility) { PlayHistory.touch(sessionID) } }
     }
 
     /// True while the game is paused because the app left the screen.

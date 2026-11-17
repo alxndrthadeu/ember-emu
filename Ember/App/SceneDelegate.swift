@@ -8,6 +8,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                willConnectTo session: UISceneSession,
                options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = scene as? UIWindowScene else { return }
+        Diagnostics.shared.start()
 
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = UIHostingController(rootView: RootView().fontDesign(.rounded))

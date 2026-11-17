@@ -92,11 +92,16 @@ final class GameLog: @unchecked Sendable {
         savedErr = dup(STDERR_FILENO)
         dup2(pipe.fileHandleForWriting.fileDescriptor, STDOUT_FILENO)
         dup2(pipe.fileHandleForWriting.fileDescriptor, STDERR_FILENO)
+        #if DEBUG
         let original = savedOut
+        #endif
         pipe.fileHandleForReading.readabilityHandler = { [weak self] reader in
             let data = reader.availableData
             guard !data.isEmpty else { return }
+            #if DEBUG
+            // Xcode's console; nobody reads it in a store build.
             data.withUnsafeBytes { _ = write(original, $0.baseAddress, data.count) }
+            #endif
             self?.append(data)
         }
         self.pipe = pipe
@@ -131,10 +136,14 @@ final class GameLog: @unchecked Sendable {
         }
     }
 
-    private func time() -> String {
+    private static let clock: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss"
-        return formatter.string(from: Date())
+        return formatter
+    }()
+
+    private func time() -> String {
+        Self.clock.string(from: Date())
     }
 
     private func prune(_ folder: URL) {

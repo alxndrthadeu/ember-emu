@@ -25,7 +25,7 @@ enum SaveThumbnails {
     }
 
     static func image(for save: SaveManager.SaveFile, gameID: String) -> UIImage? {
-        UIImage(contentsOfFile: url(for: save, gameID: gameID).path)
+        CoverCache.image(at: url(for: save, gameID: gameID))
     }
 
     /// Asks the running game for pictures of these saves (just written).
@@ -92,9 +92,22 @@ final class SaveWatcher {
         known = nil
     }
 
+    private var scanning = false
+
+    /// The folders are listed off the main thread, which is also the
+    /// game's: only the result comes back.
     private func scan() {
-        guard let game else { return }
-        let saves = SaveManager.saves(for: game)
+        guard let game, !scanning else { return }
+        scanning = true
+        Task { [weak self] in
+            let saves = await Task.detached(priority: .utility) { SaveManager.saves(for: game) }.value
+            self?.found(saves, in: game)
+        }
+    }
+
+    private func found(_ saves: [SaveManager.SaveFile], in scanned: GameEntry) {
+        scanning = false
+        guard let game, game.id == scanned.id else { return }
         let now = Dictionary(saves.map { ($0.id, $0.modified) }, uniquingKeysWith: { a, _ in a })
         if let known {
             let written = saves.filter { known[$0.id] != $0.modified }

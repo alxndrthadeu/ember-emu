@@ -273,6 +273,7 @@ struct SettingsView: View {
             LabeledContent("Versão", value: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")
             LabeledContent("Motor", value: "mkxp-z")
             NavigationLink("Licenças de código aberto") { LicensesView() }
+            NavigationLink("Relatórios do sistema") { DiagnosticsView() }
         }
     }
 }

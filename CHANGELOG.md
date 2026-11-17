@@ -17,8 +17,15 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Importing saves no longer accepts the game's own files (scripts, Game.ini), and the error log no longer shows up as a save.
 - Two copies of the same game imported at once no longer fail.
 
+### Added
+- Settings › System reports: what iOS reports about Ember on this iPhone (crashes, hangs, heat, CPU, a daily summary), kept on the device and shared only if you choose.
+
 ### Changed
 - Save state pictures are written as JPEG, quicker on the game's thread.
+- Playing on the TV costs nothing until a browser opens the page, and frames are only encoded when a screen can take them.
+- Less work on the game's thread while playing: save files are watched in the background, the play history is written in the background, covers and save pictures are decoded once.
+- Accessibility: game cards are one VoiceOver button and show when they are pressed; text sizes follow Dynamic Type in the controls screens; darker amber and green where they mark something on cream; Reduce Motion is followed in the library and the game; messages in the game are read by VoiceOver; success and error vibrate differently.
+- The game menu scrolls when it does not fit (larger text, landscape); deleting a control profile or undoing a game's controls asks first.
 
 ## [1.2.1] - 2026-11-15
 

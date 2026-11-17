@@ -127,7 +127,7 @@ struct ArchivedCard: View {
                             LinearGradient(colors: [Theme.surface, Theme.surface2], startPoint: .top, endPoint: .bottom)
                             if let url = GameCovers.url(forGameID: record.id,
                                                         folder: GameImporter.gamesFolder.appendingPathComponent(record.id)),
-                               let image = UIImage(contentsOfFile: url.path) {
+                               let image = CoverCache.image(at: url) {
                                 Image(uiImage: image).resizable().interpolation(.none).scaledToFill()
                             } else {
                                 Text(String(record.title.prefix(1)))
