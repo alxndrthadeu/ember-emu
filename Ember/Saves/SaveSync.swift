@@ -27,7 +27,24 @@ enum SaveSync {
         var conflicts: [String] = []
         /// Files iCloud still has to bring down; a later run gets them.
         var waiting = 0
+        /// Per game id.
+        var games: [String: GameReport] = [:]
     }
+
+    /// What one sync did for one game, and who saved it last.
+    struct GameReport: Equatable, Sendable {
+        var uploaded = 0
+        var downloaded = 0
+        var waiting = 0
+        var conflict = false
+        /// The device whose saves iCloud holds now, and when.
+        var lastDevice: String?
+        var lastDate: Date?
+    }
+
+    /// This device's name for "last saved on" ("iPhone de Ana", the Mac's
+    /// name). Set by the app at launch.
+    nonisolated(unsafe) static var deviceName = "Ember"
 
     /// One game to sync: its id and the folders its saves live in.
     struct GameFolders: Sendable {
@@ -71,6 +88,7 @@ enum SaveSync {
     }
 
     private static func sync(_ game: GameFolders, cloud: URL, report: inout Report) {
+        let before = report
         var state = SyncState.load(game.id)
         let areas: [(name: String, local: URL, files: [String])] = [
             ("folder", game.folder, folderSaves(in: game.folder)),
@@ -89,6 +107,60 @@ enum SaveSync {
             }
         }
         state.save(game.id)
+
+        var mine = GameReport(uploaded: report.uploaded - before.uploaded,
+                              downloaded: report.downloaded - before.downloaded,
+                              waiting: report.waiting - before.waiting,
+                              conflict: report.conflicts.count > before.conflicts.count)
+        // Who saved last travels with the saves.
+        let last = cloud.appendingPathComponent("last.json")
+        if mine.uploaded > 0, let data = try? JSONEncoder().encode(LastSave(device: deviceName, date: Date())) {
+            try? data.write(to: last, options: .atomic)
+        }
+        if let data = try? Data(contentsOf: last), let saved = try? JSONDecoder().decode(LastSave.self, from: data) {
+            mine.lastDevice = saved.device
+            mine.lastDate = saved.date
+        } else if fileExistsOrPlaceholder(last) {
+            try? FileManager.default.startDownloadingUbiquitousItem(at: last)
+        }
+        report.games[game.id] = mine
+    }
+
+    private struct LastSave: Codable {
+        let device: String
+        let date: Date
+    }
+
+    private static func fileExistsOrPlaceholder(_ url: URL) -> Bool {
+        FileManager.default.fileExists(atPath: url.path) || FileManager.default.fileExists(atPath: placeholder(for: url).path)
+    }
+
+    /// Whether iCloud has saves of this game newer than this device's,
+    /// still to come down (asked before a game opens).
+    static func hasIncoming(_ game: GameFolders) -> Bool {
+        guard isEnabled, let root = cloudRoot() else { return false }
+        return hasIncoming(game, root: root)
+    }
+
+    /// Against any folder standing in for iCloud (tests).
+    static func hasIncoming(_ game: GameFolders, root: URL) -> Bool {
+        let cloud = root.appendingPathComponent(game.id, isDirectory: true)
+        let state = SyncState.load(game.id)
+        for area in ["folder", "userdata", "states"] {
+            let cloudArea = cloud.appendingPathComponent(area, isDirectory: true)
+            for name in allFiles(in: cloudArea, includingPlaceholders: true) {
+                let remote = cloudArea.appendingPathComponent(name)
+                let key = "\(area)/\(name)"
+                if !FileManager.default.fileExists(atPath: remote.path) {
+                    // Only a placeholder: new to this device unless synced
+                    // before (iCloud also evicts old files to save space).
+                    if state.files[key] == nil { return true }
+                    continue
+                }
+                if let date = modified(remote), date != state.files[key]?.remote { return true }
+            }
+        }
+        return false
     }
 
     private static func syncFile(key: String, local: URL, remote: URL, game: GameFolders,

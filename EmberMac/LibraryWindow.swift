@@ -90,6 +90,22 @@ struct LibraryWindow: View {
             Text(library.notice ?? "")
         }
         .sheet(item: $info) { GameInfoView(game: $0) }
+        .overlay(alignment: .top) {
+            if library.waitingForSave {
+                SyncToast(text: String(localized: "Esperando o save chegar…"), busy: true)
+            } else if let toast = SyncStatus.shared.toast {
+                SyncToast(text: toast)
+            }
+        }
+        .animation(.spring(response: 0.35), value: SyncStatus.shared.toast)
+        .alert("Tem um save mais novo chegando", isPresented: Binding(
+            get: { library.incomingFor != nil }, set: { if !$0 { library.incomingFor = nil } })) {
+            Button("Esperar o save") { library.waitThenPlay() }
+            Button("Jogar mesmo assim") { library.playAnyway() }
+            Button("Cancelar", role: .cancel) {}
+        } message: {
+            Text("Este jogo foi salvo em outro aparelho e o save ainda está vindo do iCloud. Se jogar agora, você começa do save antigo.")
+        }
         .confirmationDialog("Apagar “\(deleting?.title ?? "")”?", isPresented: Binding(
             get: { deleting != nil }, set: { if !$0 { deleting = nil } }), presenting: deleting) { game in
             Button("Apagar jogo", role: .destructive) { library.delete(game) }
@@ -210,6 +226,7 @@ private struct MacGameCard: View {
             MacCover(game: game)
                 .aspectRatio(4 / 3, contentMode: .fit)
                 .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                .overlay(alignment: .topTrailing) { SyncBadge(id: game.id).padding(8) }
                 .overlay {
                     if selected {
                         RoundedRectangle(cornerRadius: 14, style: .continuous)

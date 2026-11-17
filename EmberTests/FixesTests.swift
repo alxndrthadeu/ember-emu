@@ -223,6 +223,24 @@ final class SaveSyncTests: XCTestCase {
         XCTAssertEqual(read(local), "three-here")
         XCTAssertEqual(read(remote), "three-here")
     }
+
+    func testIncomingSaveAndWhoSavedLast() throws {
+        SaveSync.deviceName = "Mac de Teste"
+        let local = game.folder.appendingPathComponent("Save01.rvdata2")
+        let remote = cloud.appendingPathComponent("\(game.id)/folder/Save01.rvdata2")
+        try write("one", local, age: 100)
+        let report = SaveSync.sync([game], root: cloud)
+        XCTAssertEqual(report.games[game.id]?.uploaded, 1)
+        XCTAssertEqual(report.games[game.id]?.lastDevice, "Mac de Teste")
+        XCTAssertFalse(SaveSync.hasIncoming(game, root: cloud))
+
+        // Another device saved: something is coming until the next sync.
+        try write("two", remote, age: 10)
+        XCTAssertTrue(SaveSync.hasIncoming(game, root: cloud))
+        _ = SaveSync.sync([game], root: cloud)
+        XCTAssertFalse(SaveSync.hasIncoming(game, root: cloud))
+        XCTAssertEqual(read(local), "two")
+    }
 }
 
 @MainActor

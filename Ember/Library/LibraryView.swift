@@ -9,6 +9,8 @@ struct LibraryView: View {
     @State var showingHistory = false
     @State var showingControls = false
     @State var showingSendToMac = false
+    @State private var incomingFor: (game: GameEntry, resume: Bool)?
+    @State private var waitingForSave = false
     /// A game tapped after another one ended: the app must reopen.
     @State private var reopenFor: GameEntry?
     @State private var removingArchived: ArchivedGame?
@@ -44,6 +46,37 @@ struct LibraryView: View {
             .safeAreaInset(edge: .bottom) { statusBanner }
         }
         .sheet(isPresented: $showingSendToMac) { SendToMacView() }
+        .alert("Tem um save mais novo chegando", isPresented: Binding(
+            get: { incomingFor != nil }, set: { if !$0 { incomingFor = nil } })) {
+            Button("Esperar o save") {
+                guard let pending = incomingFor else { return }
+                waitingForSave = true
+                Task {
+                    let arrived = await SyncStatus.waitForIncoming(pending.game)
+                    waitingForSave = false
+                    library.reload()
+                    if !arrived { SyncStatus.shared.show(String(localized: "O save ainda não chegou. Abrindo com o que está aqui.")) }
+                    let game = library.games.first { $0.id == pending.game.id } ?? pending.game
+                    open(game, resume: pending.resume, checked: true)
+                }
+            }
+            Button("Jogar mesmo assim", role: .destructive) {
+                guard let pending = incomingFor else { return }
+                open(pending.game, resume: pending.resume, checked: true)
+            }
+            Button("Cancelar", role: .cancel) {}
+        } message: {
+            Text("Este jogo foi salvo em outro aparelho e o save ainda está vindo do iCloud. Se jogar agora, você começa do save antigo.")
+        }
+        .overlay(alignment: .top) {
+            if waitingForSave {
+                SyncToast(text: String(localized: "Esperando o save chegar…"), busy: true)
+            } else if let toast = SyncStatus.shared.toast {
+                SyncToast(text: toast, busy: false)
+            }
+        }
+        .animation(.spring(response: 0.35), value: SyncStatus.shared.toast)
+        .animation(.spring(response: 0.35), value: waitingForSave)
         .onAppear {
             // Only once the player has used a Mac link: browsing asks for
             // the local network permission.
@@ -301,9 +334,19 @@ struct LibraryView: View {
     /// One game per app launch: after a game ended, the next one
     /// needs the app reopened (see CLAUDE.md, "Limite atual").
     /// `resume`: start from the automatic save state when there is one.
-    func open(_ game: GameEntry, resume: Bool = false) {
+    func open(_ game: GameEntry, resume: Bool = false, checked: Bool = false) {
         switch session.state {
         case .idle:
+            // A newer save from the Mac still coming down: ask before
+            // starting from the old one.
+            if !checked, SaveSync.isEnabled {
+                Task {
+                    let folders = SaveSync.GameFolders(game)
+                    let incoming = await Task.detached(priority: .userInitiated) { SaveSync.hasIncoming(folders) }.value
+                    if incoming { incomingFor = (game, resume) } else { open(game, resume: resume, checked: true) }
+                }
+                return
+            }
             let slot = resume && StateStore.autoState(for: game.id) != nil ? StateStore.autoSlot : nil
             session.launch(game, resumeSlot: slot)
         case .finished:

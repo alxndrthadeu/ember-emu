@@ -134,6 +134,10 @@ struct GameInfoView: View {
                     Text("Jogado \(last.formatted(.relative(presentation: .named)))")
                         .foregroundStyle(Theme.secondaryText)
                 }
+                if let saved = SyncStatus.shared.lastSave(for: game.id) {
+                    Label(saved, systemImage: "icloud")
+                        .foregroundStyle(Theme.secondaryText)
+                }
                 HStack {
                     Button {
                         library.play(game)

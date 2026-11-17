@@ -16,8 +16,12 @@ final class MacLibrary {
     var lastError: String?
     var notice: String?
     private(set) var syncing = false
+    /// A game asked to open while a newer save is coming down.
+    var incomingFor: (game: GameEntry, resume: Bool)?
+    private(set) var waitingForSave = false
 
     private init() {
+        SaveSync.deviceName = Host.current().localizedName ?? "Mac"
         reload()
         syncSaves()
         NotificationCenter.default.addObserver(
@@ -53,7 +57,16 @@ final class MacLibrary {
     /// A sandboxed app cannot pass arguments to a new instance of
     /// itself, so the game goes in a link only Ember opens:
     /// ember-play://play?id=<id>&resume=1.
-    func play(_ game: GameEntry, resume: Bool = false) {
+    func play(_ game: GameEntry, resume: Bool = false, checked: Bool = false) {
+        // A newer save from the iPhone still coming down: ask first.
+        if !checked, SaveSync.isEnabled {
+            Task {
+                let folders = SaveSync.GameFolders(game)
+                let incoming = await Task.detached(priority: .userInitiated) { SaveSync.hasIncoming(folders) }.value
+                if incoming { incomingFor = (game, resume) } else { play(game, resume: resume, checked: true) }
+            }
+            return
+        }
         var link = URLComponents()
         link.scheme = "ember-play"
         link.host = "play"
@@ -73,6 +86,37 @@ final class MacLibrary {
             guard let error else { return }
             Task { @MainActor in MacLibrary.shared.lastError = error.localizedDescription }
         }
+    }
+
+    /// The game instance sends its saves to iCloud as it quits; the
+    /// library says so when it comes back to the front right after.
+    private var announced: UUID?
+
+    func announceFinishedGame() {
+        guard let last = PlayHistory.sessions.first, last.id != announced,
+              Date().timeIntervalSince(last.end) < 90,
+              SyncStatus.shared.state(for: last.gameID) == .upToDate else { return }
+        announced = last.id
+        SyncStatus.shared.show(String(localized: "Save sincronizado: \(last.title)"))
+    }
+
+    func waitThenPlay() {
+        guard let pending = incomingFor else { return }
+        incomingFor = nil
+        waitingForSave = true
+        Task {
+            let arrived = await SyncStatus.waitForIncoming(pending.game)
+            waitingForSave = false
+            reload()
+            if !arrived { SyncStatus.shared.show(String(localized: "O save ainda não chegou. Abrindo com o que está aqui.")) }
+            play(games.first { $0.id == pending.game.id } ?? pending.game, resume: pending.resume, checked: true)
+        }
+    }
+
+    func playAnyway() {
+        guard let pending = incomingFor else { return }
+        incomingFor = nil
+        play(pending.game, resume: pending.resume, checked: true)
     }
 
     // MARK: - Importing
@@ -129,23 +173,33 @@ final class MacLibrary {
 
     // MARK: - iCloud
 
-    func syncSaves() {
+    func syncSaves(attempt: Int = 0) {
         guard SaveSync.isEnabled, !syncing, !games.isEmpty else { return }
         let folders = games.map { game in
             SaveSync.GameFolders(id: game.id, title: game.title, folder: game.folder,
                                  userData: GameStorage.userDataFolder(for: game),
                                  states: StateStore.folder(for: game.id))
         }
+        let titles = Dictionary(uniqueKeysWithValues: games.map { ($0.id, $0.title) })
         syncing = true
+        SyncStatus.shared.began()
         Task.detached(priority: .utility) {
             let report = SaveSync.sync(folders)
             await MainActor.run {
                 let library = MacLibrary.shared
                 library.syncing = false
+                SyncStatus.shared.finished(report, titles: titles)
+                library.announceFinishedGame()
                 if report.downloaded > 0 { library.reload() }
                 if !report.conflicts.isEmpty {
                     let titles = Array(Set(report.conflicts)).sorted().joined(separator: ", ")
                     library.notice = String(localized: "\(titles) teve saves mudados aqui e em outro aparelho. Ficou o mais recente; o outro está guardado em Backups.")
+                }
+                if report.waiting > 0, attempt < 10 {
+                    Task { @MainActor in
+                        try? await Task.sleep(for: .seconds(3))
+                        MacLibrary.shared.syncSaves(attempt: attempt + 1)
+                    }
                 }
             }
         }

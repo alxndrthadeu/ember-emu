@@ -56,6 +56,7 @@ final class EngineSession {
         mkxp_setUseInGameKeyboard(InGameKeyboard.isOn(for: game.id))
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         mkxp_setLauncherIdentity("Ember", version)
+        SaveSync.deviceName = Host.current().localizedName ?? "Mac"
         mkxp_setUserDataDirectory(userData.path)
         mkxp_setSharedFontsDirectory(assets.appendingPathComponent("Fonts").path)
         mkxp_setCABundlePath(assets.appendingPathComponent("cacert.pem").path)
@@ -114,7 +115,19 @@ final class EngineSession {
         if let sessionID { PlayHistory.touch(sessionID) }
         GameLog.shared.end()
         state = .finished
-        NSApp.terminate(nil)
+        // The saves go to iCloud before this instance quits (up to 15 s),
+        // so the iPhone finds them right away.
+        guard let game = currentGame, SaveSync.isEnabled else { return NSApp.terminate(nil) }
+        let folders = SaveSync.GameFolders(game)
+        Task {
+            await withTaskGroup(of: Void.self) { group in
+                group.addTask { _ = await Task.detached { SaveSync.sync([folders]) }.value }
+                group.addTask { try? await Task.sleep(for: .seconds(15)) }
+                await group.next()
+                group.cancelAll()
+            }
+            NSApp.terminate(nil)
+        }
     }
 
     /// The Mac has a keyboard: nothing to open.

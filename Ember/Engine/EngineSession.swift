@@ -202,8 +202,8 @@ final class EngineSession {
         // New cover and "Continuar".
         LibraryStore.shared.reload()
         state = .finished
-        // What the game saved goes to iCloud.
-        LibraryStore.shared.syncSaves()
+        // What the game saved goes to iCloud, and the player hears so.
+        LibraryStore.shared.syncSaves(announce: true)
         launcherWindow?.makeKeyAndVisible()
     }
 

@@ -232,6 +232,11 @@ struct GameOptionsSheet: View {
                         .font(.footnote)
                         .foregroundStyle(Theme.secondaryText)
                 }
+                if let last = SyncStatus.shared.lastSave(for: current.id) {
+                    Label(last, systemImage: "icloud")
+                        .font(.footnote)
+                        .foregroundStyle(Theme.secondaryText)
+                }
                 let sessions = PlayHistory.sessions.filter { $0.gameID == current.id }
                 if sessions.count > 1, let first = sessions.last?.start {
                     Text("\(sessions.count) sessões desde \(first.formatted(date: .abbreviated, time: .omitted))")

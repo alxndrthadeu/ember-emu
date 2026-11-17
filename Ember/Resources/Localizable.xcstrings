@@ -4021,6 +4021,16 @@
     "Jogando no Mac" : {
 
     },
+    "Jogando no Mac · %@%@" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Jogando no Mac · %1$@%2$@"
+          }
+        }
+      }
+    },
     "Jogando numa tela" : {
       "localizations" : {
         "en" : {
