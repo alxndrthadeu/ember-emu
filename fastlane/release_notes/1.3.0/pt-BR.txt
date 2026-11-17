@@ -1,0 +1,7 @@
+• Saves no iCloud: os saves e estados de cada jogo vão sozinhos para o iCloud e voltam em outro iPhone com o mesmo jogo. Se mudarem nos dois, fica o mais recente e o outro vai para Backups.
+• Atualize um jogo sem perder nada: ao importar a versão nova de um jogo da estante, o Ember troca os arquivos e mantém saves, estados, capa e controles.
+• Siri e Atalhos: "Continuar no Ember", jogar um jogo da estante ou ligar o envio pelo Wi-Fi.
+• Se o jogo der um erro típico de versão do Ruby, troque a versão com um toque no próprio aviso.
+• Correção importante: um backup deixado na pasta do Ember podia ser restaurado de novo ao voltar ao app. Agora é restaurado uma vez só e os saves substituídos ficam sempre guardados.
+• Estados salvos funcionam no jogo de exemplo; teclas repetidas em dois botões, avisos de erro e envio pelo Wi-Fi mais confiáveis.
+• Mais leve durante a partida, Jogar na TV gasta menos bateria e acessibilidade melhor (VoiceOver, tamanho do texto, contraste, Reduzir movimento).

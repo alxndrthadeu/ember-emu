@@ -1,0 +1,7 @@
+• Partidas en iCloud: las partidas y estados de cada juego van solos a iCloud y vuelven en otro iPhone con el mismo juego. Si cambian en los dos, se queda la más reciente y la otra va a Backups.
+• Actualiza un juego sin perder nada: importa la versión nueva de un juego de tu estantería y Ember cambia los archivos, manteniendo partidas, estados, portada y controles.
+• Siri y Atajos: "Continuar en Ember", jugar un juego de tu estantería o activar el envío por Wi-Fi.
+• Si un juego muestra un error típico de la versión de Ruby, cámbiala con un toque en el mismo aviso.
+• Corrección importante: una copia de seguridad dejada en la carpeta de Ember podía restaurarse otra vez al volver a la app. Ahora se restaura una sola vez y las partidas reemplazadas siempre se guardan.
+• Los estados funcionan en el juego de ejemplo; teclas compartidas por dos botones, avisos de error y envío por Wi-Fi más fiables.
+• Más ligero mientras juegas, Jugar en la TV gasta menos batería y mejor accesibilidad (VoiceOver, tamaño de texto, contraste, Reducir movimiento).
