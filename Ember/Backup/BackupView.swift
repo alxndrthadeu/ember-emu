@@ -14,7 +14,39 @@ struct BackupSection: View {
     @State private var working = false
     @State private var result: String?
 
+    @State private var iCloudSaves = SaveSync.isEnabled
+
     var body: some View {
+        Section {
+            Toggle(isOn: $iCloudSaves) {
+                Label("Saves no iCloud", systemImage: "icloud")
+            }
+            .onChange(of: iCloudSaves) {
+                UserDefaults.standard.set(iCloudSaves, forKey: SaveSync.enabledKey)
+                if iCloudSaves { library.syncSaves() }
+            }
+            if iCloudSaves {
+                HStack {
+                    if library.syncingSaves {
+                        ProgressView()
+                        Text("Sincronizando…")
+                    } else if let last = library.lastSaveSync {
+                        Image(systemName: "checkmark.icloud")
+                            .foregroundStyle(Theme.activeText)
+                        Text("Em dia · \(last.date.formatted(date: .omitted, time: .shortened))")
+                    } else {
+                        Image(systemName: "icloud")
+                        Text("Sincroniza ao abrir o Ember e ao sair de um jogo")
+                    }
+                }
+                .font(.footnote)
+                .foregroundStyle(Theme.secondaryText)
+            }
+        } header: {
+            Text("iCloud")
+        } footer: {
+            Text("Os saves e estados de cada jogo vão para o iCloud e voltam em outro iPhone, iPad ou Mac com o mesmo jogo. Os jogos não vão. Se um save mudar nos dois aparelhos, fica o mais recente e o outro vai para Backups.")
+        }
         Section {
             NavigationLink {
                 BackupBuilderView()

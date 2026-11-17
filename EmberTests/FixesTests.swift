@@ -163,3 +163,64 @@ final class GameUpdaterTests: XCTestCase {
         try? fm.removeItem(at: SaveManager.backupsFolder(for: existing))
     }
 }
+
+final class SaveSyncTests: XCTestCase {
+    private let fm = FileManager.default
+    private var root: URL!
+    private var game: SaveSync.GameFolders!
+
+    override func setUpWithError() throws {
+        root = fm.temporaryDirectory.appendingPathComponent("SyncTest-\(UUID().uuidString)")
+        let id = "Sync Test \(UUID().uuidString.prefix(8))"
+        game = SaveSync.GameFolders(id: id, title: "Sync Test", folder: root.appendingPathComponent("game"),
+                                    userData: root.appendingPathComponent("userdata"),
+                                    states: root.appendingPathComponent("states"))
+        for folder in [game.folder, game.userData, game.states] {
+            try fm.createDirectory(at: folder, withIntermediateDirectories: true)
+        }
+    }
+
+    override func tearDown() {
+        try? fm.removeItem(at: root)
+        let documents = fm.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        try? fm.removeItem(at: documents.appendingPathComponent("Backups/\(game.id)"))
+    }
+
+    private var cloud: URL { root.appendingPathComponent("cloud") }
+
+    private func write(_ text: String, _ url: URL, age: TimeInterval = 0) throws {
+        try fm.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try text.write(to: url, atomically: true, encoding: .utf8)
+        try fm.setAttributes([.modificationDate: Date().addingTimeInterval(-age)], ofItemAtPath: url.path)
+    }
+
+    private func read(_ url: URL) -> String? { try? String(contentsOf: url, encoding: .utf8) }
+
+    func testUpThenDownThenConflict() throws {
+        let local = game.folder.appendingPathComponent("Save01.rvdata2")
+        let remote = cloud.appendingPathComponent("\(game.id)/folder/Save01.rvdata2")
+        try write("one", local, age: 100)
+        try write("essentials", game.userData.appendingPathComponent("Game.rxdata"), age: 100)
+        var report = SaveSync.sync([game], root: cloud)
+        XCTAssertEqual(report.uploaded, 2)
+        XCTAssertEqual(read(remote), "one")
+
+        // Nothing changed: nothing moves.
+        report = SaveSync.sync([game], root: cloud)
+        XCTAssertEqual(report.uploaded + report.downloaded, 0)
+
+        // Another device saved: it comes down.
+        try write("two", remote, age: 50)
+        report = SaveSync.sync([game], root: cloud)
+        XCTAssertEqual(report.downloaded, 1)
+        XCTAssertEqual(read(local), "two")
+
+        // Both sides saved: the newer one wins, nothing is lost.
+        try write("three-here", local, age: 10)
+        try write("three-there", remote, age: 20)
+        report = SaveSync.sync([game], root: cloud)
+        XCTAssertEqual(report.conflicts, ["Sync Test"])
+        XCTAssertEqual(read(local), "three-here")
+        XCTAssertEqual(read(remote), "three-here")
+    }
+}

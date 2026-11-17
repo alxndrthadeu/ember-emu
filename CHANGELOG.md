@@ -23,6 +23,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Resuming an RPG Maker VX game loads its areas.
 
 ### Added
+- Saves in iCloud: each game's saves and save states sync on their own between your iPhone, iPad and Mac (same game on each), when Ember opens and when you leave a game. Games themselves never go. If a save changed on two devices, the newest stays and the other is kept in Backups. On by default; Settings › iCloud.
 - Update a game and keep your progress: importing a new version of a game already on the shelf (same title) offers to put it in the old one's place, keeping saves, save states, cover, controls and name. The saves are also kept in Backups.
 - Settings › System reports: what iOS reports about Ember on this iPhone (crashes, hangs, heat, CPU, a daily summary), kept on the device and shared only if you choose.
 

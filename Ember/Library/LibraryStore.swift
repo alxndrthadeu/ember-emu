@@ -29,6 +29,9 @@ final class LibraryStore {
     /// A game just imported that looks like a new version of one on the
     /// shelf: the library asks whether to update it.
     var updateOffer: GameUpdater.Offer?
+    /// Saves going to or coming from iCloud right now.
+    private(set) var syncingSaves = false
+    private(set) var lastSaveSync: (date: Date, report: SaveSync.Report)?
 
     struct Notice: Equatable {
         let title: String
@@ -43,6 +46,7 @@ final class LibraryStore {
     private init() {
         reload()
         importFromDocumentsRoot()
+        syncSaves()
         NotificationCenter.default.addObserver(
             forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main
         ) { _ in
@@ -52,6 +56,7 @@ final class LibraryStore {
                 guard EngineSession.shared.state != .running else { return }
                 LibraryStore.shared.reload()
                 LibraryStore.shared.importFromDocumentsRoot()
+                LibraryStore.shared.syncSaves()
             }
         }
     }
@@ -210,6 +215,32 @@ final class LibraryStore {
         }
         if !candidates.isEmpty {
             importItems(candidates, removeSources: true)
+        }
+    }
+
+    /// Brings saves in step with iCloud (`SaveSync`), off the main
+    /// thread. Never while a game runs: it reads and writes its saves.
+    func syncSaves() {
+        guard SaveSync.isEnabled, !syncingSaves, EngineSession.shared.state != .running, !games.isEmpty else { return }
+        let folders = games.map { game in
+            SaveSync.GameFolders(id: game.id, title: game.title, folder: game.folder,
+                                 userData: GameStorage.userDataFolder(for: game),
+                                 states: StateStore.folder(for: game.id))
+        }
+        syncingSaves = true
+        Task.detached(priority: .utility) {
+            let report = SaveSync.sync(folders)
+            await MainActor.run {
+                self.syncingSaves = false
+                self.lastSaveSync = (Date(), report)
+                if report.downloaded > 0 { self.reload() }
+                if !report.conflicts.isEmpty {
+                    let titles = Array(Set(report.conflicts)).sorted().joined(separator: ", ")
+                    self.importNotice = Notice(
+                        title: String(localized: "Saves de dois aparelhos"),
+                        message: String(localized: "\(titles) teve saves mudados aqui e em outro aparelho. Ficou o mais recente; o outro está guardado em Backups."))
+                }
+            }
         }
     }
 
