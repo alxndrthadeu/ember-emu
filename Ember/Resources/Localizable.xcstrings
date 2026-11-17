@@ -655,6 +655,9 @@
         }
       }
     },
+    "Abra o Ember no Mac. Não precisa estar no mesmo Wi-Fi." : {
+
+    },
     "Abra o Ember. O jogo aparece na Biblioteca." : {
       "localizations" : {
         "en" : {
@@ -670,6 +673,9 @@
           }
         }
       }
+    },
+    "Abra um jogo no Ember do Mac. O iPhone acha o Mac sozinho, mesmo sem estar no mesmo Wi-Fi, e vira o controle: os botões seguem os controles daquele jogo." : {
+
     },
     "Abra um jogo no Ember, no iPhone" : {
       "localizations" : {
@@ -751,6 +757,9 @@
         }
       }
     },
+    "Aceite o envio na tela do Mac." : {
+
+    },
     "Acelera enquanto estiver apertado" : {
       "localizations" : {
         "en" : {
@@ -798,6 +807,9 @@
           }
         }
       }
+    },
+    "Aguardando o Mac" : {
+
     },
     "Ainda não dá para importar “%@”. Use .zip, .rar, .7z, .exe autoextraível ou uma pasta." : {
       "localizations" : {
@@ -1605,6 +1617,9 @@
         }
       }
     },
+    "Cada jogo vai com os saves e os estados salvos. Depois, os saves continuam iguais nos dois pelo iCloud." : {
+
+    },
     "Cada vez que o jogo abre, o Ember guarda o que aconteceu: erros, avisos e o que o motor escreveu." : {
       "localizations" : {
         "en" : {
@@ -1652,6 +1667,9 @@
           }
         }
       }
+    },
+    "Cancelar envio" : {
+
     },
     "Cancelar. Em jogos antigos abre o menu; nos novos, segurar corre (Esc, Input::B)" : {
       "localizations" : {
@@ -1748,6 +1766,9 @@
           }
         }
       }
+    },
+    "Carregar o último estado" : {
+
     },
     "Cheats" : {
       "localizations" : {
@@ -2020,6 +2041,9 @@
           }
         }
       }
+    },
+    "Conectando…" : {
+
     },
     "Conecte o iPhone a uma rede Wi-Fi para jogar na TV." : {
       "localizations" : {
@@ -2405,6 +2429,9 @@
         }
       }
     },
+    "Deixe o Ember aberto até terminar." : {
+
+    },
     "Depois, escolha onde salvar. Jogos grandes deixam o backup grande: confira o espaço na nuvem." : {
       "localizations" : {
         "en" : {
@@ -2436,6 +2463,9 @@
           }
         }
       }
+    },
+    "Desconectar" : {
+
     },
     "Desempenho" : {
       "localizations" : {
@@ -2805,6 +2835,9 @@
         }
       }
     },
+    "Enviado" : {
+
+    },
     "Enviando" : {
       "localizations" : {
         "en" : {
@@ -2820,6 +2853,9 @@
           }
         }
       }
+    },
+    "Enviando %@" : {
+
     },
     "Enviando ao iCloud…" : {
       "localizations" : {
@@ -2837,6 +2873,18 @@
         }
       }
     },
+    "Enviar %lld jogos" : {
+
+    },
+    "Enviar 1 jogo" : {
+
+    },
+    "Enviar jogos" : {
+
+    },
+    "Enviar jogos para o Mac" : {
+
+    },
     "Enviar jogos pelo Wi-Fi" : {
       "localizations" : {
         "en" : {
@@ -2852,6 +2900,9 @@
           }
         }
       }
+    },
+    "Enviar outros jogos" : {
+
     },
     "Enviar para o Ember" : {
       "localizations" : {
@@ -2916,6 +2967,9 @@
           }
         }
       }
+    },
+    "Envio cancelado. Os jogos que chegaram inteiros ficaram no Mac." : {
+
     },
     "erro desconhecido" : {
       "localizations" : {
@@ -3108,6 +3162,9 @@
           }
         }
       }
+    },
+    "Está por perto com o Ember aberto" : {
+
     },
     "Estado carregado" : {
       "localizations" : {
@@ -3915,6 +3972,9 @@
         }
       }
     },
+    "Jogando no Mac" : {
+
+    },
     "Jogando numa tela" : {
       "localizations" : {
         "en" : {
@@ -4394,6 +4454,9 @@
           }
         }
       }
+    },
+    "Mac" : {
+
     },
     "Mac, Windows ou Linux" : {
       "localizations" : {
@@ -4896,6 +4959,9 @@
           }
         }
       }
+    },
+    "Não deu para falar com o Mac. Confira se o Ember está aberto nele." : {
+
     },
     "Não deu para salvar" : {
       "localizations" : {
@@ -5521,6 +5587,9 @@
         }
       }
     },
+    "O envio parou. Os jogos que chegaram inteiros ficaram no Mac." : {
+
+    },
     "O iCloud não está disponível. Entre na sua conta em Ajustes do iPhone e ligue o iCloud Drive." : {
       "localizations" : {
         "en" : {
@@ -5696,6 +5765,15 @@
           }
         }
       }
+    },
+    "O Mac não respondeu." : {
+
+    },
+    "O Mac recusou o envio" : {
+
+    },
+    "O Mac saiu do alcance ou o jogo fechou." : {
+
     },
     "O perfil aparece em Ajustes › Perfis de controle e pode ser usado em outros jogos." : {
       "localizations" : {
@@ -6289,6 +6367,12 @@
         }
       }
     },
+    "Procurando o Ember num Mac por perto…" : {
+
+    },
+    "Procurando um Mac com um jogo aberto…" : {
+
+    },
     "Progresso e ajustes" : {
       "localizations" : {
         "en" : {
@@ -6432,6 +6516,9 @@
           }
         }
       }
+    },
+    "Reconectar" : {
+
     },
     "Registros" : {
       "localizations" : {
@@ -6736,6 +6823,9 @@
           }
         }
       }
+    },
+    "Sair do jogo no Mac?" : {
+
     },
     "Salvar" : {
       "localizations" : {
@@ -7952,6 +8042,12 @@
           }
         }
       }
+    },
+    "Usar como controle" : {
+
+    },
+    "Usar como controle do Mac" : {
+
     },
     "Usar Ruby %@ neste jogo" : {
       "localizations" : {

@@ -1,56 +1,6 @@
 import SwiftUI
 import UIKit
 
-/// "Usar como controle": the list of Macs playing a game nearby. Picking
-/// one connects and opens the controller screen.
-struct RemoteHostsView: View {
-    @Bindable private var client = RemoteControllerClient.shared
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        NavigationStack {
-            List {
-                Section {
-                    if client.hosts.isEmpty {
-                        HStack(spacing: 12) {
-                            ProgressView()
-                            Text("Procurando um Mac com um jogo aberto…")
-                                .foregroundStyle(Theme.secondaryText)
-                        }
-                    }
-                    ForEach(client.hosts) { host in
-                        Button {
-                            client.connect(to: host)
-                            dismiss()
-                            RemoteControllerScreen.present()
-                        } label: {
-                            Label {
-                                Text(verbatim: host.name).foregroundStyle(Theme.primaryText)
-                            } icon: {
-                                Image(systemName: "macbook").foregroundStyle(Theme.accent)
-                            }
-                        }
-                    }
-                } footer: {
-                    Text("Abra um jogo no Ember do Mac. O iPhone acha o Mac sozinho, mesmo sem estar no mesmo Wi-Fi, e vira o controle: os botões seguem os controles daquele jogo.")
-                }
-            }
-            .scrollContentBackground(.hidden)
-            .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Usar como controle")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button { dismiss() } label: { Image(systemName: "xmark") }
-                        .accessibilityLabel("Fechar")
-                }
-            }
-            .onAppear { client.browse() }
-            .onDisappear { client.stopBrowsing() }
-        }
-    }
-}
-
 /// Presents the controller full screen, locked in landscape.
 @MainActor
 enum RemoteControllerScreen {

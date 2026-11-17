@@ -120,10 +120,11 @@ final class EngineSession {
     func showController() {
         guard let pointer = mkxp_getGameWindow() else { return }
         let window = Unmanaged<NSWindow>.fromOpaque(pointer).takeUnretainedValue()
+        let title = currentGame?.title ?? "Ember"
         if let name = RemoteControllerServer.shared.connectedName {
-            window.subtitle = String(localized: "Controle: \(name)")
+            window.title = "\(title) — " + String(localized: "controle: \(name)")
         } else {
-            window.subtitle = ""
+            window.title = title
         }
     }
 

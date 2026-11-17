@@ -111,6 +111,7 @@ extension LibraryView {
         case "sendmac": showingSendToMac = true
         case "import", "computer", "rtp": AppRouter.shared.tab = .importGames
         case "settings", "profiles": AppRouter.shared.tab = .settings
+        case "mac": AppRouter.shared.tab = .mac
         default: break
         }
         guard let id = environment["EMBER_AUTOLAUNCH"],

@@ -3,6 +3,7 @@ import SwiftUI
 enum AppTab: Hashable {
     case library
     case importGames
+    case mac
     case settings
 }
 
@@ -46,6 +47,9 @@ struct RootView: View {
                 Tab("Importar", systemImage: "folder.badge.plus", value: AppTab.importGames) {
                     ImportView()
                 }
+                Tab("Mac", systemImage: "macbook.and.iphone", value: AppTab.mac) {
+                    MacTab()
+                }
                 Tab("Ajustes", systemImage: "gearshape", value: AppTab.settings) {
                     SettingsView()
                 }
@@ -60,6 +64,9 @@ struct RootView: View {
                 ImportView()
                     .tabItem { Label("Importar", systemImage: "folder.badge.plus") }
                     .tag(AppTab.importGames)
+                MacTab()
+                    .tabItem { Label("Mac", systemImage: "macbook.and.iphone") }
+                    .tag(AppTab.mac)
                 SettingsView()
                     .tabItem { Label("Ajustes", systemImage: "gearshape") }
                     .tag(AppTab.settings)

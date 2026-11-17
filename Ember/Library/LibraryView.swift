@@ -8,7 +8,6 @@ struct LibraryView: View {
     @State var optionsFor: GameEntry?
     @State var showingHistory = false
     @State var showingControls = false
-    @State private var showingRemote = false
     @State var showingSendToMac = false
     /// A game tapped after another one ended: the app must reopen.
     @State private var reopenFor: GameEntry?
@@ -30,14 +29,10 @@ struct LibraryView: View {
             .navigationTitle("Biblioteca")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Menu {
-                        Button("Enviar jogos para o Mac", systemImage: "arrow.up.forward.app") { showingSendToMac = true }
-                        Button("Usar como controle do Mac", systemImage: "macbook.and.iphone") { showingRemote = true }
-                        Button("Guia de controles", systemImage: "questionmark.circle") { showingControls = true }
-                    } label: {
+                    Button { showingControls = true } label: {
                         Image(systemName: "gamecontroller")
                     }
-                    .accessibilityLabel("Controles")
+                    .accessibilityLabel("Guia de controles")
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { showingHistory = true } label: {
@@ -48,7 +43,6 @@ struct LibraryView: View {
             }
             .safeAreaInset(edge: .bottom) { statusBanner }
         }
-        .sheet(isPresented: $showingRemote) { RemoteHostsView() }
         .sheet(isPresented: $showingSendToMac) { SendToMacView() }
         .onAppear {
             // Only once the player has used a Mac link: browsing asks for
@@ -138,7 +132,7 @@ struct LibraryView: View {
     private var macNearby: some View {
         if let mac = GameSender.shared.macs.first, !library.games.isEmpty {
             Button {
-                showingSendToMac = true
+                AppRouter.shared.tab = .mac
             } label: {
                 HStack(spacing: 12) {
                     Image(systemName: "macbook")
@@ -153,7 +147,7 @@ struct LibraryView: View {
                             .foregroundStyle(Theme.secondaryText)
                     }
                     Spacer()
-                    Text("Enviar jogos")
+                    Text("Abrir")
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Theme.accent)
                 }
