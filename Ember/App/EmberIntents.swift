@@ -97,15 +97,13 @@ struct GameQuery: EntityQuery, EntityStringQuery {
 struct EmberShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(intent: ContinueGameIntent(),
-                    phrases: ["Continuar no \(.applicationName)", "Continue in \(.applicationName)",
-                              "Continuar mi juego en \(.applicationName)"],
+                    phrases: ["Continuar no \(.applicationName)"],
                     shortTitle: "Continuar", systemImageName: "play.fill")
         AppShortcut(intent: PlayGameIntent(),
-                    phrases: ["Jogar \(\.$game) no \(.applicationName)", "Play \(\.$game) in \(.applicationName)",
-                              "Jugar \(\.$game) en \(.applicationName)"],
+                    phrases: ["Jogar \(\.$game) no \(.applicationName)"],
                     shortTitle: "Jogar", systemImageName: "gamecontroller.fill")
         AppShortcut(intent: WifiTransferIntent(),
-                    phrases: ["Enviar jogos para o \(.applicationName)", "Send games to \(.applicationName)"],
+                    phrases: ["Enviar jogos para o \(.applicationName)"],
                     shortTitle: "Wi-Fi", systemImageName: "wifi")
     }
 }

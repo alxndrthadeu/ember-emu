@@ -1,7 +1,7 @@
 import Foundation
 
-/// Saves and save states kept in iCloud Drive, on every iPhone, iPad
-/// or Mac with the same game (same folder name, which comes from the
+/// Saves and save states kept in iCloud Drive, on every iPhone with the
+/// same game (same folder name, which comes from the
 /// game's title). Only saves: games never go to iCloud this way.
 ///
 /// iCloud Drive/Ember/Saves/<game id>/

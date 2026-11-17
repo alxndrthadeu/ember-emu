@@ -45,7 +45,7 @@ struct BackupSection: View {
         } header: {
             Text("iCloud")
         } footer: {
-            Text("Os saves e estados de cada jogo vão para o iCloud e voltam em outro iPhone, iPad ou Mac com o mesmo jogo. Os jogos não vão. Se um save mudar nos dois aparelhos, fica o mais recente e o outro vai para Backups.")
+            Text("Os saves e estados de cada jogo vão para o iCloud e voltam em outro iPhone com o mesmo jogo. Os jogos não vão. Se um save mudar nos dois aparelhos, fica o mais recente e o outro vai para Backups.")
         }
         Section {
             NavigationLink {
