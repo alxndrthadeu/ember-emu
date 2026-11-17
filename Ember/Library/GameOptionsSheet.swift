@@ -86,7 +86,7 @@ struct GameOptionsSheet: View {
                         choosingController = true
                     }
                     Divider().padding(.leading, 48)
-                    SheetRow(icon: "gamecontroller", title: String(localized: "Controles"),
+                    SheetRow(icon: "gamecontroller", title: String(localized: "Controles deste jogo"),
                              value: ProfileStore.shared.hasOwnMapping(current)
                                 ? String(localized: "Deste jogo") : ProfileStore.shared.profile(for: current).name,
                              chevron: "chevron.right") {
@@ -229,6 +229,12 @@ struct GameOptionsSheet: View {
                 let total = PlayHistory.totalTime(current.id)
                 if total >= 60 {
                     Text("\(durationText(total)) no total")
+                        .font(.footnote)
+                        .foregroundStyle(Theme.secondaryText)
+                }
+                let sessions = PlayHistory.sessions.filter { $0.gameID == current.id }
+                if sessions.count > 1, let first = sessions.last?.start {
+                    Text("\(sessions.count) sessões desde \(first.formatted(date: .abbreviated, time: .omitted))")
                         .font(.footnote)
                         .foregroundStyle(Theme.secondaryText)
                 }

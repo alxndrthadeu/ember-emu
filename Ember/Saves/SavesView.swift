@@ -55,7 +55,7 @@ struct SavesView: View {
                             LazyVGrid(columns: columns, spacing: 14) {
                                 ForEach(states) { state in
                                     SaveCard(game: game,
-                                             image: state.thumbnail.flatMap { UIImage(contentsOfFile: $0.path) },
+                                             image: state.thumbnail.flatMap(CoverCache.image(at:)),
                                              title: state.isAuto ? String(localized: "Automático") : String(localized: "Estado salvo"),
                                              detail: state.date.formatted(.relative(presentation: .named)),
                                              badge: state.isAuto ? "clock.arrow.circlepath" : nil)

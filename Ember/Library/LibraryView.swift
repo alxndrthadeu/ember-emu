@@ -31,7 +31,7 @@ struct LibraryView: View {
                     Button { showingControls = true } label: {
                         Image(systemName: "gamecontroller")
                     }
-                    .accessibilityLabel("Controles")
+                    .accessibilityLabel("Guia de controles")
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { showingHistory = true } label: {
@@ -48,6 +48,18 @@ struct LibraryView: View {
         } message: {
             Text(library.lastError ?? "")
         }
+        .confirmationDialog(
+            "Versão nova de “\(library.updateOffer?.existing.title ?? "")”?",
+            isPresented: Binding(get: { library.updateOffer != nil },
+                                 set: { if !$0, let offer = library.updateOffer { library.keepBoth(offer) } }),
+            titleVisibility: .visible,
+            presenting: library.updateOffer
+        ) { offer in
+            Button("Atualizar o jogo") { library.applyUpdate(offer) }
+            Button("Manter os dois") { library.keepBoth(offer) }
+        } message: { _ in
+            Text("Ao atualizar, os arquivos novos substituem os antigos. Saves, estados, capa e controles continuam, e os saves ficam guardados também em Backups.")
+        }
         .alert(library.importNotice?.title ?? "",
                isPresented: Binding(get: { library.importNotice != nil }, set: { if !$0 { library.importNotice = nil } })) {
             Button("OK", role: .cancel) {}
@@ -56,6 +68,19 @@ struct LibraryView: View {
         }
         .onChange(of: AppRouter.shared.quickAction, initial: true) { _, action in
             if let action { handle(action) }
+        }
+        .onChange(of: AppRouter.shared.gameToOpen, initial: true) { _, id in
+            guard let id else { return }
+            AppRouter.shared.gameToOpen = nil
+            AppRouter.shared.tab = .library
+            if let game = library.games.first(where: { $0.id == id }) { open(game) }
+        }
+        .alert("Ruby trocado",
+               isPresented: Binding(get: { session.rubyChangedAfterError != nil && session.state != .running },
+                                    set: { if !$0 { session.rubyChangedAfterError = nil } })) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("Na próxima vez, o jogo abre com o Ruby \(session.rubyChangedAfterError ?? ""). Para abrir agora, feche o Ember pelo seletor de apps e abra de novo.")
         }
         .onChange(of: session.state) { _, state in
             // A good moment to ask for a rating: a long session just
@@ -83,17 +108,24 @@ struct LibraryView: View {
         }
         .sheet(item: $reopenFor) { game in
             ReopenSheet(title: game.title)
-                .presentationDetents([.height(320)])
+                .presentationDetents([.height(320), .large])
         }
         .onAppear(perform: developmentHooks)
+    }
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    /// Cards grow in, or only fade with Reduce Motion.
+    private var cardTransition: AnyTransition {
+        reduceMotion ? .opacity : .scale(scale: 0.85).combined(with: .opacity)
     }
 
     private var grid: some View {
         ScrollView {
             if let recent = library.recent {
                 ContinueCard(game: recent, resumes: StateStore.autoState(for: recent.id) != nil)
-                    .onTapGesture { open(recent, resume: true) }
-                    .onLongPressGesture { showOptions(recent) }
+                    .cardPress(onTap: { open(recent, resume: true) }, onLongPress: { showOptions(recent) })
+                    .accessibilityAction(named: "Opções") { showOptions(recent) }
                     .padding(.horizontal, 20)
                     .padding(.top, 8)
                     .padding(.bottom, 20)
@@ -107,10 +139,9 @@ struct LibraryView: View {
             LazyVGrid(columns: columns, spacing: 22) {
                 ForEach(library.games) { game in
                     GameCard(game: game, status: library.archiveStatus[game.id])
-                        .transition(.scale(scale: 0.85).combined(with: .opacity))
-                        .onTapGesture { if library.archiveStatus[game.id] == nil { open(game) } }
-                        .onLongPressGesture { showOptions(game) }
-                        .accessibilityAddTraits(.isButton)
+                        .transition(cardTransition)
+                        .cardPress(onTap: { if library.archiveStatus[game.id] == nil { open(game) } },
+                                   onLongPress: { showOptions(game) })
                         .accessibilityAction(named: "Opções") { showOptions(game) }
                 }
             }
@@ -136,11 +167,11 @@ struct LibraryView: View {
                     ForEach(library.archived) { record in
                         ArchivedCard(record: record, status: library.archiveStatus[record.id],
                                      progress: library.archiveProgress[record.id])
-                            .transition(.scale(scale: 0.85).combined(with: .opacity))
-                            .onTapGesture { library.unarchive(record) }
-                            .onLongPressGesture { removingArchived = record }
-                            .accessibilityAddTraits(.isButton)
+                            .transition(cardTransition)
+                            .cardPress(onTap: { library.unarchive(record) },
+                                       onLongPress: { removingArchived = record })
                             .accessibilityHint("Baixa o jogo de volta do iCloud")
+                            .accessibilityAction(named: "Apagar do iCloud") { removingArchived = record }
                     }
                 }
                 .padding(.horizontal, 20)

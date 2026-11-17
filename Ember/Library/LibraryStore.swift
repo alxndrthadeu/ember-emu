@@ -26,6 +26,12 @@ final class LibraryStore {
     var importNotice: Notice?
     /// A game just imported: Ember asks which controller it gets.
     var chooseController: GameEntry?
+    /// A game just imported that looks like a new version of one on the
+    /// shelf: the library asks whether to update it.
+    var updateOffer: GameUpdater.Offer?
+    /// Saves going to or coming from iCloud right now.
+    private(set) var syncingSaves = false
+    private(set) var lastSaveSync: (date: Date, report: SaveSync.Report)?
 
     struct Notice: Equatable {
         let title: String
@@ -40,6 +46,7 @@ final class LibraryStore {
     private init() {
         reload()
         importFromDocumentsRoot()
+        syncSaves()
         NotificationCenter.default.addObserver(
             forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main
         ) { _ in
@@ -49,6 +56,7 @@ final class LibraryStore {
                 guard EngineSession.shared.state != .running else { return }
                 LibraryStore.shared.reload()
                 LibraryStore.shared.importFromDocumentsRoot()
+                LibraryStore.shared.syncSaves()
             }
         }
     }
@@ -107,17 +115,31 @@ final class LibraryStore {
         // A whole Ember backup ("Open in Ember", the Finder, Files).
         let backups = urls.filter { $0.pathExtension.lowercased() == EmberBackup.fileExtension }
         for url in backups {
+            // Once per file: the app becoming active looks at Documents
+            // again while a restore may still run.
+            let name = url.lastPathComponent
+            guard !importing.contains(name) else { continue }
+            importing.append(name)
             let existing = Set(games.map(\.id))
             Task.detached(priority: .userInitiated) {
                 let outcome = Result { try EmberBackup.restore(url, keepingGames: existing) }
+                // A backup left in Documents would be restored again
+                // each time the app comes back.
+                if removeSources, case .success = outcome {
+                    try? FileManager.default.removeItem(at: url)
+                }
                 await MainActor.run {
+                    self.importing.removeAll { $0 == name }
                     self.reload()
                     SkinStore.shared.reload()
+                    ProfileStore.shared.reloadFromDefaults()
                     switch outcome {
                     case .success(let summary):
-                        self.importNotice = Notice(
-                            title: String(localized: "Backup restaurado"),
-                            message: String(localized: "Backup restaurado: \(summary.games) jogos e \(summary.files) arquivos."))
+                        var message = String(localized: "Backup restaurado: \(summary.games) jogos e \(summary.files) arquivos.")
+                        if summary.waitingSaves > 0 {
+                            message += " " + String(localized: "Os saves de jogos que não estão neste aparelho ficaram em Backups. Importe o jogo e depois os saves.")
+                        }
+                        self.importNotice = Notice(title: String(localized: "Backup restaurado"), message: message)
                     case .failure(let error):
                         self.lastError = error.localizedDescription
                     }
@@ -151,6 +173,10 @@ final class LibraryStore {
                     self.reload()
                     if case .success(.game(let id)) = result,
                        let game = self.games.first(where: { $0.id == id }) {
+                        if let existing = GameUpdater.existingVersion(of: game, in: self.games) {
+                            self.updateOffer = GameUpdater.Offer(incoming: game, existing: existing)
+                            return
+                        }
                         Task {
                             await ControllerTypeStore.detect([game])
                             if url.lastPathComponent == "EmberDemo" {
@@ -189,6 +215,71 @@ final class LibraryStore {
         }
         if !candidates.isEmpty {
             importItems(candidates, removeSources: true)
+        }
+    }
+
+    /// Brings saves in step with iCloud (`SaveSync`), off the main
+    /// thread. Never while a game runs: it reads and writes its saves.
+    func syncSaves() {
+        guard SaveSync.isEnabled, !syncingSaves, EngineSession.shared.state != .running, !games.isEmpty else { return }
+        let folders = games.map { game in
+            SaveSync.GameFolders(id: game.id, title: game.title, folder: game.folder,
+                                 userData: GameStorage.userDataFolder(for: game),
+                                 states: StateStore.folder(for: game.id))
+        }
+        syncingSaves = true
+        Task.detached(priority: .utility) {
+            let report = SaveSync.sync(folders)
+            await MainActor.run {
+                self.syncingSaves = false
+                self.lastSaveSync = (Date(), report)
+                if report.downloaded > 0 { self.reload() }
+                if !report.conflicts.isEmpty {
+                    let titles = Array(Set(report.conflicts)).sorted().joined(separator: ", ")
+                    self.importNotice = Notice(
+                        title: String(localized: "Saves de dois aparelhos"),
+                        message: String(localized: "\(titles) teve saves mudados aqui e em outro aparelho. Ficou o mais recente; o outro está guardado em Backups."))
+                }
+            }
+        }
+    }
+
+    /// Puts a new version in the old game's place (saves, states and
+    /// settings stay).
+    func applyUpdate(_ offer: GameUpdater.Offer) {
+        updateOffer = nil
+        importing.append(offer.incoming.title)
+        Task.detached(priority: .userInitiated) {
+            let result = Result { try GameUpdater.update(offer) }
+            await MainActor.run {
+                self.importing.removeAll { $0 == offer.incoming.title }
+                self.reload()
+                switch result {
+                case .success:
+                    // The new version's scripts may read other keys.
+                    ControllerTypeStore.forgetDetection(offer.existing.id)
+                    ControllerTypeStore.forget(offer.incoming.id)
+                    Haptics.success()
+                    self.importNotice = Notice(
+                        title: String(localized: "Jogo atualizado"),
+                        message: String(localized: "“\(offer.existing.title)” agora está na versão nova. Saves, estados e controles continuam."))
+                    if let game = self.games.first(where: { $0.id == offer.existing.id }) {
+                        Task { await ControllerTypeStore.detect([game]) }
+                    }
+                case .failure(let error):
+                    self.lastError = error.localizedDescription
+                }
+            }
+        }
+    }
+
+    /// Keeps both: the new version stays as its own game.
+    func keepBoth(_ offer: GameUpdater.Offer) {
+        updateOffer = nil
+        let game = offer.incoming
+        Task {
+            await ControllerTypeStore.detect([game])
+            if ControllerTypeStore.needsChoice(game) { self.chooseController = game }
         }
     }
 

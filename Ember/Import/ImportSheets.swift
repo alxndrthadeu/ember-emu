@@ -43,7 +43,7 @@ struct RoadRow: View {
                 if let badge {
                     Text(verbatim: badge)
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.active)
+                        .foregroundStyle(Theme.activeText)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                         .background(Capsule().fill(Theme.active.opacity(0.14)))
@@ -100,7 +100,7 @@ struct RTPInfoView: View {
                         if RTPStore.isInstalled(kind) {
                             Label("Instalado", systemImage: "checkmark.circle.fill")
                                 .font(.subheadline)
-                                .foregroundStyle(Theme.active)
+                                .foregroundStyle(Theme.activeText)
                         } else {
                             Text("Não instalado")
                                 .font(.subheadline)

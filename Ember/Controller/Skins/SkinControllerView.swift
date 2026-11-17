@@ -44,7 +44,7 @@ struct SkinControllerView: View {
                     let sx = geo.size.width / layout.mappingSize.width
                     let sy = geo.size.height / layout.mappingSize.height
                     let rect = menu.applying(.init(scaleX: sx, y: sy))
-                    let size: CGFloat = 38
+                    let size: CGFloat = 44
                     let x = rect.minX - size / 2 - 10 < size ? rect.maxX + size / 2 + 10 : rect.minX - size / 2 - 10
                     KeyboardButton(action: onKeyboard)
                         .position(x: x, y: rect.midY)
@@ -90,7 +90,7 @@ struct KeyboardButton: View {
             Image(systemName: "keyboard.fill")
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(Theme.controlLabel)
-                .frame(width: 38, height: 38)
+                .frame(width: 44, height: 44)
         }
         .buttonStyle(.plain)
         .emberGlass(Theme.controlGlass.interactive(), in: Circle())

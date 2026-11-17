@@ -47,7 +47,7 @@ struct StatesSheet: View {
     private func row(_ state: StateStore.SaveState) -> some View {
         HStack(spacing: 12) {
             Group {
-                if let url = state.thumbnail, let image = UIImage(contentsOfFile: url.path) {
+                if let url = state.thumbnail, let image = CoverCache.image(at: url) {
                     Image(uiImage: image).resizable().interpolation(.none).scaledToFill()
                 } else {
                     Color.black

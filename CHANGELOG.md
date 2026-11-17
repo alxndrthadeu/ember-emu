@@ -4,7 +4,42 @@ What changed in each version of Ember. The newest version is on top; `Unreleased
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follow [Semantic Versioning](https://semver.org/): a new feature bumps the minor number (1.1.0), a fix the patch number (1.0.1).
 
-## [1.2.1] - Unreleased
+## [1.3.0] - Unreleased
+
+### Fixed
+- A backup left in Ember's folder (AirDrop, Finder, "Save to Files") was restored again every time the app came back, and two restores in the same minute could lose the copy of the saves it replaced. Each backup is now restored once and removed, and the replaced saves are always kept.
+- Restoring a backup with only the saves of a game that is not on this device no longer leaves an empty game behind; the saves wait in Backups.
+- Restoring a backup keeps the control mappings, profiles and history made on this device after the backup.
+- Save states work in the demo game.
+- A save state that fails no longer freezes the screen, and a failing autosave no longer retries every few frames.
+- Two buttons sending the same key (X and Start on Shift) no longer let go of the key while one is still held.
+- An error from the game shown while a menu was closing could leave the game stuck.
+- Importing saves no longer accepts the game's own files (scripts, Game.ini), and the error log no longer shows up as a save.
+- Two copies of the same game imported at once no longer fail.
+- The keys a game uses no longer list keys from commented-out code, test-play blocks or typing screens (the whole alphabet).
+- Bringing a game back from iCloud stops with a message when the download makes no progress for a minute, instead of spinning.
+- Wi-Fi transfer: a stalled upload is closed after 30 seconds and its half file removed; turning the transfer off ends uploads on their way; turning it on again no longer removes a batch still being imported.
+- Archives with links inside no longer create them, and a full disk while unpacking is reported.
+- Resuming an RPG Maker VX game loads its areas.
+
+### Added
+- Saves in iCloud: each game's saves and save states sync on their own between your iPhones (same game on each), when Ember opens and when you leave a game. Games themselves never go. If a save changed on two devices, the newest stays and the other is kept in Backups. On by default; Settings › iCloud.
+- Update a game and keep your progress: importing a new version of a game already on the shelf (same title) offers to put it in the old one's place, keeping saves, save states, cover, controls and name. The saves are also kept in Backups.
+- Siri and Shortcuts: "Continue in Ember", "Play <game> in Ember", "Send games to Ember", and the same actions in Spotlight and the Shortcuts app.
+- A game's panel shows how many sessions you played and since when.
+- When a game stops with an error typical of the wrong Ruby version, the alert offers to switch the game to the other Ruby in one tap.
+- Settings › System reports: what iOS reports about Ember on this iPhone (crashes, hangs, heat, CPU, a daily summary), kept on the device and shared only if you choose.
+
+### Changed
+- Save state pictures are written as JPEG, quicker on the game's thread.
+- Playing on the TV costs nothing until a browser opens the page, and frames are only encoded when a screen can take them.
+- Less work on the game's thread while playing: save files are watched in the background, the play history is written in the background, covers and save pictures are decoded once.
+- Accessibility: game cards are one VoiceOver button and show when they are pressed; text sizes follow Dynamic Type in the controls screens; darker amber and green where they mark something on cream; Reduce Motion is followed in the library and the game; messages in the game are read by VoiceOver; success and error vibrate differently.
+- Swift 6 language mode (full data-race safety); the engine's callbacks are set up outside the main actor.
+- Clearer names: "Controls for this game" in a game's panel, "Controls guide" in the library.
+- The game menu scrolls when it does not fit (larger text, landscape); deleting a control profile or undoing a game's controls asks first.
+
+## [1.2.1] - 2026-11-15
 
 ### Added
 - Save a game's controls as a profile, from the game's controls or from Settings › Control profiles, to use them in other games.

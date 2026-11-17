@@ -45,9 +45,11 @@ enum StateStore {
                 let url = dir.appendingPathComponent(name)
                 let date = (try? url.resourceValues(forKeys: [.contentModificationDateKey]))?
                     .contentModificationDate ?? .distantPast
-                let png = dir.appendingPathComponent("\(slot).png")
-                return SaveState(slot: slot, date: date,
-                                 thumbnail: FileManager.default.fileExists(atPath: png.path) ? png : nil)
+                // JPEG since 1.3; PNG before.
+                let picture = ["jpg", "png"].lazy
+                    .map { dir.appendingPathComponent("\(slot).\($0)") }
+                    .first { FileManager.default.fileExists(atPath: $0.path) }
+                return SaveState(slot: slot, date: date, thumbnail: picture)
             }
             .sorted { $0.date > $1.date }
     }
@@ -59,7 +61,9 @@ enum StateStore {
     static func delete(_ state: SaveState, gameID: String) {
         let dir = folder(for: gameID)
         try? FileManager.default.removeItem(at: dir.appendingPathComponent("\(state.slot).state"))
-        try? FileManager.default.removeItem(at: dir.appendingPathComponent("\(state.slot).png"))
+        for ext in ["jpg", "png"] {
+            try? FileManager.default.removeItem(at: dir.appendingPathComponent("\(state.slot).\(ext)"))
+        }
     }
 
     /// A new manual slot name.

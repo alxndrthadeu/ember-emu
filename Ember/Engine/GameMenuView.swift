@@ -42,6 +42,9 @@ struct GameMenuView: View {
     private let columns = [GridItem(.adaptive(minimum: 96), spacing: 12)]
 
     var body: some View {
+        // Scrolls: with larger text or the phone on its side the tiles
+        // are taller than the sheet.
+        ScrollView {
         VStack(alignment: .leading, spacing: 20) {
             header
 
@@ -81,8 +84,7 @@ struct GameMenuView: View {
                 }
                 MenuTile(icon: audio.soundOn ? "speaker.wave.2.fill" : "speaker.slash.fill",
                          title: String(localized: "Som"),
-                         value: audio.soundOn ? String(localized: "Ligado") : String(localized: "Desligado"),
-                         highlighted: !audio.soundOn) {
+                         value: audio.soundOn ? String(localized: "Ligado") : String(localized: "Desligado")) {
                     audio.soundOn.toggle()
                 }
                 MenuTile(icon: "gauge.with.dots.needle.67percent", title: String(localized: "Desempenho"),
@@ -128,10 +130,12 @@ struct GameMenuView: View {
             Spacer(minLength: 0)
         }
         .padding(20)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .frame(maxWidth: .infinity, alignment: .top)
+        }
+        .scrollBounceBehavior(.basedOnSize)
         .sheet(isPresented: $showingTV) {
             TVSheet()
-                .presentationDetents([.height(460)])
+                .presentationDetents([.height(460), .large])
         }
         .overlay(alignment: .bottom) {
             if let toast {
@@ -172,7 +176,7 @@ struct GameMenuView: View {
                 Image(systemName: "xmark")
                     .font(.system(size: 14, weight: .bold))
                     .foregroundStyle(Theme.secondaryText)
-                    .frame(width: 34, height: 34)
+                    .frame(width: 44, height: 44)
             }
             .buttonStyle(.plain)
             .emberGlass(.regular.interactive(), in: Circle())
@@ -200,6 +204,7 @@ struct GameMenuView: View {
 
     private func show(_ message: String) {
         withAnimation { toast = message }
+        AccessibilityNotification.Announcement(message).post()
         Task {
             try? await Task.sleep(for: .seconds(2))
             withAnimation { if toast == message { toast = nil } }
@@ -260,7 +265,8 @@ final class PauseSnapshot {
 
     /// The engine fires the paused callback on its own thread, after
     /// it stored the frame.
-    func observeEngine() {
+    /// Nonisolated: the closure runs on the engine's thread.
+    nonisolated func observeEngine() {
         mkxp_setPausedCallback({ _ in
             DispatchQueue.main.async {
                 MainActor.assumeIsolated { PauseSnapshot.shared.capture() }

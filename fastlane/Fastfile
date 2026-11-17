@@ -1,5 +1,6 @@
 # Ember on the App Store.
 #
+#   fastlane verify                 scripts/check.sh and the unit tests
 #   fastlane build                  archive and export an App Store .ipa (no upload)
 #   fastlane beta                   build and send to TestFlight
 #   fastlane release                build, upload with "What's New", submit for review
@@ -35,8 +36,19 @@ platform :ios do
     )
   end
 
+  desc "Checks (translations, syntax, changelog, credentials) and unit tests"
+  lane :verify do
+    sh("cd '#{ROOT}' && scripts/check.sh")
+    sh("cd '#{ROOT}' && scripts/test.sh")
+  end
+
   desc "Build and send to TestFlight"
   lane :beta do
+    # TestFlight refuses a build number it already has: say so before
+    # a 10-minute build, instead of after the upload.
+    latest = latest_testflight_build_number(api_key: api_key, app_identifier: APP_ID, version: version_string) rescue 0
+    UI.user_error!("Build #{build_number} is not above TestFlight's #{latest}: run scripts/bump-version.sh #{version_string} #{latest.to_i + 1}") if build_number.to_i <= latest.to_i
+    verify
     build
     upload_to_testflight(api_key: api_key, skip_waiting_for_build_processing: true)
   end
@@ -45,6 +57,7 @@ platform :ios do
   lane :release do |options|
     submit = options.fetch(:submit, true)
     ensure_releasable
+    verify
     build
     upload_to_app_store(
       api_key: api_key,

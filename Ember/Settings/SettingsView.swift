@@ -273,6 +273,7 @@ struct SettingsView: View {
             LabeledContent("Versão", value: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")
             LabeledContent("Motor", value: "mkxp-z")
             NavigationLink("Licenças de código aberto") { LicensesView() }
+            NavigationLink("Relatórios do sistema") { DiagnosticsView() }
         }
     }
 }
@@ -430,7 +431,7 @@ private struct RTPSection: View {
                         Label("Instalado", systemImage: "checkmark.circle.fill")
                             .labelStyle(.titleAndIcon)
                             .font(.subheadline)
-                            .foregroundStyle(Theme.active)
+                            .foregroundStyle(Theme.activeText)
                     } else {
                         Text("Não instalado")
                             .font(.subheadline)

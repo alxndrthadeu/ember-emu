@@ -146,6 +146,13 @@ enum PlayHistory {
         save(all)
     }
 
+    /// Reads the sessions again, newest first (after a backup merged
+    /// its history in).
+    static func reloadFromDefaults() {
+        lock.withLock { cache = nil }
+        save(sessions.sorted { $0.end > $1.end })
+    }
+
     static func clear() {
         lock.withLock { cache = [] }
         UserDefaults.standard.removeObject(forKey: sessionsKey)

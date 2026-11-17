@@ -37,6 +37,7 @@ enum GameArchive {
         case noICloud
         case packFailed
         case notFound(String)
+        case downloadStalled(String)
 
         var errorDescription: String? {
             switch self {
@@ -46,6 +47,8 @@ enum GameArchive {
                 String(localized: "Não deu para compactar o jogo. Confira se há espaço livre e tente de novo.")
             case .notFound(let title):
                 String(localized: "O arquivo de “\(title)” não está mais no iCloud Drive.")
+            case .downloadStalled(let title):
+                String(localized: "O download de “\(title)” parou. Confira a internet e toque no jogo de novo; o que já baixou continua.")
             }
         }
     }
@@ -168,12 +171,22 @@ enum GameArchive {
         // Download from iCloud, when only the placeholder is here.
         if !fakeCloud, !isDownloaded(url) {
             try fm.startDownloadingUbiquitousItem(at: url)
+            // Gives up after a minute without progress (no network, the
+            // file gone from iCloud), instead of spinning for ever.
+            var lastPercent: Double?
+            var lastChange = Date()
             while !isDownloaded(url) {
                 let percent = await MainActor.run { CloudProgress.shared.items[record.archiveName]?.downloaded }
                 progress(String(localized: "Baixando do iCloud…"), percent.map { $0 / 100 })
                 // At 100%, iCloud may still be finishing the file: the
                 // coordinated read below waits for it, so stop polling.
                 if let percent, percent >= 100 { break }
+                if percent != lastPercent {
+                    lastPercent = percent
+                    lastChange = Date()
+                } else if Date().timeIntervalSince(lastChange) > 60 {
+                    throw ArchiveError.downloadStalled(record.title)
+                }
                 try await Task.sleep(for: .milliseconds(400))
             }
         }

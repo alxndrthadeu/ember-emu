@@ -43,8 +43,23 @@ rsync -a "$TREE/licenses.json" "$APP/EngineLicenses.json"
 SOUNDFONT="$ENGINE/deps/downloads/GeneralUser-GS.sf2"
 if [ -f "$SOUNDFONT" ]; then
     rsync -a "$SOUNDFONT" "$APP/GeneralUser-GS.sf2"
+elif [ "${CONFIGURATION:-}" = "Release" ]; then
+    echo "error: no soundfont; a store build would play MIDI games silent. Run tools/fetch-soundfont.sh in the engine" >&2
+    exit 1
 else
     echo "warning: no soundfont; MIDI music will be silent. Run tools/fetch-soundfont.sh in the engine" >&2
+fi
+
+# A store build must come from an engine with every Ember patch (0001
+# keeps the iPhone cool; 0003/0004 are the TV). Checked on the source:
+# rebuild the engine after scripts/patch-engine.sh.
+if [ "${CONFIGURATION:-}" = "Release" ]; then
+    for patch in "${PROJECT_DIR:?}"/engine-patches/*.patch; do
+        if ! git -C "$ENGINE" apply --reverse --check "$patch" 2>/dev/null; then
+            echo "error: engine patch $(basename "$patch") is not in $ENGINE; run scripts/patch-engine.sh and rebuild the engine" >&2
+            exit 1
+        fi
+    done
 fi
 
 # Builds from before the import flow bundled games/ here.
@@ -55,6 +70,9 @@ rm -rf "$APP/Games"
 DEMO="${PROJECT_DIR:?}/demo/game"
 if [ -f "$DEMO/Game.ini" ]; then
     rsync -a --delete "$DEMO/" "$APP/EmberDemo/"
+elif [ "${CONFIGURATION:-}" = "Release" ]; then
+    echo "error: no demo game (App Review plays it); run ruby scripts/build-demo.rb" >&2
+    exit 1
 else
     echo "warning: no demo game; run ruby scripts/build-demo.rb" >&2
 fi

@@ -127,7 +127,7 @@ struct ArchivedCard: View {
                             LinearGradient(colors: [Theme.surface, Theme.surface2], startPoint: .top, endPoint: .bottom)
                             if let url = GameCovers.url(forGameID: record.id,
                                                         folder: GameImporter.gamesFolder.appendingPathComponent(record.id)),
-                               let image = UIImage(contentsOfFile: url.path) {
+                               let image = CoverCache.image(at: url) {
                                 Image(uiImage: image).resizable().interpolation(.none).scaledToFill()
                             } else {
                                 Text(String(record.title.prefix(1)))
@@ -184,5 +184,35 @@ struct Banner<Content: View>: View {
             .padding(.vertical, 12)
             .emberGlass(.regular, in: Capsule())
             .padding(.bottom, 8)
+    }
+}
+
+/// A card that answers a tap and a long press, and shows it is being
+/// touched (cards are not system buttons: the long press opens Ember's
+/// own options sheet). VoiceOver reads it as one button.
+struct CardPress: ViewModifier {
+    let onTap: () -> Void
+    let onLongPress: () -> Void
+    @State private var pressed = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func body(content: Content) -> some View {
+        content
+            .scaleEffect(pressed && !reduceMotion ? 0.96 : 1)
+            .opacity(pressed && reduceMotion ? 0.7 : 1)
+            .animation(.easeOut(duration: 0.15), value: pressed)
+            .onTapGesture(perform: onTap)
+            .onLongPressGesture(minimumDuration: 0.45, perform: {
+                Haptics.tap()
+                onLongPress()
+            }, onPressingChanged: { pressed = $0 })
+            .accessibilityElement(children: .combine)
+            .accessibilityAddTraits(.isButton)
+    }
+}
+
+extension View {
+    func cardPress(onTap: @escaping () -> Void, onLongPress: @escaping () -> Void) -> some View {
+        modifier(CardPress(onTap: onTap, onLongPress: onLongPress))
     }
 }

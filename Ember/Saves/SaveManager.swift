@@ -40,7 +40,7 @@ enum SaveManager {
     // MARK: Where saves live
 
     /// Files the engine or the app write in UserData that are not saves.
-    private static let notSaves: Set<String> = ["systemout.txt", "cover.jpg", ".ds_store"]
+    private static let notSaves: Set<String> = ["systemout.txt", "errorlog.txt", "cover.jpg", ".ds_store"]
     private static let saveExtensions: Set<String> = ["rxdata", "rvdata", "rvdata2"]
 
     static func backupsFolder(for game: GameEntry) -> URL {
@@ -139,6 +139,7 @@ enum SaveManager {
 
         let files = files(under: incoming, prefix: "")
             .filter { !notSaves.contains(($0.id as NSString).lastPathComponent.lowercased()) }
+            .filter { !isGameFile($0.id) }
         guard !files.isEmpty else { throw SaveError.nothingToImport }
 
         let stamp = Self.stamp()
@@ -151,6 +152,17 @@ enum SaveManager {
             try replace(target, with: file.url)
         }
         return files.count
+    }
+
+    /// The game's own files, never taken as saves: a zip of the whole
+    /// game picked by mistake must not overwrite its scripts.
+    static func isGameFile(_ id: String) -> Bool {
+        let parts = id.split(separator: "/").map { $0.lowercased() }
+        guard let first = parts.first, let last = parts.last else { return false }
+        if parts.count > 1, ["data", "graphics", "audio", "fonts", "plugins"].contains(first) { return true }
+        let ext = (last as NSString).pathExtension
+        if ["exe", "dll", "ini", "rgssad", "rgss2a", "rgss3a"].contains(ext) { return true }
+        return last.hasPrefix("scripts.")
     }
 
     /// Where the game will read a save named `id`.
@@ -185,6 +197,24 @@ enum SaveManager {
         for save in gameFolderSaves(game) {
             try? backUp(save.url, relativeID: save.id, of: game, stamp: stamp, move: true)
         }
+    }
+
+    /// A new version of a game is replacing `game`'s files: its saves in
+    /// the game folder (Save1.rxdata, Save Data/) are copied into the new
+    /// folder, and kept in Backups too. UserData/<id> is not touched: the
+    /// game keeps its id.
+    static func carryGameFolderSaves(of game: GameEntry, into newFolder: URL) throws -> Int {
+        let fm = FileManager.default
+        let stamp = Self.stamp()
+        var count = 0
+        for save in gameFolderSaves(game) {
+            try backUp(save.url, relativeID: save.id, of: game, stamp: stamp)
+            let target = newFolder.appendingPathComponent(save.id)
+            try fm.createDirectory(at: target.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try replace(target, with: save.url)
+            count += 1
+        }
+        return count
     }
 
     // MARK: Helpers

@@ -306,15 +306,17 @@ final class ProfileStore {
     var all: [ControlProfile] { ControlProfile.builtIns + custom }
 
     private init() {
-        if let data = UserDefaults.standard.data(forKey: Self.customKey),
-           let profiles = try? JSONDecoder().decode([ControlProfile].self, from: data) {
-            custom = profiles
-        }
+        reloadFromDefaults()
+    }
+
+    /// Reads profiles, choices and game mappings again (after a backup
+    /// is restored).
+    func reloadFromDefaults() {
+        custom = UserDefaults.standard.data(forKey: Self.customKey)
+            .flatMap { try? JSONDecoder().decode([ControlProfile].self, from: $0) } ?? []
         assignments = UserDefaults.standard.dictionary(forKey: Self.assignmentKey) as? [String: String] ?? [:]
-        if let data = UserDefaults.standard.data(forKey: Self.gameMappingKey),
-           let mappings = try? JSONDecoder().decode([String: ControlProfile].self, from: data) {
-            gameMappings = mappings
-        }
+        gameMappings = UserDefaults.standard.data(forKey: Self.gameMappingKey)
+            .flatMap { try? JSONDecoder().decode([String: ControlProfile].self, from: $0) } ?? [:]
     }
 
     /// What the game plays with: its own mapping, or its profile.
@@ -447,8 +449,27 @@ final class ControlMapper {
     private var activeKeys: [ControlButton: Int32] = [:]
     private var directionCounts: [ControlDirection: Int] = [:]
     private var activeDirections: [ControlDirection: Int32] = [:]
+    /// How many buttons and directions hold each key: X and Start can
+    /// both send Shift, and letting go of one must not let go of the
+    /// key while the other still holds it.
+    private var keyCounts: [Int32: Int] = [:]
+    /// Sends a key to the game (replaced in tests).
+    var inject: (Int32, Bool) -> Void = { scancode, down in mkxp_injectKeyEvent(scancode, down ? 1 : 0) }
 
-    private init() {}
+    init() {}
+
+    private func keyDown(_ scancode: Int32) {
+        let count = keyCounts[scancode, default: 0]
+        keyCounts[scancode] = count + 1
+        if count == 0 { inject(scancode, true) }
+    }
+
+    private func keyUp(_ scancode: Int32) {
+        let count = keyCounts[scancode, default: 0]
+        guard count > 0 else { return }
+        keyCounts[scancode] = count == 1 ? nil : count - 1
+        if count == 1 { inject(scancode, false) }
+    }
 
     /// A direction from the D-pad, stick or a controller: its arrow, or
     /// the key the game's mapping gives it. Counted, as two sources can
@@ -459,7 +480,7 @@ final class ControlMapper {
         guard count == 0 else { return }
         let scancode = profile.key(for: direction).scancode
         activeDirections[direction] = scancode
-        mkxp_injectKeyEvent(scancode, 1)
+        keyDown(scancode)
     }
 
     func release(_ direction: ControlDirection) {
@@ -467,7 +488,7 @@ final class ControlMapper {
         guard count > 0 else { return }
         directionCounts[direction] = count - 1
         guard count == 1, let scancode = activeDirections.removeValue(forKey: direction) else { return }
-        mkxp_injectKeyEvent(scancode, 0)
+        keyUp(scancode)
     }
 
     func press(_ button: ControlButton) {
@@ -478,7 +499,7 @@ final class ControlMapper {
         active[button] = action
         if let scancode = profile.scancode(for: button) {
             activeKeys[button] = scancode
-            mkxp_injectKeyEvent(scancode, 1)
+            keyDown(scancode)
             return
         }
         switch action {
@@ -496,7 +517,7 @@ final class ControlMapper {
         guard count == 1, let action = active.removeValue(forKey: button) else { return }
         // The key pressed, even if the profile changed meanwhile.
         if let scancode = activeKeys.removeValue(forKey: button) {
-            mkxp_injectKeyEvent(scancode, 0)
+            keyUp(scancode)
         } else if action == .fastForward {
             GameSettings.apply()
         }

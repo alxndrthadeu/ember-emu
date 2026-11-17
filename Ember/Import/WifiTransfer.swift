@@ -47,7 +47,11 @@ final class WifiTransfer {
 
     func start() {
         guard listener == nil else { return }
-        try? FileManager.default.removeItem(at: Self.staging)
+        // Leftovers of an earlier time, unless a batch is still being
+        // imported from there.
+        if LibraryStore.shared.importing.isEmpty {
+            try? FileManager.default.removeItem(at: Self.staging)
+        }
         try? FileManager.default.createDirectory(at: Self.staging, withIntermediateDirectories: true)
         do {
             let parameters = NWParameters.tcp
@@ -79,6 +83,8 @@ final class WifiTransfer {
     func stop() {
         listener?.cancel()
         listener = nil
+        // Uploads on their way stop too (their partial files go).
+        HTTPConnection.closeAll()
         isOn = false
         address = nil
         receiving = nil
@@ -135,7 +141,7 @@ final class WifiTransfer {
             var host = [CChar](repeating: 0, count: Int(NI_MAXHOST))
             if getnameinfo(addr, socklen_t(addr.pointee.sa_len), &host, socklen_t(host.count),
                            nil, 0, NI_NUMERICHOST) == 0 {
-                return String(cString: host)
+                return String(decoding: host.prefix { $0 != 0 }.map { UInt8(bitPattern: $0) }, as: UTF8.self)
             }
         }
         return nil
@@ -150,6 +156,22 @@ private final class HTTPConnection: @unchecked Sendable {
     private var file: FileHandle?
     private var remaining = 0
     private var self_: HTTPConnection?
+    /// The file being written, removed if the upload is cut short.
+    private var target: URL?
+    private var lastActivity = Date()
+    private var closed = false
+
+    /// Open connections, so turning the transfer off ends them.
+    nonisolated(unsafe) private static var open: [ObjectIdentifier: HTTPConnection] = [:]
+    private static let lock = NSLock()
+    /// A connection that sends nothing for this long is closed (a
+    /// browser gone, or a request that never finishes).
+    private static let idleLimit: TimeInterval = 30
+
+    static func closeAll() {
+        let all = lock.withLock { Array(open.values) }
+        for connection in all { connection.queue.async { connection.close() } }
+    }
 
     init(connection: NWConnection) {
         self.connection = connection
@@ -157,14 +179,28 @@ private final class HTTPConnection: @unchecked Sendable {
 
     func start() {
         self_ = self   // alive until the answer is sent
+        Self.lock.withLock { Self.open[ObjectIdentifier(self)] = self }
         connection.start(queue: queue)
+        watchIdle()
         readHeader()
+    }
+
+    private func watchIdle() {
+        queue.asyncAfter(deadline: .now() + 5) { [self] in
+            guard !closed else { return }
+            if Date().timeIntervalSince(lastActivity) > Self.idleLimit {
+                close()
+            } else {
+                watchIdle()
+            }
+        }
     }
 
     // MARK: Reading
 
     private func readHeader() {
         connection.receive(minimumIncompleteLength: 1, maximumLength: 64 * 1024) { [self] data, _, done, error in
+            lastActivity = Date()
             if let data { header.append(data) }
             if let end = header.range(of: Data("\r\n\r\n".utf8)) {
                 let head = String(decoding: header[..<end.lowerBound], as: UTF8.self)
@@ -218,6 +254,7 @@ private final class HTTPConnection: @unchecked Sendable {
             try fm.createDirectory(at: target.deletingLastPathComponent(), withIntermediateDirectories: true)
             fm.createFile(atPath: target.path, contents: nil)
             file = try FileHandle(forWritingTo: target)
+            self.target = target
         } catch {
             return respond(500, "cannot write")
         }
@@ -235,9 +272,11 @@ private final class HTTPConnection: @unchecked Sendable {
         guard remaining > 0 else {
             try? file?.close()
             file = nil
+            target = nil
             return respond(200, "ok")
         }
         connection.receive(minimumIncompleteLength: 1, maximumLength: 1 << 20) { [self] data, _, done, error in
+            lastActivity = Date()
             if let data, !data.isEmpty {
                 write(data)
             } else if error != nil || done {
@@ -259,8 +298,15 @@ private final class HTTPConnection: @unchecked Sendable {
     }
 
     private func close() {
+        guard !closed else { return }
+        closed = true
         try? file?.close()
+        file = nil
+        // Half a file would import as a broken game.
+        if let target { try? FileManager.default.removeItem(at: target) }
+        target = nil
         connection.cancel()
+        Self.lock.withLock { _ = Self.open.removeValue(forKey: ObjectIdentifier(self)) }
         self_ = nil
     }
 

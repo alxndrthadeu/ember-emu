@@ -115,6 +115,13 @@ enum ControllerTypeStore {
         UserDefaults.standard.set(true, forKey: askedKey(id))
     }
 
+    /// Reads the scripts again next time (a new version of the game),
+    /// keeping the player's own choice.
+    static func forgetDetection(_ id: String) {
+        UserDefaults.standard.removeObject(forKey: detectedKey(id))
+        GameKeyStore.forget(id)
+    }
+
     static func forget(_ id: String) {
         for key in [chosenKey(id), detectedKey(id), askedKey(id)] {
             UserDefaults.standard.removeObject(forKey: key)

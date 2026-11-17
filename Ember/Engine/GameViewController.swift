@@ -37,6 +37,12 @@ final class GameLayout {
     func observeEngine() {
         pictureRect = .zero
         aspect = nil
+        Self.installRectCallback()
+    }
+
+    /// Nonisolated: the closure runs on the engine's thread, and in a
+    /// main-actor method Swift 6 would check (and trap) that it doesn't.
+    nonisolated private static func installRectCallback() {
         mkxp_setGameRectChangedCallback({ x, y, w, h, _ in
             let rect = CGRect(x: CGFloat(x), y: CGFloat(y), width: CGFloat(w), height: CGFloat(h))
             DispatchQueue.main.async {

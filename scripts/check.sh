@@ -31,17 +31,39 @@ stale=$(python3 -c 'import json;d=json.load(open("Ember/Resources/Localizable.xc
 [[ "$stale" == "0" ]] && ok "no unused strings" || fail "$stale unused strings in Localizable.xcstrings"
 
 # Ruby: Ember's engine scripts and the demo game.
+bad=0
 for file in Ember/Resources/EngineScripts/*.rb demo/scripts/*.rb scripts/*.rb fastlane/Fastfile; do
     [[ -f "$file" ]] || continue
-    ruby -c "$file" >/dev/null 2>&1 || fail "Ruby syntax: $file"
+    ruby -c "$file" >/dev/null 2>&1 || { fail "Ruby syntax: $file"; bad=1; }
 done
-ok "Ruby syntax"
+[[ $bad == 0 ]] && ok "Ruby syntax"
+
+# The scripts that run inside games also run on Ruby 1.8 and 1.9
+# (Essentials, RPG Maker XP/VX): no syntax those can't read.
+old_ruby=$(python3 - Ember/Resources/EngineScripts/*.rb demo/scripts/*.rb <<'PY'
+import re, sys
+# Safe navigation, stabby lambdas, squiggly heredocs, `key: value` hashes
+# and keyword arguments: none of them parse on Ruby 1.8.
+patterns = [(r"&\.", "&."), (r"->\s*[({]", "->"), (r"<<~", "<<~"),
+            (r"(^|[{(,|]\s*)[a-z_][a-zA-Z0-9_]*: (?!:)", "key: value")]
+for path in sys.argv[1:]:
+    for number, line in enumerate(open(path, encoding="utf-8"), 1):
+        code = re.sub(r"'(?:\\.|[^'\\])*'|\"(?:\\.|[^\"\\])*\"", "''", line.split(" #")[0])
+        if code.lstrip().startswith("#"):
+            continue
+        for pattern, name in patterns:
+            if re.search(pattern, code):
+                print(f"{path}:{number}: {name}: {line.strip()[:80]}")
+PY
+)
+if [[ -n "$old_ruby" ]]; then fail "syntax Ruby 1.8/1.9 can't read:"; echo "$old_ruby" | head -10; else ok "Ruby 1.8/1.9 syntax"; fi
 
 # Shell scripts.
+bad=0
 for file in scripts/*.sh; do
-    bash -n "$file" 2>/dev/null || fail "shell syntax: $file"
+    bash -n "$file" 2>/dev/null || { fail "shell syntax: $file"; bad=1; }
 done
-ok "shell syntax"
+[[ $bad == 0 ]] && ok "shell syntax"
 
 # The version in project.yml has a changelog section.
 version=$(sed -nE 's/.*MARKETING_VERSION: "?([0-9.]+)"?.*/\1/p' project.yml | head -1)

@@ -53,7 +53,8 @@ final class EngineSession {
     private let saveWatcher = SaveWatcher()
 
     private func touchSession() {
-        if let sessionID { PlayHistory.touch(sessionID) }
+        // Rewrites the history list: off the main thread, the game's.
+        if let sessionID { Task.detached(priority: .utility) { PlayHistory.touch(sessionID) } }
     }
 
     /// True while the game is paused because the app left the screen.
@@ -201,6 +202,8 @@ final class EngineSession {
         // New cover and "Continuar".
         LibraryStore.shared.reload()
         state = .finished
+        // What the game saved goes to iCloud.
+        LibraryStore.shared.syncSaves()
         launcherWindow?.makeKeyAndVisible()
     }
 
@@ -226,7 +229,9 @@ final class EngineSession {
     /// The engine reports a script error, or a game's own msgbox, and
     /// blocks its thread until the player dismisses it. Without these
     /// handlers the game freezes on its first error.
-    private func observeMessages() {
+    /// Nonisolated: the engine calls these closures on its own thread
+    /// (Swift 6 would trap a main-actor closure there).
+    nonisolated private func observeMessages() {
         mkxp_setErrorMessageCallback({ message, _ in
             let text = message.map { String(cString: $0) } ?? ""
             DispatchQueue.main.async {
@@ -239,6 +244,27 @@ final class EngineSession {
                 MainActor.assumeIsolated { EngineSession.shared.presentEngineMessage(text, isError: false) }
             }
         }, nil)
+    }
+
+    /// Set when the player switched Ruby from an error: the library
+    /// says the game opens with it next time.
+    var rubyChangedAfterError: String?
+
+    /// The Ruby to try next when an error looks like a version mismatch
+    /// (syntax only one Ruby reads, String methods that changed between
+    /// 1.8 and 1.9+, frozen strings in 3.1). Nil for other errors.
+    static func rubySuggestion(for text: String, game: GameEntry) -> RubyChoice? {
+        let signatures = ["SyntaxError", "syntax error", "invalid multibyte char", "undefined method `getc'",
+                          "undefined method `each' for", "can't modify frozen String", "FrozenError",
+                          "undefined method `ord' for", "undefined method `bytesize'", "undefined method `force_encoding'",
+                          "Encoding::CompatibilityError", "invalid byte sequence"]
+        guard signatures.contains(where: { text.contains($0) }) else { return nil }
+        let rgss = GameFolder.rgssVersion(in: game.folder) ?? 1
+        switch game.rubyVersion {
+        case MKXP_RUBY_31: return rgss >= 3 ? .ruby19 : .ruby18
+        case MKXP_RUBY_19: return rgss >= 3 ? .ruby31 : .ruby18
+        default: return .ruby19
+        }
     }
 
     /// What the player can do about an error. A missing stock graphic
@@ -255,14 +281,14 @@ final class EngineSession {
     }
 
     private func presentEngineMessage(_ text: String, isError: Bool) {
+        if isError {
+            GameLog.shared.error(text)
+        } else if !text.isEmpty {
+            GameLog.shared.note("aviso do jogo: \(text)")
+        }
         guard let screen = gameScreen, !text.isEmpty else {
             isError ? mkxp_signalErrorDismissed() : mkxp_signalInfoDismissed()
             return
-        }
-        if isError {
-            GameLog.shared.error(text)
-        } else {
-            GameLog.shared.note("aviso do jogo: \(text)")
         }
         let shown = text.count > 900 ? String(text.prefix(900)) + "…" : text
         let alert: UIAlertController
@@ -270,6 +296,17 @@ final class EngineSession {
             let title = currentGame.map { String(localized: "\($0.title) encontrou um erro") } ?? String(localized: "O jogo encontrou um erro")
             let hint = "\n\n" + Self.hint(for: text)
             alert = UIAlertController(title: title, message: shown + hint, preferredStyle: .alert)
+            // An error typical of the wrong Ruby: one tap picks the other
+            // one for the next time the game opens.
+            if let game = currentGame, let other = Self.rubySuggestion(for: text, game: game) {
+                alert.message = shown + "\n\n" + String(localized: "Este erro costuma acontecer quando o jogo roda numa versão do Ruby diferente da que foi feito.")
+                alert.addAction(UIAlertAction(title: String(localized: "Usar Ruby \(other.label) neste jogo"), style: .default) { _ in
+                    RubyChoice.set(other, for: game.id)
+                    GameLog.shared.note("Ruby trocado para \(other.label) depois de um erro")
+                    mkxp_signalErrorDismissed()
+                    EngineSession.shared.rubyChangedAfterError = other.label
+                })
+            }
             alert.addAction(UIAlertAction(title: String(localized: "Copiar erro"), style: .default) { _ in
                 UIPasteboard.general.string = text
                 mkxp_signalErrorDismissed()
@@ -283,16 +320,36 @@ final class EngineSession {
                 mkxp_signalInfoDismissed()
             })
         }
+        present(alert, over: screen, isError: isError, attempt: 0)
+    }
+
+    /// The engine waits until the alert is closed, so it must show: a
+    /// sheet on its way out or another alert would make `present` fail
+    /// in silence and leave the game stuck. Tries again a moment later;
+    /// after ~6 s gives up and lets the game go on.
+    private func present(_ alert: UIAlertController, over screen: UIViewController, isError: Bool, attempt: Int) {
         var top: UIViewController = screen
-        while let presented = top.presentedViewController { top = presented }
-        top.present(alert, animated: true)
+        while let presented = top.presentedViewController, !presented.isBeingDismissed { top = presented }
+        let blocked = top.presentedViewController != nil || top is UIAlertController || top.isBeingPresented
+        guard blocked else {
+            top.present(alert, animated: true)
+            return
+        }
+        guard attempt < 20 else {
+            GameLog.shared.note("alerta do motor não pôde ser mostrado")
+            isError ? mkxp_signalErrorDismissed() : mkxp_signalInfoDismissed()
+            return
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            self?.present(alert, over: screen, isError: isError, attempt: attempt + 1)
+        }
     }
 
     // MARK: - Text input
 
     /// The engine fires this on its own thread when a game turns text
     /// input on or off (`Input.text_input`).
-    private func observeTextInput() {
+    nonisolated private func observeTextInput() {
         mkxp_setTextInputModeCallback({ active, _ in
             DispatchQueue.main.async {
                 MainActor.assumeIsolated {

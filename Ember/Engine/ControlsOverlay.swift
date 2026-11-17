@@ -12,6 +12,7 @@ struct ControlsOverlay: View {
     @State private var quitting = false
     @State private var showingStates = false
     @State private var toast: String?
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         GeometryReader { geo in
@@ -84,7 +85,7 @@ struct ControlsOverlay: View {
                 quitting = true
                 session.quit()
             }
-            .presentationDetents([.height(500)])
+            .presentationDetents([.height(500), .large])
         }
         .sheet(isPresented: $showingStates) {
             if let game = session.currentGame {
@@ -104,7 +105,7 @@ struct ControlsOverlay: View {
                     .padding(.vertical, 10)
                     .emberGlass(.regular.tint(Theme.highlight), in: Capsule())
                     .padding(.top, 54)
-                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .transition(reduceMotion ? .opacity : .move(edge: .top).combined(with: .opacity))
             }
         }
         .animation(.spring(response: 0.3), value: toast)
@@ -136,10 +137,16 @@ struct ControlsOverlay: View {
             Task { @MainActor in
                 let outcome = await session.requestState(verb, slot: slot)
                 switch outcome {
-                case .done: show(verb == "save" ? String(localized: "Estado salvo") : String(localized: "Estado carregado"))
+                case .done:
+                    Haptics.success()
+                    show(verb == "save" ? String(localized: "Estado salvo") : String(localized: "Estado carregado"))
                 case .busy(let reason): show(StateStore.busyText(reason))
-                case .failed: show(verb == "save" ? String(localized: "Não deu para salvar o estado neste jogo") : String(localized: "Não deu para carregar o estado"))
-                case .noAnswer: show(String(localized: "O jogo não respondeu. Tente de novo andando pelo mapa"))
+                case .failed:
+                    Haptics.failure()
+                    show(verb == "save" ? String(localized: "Não deu para salvar o estado neste jogo") : String(localized: "Não deu para carregar o estado"))
+                case .noAnswer:
+                    Haptics.failure()
+                    show(String(localized: "O jogo não respondeu. Tente de novo andando pelo mapa"))
                 }
             }
         }
@@ -147,6 +154,8 @@ struct ControlsOverlay: View {
 
     private func show(_ message: String) {
         toast = message
+        // VoiceOver reads it too; otherwise it is only on screen.
+        AccessibilityNotification.Announcement(message).post()
         Task { @MainActor in
             try? await Task.sleep(for: .seconds(2.5))
             if toast == message { toast = nil }
@@ -191,7 +200,7 @@ private struct FloatingMenuButton: View {
             Image(systemName: "gearshape.fill")
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundStyle(Theme.controlLabel)
-                .frame(width: 38, height: 38)
+                .frame(width: 44, height: 44)
         }
         .buttonStyle(.plain)
         .emberGlass(Theme.controlGlass.interactive(), in: Circle())

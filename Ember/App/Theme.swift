@@ -22,6 +22,12 @@ enum Theme {
     static let onHighlight = Color(hex: 0x2B211C)
     /// Musgo: the only cool color, for on / done states.
     static let active = dynamic(light: 0x2E8C83, dark: 0x4DB3A8)
+    /// Musgo for text and small marks on cream: 4.9:1 (the fill color
+    /// is 3.4:1, too faint for text).
+    static let activeText = dynamic(light: 0x22706A, dark: 0x4DB3A8)
+    /// Âmbar as an outline on cream: the fill color is 1.5:1 there,
+    /// this one 3.7:1.
+    static let highlightEdge = dynamic(light: 0xA86A00, dark: 0xF7B538)
 
     // MARK: Game screen (dark in both modes)
 

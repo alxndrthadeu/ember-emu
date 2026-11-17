@@ -48,6 +48,8 @@ enum EmberBackup {
     struct Summary {
         var games = 0
         var files = 0
+        /// Saves of games not on this device, kept in Backups.
+        var waitingSaves = 0
     }
 
     enum BackupError: LocalizedError {
@@ -181,9 +183,23 @@ enum EmberBackup {
         guard archive[manifestName] != nil else { throw BackupError.notABackup }
 
         let fm = FileManager.default
-        let stash = documents.appendingPathComponent("Backups/\(String(localized: "Restauração")) \(stamp(Date()))", isDirectory: true)
+        let stash = uniqueFolder(documents.appendingPathComponent(
+            "Backups/\(String(localized: "Restauração")) \(stamp(Date()))", isDirectory: true))
         var summary = Summary()
         var restoredGames: Set<String> = []
+        // Games the backup holds whole (more than saves). A game that is
+        // neither here nor whole in the backup has only saves: they wait
+        // in the stash instead of becoming a folder the library can't
+        // show, which would also push the real game to "<title> 2".
+        var wholeGames: Set<String> = []
+        for entry in archive where entry.type == .file {
+            let parts = entry.path.split(separator: "/").map(String.init)
+            guard parts.count >= 3, parts[0] == "Games" else { continue }
+            let name = parts.dropFirst(2).joined(separator: "/")
+            if !SaveManager.isGameFolderSaveName(parts.last ?? ""), !name.lowercased().hasPrefix("save data/") {
+                wholeGames.insert(parts[1])
+            }
+        }
 
         for entry in archive where entry.type == .file {
             let path = entry.path
@@ -201,7 +217,14 @@ enum EmberBackup {
                         || name.lowercased().hasPrefix("save data/")
                     guard isSave else { continue }
                 }
-                if top == "Games", parts.count >= 2 { restoredGames.insert(parts[1]) }
+                if top == "Games", parts.count >= 2, !existing.contains(parts[1]), !wholeGames.contains(parts[1]) {
+                    target = stash.appendingPathComponent(path)
+                    summary.waitingSaves += 1
+                    try fm.createDirectory(at: target.deletingLastPathComponent(), withIntermediateDirectories: true)
+                    _ = try archive.extract(entry, to: target)
+                    continue
+                }
+                if top == "Games", parts.count >= 2, !existing.contains(parts[1]) { restoredGames.insert(parts[1]) }
                 target = documents.appendingPathComponent(path)
             case "States", "Covers", "RTP", "Skins":
                 target = support.appendingPathComponent(path)
@@ -215,10 +238,15 @@ enum EmberBackup {
             }
 
             if fm.fileExists(atPath: target.path) {
+                // What was here goes to the stash; never over a copy
+                // already kept there.
                 let kept = stash.appendingPathComponent(path)
-                try? fm.createDirectory(at: kept.deletingLastPathComponent(), withIntermediateDirectories: true)
-                try? fm.removeItem(at: kept)
-                try fm.moveItem(at: target, to: kept)
+                try fm.createDirectory(at: kept.deletingLastPathComponent(), withIntermediateDirectories: true)
+                if fm.fileExists(atPath: kept.path) {
+                    try fm.removeItem(at: target)
+                } else {
+                    try fm.moveItem(at: target, to: kept)
+                }
             }
             try fm.createDirectory(at: target.deletingLastPathComponent(), withIntermediateDirectories: true)
             _ = try archive.extract(entry, to: target)
@@ -235,8 +263,52 @@ enum EmberBackup {
         else { return }
         let defaults = UserDefaults.standard
         for (key, value) in domain where !key.hasPrefix("settings.") {
-            defaults.set(value, forKey: key)
+            defaults.set(merged(defaults.object(forKey: key), with: value), forKey: key)
         }
+        PlayHistory.reloadFromDefaults()
+        // ProfileStore reads them again on the main actor (LibraryStore).
+    }
+
+    /// The backup's value, kept together with what this device has that
+    /// the backup doesn't: a game's control mapping made after the
+    /// backup survives. Dictionaries merge by key, lists of records by
+    /// "id" (also inside JSON data); anything else, the backup wins.
+    static func merged(_ local: Any?, with backup: Any) -> Any {
+        switch (local, backup) {
+        case let (local as [String: Any], backup as [String: Any]):
+            return local.merging(backup) { _, new in new }
+        case let (local as Data, backup as Data):
+            guard let localJSON = try? JSONSerialization.jsonObject(with: local),
+                  let backupJSON = try? JSONSerialization.jsonObject(with: backup) else { return backup }
+            let result = mergedJSON(localJSON, backupJSON)
+            return (try? JSONSerialization.data(withJSONObject: result)) ?? backup
+        default:
+            return backup
+        }
+    }
+
+    private static func mergedJSON(_ local: Any, _ backup: Any) -> Any {
+        if let local = local as? [String: Any], let backup = backup as? [String: Any] {
+            return local.merging(backup) { _, new in new }
+        }
+        if let local = local as? [[String: Any]], let backup = backup as? [[String: Any]],
+           local.allSatisfy({ $0["id"] is String }), backup.allSatisfy({ $0["id"] is String }) {
+            let ids = Set(backup.compactMap { $0["id"] as? String })
+            return backup + local.filter { !ids.contains($0["id"] as? String ?? "") }
+        }
+        return backup
+    }
+
+    /// The folder, or "<folder> 2", "<folder> 3"… when it already exists
+    /// (two restores in the same minute keep both stashes).
+    private static func uniqueFolder(_ url: URL) -> URL {
+        var candidate = url
+        var number = 2
+        while FileManager.default.fileExists(atPath: candidate.path) {
+            candidate = url.deletingLastPathComponent().appendingPathComponent("\(url.lastPathComponent) \(number)")
+            number += 1
+        }
+        return candidate
     }
 
     private static func stamp(_ date: Date) -> String {
