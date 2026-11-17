@@ -67,6 +67,10 @@ final class RemoteControllerServer {
     private func ended(_ old: NWConnection) {
         guard old === connection else { return }
         ControlMapper.shared.releaseAll()
+        // Without the iPhone, the Mac's own controls for the game again.
+        if let game = EngineSession.shared.currentGame {
+            ControlMapper.shared.profile = ProfileStore.shared.profile(for: game)
+        }
         connection = nil
         if let name = connectedName { GameLog.shared.note("controle remoto desconectado: \(name)") }
         connectedName = nil
@@ -97,6 +101,11 @@ final class RemoteControllerServer {
             command(payload)
         case .releaseAll:
             mapper.releaseAll()
+        case .profile:
+            guard let profile = try? JSONDecoder().decode(ControlProfile.self, from: Data(payload.utf8)) else { return }
+            mapper.releaseAll()
+            mapper.profile = profile
+            GameLog.shared.note("controle remoto: perfil do iPhone (\(profile.name))")
         case .info:
             break
         }
@@ -130,7 +139,7 @@ final class RemoteControllerServer {
     private func sendInfo() {
         guard let connection, let game = EngineSession.shared.currentGame else { return }
         let type = ControllerTypeStore.type(for: game).rawValue
-        let message = "\(type)|\(GameSettings.speed)|\(game.title)"
+        let message = "\(type)|\(GameSettings.speed)|\(game.id)|\(game.title)"
         connection.send(content: RemoteProtocol.encode(.info, message), completion: .contentProcessed { _ in })
     }
 }

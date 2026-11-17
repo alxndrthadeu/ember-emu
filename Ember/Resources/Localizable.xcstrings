@@ -119,6 +119,16 @@
         }
       }
     },
+    "%@ · velocidade %lldx" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · velocidade %2$lldx"
+          }
+        }
+      }
+    },
     "%@ (cópia)" : {
       "localizations" : {
         "en" : {
@@ -655,6 +665,12 @@
         }
       }
     },
+    "Abra o Ember no Mac" : {
+
+    },
+    "Abra o Ember no Mac." : {
+
+    },
     "Abra o Ember no Mac. Não precisa estar no mesmo Wi-Fi." : {
 
     },
@@ -674,7 +690,7 @@
         }
       }
     },
-    "Abra um jogo no Ember do Mac. O iPhone acha o Mac sozinho, mesmo sem estar no mesmo Wi-Fi, e vira o controle: os botões seguem os controles daquele jogo." : {
+    "Abra um jogo no Ember do Mac para ele aparecer aqui." : {
 
     },
     "Abra um jogo no Ember, no iPhone" : {
@@ -756,6 +772,12 @@
           }
         }
       }
+    },
+    "Abrir" : {
+
+    },
+    "Abrir o controle" : {
+
     },
     "Aceite o envio na tela do Mac." : {
 
@@ -1978,6 +2000,9 @@
         }
       }
     },
+    "Como funciona" : {
+
+    },
     "Como você quer jogar?" : {
       "localizations" : {
         "en" : {
@@ -2025,6 +2050,9 @@
           }
         }
       }
+    },
+    "Conectado como controle" : {
+
     },
     "Conectando ao iPhone…" : {
       "localizations" : {
@@ -2109,6 +2137,9 @@
         }
       }
     },
+    "Conexão perdida" : {
+
+    },
     "Confirmar" : {
       "localizations" : {
         "en" : {
@@ -2188,6 +2219,9 @@
           }
         }
       }
+    },
+    "Controlar" : {
+
     },
     "Controle" : {
       "localizations" : {
@@ -2771,6 +2805,9 @@
         }
       }
     },
+    "Ember aberto" : {
+
+    },
     "Ember Laranja" : {
       "localizations" : {
         "en" : {
@@ -2968,6 +3005,9 @@
         }
       }
     },
+    "Envie seus jogos" : {
+
+    },
     "Envio cancelado. Os jogos que chegaram inteiros ficaram no Mac." : {
 
     },
@@ -3018,6 +3058,9 @@
           }
         }
       }
+    },
+    "Escolha os jogos em Macs por perto e aceite no Mac. Uma vez basta." : {
+
     },
     "Escolha uma skin para cada tipo de controle. O Ember lê skins do Delta e do Manic EMU (.deltaskin, .manicskin) de qualquer console: GBA para 2 botões, SNES para 4 botões, N64 ou PlayStation para o Moderno. Ao importar, a skin vira um pacote .ember: os botões do artista são recortados e remontados no iPhone Duo e nas orientações que a skin não tem. Segure uma skin para apagar." : {
       "localizations" : {
@@ -3940,6 +3983,9 @@
         }
       }
     },
+    "Jogando agora no Mac" : {
+
+    },
     "Jogando em %lld telas" : {
       "localizations" : {
         "en" : {
@@ -4231,6 +4277,9 @@
         }
       }
     },
+    "Jogue no Mac" : {
+
+    },
     "L" : {
       "localizations" : {
         "en" : {
@@ -4473,6 +4522,9 @@
           }
         }
       }
+    },
+    "Macs por perto" : {
+
     },
     "Mais" : {
       "localizations" : {
@@ -5622,6 +5674,9 @@
         }
       }
     },
+    "O iPhone vira o controle: botões grandes, sempre deitado, com o menu do jogo (engrenagem) e o teclado. Os botões seguem os controles daquele jogo." : {
+
+    },
     "O iPhone virou o controle" : {
       "localizations" : {
         "en" : {
@@ -5773,6 +5828,9 @@
 
     },
     "O Mac saiu do alcance ou o jogo fechou." : {
+
+    },
+    "O mesmo app, baixado da App Store no Mac. Não precisa estar no mesmo Wi-Fi: o iPhone acha o Mac direto, como no AirDrop." : {
 
     },
     "O perfil aparece em Ajustes › Perfis de controle e pode ser usado em outros jogos." : {
@@ -5998,6 +6056,9 @@
           }
         }
       }
+    },
+    "Os jogos vão com os saves e os estados salvos. Depois disso, os saves continuam iguais no iPhone e no Mac pelo iCloud." : {
+
     },
     "Os mesmos arquivos do PC. A imagem é o mapa de quando o jogo salvou; saves de antes desta versão ou importados mostram a capa." : {
       "localizations" : {
@@ -6368,9 +6429,6 @@
       }
     },
     "Procurando o Ember num Mac por perto…" : {
-
-    },
-    "Procurando um Mac com um jogo aberto…" : {
 
     },
     "Progresso e ajustes" : {
@@ -8043,12 +8101,6 @@
         }
       }
     },
-    "Usar como controle" : {
-
-    },
-    "Usar como controle do Mac" : {
-
-    },
     "Usar Ruby %@ neste jogo" : {
       "localizations" : {
         "en" : {
@@ -8080,6 +8132,9 @@
           }
         }
       }
+    },
+    "Use o teclado, um controle ou este iPhone: abra o jogo no Mac e toque em Controlar." : {
+
     },
     "Use Salvar estado no menu, andando pelo mapa. O Ember também salva sozinho quando você sai do app." : {
       "localizations" : {

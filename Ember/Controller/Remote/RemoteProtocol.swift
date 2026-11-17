@@ -17,7 +17,7 @@ enum RemoteProtocol {
     enum Kind: UInt8 {
         /// iPhone → Mac: the iPhone's name.
         case hello = 1
-        /// Mac → iPhone: "<controller type>|<game title>".
+        /// Mac → iPhone: "<controller type>|<speed>|<game id>|<game title>".
         case info = 2
         /// iPhone → Mac: a ControlButton's raw value.
         case buttonDown = 3
@@ -33,6 +33,10 @@ enum RemoteProtocol {
         case command = 9
         /// iPhone → Mac: let go of everything (the app left the screen).
         case releaseAll = 10
+        /// iPhone → Mac: the game's ControlProfile as JSON (its own
+        /// mapping or the profile it plays with on the iPhone), so every
+        /// button does on the Mac what it does on the iPhone.
+        case profile = 11
     }
 
     enum Command: String {

@@ -49,6 +49,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         playing = true
         #if DEBUG
         EngineSession.shared.scriptForLaunch = items.first { $0.name == "script" }?.value
+        // Development aid: tests run without the game's sound.
+        if items.contains(where: { $0.name == "mute" }) { EngineSession.shared.mutedForTest = true }
         #endif
         NSApp.mainMenu = MainMenu.build(playing: true)
         startGame(id, resume: items.contains { $0.name == "resume" })

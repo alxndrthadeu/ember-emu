@@ -62,6 +62,9 @@ final class MacLibrary {
         if let script = ProcessInfo.processInfo.environment["EMBER_SCRIPT"] {
             link.queryItems?.append(URLQueryItem(name: "script", value: script))
         }
+        if ProcessInfo.processInfo.environment["EMBER_MUTE"] != nil {
+            link.queryItems?.append(URLQueryItem(name: "mute", value: "1"))
+        }
         #endif
         guard let url = link.url else { return }
         let configuration = NSWorkspace.OpenConfiguration()

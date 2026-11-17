@@ -19,6 +19,9 @@ final class EngineSession {
 
     private(set) var state: State = .idle
     private(set) var currentGame: GameEntry?
+    /// Sound off for this session only, without touching the setting
+    /// (development tests).
+    var mutedForTest = false
     #if DEBUG
     /// A test script from the ember-play link (DevelopmentScript).
     var scriptForLaunch: String?
@@ -74,7 +77,10 @@ final class EngineSession {
         // window closes by its red button).
         // The player's "game sound" once OpenAL exists.
         Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { _ in
-            MainActor.assumeIsolated { if !EngineSession.shared.soundOn { alListenerf(0x100A, 0) } }
+            MainActor.assumeIsolated {
+                let session = EngineSession.shared
+                if !session.soundOn || session.mutedForTest { alListenerf(0x100A, 0) }
+            }
         }
         coverTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
             MainActor.assumeIsolated { EngineSession.shared.saveCover() }

@@ -66,6 +66,8 @@ final class RemoteControllerClient {
 
     func connect(to host: Host) {
         disconnect()
+        profileSentFor = nil
+        retries = 0
         target = host
         state = .connecting(host.name)
         let connection = NWConnection(to: host.endpoint, using: RemoteProtocol.parameters)
@@ -91,23 +93,42 @@ final class RemoteControllerClient {
         UIApplication.shared.isIdleTimerDisabled = false
     }
 
+    private var retries = 0
+
     /// After the link dropped (the Mac slept, the game ended): try again.
-    func reconnect() {
+    func reconnect(keepingRetries: Bool = false) {
         guard let target else { return }
+        let count = retries
         connect(to: target)
+        if keepingRetries { retries = count }
     }
 
     private func connectionChanged(_ new: NWConnection.State, _ source: NWConnection) {
+        #if DEBUG
+        print("[ember-remote] connection \(new)")
+        #endif
         guard source === connection, let target else { return }
         switch new {
         case .ready:
+            retries = 0
             state = .connected(target.name)
             send(.hello, UIDevice.current.name)
-        case .failed, .cancelled:
-            if case .connected = state { state = .lost(target.name) }
-            else if case .connecting = state { state = .lost(target.name) }
+        case .failed:
+            // A stale link (the Mac restarted the game, the app was
+            // closed): try again on our own a few times.
+            if retries < 3 {
+                retries += 1
+                state = .connecting(target.name)
+                Task { @MainActor in
+                    try? await Task.sleep(for: .seconds(1))
+                    if self.target == target { self.reconnect(keepingRetries: true) }
+                }
+            } else {
+                state = .lost(target.name)
+            }
         case .waiting:
-            state = .lost(target.name)
+            // Network.framework keeps trying by itself.
+            state = .connecting(target.name)
         default:
             break
         }
@@ -115,18 +136,35 @@ final class RemoteControllerClient {
 
     private func lost(_ source: NWConnection) {
         guard source === connection, let target else { return }
-        state = .lost(target.name)
+        if case .connected = state { state = .lost(target.name) }
     }
 
     private func received(_ kind: RemoteProtocol.Kind, _ payload: String) {
         guard kind == .info else { return }
-        let parts = payload.split(separator: "|", maxSplits: 2).map(String.init)
+        let parts = payload.split(separator: "|", maxSplits: 3, omittingEmptySubsequences: false).map(String.init)
         if let type = parts.first.flatMap(ControllerType.init(rawValue:)) { controllerType = type }
         if parts.count > 1, let value = Int(parts[1]) { speed = value }
-        if parts.count > 2 { gameTitle = parts[2] }
+        if parts.count > 3 {
+            gameTitle = parts[3]
+            sendProfile(forGameID: parts[2])
+        }
     }
 
     // MARK: - Sending
+
+    /// The controls this iPhone uses for the game (its own mapping, or
+    /// its profile), when the game is on this iPhone too. Sent once per
+    /// game: the Mac then plays every button the same way.
+    private var profileSentFor: String?
+
+    private func sendProfile(forGameID id: String) {
+        guard profileSentFor != id,
+              let game = LibraryStore.shared.games.first(where: { $0.id == id }),
+              let data = try? JSONEncoder().encode(ProfileStore.shared.profile(for: game))
+        else { return }
+        profileSentFor = id
+        send(.profile, String(decoding: data, as: UTF8.self))
+    }
 
     func send(_ kind: RemoteProtocol.Kind, _ payload: String = "") {
         guard let connection else { return }
