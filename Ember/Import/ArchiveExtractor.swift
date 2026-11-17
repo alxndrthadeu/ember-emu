@@ -89,6 +89,9 @@ enum ArchiveExtractor {
             }
             guard let entry else { continue }
             if archive_entry_is_encrypted(entry) != 0 { throw ExtractError.encrypted }
+            // Games need files and folders only. A link could point out
+            // of the game folder (a crafted archive), so none are made.
+            if archive_entry_filetype(entry) == 0o120000 || archive_entry_hardlink(entry) != nil { continue }
 
             guard let raw = archive_entry_pathname_utf8(entry) ?? archive_entry_pathname(entry) else { continue }
             // Windows archives use backslashes.
@@ -107,7 +110,10 @@ enum ArchiveExtractor {
             if archive_entry_size(entry) > 0 {
                 try copyData(from: reader, to: writer)
             }
-            archive_write_finish_entry(writer)
+            // A full disk shows up here, not on the copy.
+            guard archive_write_finish_entry(writer) >= ARCHIVE_WARN else {
+                throw ExtractError.failed(message(writer))
+            }
         }
     }
 

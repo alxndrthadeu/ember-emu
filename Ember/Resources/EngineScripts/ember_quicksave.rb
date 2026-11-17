@@ -416,9 +416,11 @@ module EmberState
 
     # The title scene normally loads the database; resuming skips it.
     def ensure_database
-      return unless $data_system.nil? || $data_tilesets.nil?
+      return unless $data_system.nil?
       ext = (defined?(RPG::BaseItem) ? 'rvdata' : 'rxdata')
-      DATABASE.each do |name|
+      # VX keeps its tilesets in System and has Areas; XP the other way.
+      names = ext == 'rvdata' ? (DATABASE - ['Tilesets']) + ['Areas'] : DATABASE
+      names.each do |name|
         global = "$data_" + name.gsub(/([a-z])([A-Z])/, '\\1_\\2').downcase
         begin
           @value = load_data("Data/#{name}.#{ext}")

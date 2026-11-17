@@ -19,7 +19,8 @@ import Foundation
 /// modules) do not count.
 enum GameKeyScanner {
     /// Keys most used first; at most `limit`.
-    static func keys(inCode code: String, limit: Int = 16) -> [KeyboardKey] {
+    static func keys(inCode raw: String, limit: Int = 16) -> [KeyboardKey] {
+        let code = playedCode(raw)
         var counts: [Int32: Int] = [:]
         func add(_ scancode: Int32?) {
             guard let scancode, !reserved.contains(scancode) else { return }
@@ -34,9 +35,67 @@ enum GameKeyScanner {
         for match in code.captures(of: #"Get(?:Async)?KeyState\w*\.call\(\s*(0x[0-9A-Fa-f]+|\d+)\s*\)"#) {
             add(virtualKeyScancode(match))
         }
+        // A text-entry script reads every letter (name input, typing
+        // minigames): those are not keys to put on buttons.
+        let letters = counts.keys.filter { (4...29).contains($0) }
+        if letters.count >= 20 {
+            for letter in letters { counts[letter] = nil }
+            let digits = counts.keys.filter { (30...39).contains($0) }
+            if digits.count >= 10 { for digit in digits { counts[digit] = nil } }
+        }
         return counts.sorted { $0.value != $1.value ? $0.value > $1.value : $0.key < $1.key }
             .prefix(limit)
             .map { KeyboardKey(scancode: $0.key) }
+    }
+
+    /// The code a player's game runs: without `=begin`/`=end` comment
+    /// blocks, comments at the end of lines, and blocks that only run
+    /// in the editor's test play (`if $DEBUG` … `end`, up to an `else`).
+    static func playedCode(_ code: String) -> String {
+        var kept: [Substring] = []
+        var inComment = false
+        var debugIndent: Int?
+        for line in code.split(separator: "\n", omittingEmptySubsequences: false) {
+            if inComment {
+                if line.hasPrefix("=end") { inComment = false }
+                continue
+            }
+            if line.hasPrefix("=begin") { inComment = true; continue }
+            let trimmed = line.drop { $0 == " " || $0 == "\t" }
+            let indent = line.count - trimmed.count
+            if let opened = debugIndent {
+                if indent <= opened, trimmed.hasPrefix("end") || trimmed.hasPrefix("else") || trimmed.hasPrefix("elsif") {
+                    debugIndent = nil
+                }
+                continue
+            }
+            if trimmed.range(of: #"^(if|unless|when)\s+\$(DEBUG|TEST)\s*(then)?\s*(#.*)?$"#, options: .regularExpression) != nil {
+                debugIndent = indent
+                continue
+            }
+            kept.append(stripComment(line))
+        }
+        return kept.joined(separator: "\n")
+    }
+
+    /// The line up to a `#` that starts a comment (not one inside a
+    /// string, nor `#{` interpolation).
+    private static func stripComment(_ line: Substring) -> Substring {
+        var quote: Character?
+        var previous: Character?
+        for index in line.indices {
+            let char = line[index]
+            if let open = quote {
+                if char == open && previous != "\\" { quote = nil }
+            } else if char == "\"" || char == "'" {
+                quote = char
+            } else if char == "#" {
+                let next = line.index(after: index)
+                if next == line.endIndex || line[next] != "{" { return line[..<index] }
+            }
+            previous = char
+        }
+        return line
     }
 
     /// F1, F2, F12 (engine) and the arrows (D-pad).
@@ -98,7 +157,7 @@ enum GameKeyScanner {
 /// reads them with the controller type).
 enum GameKeyStore {
     /// Bumped when the scanner changes: games are read again.
-    private static let version = 1
+    private static let version = 2
     private static func key(_ id: String) -> String { "controls.keys.v\(version).\(id)" }
 
     /// Nil until the scripts are read.
@@ -108,6 +167,8 @@ enum GameKeyStore {
 
     static func set(_ keys: [KeyboardKey], for id: String) {
         UserDefaults.standard.set(keys.map { Int($0.scancode) }, forKey: key(id))
+        // What an older scanner found.
+        for old in 1..<version { UserDefaults.standard.removeObject(forKey: "controls.keys.v\(old).\(id)") }
     }
 
     static func forget(_ id: String) {

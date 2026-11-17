@@ -103,3 +103,30 @@ final class SaveImportTests: XCTestCase {
         }
     }
 }
+
+final class GameKeyScannerBlockTests: XCTestCase {
+    func testCommentBlocksAndDebugBlocksDoNotCount() {
+        let code = """
+        =begin
+        Input.triggerex?(:F6)
+        =end
+        if $DEBUG
+          if Input.triggerex?(:F7)
+            puts 1
+          end
+        else
+          Input.triggerex?(:F8)
+        end
+        x = 1 # Input.triggerex?(:F9)
+        s = "#{Input::F5}" if Input.triggerex?(:Q)
+        """
+        let names = GameKeyScanner.keys(inCode: code).map(\.name)
+        XCTAssertEqual(Set(names), ["F8", "F5", "Q"])
+    }
+
+    func testTypingScriptsDoNotListTheAlphabet() {
+        let code = (0x41...0x5A).map { "Input.triggerex?(0x\(String($0, radix: 16)))" }.joined(separator: "\n")
+            + "\nInput.triggerex?(:F5)"
+        XCTAssertEqual(GameKeyScanner.keys(inCode: code).map(\.name), ["F5"])
+    }
+}

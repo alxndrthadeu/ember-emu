@@ -16,6 +16,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - An error from the game shown while a menu was closing could leave the game stuck.
 - Importing saves no longer accepts the game's own files (scripts, Game.ini), and the error log no longer shows up as a save.
 - Two copies of the same game imported at once no longer fail.
+- The keys a game uses no longer list keys from commented-out code, test-play blocks or typing screens (the whole alphabet).
+- Bringing a game back from iCloud stops with a message when the download makes no progress for a minute, instead of spinning.
+- Wi-Fi transfer: a stalled upload is closed after 30 seconds and its half file removed; turning the transfer off ends uploads on their way; turning it on again no longer removes a batch still being imported.
+- Archives with links inside no longer create them, and a full disk while unpacking is reported.
+- Resuming an RPG Maker VX game loads its areas.
 
 ### Added
 - Settings › System reports: what iOS reports about Ember on this iPhone (crashes, hangs, heat, CPU, a daily summary), kept on the device and shared only if you choose.
