@@ -1,5 +1,4 @@
 import Foundation
-import UIKit
 
 /// Save states ("save rápido"), kept by Ember apart from the game's own
 /// saves. The work happens inside the game, in ember_quicksave.rb; this

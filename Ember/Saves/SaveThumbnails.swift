@@ -1,5 +1,4 @@
 import Foundation
-import UIKit
 
 /// Pictures of the game's own saves. The save files hold no image, so
 /// while a game runs Ember watches its save files; when one is written,
@@ -24,8 +23,12 @@ enum SaveThumbnails {
         return folder(for: gameID).appendingPathComponent("\(key(save))@\(stamp).png")
     }
 
-    static func image(for save: SaveManager.SaveFile, gameID: String) -> UIImage? {
+    static func image(for save: SaveManager.SaveFile, gameID: String) -> PlatformImage? {
+        #if canImport(UIKit)
         CoverCache.image(at: url(for: save, gameID: gameID))
+        #else
+        PlatformImage(contentsOf: url(for: save, gameID: gameID))
+        #endif
     }
 
     /// Asks the running game for pictures of these saves (just written).

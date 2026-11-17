@@ -134,6 +134,41 @@ targets:
     platform: macOS
     sources:
       - path: EmberMac
+        excludes:
+          - Info.plist
+      # Shared with the iPhone app: the library, import, saves, iCloud,
+      # profiles, script scanners and the engine's configuration.
+      - Ember/App/AppSettings.swift
+      - Ember/App/PlatformImage.swift
+      - Ember/App/Theme.swift
+      - Ember/App/Compat.swift
+      - Ember/Backup/GameArchive.swift
+      - Ember/Backup/EmberBackup.swift
+      - Ember/App/ObservationLoop.swift
+      - Ember/Library/GameEntry.swift
+      - Ember/Library/GameCovers.swift
+      - Ember/Library/GameStorage.swift
+      - Ember/Import/GameImporter.swift
+      - Ember/Import/ArchiveExtractor.swift
+      - Ember/Import/RTPStore.swift
+      - Ember/Import/GameUpdater.swift
+      - Ember/Saves/SaveManager.swift
+      - Ember/Saves/SaveSync.swift
+      - Ember/Saves/SaveThumbnails.swift
+      - Ember/Controller/ControllerType.swift
+      - Ember/Controller/Detection/GameKeyScanner.swift
+      - Ember/Controller/Detection/ScriptScanner.swift
+      - Ember/Controller/Profiles/KeyboardKey.swift
+      - Ember/Controller/Profiles/ControlProfiles.swift
+      - Ember/Engine/EngineConfig.swift
+      - Ember/Engine/ScreenFilter.swift
+      - Ember/Engine/StateStore.swift
+      - Ember/Engine/GameSettings.swift
+      - Ember/Engine/GameKey.swift
+      - Ember/Engine/GameLog.swift
+      - Ember/Engine/CheatMenu.swift
+    dependencies:
+      - package: ZIPFoundation
     configFiles:
       Debug: Config/Ember.xcconfig
       Release: Config/Ember.xcconfig
@@ -144,6 +179,8 @@ targets:
         MARKETING_VERSION: "1.3.0"
         CURRENT_PROJECT_VERSION: "6"
         GENERATE_INFOPLIST_FILE: YES
+        # Only the ember-play:// scheme; the rest is generated.
+        INFOPLIST_FILE: EmberMac/Info.plist
         INFOPLIST_KEY_CFBundleDisplayName: Ember
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.role-playing-games
         INFOPLIST_KEY_NSPrincipalClass: NSApplication
@@ -156,10 +193,11 @@ targets:
         ONLY_ACTIVE_ARCH: YES
         ENABLE_USER_SCRIPT_SANDBOXING: NO
         DEAD_CODE_STRIPPING: YES
-        HEADER_SEARCH_PATHS: $(EMBER_ENGINE)/src
+        HEADER_SEARCH_PATHS: $(EMBER_ENGINE)/src $(SRCROOT)/Ember/Vendor/libarchive
         LIBRARY_SEARCH_PATHS: $(EMBER_DEPS)/lib $(EMBER_ANGLE)/lib
         OTHER_LDFLAGS:
           - -Wl,-force_load,$(EMBER_DEPS)/lib/libmkxpz-core.a
+          - -larchive
           - $(EMBER_DEPS)/lib/mkxp18-merged.o
           - $(EMBER_DEPS)/lib/mkxp19-merged.o
           - $(EMBER_DEPS)/lib/mkxp31-merged.o

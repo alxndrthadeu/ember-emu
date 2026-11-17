@@ -1,5 +1,4 @@
 import Foundation
-import UIKit
 
 /// Where a game's cover comes from, in order:
 ///
@@ -29,11 +28,11 @@ enum GameCovers {
     }
 
     /// Saves a paused frame as the automatic cover, off the main thread.
-    static func saveSnapshot(_ image: UIImage, forGameID id: String) {
+    static func saveSnapshot(_ image: PlatformImage, forGameID id: String) {
         write(image, to: snapshotURL(forGameID: id))
     }
 
-    static func setCustomCover(_ image: UIImage, forGameID id: String) {
+    static func setCustomCover(_ image: PlatformImage, forGameID id: String) {
         write(image, to: customURL(forGameID: id), async: false)
     }
 
@@ -56,7 +55,7 @@ enum GameCovers {
         folder.appendingPathComponent("\(id)-custom.jpg")
     }
 
-    private static func write(_ image: UIImage, to url: URL, async: Bool = true) {
+    private static func write(_ image: PlatformImage, to url: URL, async: Bool = true) {
         let work: @Sendable () -> Void = {
             guard let data = image.jpegData(compressionQuality: 0.85) else { return }
             try? FileManager.default.createDirectory(at: url.deletingLastPathComponent(),
