@@ -85,6 +85,7 @@ extension LibraryView {
             let id = environment["EMBER_GAME"]
             optionsFor = library.games.first { id == nil || $0.id == id }
         case "controller": library.chooseController = library.games.first
+        case "remote": RemoteControllerScreen.present()
         case "import", "computer", "rtp": AppRouter.shared.tab = .importGames
         case "settings", "profiles": AppRouter.shared.tab = .settings
         default: break
@@ -101,6 +102,9 @@ extension LibraryView {
                 try? await Task.sleep(for: .seconds(1))
                 print("[ember-tv]", TVStream.shared.address ?? "no address", TVStream.shared.isOn)
             }
+        }
+        if let script = environment["EMBER_REMOTE"] {
+            RemoteControllerClient.shared.runDevelopmentScript(script)
         }
         if let script = environment["EMBER_KEYS"] {
             Task { await runKeyScript(script) }

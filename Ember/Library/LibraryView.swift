@@ -8,6 +8,7 @@ struct LibraryView: View {
     @State var optionsFor: GameEntry?
     @State var showingHistory = false
     @State var showingControls = false
+    @State private var showingRemote = false
     /// A game tapped after another one ended: the app must reopen.
     @State private var reopenFor: GameEntry?
     @State private var removingArchived: ArchivedGame?
@@ -28,10 +29,13 @@ struct LibraryView: View {
             .navigationTitle("Biblioteca")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button { showingControls = true } label: {
+                    Menu {
+                        Button("Usar como controle do Mac", systemImage: "macbook.and.iphone") { showingRemote = true }
+                        Button("Guia de controles", systemImage: "questionmark.circle") { showingControls = true }
+                    } label: {
                         Image(systemName: "gamecontroller")
                     }
-                    .accessibilityLabel("Guia de controles")
+                    .accessibilityLabel("Controles")
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { showingHistory = true } label: {
@@ -42,6 +46,7 @@ struct LibraryView: View {
             }
             .safeAreaInset(edge: .bottom) { statusBanner }
         }
+        .sheet(isPresented: $showingRemote) { RemoteHostsView() }
         .alert("Não deu certo",
                isPresented: Binding(get: { library.lastError != nil }, set: { if !$0 { library.lastError = nil } })) {
             Button("OK", role: .cancel) {}

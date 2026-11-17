@@ -67,6 +67,9 @@ final class EngineSession {
         Self.observeMessages()
         state = .running
         watchForGameWindow()
+        // An iPhone can be this game's controller.
+        RemoteControllerServer.shared.onChange = { EngineSession.shared.showController() }
+        RemoteControllerServer.shared.start(for: game)
         // A cover for the shelf every minute (the last frame when the
         // window closes by its red button).
         // The player's "game sound" once OpenAL exists.
@@ -93,6 +96,7 @@ final class EngineSession {
     }
 
     private func engineDidEnd() {
+        RemoteControllerServer.shared.stop()
         historyTimer?.invalidate()
         coverTimer?.invalidate()
         if let sessionID { PlayHistory.touch(sessionID) }
@@ -109,6 +113,17 @@ final class EngineSession {
         saveCover()
         Timer.scheduledTimer(withTimeInterval: 0.4, repeats: false) { _ in
             mkxp_requestTerminate()
+        }
+    }
+
+    /// "iPhone de Ana · controle" under the window title.
+    func showController() {
+        guard let pointer = mkxp_getGameWindow() else { return }
+        let window = Unmanaged<NSWindow>.fromOpaque(pointer).takeUnretainedValue()
+        if let name = RemoteControllerServer.shared.connectedName {
+            window.subtitle = String(localized: "Controle: \(name)")
+        } else {
+            window.subtitle = ""
         }
     }
 
