@@ -8,6 +8,12 @@ class DemoScene
     Graphics.transition(24)
     loop do
       Graphics.update
+      if $demo_pending_state
+        # A save state from Ember: back to the camp, where it was.
+        $scene = MapScene.new($demo_pending_state)
+        $demo_pending_state = nil
+        break
+      end
       Input.update
       update
       break if $scene != self
@@ -297,6 +303,14 @@ class MapScene < DemoScene
     elsif Input.trigger?(Input::B)
       @menu = GameMenu.new
     end
+  end
+
+  # Nil when Ember can keep a save state now.
+  def busy_reason
+    return 'menu' if @menu
+    return 'message' if @message.active?
+    return 'moving' if @moving > 0
+    nil
   end
 
   def update

@@ -17,6 +17,12 @@ struct KeyboardPicker: View {
     var onSpecial: (GameAction) -> Void = { _ in }
 
     @Environment(\.dismiss) private var dismiss
+    // The keyboard fills the width; key labels and rows grow with the
+    // text size, up to what a key can hold.
+    @ScaledMetric(relativeTo: .subheadline) private var keyHeight: CGFloat = 46
+    @ScaledMetric(relativeTo: .subheadline) private var letterSize: CGFloat = 15
+    @ScaledMetric(relativeTo: .caption) private var wordSize: CGFloat = 12
+    @ScaledMetric(relativeTo: .caption2) private var cornerSize: CGFloat = 9
 
     /// Rows of (scancode, width in key units).
     private static let rows: [[(Int32, CGFloat)]] = [
@@ -64,7 +70,7 @@ struct KeyboardPicker: View {
                 }
             }
         }
-        .frame(height: 7 * 46 + 6 * 6)
+        .frame(height: 7 * keyHeight + 6 * 6)
     }
 
     private func keycap(_ key: KeyboardKey, width: CGFloat) -> some View {
@@ -78,23 +84,30 @@ struct KeyboardPicker: View {
         } label: {
             ZStack(alignment: .topTrailing) {
                 Text(verbatim: Self.shortName(key))
-                    .font(.system(size: Self.shortName(key).count > 1 ? 12 : 15, weight: .semibold, design: .rounded))
+                    .font(.system(size: Self.shortName(key).count > 1 ? wordSize : letterSize, weight: .semibold, design: .rounded))
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
                     .foregroundStyle(isSelected ? Theme.onAccent : Theme.primaryText)
-                    .frame(width: width, height: 46)
+                    .frame(width: width, height: keyHeight)
                     .background(
                         RoundedRectangle(cornerRadius: 7)
                             .fill(isSelected ? Theme.accent : Theme.surface)
                     )
                     .overlay(
                         RoundedRectangle(cornerRadius: 7)
-                            .strokeBorder(isGameKey ? Theme.highlight : Theme.surface2, lineWidth: isGameKey ? 2 : 1)
+                            .strokeBorder(isGameKey ? Theme.highlightEdge : Theme.surface2, lineWidth: isGameKey ? 2 : 1)
                     )
+                if isGameKey && !isSelected {
+                    // Not by color alone: a dot marks the game's keys.
+                    Circle().fill(Theme.highlightEdge)
+                        .frame(width: 5, height: 5)
+                        .padding(5)
+                        .frame(width: width, height: keyHeight, alignment: .bottomLeading)
+                }
                 if !used.isEmpty {
                     Text(verbatim: used.joined(separator: " "))
-                        .font(.system(size: 9, weight: .heavy, design: .rounded))
-                        .foregroundStyle(isSelected ? Theme.onAccent : Theme.active)
+                        .font(.system(size: cornerSize, weight: .heavy, design: .rounded))
+                        .foregroundStyle(isSelected ? Theme.onAccent : Theme.activeText)
                         .padding(.horizontal, 3)
                         .padding(.top, 2)
                         .lineLimit(1)
@@ -104,15 +117,24 @@ struct KeyboardPicker: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel(Text(verbatim: key.name))
+        .accessibilityValue(accessibilityValue(isGameKey: isGameKey, used: used))
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+    }
+
+    private func accessibilityValue(isGameKey: Bool, used: [String]) -> String {
+        var parts: [String] = []
+        if isGameKey { parts.append(String(localized: "Usada pelo jogo")) }
+        if !used.isEmpty { parts.append(String(localized: "Já em \(used.joined(separator: ", "))")) }
+        return parts.joined(separator: "; ")
     }
 
     private var legend: some View {
         VStack(alignment: .leading, spacing: 6) {
             if !gameKeys.isEmpty {
                 Label {
-                    Text("Contorno âmbar: teclas que este jogo usa")
+                    Text("Contorno âmbar e ponto: teclas que este jogo usa")
                 } icon: {
-                    RoundedRectangle(cornerRadius: 3).strokeBorder(Theme.highlight, lineWidth: 2)
+                    RoundedRectangle(cornerRadius: 3).strokeBorder(Theme.highlightEdge, lineWidth: 2)
                         .frame(width: 14, height: 14)
                 }
             }
@@ -120,7 +142,7 @@ struct KeyboardPicker: View {
                 Text("No canto: botões que já apertam a tecla")
             } icon: {
                 Text(verbatim: "A").font(.system(size: 9, weight: .bold, design: .rounded))
-                    .foregroundStyle(Theme.active).frame(width: 14, height: 14)
+                    .foregroundStyle(Theme.activeText).frame(width: 14, height: 14)
             }
         }
         .font(.caption)

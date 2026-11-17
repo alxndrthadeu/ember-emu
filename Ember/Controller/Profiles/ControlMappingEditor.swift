@@ -171,12 +171,14 @@ struct ControlMappingEditor: View {
 /// A direction's arrow in a capsule, next to the button badges.
 struct DirectionBadge: View {
     let direction: ControlDirection
+    @ScaledMetric(relativeTo: .body) private var width: CGFloat = 56
+    @ScaledMetric(relativeTo: .body) private var height: CGFloat = 30
 
     var body: some View {
         Image(systemName: direction.symbol)
-            .font(.system(size: 14, weight: .bold))
+            .font(.subheadline.weight(.bold))
             .foregroundStyle(Theme.primaryText)
-            .frame(width: 56, height: 30)
+            .frame(width: width, height: height)
             .emberGlass(.regular, in: Capsule())
     }
 }

@@ -108,7 +108,7 @@ private struct LogTextView: View {
     var body: some View {
         ScrollView {
             Text(shown)
-                .font(.system(size: 11, design: .monospaced))
+                .font(.caption2.monospaced())
                 .textSelection(.enabled)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()

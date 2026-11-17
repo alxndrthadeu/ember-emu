@@ -141,7 +141,7 @@ private struct ProfileRow: View {
                 if !games.isEmpty {
                     Text(usedIn)
                         .font(.caption2.weight(.medium))
-                        .foregroundStyle(Theme.active)
+                        .foregroundStyle(Theme.activeText)
                         .lineLimit(1)
                 }
             }
@@ -165,6 +165,7 @@ struct ProfileEditor: View {
     @Environment(\.dismiss) private var dismiss
     @State private var profile: ControlProfile
     @State private var copy: ControlProfile?
+    @State private var confirmingDelete = false
 
     init(profile: ControlProfile) {
         _profile = State(initialValue: profile)
@@ -207,8 +208,20 @@ struct ProfileEditor: View {
                         Label("Duplicar", systemImage: "plus.square.on.square")
                     }
                     Button("Apagar perfil", role: .destructive) {
-                        store.delete(profile)
-                        dismiss()
+                        confirmingDelete = true
+                    }
+                    .confirmationDialog("Apagar “\(profile.name)”?", isPresented: $confirmingDelete,
+                                        titleVisibility: .visible) {
+                        Button("Apagar perfil", role: .destructive) {
+                            store.delete(profile)
+                            dismiss()
+                        }
+                    } message: {
+                        if games.isEmpty {
+                            Text("O perfil sai da lista. Isso não pode ser desfeito.")
+                        } else {
+                            Text("Os jogos com este perfil voltam ao automático. Isso não pode ser desfeito.")
+                        }
                     }
                 } footer: {
                     if !games.isEmpty {
@@ -287,12 +300,17 @@ struct ButtonMappingSection: View {
 /// A button's name in a capsule, as in the profile lists.
 struct ButtonBadge: View {
     let button: ControlButton
+    // Grow with the text size (Dynamic Type).
+    @ScaledMetric(relativeTo: .body) private var width: CGFloat = 56
+    @ScaledMetric(relativeTo: .body) private var height: CGFloat = 30
+    @ScaledMetric(relativeTo: .body) private var large: CGFloat = 15
+    @ScaledMetric(relativeTo: .body) private var small: CGFloat = 11
 
     var body: some View {
         Text(button.label)
-            .font(.system(size: button.label.count > 2 ? 11 : 15, weight: .bold, design: .rounded))
+            .font(.system(size: button.label.count > 2 ? small : large, weight: .bold, design: .rounded))
             .foregroundStyle(Theme.primaryText)
-            .frame(width: 56, height: 30)
+            .frame(width: width, height: height)
             .emberGlass(.regular, in: Capsule())
     }
 }

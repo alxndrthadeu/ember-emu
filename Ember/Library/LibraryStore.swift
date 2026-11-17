@@ -107,17 +107,31 @@ final class LibraryStore {
         // A whole Ember backup ("Open in Ember", the Finder, Files).
         let backups = urls.filter { $0.pathExtension.lowercased() == EmberBackup.fileExtension }
         for url in backups {
+            // Once per file: the app becoming active looks at Documents
+            // again while a restore may still run.
+            let name = url.lastPathComponent
+            guard !importing.contains(name) else { continue }
+            importing.append(name)
             let existing = Set(games.map(\.id))
             Task.detached(priority: .userInitiated) {
                 let outcome = Result { try EmberBackup.restore(url, keepingGames: existing) }
+                // A backup left in Documents would be restored again
+                // each time the app comes back.
+                if removeSources, case .success = outcome {
+                    try? FileManager.default.removeItem(at: url)
+                }
                 await MainActor.run {
+                    self.importing.removeAll { $0 == name }
                     self.reload()
                     SkinStore.shared.reload()
+                    ProfileStore.shared.reloadFromDefaults()
                     switch outcome {
                     case .success(let summary):
-                        self.importNotice = Notice(
-                            title: String(localized: "Backup restaurado"),
-                            message: String(localized: "Backup restaurado: \(summary.games) jogos e \(summary.files) arquivos."))
+                        var message = String(localized: "Backup restaurado: \(summary.games) jogos e \(summary.files) arquivos.")
+                        if summary.waitingSaves > 0 {
+                            message += " " + String(localized: "Os saves de jogos que não estão neste aparelho ficaram em Backups. Importe o jogo e depois os saves.")
+                        }
+                        self.importNotice = Notice(title: String(localized: "Backup restaurado"), message: message)
                     case .failure(let error):
                         self.lastError = error.localizedDescription
                     }

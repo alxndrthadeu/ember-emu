@@ -83,17 +83,24 @@ struct LibraryView: View {
         }
         .sheet(item: $reopenFor) { game in
             ReopenSheet(title: game.title)
-                .presentationDetents([.height(320)])
+                .presentationDetents([.height(320), .large])
         }
         .onAppear(perform: developmentHooks)
+    }
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    /// Cards grow in, or only fade with Reduce Motion.
+    private var cardTransition: AnyTransition {
+        reduceMotion ? .opacity : .scale(scale: 0.85).combined(with: .opacity)
     }
 
     private var grid: some View {
         ScrollView {
             if let recent = library.recent {
                 ContinueCard(game: recent, resumes: StateStore.autoState(for: recent.id) != nil)
-                    .onTapGesture { open(recent, resume: true) }
-                    .onLongPressGesture { showOptions(recent) }
+                    .cardPress(onTap: { open(recent, resume: true) }, onLongPress: { showOptions(recent) })
+                    .accessibilityAction(named: "Opções") { showOptions(recent) }
                     .padding(.horizontal, 20)
                     .padding(.top, 8)
                     .padding(.bottom, 20)
@@ -107,10 +114,9 @@ struct LibraryView: View {
             LazyVGrid(columns: columns, spacing: 22) {
                 ForEach(library.games) { game in
                     GameCard(game: game, status: library.archiveStatus[game.id])
-                        .transition(.scale(scale: 0.85).combined(with: .opacity))
-                        .onTapGesture { if library.archiveStatus[game.id] == nil { open(game) } }
-                        .onLongPressGesture { showOptions(game) }
-                        .accessibilityAddTraits(.isButton)
+                        .transition(cardTransition)
+                        .cardPress(onTap: { if library.archiveStatus[game.id] == nil { open(game) } },
+                                   onLongPress: { showOptions(game) })
                         .accessibilityAction(named: "Opções") { showOptions(game) }
                 }
             }
@@ -136,11 +142,11 @@ struct LibraryView: View {
                     ForEach(library.archived) { record in
                         ArchivedCard(record: record, status: library.archiveStatus[record.id],
                                      progress: library.archiveProgress[record.id])
-                            .transition(.scale(scale: 0.85).combined(with: .opacity))
-                            .onTapGesture { library.unarchive(record) }
-                            .onLongPressGesture { removingArchived = record }
-                            .accessibilityAddTraits(.isButton)
+                            .transition(cardTransition)
+                            .cardPress(onTap: { library.unarchive(record) },
+                                       onLongPress: { removingArchived = record })
                             .accessibilityHint("Baixa o jogo de volta do iCloud")
+                            .accessibilityAction(named: "Apagar do iCloud") { removingArchived = record }
                     }
                 }
                 .padding(.horizontal, 20)

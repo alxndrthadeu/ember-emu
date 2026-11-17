@@ -91,6 +91,27 @@ module Demo
     false
   end
 
+  # Ember's save states (ember_quicksave.rb asks $ember_host): the demo
+  # has no Scene_Map, so it says itself when it is quiet, what to keep
+  # and how to come back.
+  module Host
+    def self.ember_quiet_reason
+      map = $scene.is_a?(MapScene) ? $scene : nil
+      return 'scene' unless map
+      map.busy_reason
+    end
+
+    def self.ember_dump
+      { 'version' => 1, 'x' => $scene.hx, 'y' => $scene.hy, 'facing' => $scene.facing.to_s }
+    end
+
+    # Taken up by the scene loop at the next frame.
+    def self.ember_restore(data)
+      $demo_pending_state = data
+    end
+  end
+  $ember_host = Host
+
   def self.saved_game
     return nil unless File.exist?(SAVE_FILE)
     data = File.open(SAVE_FILE, 'rb') { |f| Marshal.load(f) }

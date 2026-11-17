@@ -91,8 +91,13 @@ enum GameImporter {
         let title = GameFolder.title(in: root)
             ?? (name as NSString).deletingPathExtension
         try fm.createDirectory(at: gamesFolder, withIntermediateDirectories: true)
-        let id = uniqueID(for: title)
-        try fm.moveItem(at: root, to: gamesFolder.appendingPathComponent(id, isDirectory: true))
+        // Two imports of the same game at once (two zips over Wi-Fi)
+        // must not pick the same free name.
+        let id = try placing.withLock {
+            let id = uniqueID(for: title)
+            try fm.moveItem(at: root, to: gamesFolder.appendingPathComponent(id, isDirectory: true))
+            return id
+        }
 
         if discardArchive, !isFolder {
             trash(url)
@@ -210,6 +215,8 @@ enum GameImporter {
         }
         if let error = coordinatorError ?? copyError { throw error }
     }
+
+    private static let placing = NSLock()
 
     /// A folder name from the title: readable in the Files app, and
     /// unique in the library ("Pokemon Flux", "Pokemon Flux 2", ...).

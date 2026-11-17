@@ -14,6 +14,7 @@ struct GameControlsView: View {
     @State private var naming = false
     @State private var newName = ""
     @State private var savedName: String?
+    @State private var confirmingReset = false
     private let gameKeys: [KeyboardKey]?
 
     init(game: GameEntry) {
@@ -90,8 +91,16 @@ struct GameControlsView: View {
                     Label("Salvar como perfil", systemImage: "square.and.arrow.down")
                 }
                 Button("Desfazer as mudanças deste jogo", role: .destructive) {
-                    store.resetMapping(for: game)
-                    profile = store.profile(for: game)
+                    confirmingReset = true
+                }
+                .confirmationDialog("Desfazer as mudanças deste jogo?", isPresented: $confirmingReset,
+                                    titleVisibility: .visible) {
+                    Button("Desfazer as mudanças", role: .destructive) {
+                        store.resetMapping(for: game)
+                        profile = store.profile(for: game)
+                    }
+                } message: {
+                    Text("Os botões voltam a ser os do perfil “\(store.baseProfile(for: game).name)”.")
                 }
             }
         } footer: {
@@ -135,7 +144,7 @@ struct GameControlsView: View {
         let buttons = profile.buttons(sending: key)
         return HStack(spacing: 12) {
             Text(verbatim: key.name)
-                .font(.system(size: key.name.count > 3 ? 12 : 15, weight: .bold, design: .rounded))
+                .font(key.name.count > 3 ? .caption.weight(.bold) : .subheadline.weight(.bold))
                 .foregroundStyle(Theme.primaryText)
                 .frame(minWidth: 56, minHeight: 30)
                 .padding(.horizontal, key.name.count > 4 ? 8 : 0)

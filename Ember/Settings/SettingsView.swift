@@ -430,7 +430,7 @@ private struct RTPSection: View {
                         Label("Instalado", systemImage: "checkmark.circle.fill")
                             .labelStyle(.titleAndIcon)
                             .font(.subheadline)
-                            .foregroundStyle(Theme.active)
+                            .foregroundStyle(Theme.activeText)
                     } else {
                         Text("Não instalado")
                             .font(.subheadline)

@@ -255,14 +255,14 @@ final class EngineSession {
     }
 
     private func presentEngineMessage(_ text: String, isError: Bool) {
+        if isError {
+            GameLog.shared.error(text)
+        } else if !text.isEmpty {
+            GameLog.shared.note("aviso do jogo: \(text)")
+        }
         guard let screen = gameScreen, !text.isEmpty else {
             isError ? mkxp_signalErrorDismissed() : mkxp_signalInfoDismissed()
             return
-        }
-        if isError {
-            GameLog.shared.error(text)
-        } else {
-            GameLog.shared.note("aviso do jogo: \(text)")
         }
         let shown = text.count > 900 ? String(text.prefix(900)) + "…" : text
         let alert: UIAlertController
@@ -283,9 +283,29 @@ final class EngineSession {
                 mkxp_signalInfoDismissed()
             })
         }
+        present(alert, over: screen, isError: isError, attempt: 0)
+    }
+
+    /// The engine waits until the alert is closed, so it must show: a
+    /// sheet on its way out or another alert would make `present` fail
+    /// in silence and leave the game stuck. Tries again a moment later;
+    /// after ~6 s gives up and lets the game go on.
+    private func present(_ alert: UIAlertController, over screen: UIViewController, isError: Bool, attempt: Int) {
         var top: UIViewController = screen
-        while let presented = top.presentedViewController { top = presented }
-        top.present(alert, animated: true)
+        while let presented = top.presentedViewController, !presented.isBeingDismissed { top = presented }
+        let blocked = top.presentedViewController != nil || top is UIAlertController || top.isBeingPresented
+        guard blocked else {
+            top.present(alert, animated: true)
+            return
+        }
+        guard attempt < 20 else {
+            GameLog.shared.note("alerta do motor não pôde ser mostrado")
+            isError ? mkxp_signalErrorDismissed() : mkxp_signalInfoDismissed()
+            return
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            self?.present(alert, over: screen, isError: isError, attempt: attempt + 1)
+        }
     }
 
     // MARK: - Text input

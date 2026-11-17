@@ -186,3 +186,33 @@ struct Banner<Content: View>: View {
             .padding(.bottom, 8)
     }
 }
+
+/// A card that answers a tap and a long press, and shows it is being
+/// touched (cards are not system buttons: the long press opens Ember's
+/// own options sheet). VoiceOver reads it as one button.
+struct CardPress: ViewModifier {
+    let onTap: () -> Void
+    let onLongPress: () -> Void
+    @State private var pressed = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func body(content: Content) -> some View {
+        content
+            .scaleEffect(pressed && !reduceMotion ? 0.96 : 1)
+            .opacity(pressed && reduceMotion ? 0.7 : 1)
+            .animation(.easeOut(duration: 0.15), value: pressed)
+            .onTapGesture(perform: onTap)
+            .onLongPressGesture(minimumDuration: 0.45, perform: {
+                Haptics.tap()
+                onLongPress()
+            }, onPressingChanged: { pressed = $0 })
+            .accessibilityElement(children: .combine)
+            .accessibilityAddTraits(.isButton)
+    }
+}
+
+extension View {
+    func cardPress(onTap: @escaping () -> Void, onLongPress: @escaping () -> Void) -> some View {
+        modifier(CardPress(onTap: onTap, onLongPress: onLongPress))
+    }
+}

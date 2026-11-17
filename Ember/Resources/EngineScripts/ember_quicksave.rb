@@ -9,6 +9,9 @@
 #   :ace         RPG Maker VX Ace (DataManager)
 #   :generic     RPG Maker XP / VX and older Essentials: the $game_*,
 #                $Pokemon*, $Trainer... globals their own saves hold
+#   :host        a game with its own scenes (Ember's demo) that sets
+#                $ember_host to an object answering ember_quiet_reason
+#                (nil when it can save), ember_dump and ember_restore(data)
 #
 # The app talks to this script through files in EMBER_STATE_DIR:
 #   request   written by the app: "save:<slot>" or "load:<slot>"
@@ -46,8 +49,15 @@ module EmberState
       !DIR.empty?
     end
 
+    def host
+      h = $ember_host
+      h && h.respond_to?(:ember_dump) && h.respond_to?(:ember_restore) ? h : nil
+    end
+
     def kind
-      if defined?(SaveData) && SaveData.respond_to?(:compile_save_hash) && defined?(Game) && Game.respond_to?(:load)
+      if host
+        :host
+      elsif defined?(SaveData) && SaveData.respond_to?(:compile_save_hash) && defined?(Game) && Game.respond_to?(:load)
         :essentials
       elsif defined?(DataManager) && DataManager.respond_to?(:make_save_contents)
         :ace
@@ -99,7 +109,10 @@ module EmberState
         respond("ok:save:#{slot}")
       elsif verb == 'load'
         payload = read(slot)
-        if payload
+        if payload && payload['kind'] == 'host' && host
+          host.ember_restore(payload['data'])
+          respond("ok:load:#{slot}")
+        elsif payload
           # Restored at the start of the next Scene_Map#update, never in
           # the middle of a frame: the old scene must not run another
           # update against the new game state.
@@ -207,8 +220,15 @@ module EmberState
       return if AUTO_SECONDS <= 0
       return if Time.now - @last_auto < AUTO_SECONDS
       return if quiet_reason
-      save('auto')
+      # Counted from the try: a save that fails (a game holding
+      # something Marshal can't write) waits for the next turn instead
+      # of trying again every few frames.
       @last_auto = Time.now
+      begin
+        save('auto')
+      rescue Exception => e
+        puts "[ember-state] autosave failed: #{e.class}: #{e.message}"
+      end
     end
 
     # --- Is now a safe moment? ----------------------------------------
@@ -223,6 +243,9 @@ module EmberState
 
     # Nil when it is safe to save; otherwise why not.
     def quiet_reason
+      if host
+        return host.respond_to?(:ember_quiet_reason) ? host.ember_quiet_reason : nil
+      end
       return 'scene' unless defined?(Scene_Map) && current_scene.is_a?(Scene_Map)
       interpreter = nil
       begin
@@ -254,18 +277,36 @@ module EmberState
 
     def save(slot)
       data = case kind
+             when :host then host.ember_dump
              when :essentials then SaveData.compile_save_hash
              when :ace then DataManager.make_save_contents
-             else generic_dump
+             else generic_dump(false)
              end
       payload = { 'ember' => 1, 'kind' => kind.to_s, 'data' => data,
                   'frame_count' => Graphics.frame_count, 'time' => Time.now.to_i }
       final = File.join(DIR, "#{slot}.state")
       temp = final + '.tmp'
-      File.open(temp, 'wb') { |f| Marshal.dump(payload, f) }
-      File.rename(temp, final)
       begin
-        Graphics.screenshot(File.join(DIR, "#{slot}.png")) if Graphics.respond_to?(:screenshot)
+        begin
+          bytes = Marshal.dump(payload)
+        rescue TypeError
+          raise unless payload['kind'] == 'generic'
+          # Some global holds sprites, procs or IO: keep only the ones
+          # that can be written. Only then is each one tried alone, so a
+          # normal save serializes the game once.
+          payload['data'] = generic_dump(true)
+          bytes = Marshal.dump(payload)
+        end
+        File.open(temp, 'wb') { |f| f.write(bytes) }
+        File.rename(temp, final)
+      ensure
+        if File.exist?(temp)
+          File.delete(temp) rescue nil
+        end
+      end
+      begin
+        # JPEG: much quicker to write than PNG, on the game's own thread.
+        Graphics.screenshot(File.join(DIR, "#{slot}.jpg")) if Graphics.respond_to?(:screenshot)
       rescue Exception
       end
     end
@@ -274,13 +315,17 @@ module EmberState
     # $PokemonTemp) are rebuilt, never saved.
     GENERIC_NAME = /\A\$(game_(?!temp)|Pokemon(?!Temp)|Trainer\z|MapFactory\z|map_factory\z|player\z|bag\z|stats\z|storage\z)/
 
-    def generic_dump
+    def generic_dump(checked)
       values = {}
       global_variables.each do |name|
         name = name.to_s
         next unless name =~ GENERIC_NAME
         value = eval(name)
         next if value.nil?
+        unless checked
+          values[name] = value
+          next
+        end
         begin
           Marshal.dump(value)
           values[name] = value
@@ -313,14 +358,23 @@ module EmberState
       # the new scene once the state is restored. Its own disposal on
       # the way out then finds nothing left to do.
       scene = current_scene
+      disposed = false
       if scene.respond_to?(:disposeSpritesets, true)
         Graphics.freeze if Graphics.respond_to?(:freeze)
         scene.send(:disposeSpritesets)
+        disposed = true
       end
       restore(payload)
       respond("ok:load:#{slot}")
     rescue Exception => e
       respond("error:load #{e.class}: #{e.message}")
+      # Put the map back on screen: its sprites went down and the screen
+      # was frozen before the state failed.
+      begin
+        scene.send(:createSpritesets) if disposed && scene.respond_to?(:createSpritesets, true)
+        Graphics.transition(0) if disposed && Graphics.respond_to?(:transition)
+      rescue Exception
+      end
     end
 
     def install_map_hook
@@ -343,6 +397,8 @@ module EmberState
       Graphics.frame_count = payload['frame_count'] if payload['frame_count']
       data = payload['data']
       case payload['kind']
+      when 'host'
+        host.ember_restore(data) if host
       when 'essentials'
         Game.load(data)
       when 'ace'

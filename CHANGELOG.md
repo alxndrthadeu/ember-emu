@@ -4,7 +4,23 @@ What changed in each version of Ember. The newest version is on top; `Unreleased
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follow [Semantic Versioning](https://semver.org/): a new feature bumps the minor number (1.1.0), a fix the patch number (1.0.1).
 
-## [1.2.1] - Unreleased
+## [1.3.0] - Unreleased
+
+### Fixed
+- A backup left in Ember's folder (AirDrop, Finder, "Save to Files") was restored again every time the app came back, and two restores in the same minute could lose the copy of the saves it replaced. Each backup is now restored once and removed, and the replaced saves are always kept.
+- Restoring a backup with only the saves of a game that is not on this device no longer leaves an empty game behind; the saves wait in Backups.
+- Restoring a backup keeps the control mappings, profiles and history made on this device after the backup.
+- Save states work in the demo game.
+- A save state that fails no longer freezes the screen, and a failing autosave no longer retries every few frames.
+- Two buttons sending the same key (X and Start on Shift) no longer let go of the key while one is still held.
+- An error from the game shown while a menu was closing could leave the game stuck.
+- Importing saves no longer accepts the game's own files (scripts, Game.ini), and the error log no longer shows up as a save.
+- Two copies of the same game imported at once no longer fail.
+
+### Changed
+- Save state pictures are written as JPEG, quicker on the game's thread.
+
+## [1.2.1] - 2026-11-15
 
 ### Added
 - Save a game's controls as a profile, from the game's controls or from Settings › Control profiles, to use them in other games.

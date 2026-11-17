@@ -22,7 +22,12 @@ final class TVStream {
     private(set) var address: String?
     /// Browsers showing the game right now.
     private(set) var viewers = 0 {
-        didSet { GameLayout.shared.onTV = viewers > 0 }
+        didSet {
+            GameLayout.shared.onTV = viewers > 0
+            // The engine reads each frame back from the GPU only while
+            // someone watches: with the TV on and no browser, nothing.
+            mkxp_setFrameStreamEnabled(isOn && viewers > 0)
+        }
     }
     var lastError: String?
 
@@ -79,7 +84,6 @@ final class TVStream {
             streamer.onViewersChanged = { count in
                 Task { @MainActor in TVStream.shared.viewers = count }
             }
-            mkxp_setFrameStreamEnabled(true)
             streamer.start()
             listener.start(queue: streamer.queue)
             self.listener = listener
@@ -176,7 +180,9 @@ private final class FrameStreamer: @unchecked Sendable {
 
     private func tick() {
         pumpAudio()
-        guard !viewers.isEmpty else { return }
+        // A frame only when some browser can take it now; the others
+        // would drop it anyway.
+        guard viewers.values.contains(where: \.isReady) else { return }
         var width: Int32 = 0, height: Int32 = 0
         var copied = buffer.withUnsafeMutableBytes { raw in
             mkxp_copyStreamFrame(raw.bindMemory(to: UInt8.self).baseAddress, Int32(raw.count),
@@ -199,19 +205,25 @@ private final class FrameStreamer: @unchecked Sendable {
 
     private func encode(width: Int, height: Int) -> Data? {
         let size = width * height * 4
-        guard let provider = CGDataProvider(data: Data(buffer.prefix(size)) as CFData),
-              let image = CGImage(width: width, height: height, bitsPerComponent: 8, bitsPerPixel: 32,
-                                  bytesPerRow: width * 4, space: CGColorSpaceCreateDeviceRGB(),
-                                  bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.noneSkipLast.rawValue),
-                                  provider: provider, decode: nil, shouldInterpolate: false,
-                                  intent: .defaultIntent)
-        else { return nil }
-        let data = NSMutableData()
-        guard let dest = CGImageDestinationCreateWithData(data, UTType.jpeg.identifier as CFString, 1, nil)
-        else { return nil }
-        CGImageDestinationAddImage(dest, image, [kCGImageDestinationLossyCompressionQuality: 0.85] as CFDictionary)
-        guard CGImageDestinationFinalize(dest) else { return nil }
-        return data as Data
+        guard size <= buffer.count else { return nil }
+        // Straight from the buffer, no copy: the encoder is done with
+        // the pixels before this returns.
+        return buffer.withUnsafeBytes { raw -> Data? in
+            guard let base = raw.baseAddress,
+                  let provider = CGDataProvider(dataInfo: nil, data: base, size: size, releaseData: { _, _, _ in }),
+                  let image = CGImage(width: width, height: height, bitsPerComponent: 8, bitsPerPixel: 32,
+                                      bytesPerRow: width * 4, space: CGColorSpaceCreateDeviceRGB(),
+                                      bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.noneSkipLast.rawValue),
+                                      provider: provider, decode: nil, shouldInterpolate: false,
+                                      intent: .defaultIntent)
+            else { return nil }
+            let data = NSMutableData()
+            guard let dest = CGImageDestinationCreateWithData(data, UTType.jpeg.identifier as CFString, 1, nil)
+            else { return nil }
+            CGImageDestinationAddImage(dest, image, [kCGImageDestinationLossyCompressionQuality: 0.8] as CFDictionary)
+            guard CGImageDestinationFinalize(dest) else { return nil }
+            return data as Data
+        }
     }
 }
 
@@ -283,6 +295,9 @@ private final class TVConnection: @unchecked Sendable {
             if done || error != nil { close() } else { watchForClose() }
         }
     }
+
+    /// Free to take a frame now (called on the streamer's queue).
+    var isReady: Bool { !sending && !closed }
 
     /// Sends a frame unless the browser is still taking the last one
     /// (a slow screen skips frames instead of falling behind).
@@ -471,7 +486,7 @@ struct TVSheet: View {
                                          : String(localized: "Jogando em \(tv.viewers) telas")),
                       systemImage: tv.viewers == 0 ? "hourglass" : "dot.radiowaves.left.and.right")
                     .font(.subheadline.weight(.medium))
-                    .foregroundStyle(tv.viewers == 0 ? Color.secondary : Theme.active)
+                    .foregroundStyle(tv.viewers == 0 ? Color.secondary : Theme.activeText)
 
                 Text("Na TV, aperte OK (ou clique, no computador) para tela cheia e som: o som passa a sair na TV e o iPhone fica mudo.")
                     .font(.footnote)
