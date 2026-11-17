@@ -15,6 +15,8 @@ final class AppRouter {
     var tab: AppTab = .library
     /// A home screen quick action waiting for the library to handle it.
     var quickAction: QuickAction?
+    /// A game to open, asked by Siri or Shortcuts (its id).
+    var gameToOpen: String?
     private init() {}
 }
 

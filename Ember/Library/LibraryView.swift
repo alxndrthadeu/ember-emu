@@ -69,6 +69,19 @@ struct LibraryView: View {
         .onChange(of: AppRouter.shared.quickAction, initial: true) { _, action in
             if let action { handle(action) }
         }
+        .onChange(of: AppRouter.shared.gameToOpen, initial: true) { _, id in
+            guard let id else { return }
+            AppRouter.shared.gameToOpen = nil
+            AppRouter.shared.tab = .library
+            if let game = library.games.first(where: { $0.id == id }) { open(game) }
+        }
+        .alert("Ruby trocado",
+               isPresented: Binding(get: { session.rubyChangedAfterError != nil && session.state != .running },
+                                    set: { if !$0 { session.rubyChangedAfterError = nil } })) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("Na próxima vez, o jogo abre com o Ruby \(session.rubyChangedAfterError ?? ""). Para abrir agora, feche o Ember pelo seletor de apps e abra de novo.")
+        }
         .onChange(of: session.state) { _, state in
             // A good moment to ask for a rating: a long session just
             // ended well (see ReviewPrompt).

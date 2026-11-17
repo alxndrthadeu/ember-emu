@@ -232,6 +232,12 @@ struct GameOptionsSheet: View {
                         .font(.footnote)
                         .foregroundStyle(Theme.secondaryText)
                 }
+                let sessions = PlayHistory.sessions.filter { $0.gameID == current.id }
+                if sessions.count > 1, let first = sessions.last?.start {
+                    Text("\(sessions.count) sessões desde \(first.formatted(date: .abbreviated, time: .omitted))")
+                        .font(.footnote)
+                        .foregroundStyle(Theme.secondaryText)
+                }
             }
             Spacer(minLength: 0)
         }
