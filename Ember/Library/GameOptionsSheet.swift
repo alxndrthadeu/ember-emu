@@ -86,7 +86,7 @@ struct GameOptionsSheet: View {
                         choosingController = true
                     }
                     Divider().padding(.leading, 48)
-                    SheetRow(icon: "gamecontroller", title: String(localized: "Controles"),
+                    SheetRow(icon: "gamecontroller", title: String(localized: "Controles deste jogo"),
                              value: ProfileStore.shared.hasOwnMapping(current)
                                 ? String(localized: "Deste jogo") : ProfileStore.shared.profile(for: current).name,
                              chevron: "chevron.right") {

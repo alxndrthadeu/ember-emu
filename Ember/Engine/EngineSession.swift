@@ -229,7 +229,9 @@ final class EngineSession {
     /// The engine reports a script error, or a game's own msgbox, and
     /// blocks its thread until the player dismisses it. Without these
     /// handlers the game freezes on its first error.
-    private func observeMessages() {
+    /// Nonisolated: the engine calls these closures on its own thread
+    /// (Swift 6 would trap a main-actor closure there).
+    nonisolated private func observeMessages() {
         mkxp_setErrorMessageCallback({ message, _ in
             let text = message.map { String(cString: $0) } ?? ""
             DispatchQueue.main.async {
@@ -347,7 +349,7 @@ final class EngineSession {
 
     /// The engine fires this on its own thread when a game turns text
     /// input on or off (`Input.text_input`).
-    private func observeTextInput() {
+    nonisolated private func observeTextInput() {
         mkxp_setTextInputModeCallback({ active, _ in
             DispatchQueue.main.async {
                 MainActor.assumeIsolated {

@@ -265,7 +265,8 @@ final class PauseSnapshot {
 
     /// The engine fires the paused callback on its own thread, after
     /// it stored the frame.
-    func observeEngine() {
+    /// Nonisolated: the closure runs on the engine's thread.
+    nonisolated func observeEngine() {
         mkxp_setPausedCallback({ _ in
             DispatchQueue.main.async {
                 MainActor.assumeIsolated { PauseSnapshot.shared.capture() }

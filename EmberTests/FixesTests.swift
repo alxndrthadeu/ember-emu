@@ -224,3 +224,21 @@ final class SaveSyncTests: XCTestCase {
         XCTAssertEqual(read(remote), "three-here")
     }
 }
+
+@MainActor
+final class RubySuggestionTests: XCTestCase {
+    func testVersionErrorsSuggestTheOtherRuby() throws {
+        let fm = FileManager.default
+        let folder = fm.temporaryDirectory.appendingPathComponent("RubyTest-\(UUID().uuidString)")
+        defer { try? fm.removeItem(at: folder) }
+        try fm.createDirectory(at: folder.appendingPathComponent("Data"), withIntermediateDirectories: true)
+        try "[Game]\nTitle=Ruby Test\nLibrary=RGSS102E.dll\n".write(
+            to: folder.appendingPathComponent("Game.ini"), atomically: true, encoding: .utf8)
+        try "x".write(to: folder.appendingPathComponent("Data/Scripts.rxdata"), atomically: true, encoding: .utf8)
+        let game = try XCTUnwrap(GameEntry(folder: folder))
+        let suggestion = EngineSession.rubySuggestion(for: "Script 'Main' line 3: SyntaxError occurred.", game: game)
+        XCTAssertNotNil(suggestion)
+        XCTAssertNotEqual(suggestion?.version, game.rubyVersion)
+        XCTAssertNil(EngineSession.rubySuggestion(for: "Unable to find file Graphics/Titles/x", game: game))
+    }
+}

@@ -36,6 +36,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Playing on the TV costs nothing until a browser opens the page, and frames are only encoded when a screen can take them.
 - Less work on the game's thread while playing: save files are watched in the background, the play history is written in the background, covers and save pictures are decoded once.
 - Accessibility: game cards are one VoiceOver button and show when they are pressed; text sizes follow Dynamic Type in the controls screens; darker amber and green where they mark something on cream; Reduce Motion is followed in the library and the game; messages in the game are read by VoiceOver; success and error vibrate differently.
+- Swift 6 language mode (full data-race safety); the engine's callbacks are set up outside the main actor.
+- Clearer names: "Controls for this game" in a game's panel, "Controls guide" in the library.
 - The game menu scrolls when it does not fit (larger text, landscape); deleting a control profile or undoing a game's controls asks first.
 
 ## [1.2.1] - 2026-11-15

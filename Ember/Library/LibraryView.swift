@@ -31,7 +31,7 @@ struct LibraryView: View {
                     Button { showingControls = true } label: {
                         Image(systemName: "gamecontroller")
                     }
-                    .accessibilityLabel("Controles")
+                    .accessibilityLabel("Guia de controles")
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { showingHistory = true } label: {
