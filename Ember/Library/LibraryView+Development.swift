@@ -103,7 +103,7 @@ extension LibraryView {
         switch environment["EMBER_SHOW"] {
         case "history": showingHistory = true
         case "controls": showingControls = true
-        case "options", "saves", "gamecontrols":
+        case "options", "saves", "cloud", "gamecontrols":
             let id = environment["EMBER_GAME"]
             optionsFor = library.games.first { id == nil || $0.id == id }
         case "controller": library.chooseController = library.games.first

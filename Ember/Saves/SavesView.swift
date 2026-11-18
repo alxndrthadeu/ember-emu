@@ -140,7 +140,12 @@ struct SavesView: View {
     /// going on now.
     @ViewBuilder
     private var cloudStatus: some View {
-        if SaveSync.isEnabled {
+        if !SaveSync.syncsAutomatically(game.id) {
+            Label("Sincronização automática desligada. Envie ou baixe em Saves no iCloud, no painel do jogo.", systemImage: "icloud.slash")
+                .font(.footnote)
+                .foregroundStyle(Theme.secondaryText)
+                .padding(.horizontal, 4)
+        } else {
             HStack(spacing: 8) {
                 if syncing {
                     ProgressView().controlSize(.small)
@@ -164,7 +169,7 @@ struct SavesView: View {
     /// this game is playing right now: nothing changes under a running
     /// game. Waits a little for files iCloud is still bringing down.
     private func syncFromCloud() async {
-        guard SaveSync.isEnabled, !syncing else { return }
+        guard SaveSync.syncsAutomatically(game.id), !syncing else { return }
         let session = EngineSession.shared
         if session.state == .running, session.currentGame?.id == game.id { return }
         syncing = true

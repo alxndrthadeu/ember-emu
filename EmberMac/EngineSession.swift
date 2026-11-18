@@ -45,6 +45,8 @@ final class EngineSession {
     func launch(_ game: GameEntry, resumeSlot: String? = nil) {
         guard state == .idle else { return }
         currentGame = game
+        // The library brings no saves down under this game while it runs.
+        SaveSync.markPlaying(game.id, true)
         let resources = Bundle.main.resourceURL!
         // The engine's assets, as a Mac bundle (scripts/embed-engine.sh).
         let assets = resources.appendingPathComponent("Assets.bundle/Contents/Resources")
@@ -124,6 +126,7 @@ final class EngineSession {
 
     private func engineDidEnd() {
         saveWatcher.stop()
+        if let game = currentGame { SaveSync.markPlaying(game.id, false) }
         RemoteControllerServer.shared.stop()
         PhysicalControllerInput.shared.stop()
         historyTimer?.invalidate()

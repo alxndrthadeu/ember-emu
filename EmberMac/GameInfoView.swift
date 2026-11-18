@@ -16,6 +16,7 @@ struct GameInfoView: View {
     @State private var importingSaves = false
     @State private var message: String?
     @State private var confirmingDelete = false
+    @State private var showingCloud = false
 
     init(game: GameEntry) {
         self.game = game
@@ -41,6 +42,8 @@ struct GameInfoView: View {
                         Button("Exportar saves…") { exportSaves() }
                             .disabled(saves.isEmpty)
                         Button("Importar saves…") { importingSaves = true }
+                        Spacer()
+                        Button("Saves no iCloud…") { showingCloud = true }
                     }
                 }
                 Section("Estados salvos") {
@@ -79,6 +82,9 @@ struct GameInfoView: View {
         }
         .frame(width: 520, height: 640)
         .onAppear(perform: load)
+        .sheet(isPresented: $showingCloud, onDismiss: load) {
+            CloudSavesSheet { CloudSavesView(game: game) { library.reload() } }
+        }
         .onDisappear(perform: rename)
         .fileImporter(isPresented: $pickingCover, allowedContentTypes: [.image]) { result in
             guard case .success(let url) = result else { return }

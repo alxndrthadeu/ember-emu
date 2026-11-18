@@ -157,6 +157,7 @@ targets:
       - Ember/Saves/SaveThumbnails.swift
       - Ember/Saves/SyncStatus.swift
       - Ember/Saves/SyncViews.swift
+      - Ember/Saves/CloudSavesView.swift
       - Ember/Controller/ControllerType.swift
       - Ember/Controller/Detection/GameKeyScanner.swift
       - Ember/Controller/Detection/ScriptScanner.swift

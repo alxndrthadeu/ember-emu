@@ -181,7 +181,8 @@ final class MacLibrary {
 
     func syncSaves(attempt: Int = 0) {
         guard SaveSync.isEnabled, !syncing, !games.isEmpty else { return }
-        let folders = games.map { game in
+        // A game open in its own window syncs as it saves and as it closes.
+        let folders = games.filter { !SaveSync.isPlayingElsewhere($0.id) }.map { game in
             SaveSync.GameFolders(id: game.id, title: game.title, folder: game.folder,
                                  userData: GameStorage.userDataFolder(for: game),
                                  states: StateStore.folder(for: game.id))

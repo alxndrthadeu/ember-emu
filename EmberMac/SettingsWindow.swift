@@ -27,20 +27,22 @@ private struct SettingsView: View {
     @State private var filter = ScreenFilter.current
     @State private var soundOn = UserDefaults.standard.object(forKey: "settings.gameSound") as? Bool ?? true
     @State private var importingRTP = false
+    @State private var showingCloud = false
     @Bindable private var library = MacLibrary.shared
 
     var body: some View {
         Form {
             Section {
-                Toggle("Saves no iCloud", isOn: $iCloudSaves)
+                Toggle("Sincronizar saves automaticamente", isOn: $iCloudSaves)
                     .onChange(of: iCloudSaves) {
                         UserDefaults.standard.set(iCloudSaves, forKey: SaveSync.enabledKey)
                         if iCloudSaves { library.syncSaves() }
                     }
+                Button("Saves de cada jogo…") { showingCloud = true }
             } header: {
-                Text("iCloud")
+                Text("Saves no iCloud")
             } footer: {
-                Text("Os saves e estados de cada jogo vão para o iCloud e voltam no seu iPhone com o mesmo jogo. Os jogos não vão. Se um save mudar nos dois aparelhos, fica o mais recente e o outro vai para Backups.")
+                Text("Os saves e estados de cada jogo vão para o iCloud e voltam no seu iPhone com o mesmo jogo. Os jogos não vão. Se um save mudar nos dois aparelhos, fica o mais recente e o outro vai para Backups. Em Saves de cada jogo, você vê o que está aqui e no iCloud, envia ou baixa à mão e escolhe quais jogos sincronizam sozinhos.")
                     .foregroundStyle(.secondary)
             }
 
@@ -80,6 +82,9 @@ private struct SettingsView: View {
         }
         .formStyle(.grouped)
         .frame(width: 520, height: 480)
+        .sheet(isPresented: $showingCloud) {
+            CloudSavesSheet { CloudSavesList(games: library.games) { library.reload() } }
+        }
         .fileImporter(isPresented: $importingRTP, allowedContentTypes: [.folder, .zip], allowsMultipleSelection: false) { result in
             if case .success(let urls) = result { library.importItems(urls) }
         }

@@ -29,7 +29,7 @@ final class SyncStatus {
     private init() {}
 
     func state(for id: String) -> State? {
-        guard SaveSync.isEnabled, let report = games[id] else { return nil }
+        guard SaveSync.syncsAutomatically(id), let report = games[id] else { return nil }
         if syncing, report.uploaded > 0 { return .sending }
         if report.waiting > 0 { return .incoming }
         if report.conflict { return .conflict }
@@ -110,7 +110,7 @@ extension SyncStatus {
     /// something went up; the game's iCloud state and "last save" follow.
     @discardableResult
     func uploadWhilePlaying(_ game: GameEntry) async -> Bool {
-        guard SaveSync.isEnabled else { return false }
+        guard SaveSync.syncsAutomatically(game.id) else { return false }
         let folders = SaveSync.GameFolders(game)
         let report = await Task.detached(priority: .utility) { SaveSync.upload(folders) }.value
         finished(report, titles: [game.id: game.title])

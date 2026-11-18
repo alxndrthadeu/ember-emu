@@ -16,6 +16,7 @@ struct GameOptionsSheet: View {
     @State private var photo: PhotosPickerItem?
     @State private var exportFile: ExportFile?
     @State private var showingSaves = false
+    @State private var showingCloud = false
     @State private var choosingController = false
     @State private var editingControls = false
     @State private var confirmingDelete = false
@@ -75,6 +76,14 @@ struct GameOptionsSheet: View {
                                                                          : String(localized: "Ver todos os saves"),
                              value: saves.isEmpty ? nil : "\(saves.count)", chevron: "chevron.right") {
                         showingSaves = true
+                    }
+                    Divider().padding(.leading, 48)
+                    SheetRow(icon: SaveSync.syncsAutomatically(current.id) ? "checkmark.icloud" : "icloud.slash",
+                             title: String(localized: "Saves no iCloud"),
+                             value: SaveSync.syncsAutomatically(current.id) ? String(localized: "Automático")
+                                                                            : String(localized: "Só à mão"),
+                             chevron: "chevron.right") {
+                        showingCloud = true
                     }
                 }
 
@@ -161,9 +170,10 @@ struct GameOptionsSheet: View {
         .onAppear {
             refreshSaves()
             #if DEBUG
-            // Development aid: EMBER_SHOW=saves|gamecontrols opens that screen.
+            // Development aid: EMBER_SHOW=saves|cloud|gamecontrols opens that screen.
             switch ProcessInfo.processInfo.environment["EMBER_SHOW"] {
             case "saves": showingSaves = true
+            case "cloud": showingCloud = true
             case "gamecontrols": editingControls = true
             default: break
             }
@@ -185,6 +195,17 @@ struct GameOptionsSheet: View {
         }
         .sheet(isPresented: $showingSaves, onDismiss: refreshSaves) {
             SavesView(game: current)
+        }
+        .sheet(isPresented: $showingCloud, onDismiss: refreshSaves) {
+            NavigationStack {
+                CloudSavesView(game: current) { library.reload() }
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button { showingCloud = false } label: { Image(systemName: "xmark") }
+                                .accessibilityLabel("Fechar")
+                        }
+                    }
+            }
         }
         .sheet(isPresented: $showingLogs) {
             LogsView(game: current)

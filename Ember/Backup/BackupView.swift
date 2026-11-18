@@ -19,7 +19,7 @@ struct BackupSection: View {
     var body: some View {
         Section {
             Toggle(isOn: $iCloudSaves) {
-                Label("Saves no iCloud", systemImage: "icloud")
+                Label("Sincronizar saves automaticamente", systemImage: "icloud")
             }
             .onChange(of: iCloudSaves) {
                 UserDefaults.standard.set(iCloudSaves, forKey: SaveSync.enabledKey)
@@ -42,10 +42,15 @@ struct BackupSection: View {
                 .font(.footnote)
                 .foregroundStyle(Theme.secondaryText)
             }
+            NavigationLink {
+                CloudSavesList(games: library.games) { library.reload() }
+            } label: {
+                Label("Saves de cada jogo", systemImage: "list.bullet.rectangle")
+            }
         } header: {
-            Text("iCloud")
+            Text("Saves no iCloud")
         } footer: {
-            Text("Os saves e estados de cada jogo vão para o iCloud e voltam em outro iPhone com o mesmo jogo. Os jogos não vão. Se um save mudar nos dois aparelhos, fica o mais recente e o outro vai para Backups.")
+            Text("Os saves e estados de cada jogo vão para o iCloud e voltam no seu Mac ou em outro iPhone com o mesmo jogo. Os jogos não vão. Se um save mudar nos dois aparelhos, fica o mais recente e o outro vai para Backups. Em Saves de cada jogo, você vê o que está aqui e no iCloud, envia ou baixa à mão e escolhe quais jogos sincronizam sozinhos.")
         }
         Section {
             NavigationLink {

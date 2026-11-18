@@ -253,6 +253,76 @@
         }
       }
     },
+    "%lld a baixar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld to download"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld por descargar"
+          }
+        }
+      }
+    },
+    "%lld arquivo(s) · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld file(s) · %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld archivo(s) · %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld arquivo(s) · %2$@"
+          }
+        }
+      }
+    },
+    "%lld arquivo(s) ainda não chegaram do iCloud. Tente de novo daqui a pouco." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld file(s) have not arrived from iCloud yet. Try again in a moment."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld archivo(s) aún no llegan de iCloud. Inténtalo de nuevo en un momento."
+          }
+        }
+      }
+    },
+    "%lld arquivo(s) baixado(s) do iCloud. Os que estavam aqui ficaram em Backups." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld file(s) brought from iCloud. The ones that were here are in Backups."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld archivo(s) descargado(s) de iCloud. Los que había aquí quedaron en Backups."
+          }
+        }
+      }
+    },
     "%lld arquivo(s) de save importado(s). Os que foram substituídos estão em Backups." : {
       "localizations" : {
         "en" : {
@@ -265,6 +335,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld archivo(s) de guardado importado(s). Los reemplazados están en Backups."
+          }
+        }
+      }
+    },
+    "%lld arquivo(s) enviado(s) para o iCloud." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld file(s) sent to iCloud."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld archivo(s) enviado(s) a iCloud."
           }
         }
       }
@@ -641,6 +727,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "La extracción se detuvo a mitad de camino (%@)."
+          }
+        }
+      }
+    },
+    "A sincronização automática está desligada para todos os jogos, em Ajustes." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatic sync is off for every game, in Settings."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La sincronización automática está desactivada para todos los juegos, en Ajustes."
           }
         }
       }
@@ -1461,6 +1563,22 @@
         }
       }
     },
+    "Aqui: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Here: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aquí: %@"
+          }
+        }
+      }
+    },
     "Arquivar" : {
       "localizations" : {
         "en" : {
@@ -1815,6 +1933,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Descargando de iCloud…"
+          }
+        }
+      }
+    },
+    "Baixar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Download"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descargar"
+          }
+        }
+      }
+    },
+    "Baixar do iCloud" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Download from iCloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descargar de iCloud"
+          }
+        }
+      }
+    },
+    "Baixar os saves do iCloud?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Download the saves from iCloud?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Descargar las partidas de iCloud?"
           }
         }
       }
@@ -3563,6 +3729,22 @@
         }
       }
     },
+    "Enviar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upload"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subir"
+          }
+        }
+      }
+    },
     "Enviar %lld jogos" : {
       "localizations" : {
         "en" : {
@@ -3643,6 +3825,22 @@
         }
       }
     },
+    "Enviar os saves para o iCloud?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upload the saves to iCloud?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Subir las partidas a iCloud?"
+          }
+        }
+      }
+    },
     "Enviar outros jogos" : {
       "localizations" : {
         "en" : {
@@ -3671,6 +3869,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enviar a Ember"
+          }
+        }
+      }
+    },
+    "Enviar para o iCloud" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upload to iCloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subir a iCloud"
           }
         }
       }
@@ -3719,6 +3933,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enviar partidas"
+          }
+        }
+      }
+    },
+    "Enviar troca os saves do iCloud pelos deste aparelho; baixar faz o contrário. O que for substituído fica guardado em Backups." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upload replaces the saves in iCloud with this device’s; download does the opposite. Whatever is replaced is kept in Backups."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subir reemplaza las partidas de iCloud por las de este dispositivo; descargar hace lo contrario. Lo reemplazado se guarda en Backups."
           }
         }
       }
@@ -4171,6 +4401,22 @@
         }
       }
     },
+    "Este aparelho já tinha estes saves." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This device already had these saves."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este dispositivo ya tenía estas partidas."
+          }
+        }
+      }
+    },
     "Este arquivo não é um backup do Ember." : {
       "localizations" : {
         "en" : {
@@ -4471,6 +4717,22 @@
         }
       }
     },
+    "Feche o jogo para baixar saves do iCloud." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close the game to download saves from iCloud."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cierra el juego para descargar partidas de iCloud."
+          }
+        }
+      }
+    },
     "Feche o menu do jogo para salvar o estado" : {
       "localizations" : {
         "en" : {
@@ -4647,18 +4909,34 @@
         }
       }
     },
-    "iCloud" : {
+    "iCloud indisponível" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iCloud"
+            "value" : "iCloud unavailable"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iCloud"
+            "value" : "iCloud no disponible"
+          }
+        }
+      }
+    },
+    "iCloud: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud: %@"
           }
         }
       }
@@ -5549,6 +5827,22 @@
         }
       }
     },
+    "Ligado, cada save vai para o iCloud assim que o jogo salva, e o que outro aparelho mandou chega antes de abrir o jogo. Desligado, só quando você enviar ou baixar aqui." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On, each save goes to iCloud as soon as the game saves, and what another device sent arrives before the game opens. Off, only when you upload or download here."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activado, cada partida va a iCloud en cuanto el juego guarda, y lo que envió otro dispositivo llega antes de abrir el juego. Desactivado, solo cuando subas o descargues aquí."
+          }
+        }
+      }
+    },
     "Ligado, esperando arquivos" : {
       "localizations" : {
         "en" : {
@@ -5705,6 +5999,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Más"
+          }
+        }
+      }
+    },
+    "Mais recente" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Newer"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Más reciente"
           }
         }
       }
@@ -6275,6 +6585,38 @@
         }
       }
     },
+    "Não há saves deste jogo neste aparelho." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There are no saves of this game on this device."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay partidas de este juego en este dispositivo."
+          }
+        }
+      }
+    },
+    "Não há saves deste jogo no iCloud." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There are no saves of this game in iCloud."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay partidas de este juego en iCloud."
+          }
+        }
+      }
+    },
     "Não instalado" : {
       "localizations" : {
         "en" : {
@@ -6387,6 +6729,22 @@
         }
       }
     },
+    "Nenhum jogo na estante." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No games on the shelf."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay juegos en la estantería."
+          }
+        }
+      }
+    },
     "Nenhum registro ainda" : {
       "localizations" : {
         "en" : {
@@ -6419,6 +6777,22 @@
         }
       }
     },
+    "Nenhum save" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No saves"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin partidas"
+          }
+        }
+      }
+    },
     "Nenhum save ainda" : {
       "localizations" : {
         "en" : {
@@ -6447,6 +6821,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Todavía no hay partidas"
+          }
+        }
+      }
+    },
+    "Neste iPhone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On this iPhone"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En este iPhone"
+          }
+        }
+      }
+    },
+    "Neste Mac" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On this Mac"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En este Mac"
           }
         }
       }
@@ -6895,6 +7301,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El envío se detuvo. Los juegos que llegaron completos se quedaron en el Mac."
+          }
+        }
+      }
+    },
+    "O iCloud já tinha estes saves." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud already had these saves."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud ya tenía estas partidas."
+          }
+        }
+      }
+    },
+    "O iCloud não está disponível. Confira se você entrou na sua conta e se o iCloud Drive está ligado." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud is not available. Check that you are signed in and that iCloud Drive is on."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud no está disponible. Comprueba que hayas iniciado sesión y que iCloud Drive esté activado."
           }
         }
       }
@@ -7555,6 +7993,38 @@
         }
       }
     },
+    "Os saves deste jogo neste aparelho passam a ser os do iCloud. Os daqui ficam em Backups." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This game’s saves on this device become the ones in iCloud. The ones here are kept in Backups."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las partidas de este juego en este dispositivo pasan a ser las de iCloud. Las de aquí quedan en Backups."
+          }
+        }
+      }
+    },
+    "Os saves deste jogo no iCloud passam a ser os deste aparelho. Os de lá ficam em Backups." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This game’s saves in iCloud become the ones on this device. The ones there are kept in Backups."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las partidas de este juego en iCloud pasan a ser las de este dispositivo. Las de allí quedan en Backups."
+          }
+        }
+      }
+    },
     "Os saves deste jogo vão para o iCloud quando você salva." : {
       "localizations" : {
         "en" : {
@@ -7571,34 +8041,34 @@
         }
       }
     },
-    "Os saves e estados de cada jogo vão para o iCloud e voltam em outro iPhone com o mesmo jogo. Os jogos não vão. Se um save mudar nos dois aparelhos, fica o mais recente e o outro vai para Backups." : {
+    "Os saves e estados de cada jogo vão para o iCloud e voltam no seu iPhone com o mesmo jogo. Os jogos não vão. Se um save mudar nos dois aparelhos, fica o mais recente e o outro vai para Backups. Em Saves de cada jogo, você vê o que está aqui e no iCloud, envia ou baixa à mão e escolhe quais jogos sincronizam sozinhos." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Each game's saves and save states go to iCloud and come back on another iPhone, iPad or Mac with the same game. Games don't go. If a save changes on both devices, the newest stays and the other goes to Backups."
+            "value" : "Each game’s saves and save states go to iCloud and come back on your iPhone with the same game. Games themselves never go. If a save changed on two devices, the newest stays and the other goes to Backups. In Saves for each game, you see what is here and in iCloud, upload or download by hand and choose which games sync on their own."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Las partidas y estados de cada juego van a iCloud y vuelven en otro iPhone, iPad o Mac con el mismo juego. Los juegos no van. Si una partida cambia en los dos dispositivos, se queda la más reciente y la otra va a Backups."
+            "value" : "Las partidas y estados de cada juego van a iCloud y vuelven en tu iPhone con el mismo juego. Los juegos no van. Si una partida cambió en dos dispositivos, queda la más reciente y la otra va a Backups. En Partidas de cada juego, ves lo que hay aquí y en iCloud, subes o descargas a mano y eliges qué juegos se sincronizan solos."
           }
         }
       }
     },
-    "Os saves e estados de cada jogo vão para o iCloud e voltam no seu iPhone com o mesmo jogo. Os jogos não vão. Se um save mudar nos dois aparelhos, fica o mais recente e o outro vai para Backups." : {
+    "Os saves e estados de cada jogo vão para o iCloud e voltam no seu Mac ou em outro iPhone com o mesmo jogo. Os jogos não vão. Se um save mudar nos dois aparelhos, fica o mais recente e o outro vai para Backups. Em Saves de cada jogo, você vê o que está aqui e no iCloud, envia ou baixa à mão e escolhe quais jogos sincronizam sozinhos." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Each game's saves and states go to iCloud and come back on your iPhone with the same game. The games do not go. If a save changes on both devices, the newest stays and the other goes to Backups."
+            "value" : "Each game’s saves and save states go to iCloud and come back on your Mac or another iPhone with the same game. Games themselves never go. If a save changed on two devices, the newest stays and the other goes to Backups. In Saves for each game, you see what is here and in iCloud, upload or download by hand and choose which games sync on their own."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Las partidas y estados de cada juego van a iCloud y vuelven en tu iPhone con el mismo juego. Los juegos no van. Si una partida cambia en los dos dispositivos, queda la más reciente y la otra va a Backups."
+            "value" : "Las partidas y estados de cada juego van a iCloud y vuelven en tu Mac o en otro iPhone con el mismo juego. Los juegos no van. Si una partida cambió en dos dispositivos, queda la más reciente y la otra va a Backups. En Partidas de cada juego, ves lo que hay aquí y en iCloud, subes o descargas a mano y eliges qué juegos se sincronizan solos."
           }
         }
       }
@@ -7887,6 +8357,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Suéltalo"
+          }
+        }
+      }
+    },
+    "Por %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por %@"
           }
         }
       }
@@ -8697,6 +9183,38 @@
         }
       }
     },
+    "Saves de cada jogo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saves for each game"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partidas de cada juego"
+          }
+        }
+      }
+    },
+    "Saves de cada jogo…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saves for Each Game…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partidas de cada juego…"
+          }
+        }
+      }
+    },
     "Saves de dois aparelhos" : {
       "localizations" : {
         "en" : {
@@ -8773,6 +9291,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Partidas en iCloud"
+          }
+        }
+      }
+    },
+    "Saves no iCloud…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saves in iCloud…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partidas en iCloud…"
           }
         }
       }
@@ -9017,6 +9551,22 @@
         }
       }
     },
+    "Sincronização automática desligada. Envie ou baixe em Saves no iCloud, no painel do jogo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatic sync is off. Upload or download in Saves in iCloud, in the game’s panel."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sincronización automática desactivada. Sube o descarga en Partidas en iCloud, en el panel del juego."
+          }
+        }
+      }
+    },
     "Sincronizando saves…" : {
       "localizations" : {
         "en" : {
@@ -9045,6 +9595,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sincronizando…"
+          }
+        }
+      }
+    },
+    "Sincronizar automaticamente" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync automatically"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sincronizar automáticamente"
+          }
+        }
+      }
+    },
+    "Sincronizar saves automaticamente" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync saves automatically"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sincronizar partidas automáticamente"
           }
         }
       }
@@ -9093,6 +9675,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Skins .deltaskin y .manicskin"
+          }
+        }
+      }
+    },
+    "Só à mão" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By hand only"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo a mano"
           }
         }
       }

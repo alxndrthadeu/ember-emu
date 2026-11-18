@@ -11,6 +11,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - The iPhone as the Mac's controller: open the Mac tab on the iPhone and pick the game playing on the Mac. Big buttons in landscape, the keyboard and the game menu, with the iPhone's controls for that game. Works nearby without sharing a Wi-Fi network.
 - Send games and their saves from the iPhone to the Mac, nearby.
 - Saves in iCloud between iPhone and Mac, sent as soon as the game saves ("Saved to iCloud" on the game, and on the iPhone used as controller), with the last save shown on each game and a short notice when a save arrives. The saves screen on the iPhone brings the latest from iCloud when it opens, and on pull to refresh.
+- Saves in iCloud for each game, on iPhone and Mac: this device's saves and iCloud's side by side (when, by which device, how many), the newer one marked; upload to or download from iCloud by hand, replacing the other side (what is replaced is kept in Backups); and a choice of which games sync on their own. In a game's panel and in Settings › Saves for each game.
 - The iPhone goes back to portrait when it stops being the Mac's controller, if it was in portrait before.
 - On the Mac, a missing RTP file tells you to import the RTP in Settings › RTP.
 

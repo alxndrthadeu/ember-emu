@@ -19,8 +19,25 @@ import Foundation
 enum SaveSync {
     static let enabledKey = "settings.iCloudSaves"
 
+    /// Automatic sync, for every game (Settings). Sending and bringing a
+    /// game's saves by hand works either way.
     static var isEnabled: Bool {
         UserDefaults.standard.object(forKey: enabledKey) as? Bool ?? true
+    }
+
+    /// Games left out of the automatic sync (each game's iCloud screen).
+    static let manualGamesKey = "saves.manualSync"
+
+    /// Whether this game's saves sync on their own: automatic sync on,
+    /// and the game not set to "only by hand".
+    static func syncsAutomatically(_ id: String) -> Bool {
+        isEnabled && !(UserDefaults.standard.stringArray(forKey: manualGamesKey) ?? []).contains(id)
+    }
+
+    static func setSyncsAutomatically(_ on: Bool, for id: String) {
+        var manual = Set(UserDefaults.standard.stringArray(forKey: manualGamesKey) ?? [])
+        if on { manual.remove(id) } else { manual.insert(id) }
+        UserDefaults.standard.set(manual.sorted(), forKey: manualGamesKey)
     }
 
     struct Report: Equatable {
@@ -75,8 +92,10 @@ enum SaveSync {
 
     // MARK: - Sync
 
+    /// The automatic sync: the games that sync on their own.
     static func sync(_ games: [GameFolders]) -> Report {
-        guard isEnabled, let root = cloudRoot() else { return Report() }
+        let games = games.filter { syncsAutomatically($0.id) }
+        guard !games.isEmpty, let root = cloudRoot() else { return Report() }
         return sync(games, root: root)
     }
 
@@ -95,19 +114,14 @@ enum SaveSync {
     /// file changes under the running game. What iCloud has newer waits
     /// for the next full sync.
     static func upload(_ game: GameFolders) -> Report {
-        guard isEnabled, let root = cloudRoot() else { return Report() }
+        guard syncsAutomatically(game.id), let root = cloudRoot() else { return Report() }
         return sync([game], root: root, uploadOnly: true)
     }
 
     private static func sync(_ game: GameFolders, cloud: URL, uploadOnly: Bool, report: inout Report) {
         let before = report
         var state = SyncState.load(game.id)
-        let areas: [(name: String, local: URL, files: [String])] = [
-            ("folder", game.folder, folderSaves(in: game.folder)),
-            ("userdata", game.userData, allFiles(in: game.userData).filter(isUserDataSave)),
-            ("states", game.states, allFiles(in: game.states).filter(isStateFile)),
-        ]
-        for area in areas {
+        for area in areas(of: game) {
             let cloudArea = cloud.appendingPathComponent(area.name, isDirectory: true)
             var names = Set(area.files)
             for name in allFiles(in: cloudArea, includingPlaceholders: true) { names.insert(name) }
@@ -139,6 +153,15 @@ enum SaveSync {
         report.games[game.id] = mine
     }
 
+    /// The three places a game's saves live, with the files in each.
+    private static func areas(of game: GameFolders) -> [(name: String, local: URL, files: [String])] {
+        [
+            ("folder", game.folder, folderSaves(in: game.folder)),
+            ("userdata", game.userData, allFiles(in: game.userData).filter(isUserDataSave)),
+            ("states", game.states, allFiles(in: game.states).filter(isStateFile)),
+        ]
+    }
+
     private struct LastSave: Codable {
         let device: String
         let date: Date
@@ -151,7 +174,7 @@ enum SaveSync {
     /// Whether iCloud has saves of this game newer than this device's,
     /// still to come down (asked before a game opens).
     static func hasIncoming(_ game: GameFolders) -> Bool {
-        guard isEnabled, let root = cloudRoot() else { return false }
+        guard syncsAutomatically(game.id), let root = cloudRoot() else { return false }
         return hasIncoming(game, root: root)
     }
 
@@ -330,6 +353,196 @@ enum SaveSync {
         if !FileManager.default.fileExists(atPath: target.path) {
             try FileManager.default.copyItem(at: url, to: target)
         }
+    }
+}
+
+// MARK: - By hand (each game's iCloud screen)
+
+extension SaveSync {
+    /// One side of a game's saves: this device or iCloud.
+    struct Side: Equatable, Sendable {
+        var files = 0
+        /// Files iCloud has not brought down yet (their size is unknown).
+        var waiting = 0
+        var bytes: Int64 = 0
+        /// The newest save on this side.
+        var latest: Date?
+        /// Who sent them (iCloud only).
+        var device: String?
+        var isEmpty: Bool { files + waiting == 0 }
+    }
+
+    /// What this device has of a game's saves.
+    static func localSide(_ game: GameFolders) -> Side {
+        var side = Side()
+        for area in areas(of: game) {
+            for name in area.files {
+                let url = area.local.appendingPathComponent(name)
+                side.files += 1
+                side.bytes += size(of: url)
+                if let date = modified(url), date > (side.latest ?? .distantPast) { side.latest = date }
+            }
+        }
+        return side
+    }
+
+    /// What iCloud has of a game's saves; nil without iCloud.
+    static func cloudSide(_ game: GameFolders) -> Side? {
+        guard let root = cloudRoot() else { return nil }
+        return cloudSide(game, root: root)
+    }
+
+    static func cloudSide(_ game: GameFolders, root: URL) -> Side {
+        let cloud = root.appendingPathComponent(game.id, isDirectory: true)
+        var side = Side()
+        for area in ["folder", "userdata", "states"] {
+            let folder = cloud.appendingPathComponent(area, isDirectory: true)
+            for name in allFiles(in: folder, includingPlaceholders: true) {
+                let url = folder.appendingPathComponent(name)
+                guard FileManager.default.fileExists(atPath: url.path) else {
+                    side.waiting += 1
+                    continue
+                }
+                side.files += 1
+                side.bytes += size(of: url)
+                if let date = modified(url), date > (side.latest ?? .distantPast) { side.latest = date }
+            }
+        }
+        let last = cloud.appendingPathComponent("last.json")
+        if let data = try? Data(contentsOf: last), let saved = try? JSONDecoder().decode(LastSave.self, from: data) {
+            side.device = saved.device
+            if side.latest == nil || side.waiting > 0 { side.latest = max(side.latest ?? .distantPast, saved.date) }
+        } else if fileExistsOrPlaceholder(last) {
+            try? FileManager.default.startDownloadingUbiquitousItem(at: last)
+        }
+        return side
+    }
+
+    enum ManualError: LocalizedError {
+        case noCloud
+        case nothingHere
+        case nothingThere
+
+        var errorDescription: String? {
+            switch self {
+            case .noCloud: String(localized: "O iCloud não está disponível. Confira se você entrou na sua conta e se o iCloud Drive está ligado.")
+            case .nothingHere: String(localized: "Não há saves deste jogo neste aparelho.")
+            case .nothingThere: String(localized: "Não há saves deste jogo no iCloud.")
+            }
+        }
+    }
+
+    /// Sends every save of this game, replacing iCloud's copy of each.
+    /// What iCloud had is kept in Backups first. Returns the files sent.
+    @discardableResult
+    static func sendAll(_ game: GameFolders) throws -> Int {
+        guard let root = cloudRoot() else { throw ManualError.noCloud }
+        return try sendAll(game, root: root)
+    }
+
+    @discardableResult
+    static func sendAll(_ game: GameFolders, root: URL) throws -> Int {
+        let cloud = root.appendingPathComponent(game.id, isDirectory: true)
+        var state = SyncState.load(game.id)
+        var sent = 0
+        for area in areas(of: game) {
+            for name in area.files {
+                let key = "\(area.name)/\(name)"
+                let local = area.local.appendingPathComponent(name)
+                let remote = cloud.appendingPathComponent(key)
+                if FileManager.default.fileExists(atPath: remote.path) {
+                    if sameContents(local, remote) {
+                        state.files[key] = SyncState.File(local: modified(local), remote: modified(remote))
+                        continue
+                    }
+                    try keep(remote, of: game, reason: "iCloud substituído", name: key)
+                }
+                try copy(local, to: remote)
+                state.files[key] = SyncState.File(local: modified(local), remote: modified(remote))
+                sent += 1
+            }
+        }
+        guard sent > 0 || !state.files.isEmpty else { throw ManualError.nothingHere }
+        state.save(game.id)
+        if let data = try? JSONEncoder().encode(LastSave(device: deviceName, date: Date())) {
+            try? data.write(to: cloud.appendingPathComponent("last.json"), options: .atomic)
+        }
+        return sent
+    }
+
+    /// Brings every save of this game from iCloud, replacing this device's
+    /// copy of each (kept in Backups first). Files iCloud has not brought
+    /// down yet are asked for and counted in `waiting`: call again.
+    static func bringAll(_ game: GameFolders) throws -> (brought: Int, waiting: Int) {
+        guard let root = cloudRoot() else { throw ManualError.noCloud }
+        return try bringAll(game, root: root)
+    }
+
+    static func bringAll(_ game: GameFolders, root: URL) throws -> (brought: Int, waiting: Int) {
+        let cloud = root.appendingPathComponent(game.id, isDirectory: true)
+        var state = SyncState.load(game.id)
+        var brought = 0
+        var waiting = 0
+        var found = 0
+        let locals: [String: URL] = ["folder": game.folder, "userdata": game.userData, "states": game.states]
+        for area in ["folder", "userdata", "states"] {
+            let folder = cloud.appendingPathComponent(area, isDirectory: true)
+            for name in allFiles(in: folder, includingPlaceholders: true) {
+                found += 1
+                let key = "\(area)/\(name)"
+                let remote = folder.appendingPathComponent(name)
+                let local = locals[area]!.appendingPathComponent(name)
+                guard FileManager.default.fileExists(atPath: remote.path) else {
+                    try? FileManager.default.startDownloadingUbiquitousItem(at: remote)
+                    waiting += 1
+                    continue
+                }
+                if FileManager.default.fileExists(atPath: local.path) {
+                    if sameContents(local, remote) {
+                        state.files[key] = SyncState.File(local: modified(local), remote: modified(remote))
+                        continue
+                    }
+                    try keep(local, of: game, reason: "antes do iCloud")
+                }
+                try copy(remote, to: local)
+                state.files[key] = SyncState.File(local: modified(local), remote: modified(remote))
+                brought += 1
+            }
+        }
+        guard found > 0 else { throw ManualError.nothingThere }
+        state.save(game.id)
+        return (brought, waiting)
+    }
+
+    private static func size(of url: URL) -> Int64 {
+        Int64((try? url.resourceValues(forKeys: [.fileSizeKey]))?.fileSize ?? 0)
+    }
+}
+
+// MARK: - A game playing in another instance (Mac)
+
+extension SaveSync {
+    /// The Mac runs each game in its own instance: the library must not
+    /// bring saves down under one. The instance marks its game while it
+    /// runs (with its process id, so a crash does not leave it marked).
+    private static func playingMarker(_ id: String) -> URL {
+        let safe = id.replacingOccurrences(of: "/", with: "_")
+        return FileManager.default.temporaryDirectory.appendingPathComponent("ember-playing-\(safe)")
+    }
+
+    static func markPlaying(_ id: String, _ on: Bool) {
+        let marker = playingMarker(id)
+        if on {
+            try? String(ProcessInfo.processInfo.processIdentifier).write(to: marker, atomically: true, encoding: .utf8)
+        } else {
+            try? FileManager.default.removeItem(at: marker)
+        }
+    }
+
+    static func isPlayingElsewhere(_ id: String) -> Bool {
+        guard let text = try? String(contentsOf: playingMarker(id), encoding: .utf8),
+              let pid = Int32(text), pid != ProcessInfo.processInfo.processIdentifier else { return false }
+        return kill(pid, 0) == 0
     }
 }
 

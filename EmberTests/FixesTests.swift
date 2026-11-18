@@ -265,6 +265,40 @@ final class SaveSyncTests: XCTestCase {
         XCTAssertEqual(report.downloaded, 1)
         XCTAssertEqual(read(theirs), "two-from-mac")
     }
+
+    /// By hand: sending replaces iCloud's copy even when iCloud's is
+    /// newer, bringing replaces this device's, and the next automatic
+    /// sync sees both sides in step.
+    func testSendAndBringByHand() throws {
+        let local = game.folder.appendingPathComponent("Save01.rvdata2")
+        let remote = cloud.appendingPathComponent("\(game.id)/folder/Save01.rvdata2")
+        try write("mine-old", local, age: 100)
+        try write("theirs-new", remote, age: 10)
+
+        XCTAssertEqual(try SaveSync.sendAll(game, root: cloud), 1)
+        XCTAssertEqual(read(remote), "mine-old")
+        XCTAssertEqual(SaveSync.cloudSide(game, root: cloud).files, 1)
+        var report = SaveSync.sync([game], root: cloud)
+        XCTAssertEqual(report.uploaded + report.downloaded, 0)
+
+        try write("theirs-again", remote, age: 5)
+        let result = try SaveSync.bringAll(game, root: cloud)
+        XCTAssertEqual(result.brought, 1)
+        XCTAssertEqual(read(local), "theirs-again")
+        report = SaveSync.sync([game], root: cloud)
+        XCTAssertEqual(report.uploaded + report.downloaded, 0)
+
+        XCTAssertThrowsError(try SaveSync.bringAll(SaveSync.GameFolders(
+            id: "Empty \(UUID())", title: "Empty", folder: root, userData: root, states: root), root: cloud))
+    }
+
+    func testAGameCanSyncOnlyByHand() {
+        XCTAssertTrue(SaveSync.syncsAutomatically(game.id))
+        SaveSync.setSyncsAutomatically(false, for: game.id)
+        XCTAssertFalse(SaveSync.syncsAutomatically(game.id))
+        SaveSync.setSyncsAutomatically(true, for: game.id)
+        XCTAssertTrue(SaveSync.syncsAutomatically(game.id))
+    }
 }
 
 @MainActor
