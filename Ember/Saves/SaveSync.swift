@@ -74,7 +74,33 @@ enum SaveSync {
         let states: URL
     }
 
+    /// iCloud's folder, once it answered: asking again is free, but the
+    /// first ask in a process can take long while iCloud gets the
+    /// container ready (a Mac just signed in, the app just installed).
+    nonisolated(unsafe) private static var knownRoot: URL?
+    private static let rootLock = NSLock()
+
+    /// Asks for iCloud's folder ahead of the first save (as a game opens),
+    /// so sending it does not wait. Off the main thread.
+    static func prepare() {
+        DispatchQueue.global(qos: .utility).async { _ = cloudRoot() }
+    }
+
     static func cloudRoot() -> URL? {
+        rootLock.lock()
+        let known = knownRoot
+        rootLock.unlock()
+        if let known { return known }
+        let root = findCloudRoot()
+        if let root {
+            rootLock.lock()
+            knownRoot = root
+            rootLock.unlock()
+        }
+        return root
+    }
+
+    private static func findCloudRoot() -> URL? {
         #if DEBUG
         if GameArchive.fakeCloud {
             let support = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
@@ -116,6 +142,19 @@ enum SaveSync {
     static func upload(_ game: GameFolders) -> Report {
         guard syncsAutomatically(game.id), let root = cloudRoot() else { return Report() }
         return sync([game], root: root, uploadOnly: true)
+    }
+
+    /// Whether this device has saves of the game that iCloud has not got
+    /// yet (a send that could not happen: iCloud not ready, no network).
+    static func hasOutgoing(_ game: GameFolders) -> Bool {
+        let state = SyncState.load(game.id)
+        for area in areas(of: game) {
+            for name in area.files {
+                let date = modified(area.local.appendingPathComponent(name))
+                if date != nil, date != state.files["\(area.name)/\(name)"]?.local { return true }
+            }
+        }
+        return false
     }
 
     private static func sync(_ game: GameFolders, cloud: URL, uploadOnly: Bool, report: inout Report) {

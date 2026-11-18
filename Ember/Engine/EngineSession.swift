@@ -169,7 +169,9 @@ final class EngineSession {
         historyTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { _ in
             MainActor.assumeIsolated { EngineSession.shared.touchSession() }
         }
-        // A save the game writes goes to iCloud as soon as it is done.
+        // A save the game writes goes to iCloud as soon as it is done;
+        // iCloud gets ready now, not at the first save.
+        SaveSync.prepare()
         saveWatcher.onSaved = { game in
             Task {
                 if await SyncStatus.shared.uploadWhilePlaying(game) {

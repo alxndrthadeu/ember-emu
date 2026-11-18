@@ -25,6 +25,9 @@ final class SyncStatus {
     private(set) var lastSync: Date?
     /// The message of the moment, shown for a few seconds.
     private(set) var toast: String?
+    /// Games whose saves are going up while they play.
+    @ObservationIgnored private var uploading: Set<String> = []
+    @ObservationIgnored private var uploadAgain: Set<String> = []
 
     private init() {}
 
@@ -108,14 +111,45 @@ extension SyncStatus {
     /// While a game plays: sends what it just saved (or a save state) to
     /// iCloud right away, without bringing anything down. True when
     /// something went up; the game's iCloud state and "last save" follow.
+    /// When iCloud is not ready or the network is out, tries again every
+    /// 15 s for a few minutes (the game may still be playing).
+    /// One send at a time per game: a save made while one is going makes
+    /// it look again once done.
     @discardableResult
     func uploadWhilePlaying(_ game: GameEntry) async -> Bool {
         guard SaveSync.syncsAutomatically(game.id) else { return false }
-        let folders = SaveSync.GameFolders(game)
-        let report = await Task.detached(priority: .utility) { SaveSync.upload(folders) }.value
-        finished(report, titles: [game.id: game.title])
-        let sent = report.uploaded > 0
-        if sent { GameLog.shared.note("save enviado ao iCloud (\(report.uploaded) arquivo(s))") }
+        guard !uploading.contains(game.id) else {
+            uploadAgain.insert(game.id)
+            return false
+        }
+        uploading.insert(game.id)
+        defer { uploading.remove(game.id) }
+        var sent = false
+        repeat {
+            uploadAgain.remove(game.id)
+            if await uploadWithRetries(game) { sent = true }
+        } while uploadAgain.contains(game.id)
         return sent
+    }
+
+    private func uploadWithRetries(_ game: GameEntry) async -> Bool {
+        let folders = SaveSync.GameFolders(game)
+        for attempt in 0..<12 {
+            let (report, pending) = await Task.detached(priority: .utility) {
+                let report = SaveSync.upload(folders)
+                return (report, SaveSync.hasOutgoing(folders))
+            }.value
+            finished(report, titles: [game.id: game.title])
+            if report.uploaded > 0 {
+                GameLog.shared.note("save enviado ao iCloud (\(report.uploaded) arquivo(s))\(attempt > 0 ? " na tentativa \(attempt + 1)" : "")")
+                return true
+            }
+            guard pending else { return false }
+            if attempt == 0 { GameLog.shared.note("save ainda não foi para o iCloud; tentando de novo") }
+            try? await Task.sleep(for: .seconds(15))
+            guard SaveSync.syncsAutomatically(game.id) else { return false }
+        }
+        GameLog.shared.note("save não foi para o iCloud; vai ao fechar o jogo ou na próxima sincronização")
+        return false
     }
 }

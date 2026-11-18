@@ -83,7 +83,9 @@ final class EngineSession {
             options: [.userInitiated, .latencyCritical, .idleDisplaySleepDisabled],
             reason: "Jogo rodando")
         watchForGameWindow()
-        // A save the game writes goes to iCloud as soon as it is done.
+        // A save the game writes goes to iCloud as soon as it is done;
+        // iCloud gets ready now, not at the first save.
+        SaveSync.prepare()
         saveWatcher.onSaved = { game in
             Task { await EngineSession.shared.sendToCloud(game, message: String(localized: "Save no iCloud")) }
         }
