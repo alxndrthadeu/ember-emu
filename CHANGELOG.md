@@ -6,6 +6,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 
 ## [Unreleased]
 
+### Added
+- Ember for Mac: a library made for the desk, each game in its own window, Game menu with save states, speed, screenshots and restart (⌘R), settings, the game's panel (⌘I), keyboard and game controllers with each game's controls. English and Spanish too.
+- The iPhone as the Mac's controller: open the Mac tab on the iPhone and pick the game playing on the Mac. Big buttons in landscape, the keyboard and the game menu, with the iPhone's controls for that game. Works nearby without sharing a Wi-Fi network.
+- Send games and their saves from the iPhone to the Mac, nearby.
+- Saves in iCloud between iPhone and Mac, with the last save shown on each game and a short notice when a save arrives.
+- On the Mac, a missing RTP file tells you to import the RTP in Settings › RTP.
+
 ### Fixed
 - A background music without a valid file name (a number in its place) no longer stops some RPG Maker XP games after a battle: the map's music plays instead, and the session log tells where it came from. Resuming a save state no longer hides this error silently.
 
