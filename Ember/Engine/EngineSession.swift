@@ -65,16 +65,30 @@ final class EngineSession {
     /// Leaving the screen: save the "auto" state (the game does it at
     /// its next quiet frame), then pause. iOS may close a suspended app
     /// to free memory; "Continuar" then resumes from this state.
+    /// Then what the game saved (and that state) goes to iCloud, in the
+    /// time iOS gives an app on its way out: a save made just before
+    /// leaving does not wait for the next time Ember opens. Once in the
+    /// iCloud folder, iOS uploads it even with Ember closed.
     private func appWillResignActive() {
         touchSession()
-        guard state == .running, let game = currentGame,
-              !mkxp_isPaused(), !mkxp_isPauseRequested() else { return }
-        GameLog.shared.note("o app saiu da tela")
-        pausedForBackground = AppSettings.pauseOnBackground
-        let task = UIApplication.shared.beginBackgroundTask(withName: "ember.autostate")
+        guard state == .running, let game = currentGame else { return }
+        let task = UIApplication.shared.beginBackgroundTask(withName: "ember.leaving")
+        let playing = !mkxp_isPaused() && !mkxp_isPauseRequested()
+        if playing {
+            GameLog.shared.note("o app saiu da tela")
+            pausedForBackground = AppSettings.pauseOnBackground
+        }
         Task { @MainActor in
-            _ = await StateStore.request("save", slot: StateStore.autoSlot, gameID: game.id, timeout: 1.5)
-            if self.pausedForBackground, self.state == .running { mkxp_requestPause() }
+            if playing {
+                _ = await StateStore.request("save", slot: StateStore.autoSlot, gameID: game.id, timeout: 1.5)
+                if self.pausedForBackground, self.state == .running { mkxp_requestPause() }
+            }
+            if SaveSync.syncsAutomatically(game.id) {
+                let folders = SaveSync.GameFolders(game)
+                let report = await Task.detached(priority: .userInitiated) { SaveSync.upload(folders) }.value
+                SyncStatus.shared.finished(report, titles: [game.id: game.title])
+                if report.uploaded > 0 { GameLog.shared.note("saindo da tela: \(report.uploaded) arquivo(s) enviados ao iCloud") }
+            }
             UIApplication.shared.endBackgroundTask(task)
         }
     }
