@@ -44,8 +44,6 @@ targets:
         INFOPLIST_FILE: Ember/Resources/Info.plist
         CODE_SIGN_ENTITLEMENTS: Ember/Resources/Ember.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-        SWIFT_EMIT_LOC_STRINGS: YES
-        LOCALIZATION_PREFERS_STRING_CATALOGS: YES
         GENERATE_INFOPLIST_FILE: NO
         TARGETED_DEVICE_FAMILY: "1"
         SWIFT_VERSION: "6.0"
@@ -174,6 +172,8 @@ targets:
       - Ember/Engine/GameKey.swift
       - Ember/Engine/GameLog.swift
       - Ember/Engine/CheatMenu.swift
+      # The same string catalog as the iPhone app (English, Spanish).
+      - Ember/Resources/Localizable.xcstrings
     dependencies:
       - package: ZIPFoundation
     configFiles:
@@ -188,6 +188,8 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         # Only the ember-play:// scheme; the rest is generated.
         INFOPLIST_FILE: EmberMac/Info.plist
+        SWIFT_EMIT_LOC_STRINGS: YES
+        LOCALIZATION_PREFERS_STRING_CATALOGS: YES
         INFOPLIST_KEY_CFBundleDisplayName: Ember
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.role-playing-games

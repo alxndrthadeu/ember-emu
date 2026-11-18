@@ -121,6 +121,18 @@
     },
     "%@ · velocidade %lldx" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · speed %2$lldx"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · velocidad %2$lldx"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "new",
@@ -193,6 +205,22 @@
         }
       }
     },
+    "%@ quer enviar jogos para este Mac" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ wants to send games to this Mac"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ quiere enviar juegos a este Mac"
+          }
+        }
+      }
+    },
     "%@ teve saves mudados aqui e em outro aparelho. Ficou o mais recente; o outro está guardado em Backups." : {
       "localizations" : {
         "en" : {
@@ -221,6 +249,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld"
+          }
+        }
+      }
+    },
+    "%lld arquivo(s) de save importado(s). Os que foram substituídos estão em Backups." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld save file(s) imported. The ones replaced are in Backups."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld archivo(s) de guardado importado(s). Los reemplazados están en Backups."
           }
         }
       }
@@ -335,6 +379,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld partidas guardadas importadas"
+          }
+        }
+      }
+    },
+    "%lld saves sincronizados" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld saves synced"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld partidas sincronizadas"
           }
         }
       }
@@ -601,6 +661,22 @@
         }
       }
     },
+    "A transferência se perdeu no meio de um arquivo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The transfer broke off in the middle of a file."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La transferencia se cortó a mitad de un archivo."
+          }
+        }
+      }
+    },
     "A transparência vale para skins que permitem ver o jogo por trás dos botões. Com um controle de Xbox, PlayStation ou MFi conectado, os botões da tela somem na paisagem e a engrenagem fica num canto." : {
       "localizations" : {
         "en" : {
@@ -666,13 +742,52 @@
       }
     },
     "Abra o Ember no Mac" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Ember on the Mac"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre Ember en el Mac"
+          }
+        }
+      }
     },
     "Abra o Ember no Mac." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Ember on the Mac."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre Ember en el Mac."
+          }
+        }
+      }
     },
     "Abra o Ember no Mac. Não precisa estar no mesmo Wi-Fi." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Ember on the Mac. It does not need to be on the same Wi-Fi."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre Ember en el Mac. No hace falta estar en la misma red Wi-Fi."
+          }
+        }
+      }
     },
     "Abra o Ember. O jogo aparece na Biblioteca." : {
       "localizations" : {
@@ -691,7 +806,20 @@
       }
     },
     "Abra um jogo no Ember do Mac para ele aparecer aqui." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open a game in Ember on the Mac to see it here."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre un juego en Ember del Mac para que aparezca aquí."
+          }
+        }
+      }
     },
     "Abra um jogo no Ember, no iPhone" : {
       "localizations" : {
@@ -774,13 +902,52 @@
       }
     },
     "Abrir" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir"
+          }
+        }
+      }
     },
     "Abrir o controle" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open the controller"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir el control"
+          }
+        }
+      }
     },
     "Aceite o envio na tela do Mac." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accept the transfer on the Mac."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acepta el envío en la pantalla del Mac."
+          }
+        }
+      }
     },
     "Acelera enquanto estiver apertado" : {
       "localizations" : {
@@ -831,7 +998,20 @@
       }
     },
     "Aguardando o Mac" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting for the Mac"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esperando al Mac"
+          }
+        }
+      }
     },
     "Ainda não dá para importar “%@”. Use .zip, .rar, .7z, .exe autoextraível ou uma pasta." : {
       "localizations" : {
@@ -861,6 +1041,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Todavía no hay partidas guardadas de %@."
+          }
+        }
+      }
+    },
+    "Ainda não há saves deste jogo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No saves for this game yet."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todavía no hay partidas guardadas de este juego."
           }
         }
       }
@@ -929,6 +1125,38 @@
         }
       }
     },
+    "Ajustes…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes…"
+          }
+        }
+      }
+    },
+    "Alguns jogos antigos usam os gráficos e sons do RTP do RPG Maker. Importe a pasta do RTP (ou um .zip) uma vez." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Some older games use the graphics and sounds of RPG Maker's RTP. Import the RTP folder (or a .zip) once."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algunos juegos antiguos usan los gráficos y sonidos del RTP de RPG Maker. Importa la carpeta del RTP (o un .zip) una vez."
+          }
+        }
+      }
+    },
     "Analógico, A, B, X, Y e quatro gatilhos, para jogos de ação." : {
       "localizations" : {
         "en" : {
@@ -973,6 +1201,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Caminar y moverse por los menús"
+          }
+        }
+      }
+    },
+    "Antes do iPhone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before the iPhone"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antes del iPhone"
           }
         }
       }
@@ -1105,6 +1349,22 @@
         }
       }
     },
+    "Apagar jogo…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Game…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar juego…"
+          }
+        }
+      }
+    },
     "Apagar o arquivo depois de importar" : {
       "localizations" : {
         "en" : {
@@ -1169,6 +1429,22 @@
         }
       }
     },
+    "Apagar…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar…"
+          }
+        }
+      }
+    },
     "Aparece nos jogos antigos, para digitar nomes" : {
       "localizations" : {
         "en" : {
@@ -1213,6 +1489,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¿Archivar %@ en iCloud?"
+          }
+        }
+      }
+    },
+    "Arquivo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archivo"
           }
         }
       }
@@ -1281,6 +1573,22 @@
         }
       }
     },
+    "Arraste um jogo .zip, .rar, .7z, .exe ou uma pasta para esta janela, ou importe pelo botão +." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drag a .zip, .rar, .7z, .exe game or a folder into this window, or import with the + button."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrastra un juego .zip, .rar, .7z, .exe o una carpeta a esta ventana, o impórtalo con el botón +."
+          }
+        }
+      }
+    },
     "Atualizar o jogo" : {
       "localizations" : {
         "en" : {
@@ -1325,6 +1633,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Automático"
+          }
+        }
+      }
+    },
+    "Automático · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatic · %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automático · %@"
           }
         }
       }
@@ -1591,6 +1915,22 @@
         }
       }
     },
+    "Buscar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar"
+          }
+        }
+      }
+    },
     "Cada botão aperta a tecla do PC que você escolher, como num teclado. Bom para jogos feitos para computador." : {
       "localizations" : {
         "en" : {
@@ -1640,7 +1980,20 @@
       }
     },
     "Cada jogo vai com os saves e os estados salvos. Depois, os saves continuam iguais nos dois pelo iCloud." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Each game goes with its saves and save states. After that, iCloud keeps the saves the same on both."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cada juego va con sus partidas y estados guardados. Después, iCloud mantiene las partidas iguales en los dos."
+          }
+        }
+      }
     },
     "Cada vez que o jogo abre, o Ember guarda o que aconteceu: erros, avisos e o que o motor escreveu." : {
       "localizations" : {
@@ -1691,7 +2044,20 @@
       }
     },
     "Cancelar envio" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel Transfer"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar envío"
+          }
+        }
+      }
     },
     "Cancelar. Em jogos antigos abre o menu; nos novos, segurar corre (Esc, Input::B)" : {
       "localizations" : {
@@ -1789,8 +2155,37 @@
         }
       }
     },
+    "Captura de tela" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Screenshot"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Captura de pantalla"
+          }
+        }
+      }
+    },
     "Carregar o último estado" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Load Last State"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargar el último estado"
+          }
+        }
+      }
     },
     "Cheats" : {
       "localizations" : {
@@ -1804,6 +2199,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Trucos"
+          }
+        }
+      }
+    },
+    "Chegaram do iPhone: %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrived from the iPhone: %@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Llegaron del iPhone: %@."
           }
         }
       }
@@ -1888,6 +2299,22 @@
         }
       }
     },
+    "Clique duas vezes para jogar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Double-click to play"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haz doble clic para jugar"
+          }
+        }
+      }
+    },
     "Clique ou aperte OK para tela cheia e som" : {
       "localizations" : {
         "en" : {
@@ -1900,6 +2327,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Haz clic o pulsa OK para pantalla completa y sonido"
+          }
+        }
+      }
+    },
+    "Código no GitHub" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Source code on GitHub"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Código en GitHub"
           }
         }
       }
@@ -2001,7 +2444,20 @@
       }
     },
     "Como funciona" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How it works"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cómo funciona"
+          }
+        }
+      }
     },
     "Como você quer jogar?" : {
       "localizations" : {
@@ -2052,7 +2508,20 @@
       }
     },
     "Conectado como controle" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connected as a controller"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conectado como control"
+          }
+        }
+      }
     },
     "Conectando ao iPhone…" : {
       "localizations" : {
@@ -2071,7 +2540,20 @@
       }
     },
     "Conectando…" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connecting…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conectando…"
+          }
+        }
+      }
     },
     "Conecte o iPhone a uma rede Wi-Fi para jogar na TV." : {
       "localizations" : {
@@ -2138,7 +2620,20 @@
       }
     },
     "Conexão perdida" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connection lost"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conexión perdida"
+          }
+        }
+      }
     },
     "Confirmar" : {
       "localizations" : {
@@ -2188,6 +2683,22 @@
         }
       }
     },
+    "Continuar de onde parou" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resume where you left off"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuar donde lo dejaste"
+          }
+        }
+      }
+    },
     "Continuar o último jogo" : {
       "localizations" : {
         "en" : {
@@ -2221,7 +2732,20 @@
       }
     },
     "Controlar" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Control"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controlar"
+          }
+        }
+      }
     },
     "Controle" : {
       "localizations" : {
@@ -2267,6 +2791,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Control en pantalla"
+          }
+        }
+      }
+    },
+    "controle: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "controller: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "control: %@"
           }
         }
       }
@@ -2464,7 +3004,20 @@
       }
     },
     "Deixe o Ember aberto até terminar." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep Ember open until it finishes."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deja Ember abierto hasta que termine."
+          }
+        }
+      }
     },
     "Depois, escolha onde salvar. Jogos grandes deixam o backup grande: confira o espaço na nuvem." : {
       "localizations" : {
@@ -2499,7 +3052,20 @@
       }
     },
     "Desconectar" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disconnect"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desconectar"
+          }
+        }
+      }
     },
     "Desempenho" : {
       "localizations" : {
@@ -2806,7 +3372,20 @@
       }
     },
     "Ember aberto" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember open"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ember abierto"
+          }
+        }
+      }
     },
     "Ember Laranja" : {
       "localizations" : {
@@ -2820,6 +3399,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ember Naranja"
+          }
+        }
+      }
+    },
+    "Encerrar o Ember" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit Ember"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salir de Ember"
           }
         }
       }
@@ -2873,7 +3468,20 @@
       }
     },
     "Enviado" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sent"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviado"
+          }
+        }
+      }
     },
     "Enviando" : {
       "localizations" : {
@@ -2892,7 +3500,20 @@
       }
     },
     "Enviando %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sending %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviando %@"
+          }
+        }
+      }
     },
     "Enviando ao iCloud…" : {
       "localizations" : {
@@ -2910,17 +3531,85 @@
         }
       }
     },
+    "Enviando saves" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sending saves"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviando partidas"
+          }
+        }
+      }
+    },
     "Enviar %lld jogos" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send %lld games"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar %lld juegos"
+          }
+        }
+      }
     },
     "Enviar 1 jogo" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send 1 game"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar 1 juego"
+          }
+        }
+      }
     },
     "Enviar jogos" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send games"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar juegos"
+          }
+        }
+      }
     },
     "Enviar jogos para o Mac" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send games to the Mac"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar juegos al Mac"
+          }
+        }
+      }
     },
     "Enviar jogos pelo Wi-Fi" : {
       "localizations" : {
@@ -2939,7 +3628,20 @@
       }
     },
     "Enviar outros jogos" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send other games"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar otros juegos"
+          }
+        }
+      }
     },
     "Enviar para o Ember" : {
       "localizations" : {
@@ -3006,10 +3708,36 @@
       }
     },
     "Envie seus jogos" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send your games"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envía tus juegos"
+          }
+        }
+      }
     },
     "Envio cancelado. Os jogos que chegaram inteiros ficaram no Mac." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transfer canceled. The games that arrived whole stayed on the Mac."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envío cancelado. Los juegos que llegaron completos se quedaron en el Mac."
+          }
+        }
+      }
     },
     "erro desconhecido" : {
       "localizations" : {
@@ -3060,7 +3788,36 @@
       }
     },
     "Escolha os jogos em Macs por perto e aceite no Mac. Uma vez basta." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick the games under Macs nearby and accept on the Mac. Once is enough."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige los juegos en Macs cercanos y acepta en el Mac. Basta con una vez."
+          }
+        }
+      }
+    },
+    "Escolha um jogo: .zip, .rar, .7z, .exe ou uma pasta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a game: .zip, .rar, .7z, .exe or a folder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige un juego: .zip, .rar, .7z, .exe o una carpeta"
+          }
+        }
+      }
     },
     "Escolha uma skin para cada tipo de controle. O Ember lê skins do Delta e do Manic EMU (.deltaskin, .manicskin) de qualquer console: GBA para 2 botões, SNES para 4 botões, N64 ou PlayStation para o Moderno. Ao importar, a skin vira um pacote .ember: os botões do artista são recortados e remontados no iPhone Duo e nas orientações que a skin não tem. Segure uma skin para apagar." : {
       "localizations" : {
@@ -3090,6 +3847,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Elegir archivos"
+          }
+        }
+      }
+    },
+    "Escolher capa…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose Cover…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elegir portada…"
           }
         }
       }
@@ -3174,6 +3947,22 @@
         }
       }
     },
+    "Esperando o save chegar…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting for the save to arrive…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esperando a que llegue la partida…"
+          }
+        }
+      }
+    },
     "Esperando uma tela abrir o endereço" : {
       "localizations" : {
         "en" : {
@@ -3186,6 +3975,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esperando que una pantalla abra la dirección"
+          }
+        }
+      }
+    },
+    "Esperar o save" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wait for the save"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esperar la partida"
           }
         }
       }
@@ -3207,7 +4012,36 @@
       }
     },
     "Está por perto com o Ember aberto" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nearby with Ember open"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cerca, con Ember abierto"
+          }
+        }
+      }
+    },
+    "Estado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "State"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estado"
+          }
+        }
+      }
     },
     "Estado carregado" : {
       "localizations" : {
@@ -3369,6 +4203,22 @@
         }
       }
     },
+    "Este jogo foi salvo em outro aparelho e o save ainda está vindo do iCloud. Se jogar agora, você começa do save antigo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This game was saved on another device and the save is still coming from iCloud. If you play now, you start from the old save."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este juego se guardó en otro dispositivo y la partida todavía está llegando de iCloud. Si juegas ahora, empiezas desde la partida anterior."
+          }
+        }
+      }
+    },
     "Estes saves são de “%@”. Importe o jogo primeiro e abra o arquivo de novo." : {
       "localizations" : {
         "en" : {
@@ -3401,6 +4251,22 @@
         }
       }
     },
+    "Exportar saves…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export Saves…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportar partidas…"
+          }
+        }
+      }
+    },
     "Exportar todos (.zip)" : {
       "localizations" : {
         "en" : {
@@ -3429,6 +4295,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hablar, interactuar, elegir (Enter, Input::C)"
+          }
+        }
+      }
+    },
+    "Falta o arquivo %@, que vem no RTP do %@. Importe o RTP uma vez em Ajustes › RTP, como pasta ou .zip, e abra o jogo de novo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The file %1$@ is missing; it comes with the %2$@ RTP. Import the RTP once in Settings › RTP, as a folder or .zip, and open the game again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Falta el archivo %1$@, que viene en el RTP de %2$@. Importa el RTP una vez en Ajustes › RTP, como carpeta o .zip, y abre el juego otra vez."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Falta o arquivo %1$@, que vem no RTP do %2$@. Importe o RTP uma vez em Ajustes › RTP, como pasta ou .zip, e abra o jogo de novo."
           }
         }
       }
@@ -3519,6 +4407,22 @@
         }
       }
     },
+    "Fechar janela" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close Window"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cerrar ventana"
+          }
+        }
+      }
+    },
     "Feche o Ember para abrir %@" : {
       "localizations" : {
         "en" : {
@@ -3579,6 +4483,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Filtro de imagen"
+          }
+        }
+      }
+    },
+    "Filtro de tela" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Screen filter"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtro de pantalla"
           }
         }
       }
@@ -3823,6 +4743,22 @@
         }
       }
     },
+    "Importar jogo…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import Game…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar juego…"
+          }
+        }
+      }
+    },
     "Importar ou ver saves" : {
       "localizations" : {
         "en" : {
@@ -3855,6 +4791,22 @@
         }
       }
     },
+    "Importar RTP…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import RTP…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar RTP…"
+          }
+        }
+      }
+    },
     "Importar saves" : {
       "localizations" : {
         "en" : {
@@ -3867,6 +4819,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Importar partidas"
+          }
+        }
+      }
+    },
+    "Importar saves…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import Saves…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar partidas…"
           }
         }
       }
@@ -3903,6 +4871,22 @@
         }
       }
     },
+    "Importar um jogo (.zip, .rar, .7z, .exe ou pasta)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import a game (.zip, .rar, .7z, .exe or folder)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar un juego (.zip, .rar, .7z, .exe o carpeta)"
+          }
+        }
+      }
+    },
     "Importe um jogo .zip ou uma pasta para começar." : {
       "localizations" : {
         "en" : {
@@ -3915,6 +4899,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Importa un juego en .zip o una carpeta para empezar."
+          }
+        }
+      }
+    },
+    "Informações" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get Info"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Información"
           }
         }
       }
@@ -3967,6 +4967,22 @@
         }
       }
     },
+    "Janela" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Window"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ventana"
+          }
+        }
+      }
+    },
     "Jogado %@" : {
       "localizations" : {
         "en" : {
@@ -3983,8 +4999,37 @@
         }
       }
     },
+    "jogados" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "played"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "jugados"
+          }
+        }
+      }
+    },
     "Jogando agora no Mac" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playing now on the Mac"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jugando ahora en el Mac"
+          }
+        }
+      }
     },
     "Jogando em %lld telas" : {
       "localizations" : {
@@ -4019,10 +5064,35 @@
       }
     },
     "Jogando no Mac" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playing on the Mac"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jugando en el Mac"
+          }
+        }
+      }
     },
     "Jogando no Mac · %@%@" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playing on the Mac · %1$@%2$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jugando en el Mac · %1$@%2$@"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "new",
@@ -4075,6 +5145,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jugar ${game}"
+          }
+        }
+      }
+    },
+    "Jogar mesmo assim" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play anyway"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jugar de todos modos"
           }
         }
       }
@@ -4288,7 +5374,20 @@
       }
     },
     "Jogue no Mac" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play on the Mac"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Juega en el Mac"
+          }
+        }
+      }
     },
     "L" : {
       "localizations" : {
@@ -4515,7 +5614,20 @@
       }
     },
     "Mac" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
+          }
+        }
+      }
     },
     "Mac, Windows ou Linux" : {
       "localizations" : {
@@ -4534,7 +5646,20 @@
       }
     },
     "Macs por perto" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macs nearby"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macs cercanos"
+          }
+        }
+      }
     },
     "Mais" : {
       "localizations" : {
@@ -4680,6 +5805,22 @@
         }
       }
     },
+    "Minimizar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimize"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimizar"
+          }
+        }
+      }
+    },
     "Moderno" : {
       "localizations" : {
         "en" : {
@@ -4740,6 +5881,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mostrar rendimiento (FPS, CPU, memoria)"
+          }
+        }
+      }
+    },
+    "Mostrar no Finder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show in Finder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar en el Finder"
           }
         }
       }
@@ -5023,7 +6180,20 @@
       }
     },
     "Não deu para falar com o Mac. Confira se o Ember está aberto nele." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't reach the Mac. Check that Ember is open on it."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo conectar con el Mac. Comprueba que Ember esté abierto en él."
+          }
+        }
+      }
     },
     "Não deu para salvar" : {
       "localizations" : {
@@ -5053,6 +6223,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No se pudo guardar el estado en este juego"
+          }
+        }
+      }
+    },
+    "Não há espaço no Mac para receber os jogos." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There is not enough space on the Mac for the games."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay espacio en el Mac para recibir los juegos."
           }
         }
       }
@@ -5149,6 +6335,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ningún estado guardado"
+          }
+        }
+      }
+    },
+    "Nenhum estado salvo. No jogo, use Jogo › Salvar estado (⌘S)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No saved states. In the game, use Game › Save State (⌘S)."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay estados guardados. En el juego, usa Juego › Guardar estado (⌘S)."
           }
         }
       }
@@ -5650,7 +6852,20 @@
       }
     },
     "O envio parou. Os jogos que chegaram inteiros ficaram no Mac." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The transfer stopped. The games that arrived whole stayed on the Mac."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El envío se detuvo. Los juegos que llegaron completos se quedaron en el Mac."
+          }
+        }
+      }
     },
     "O iCloud não está disponível. Entre na sua conta em Ajustes do iPhone e ligue o iCloud Drive." : {
       "localizations" : {
@@ -5684,8 +6899,53 @@
         }
       }
     },
+    "O iPhone mandou um arquivo inesperado." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The iPhone sent an unexpected file."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El iPhone envió un archivo inesperado."
+          }
+        }
+      }
+    },
+    "O iPhone se desconectou antes de terminar. Os jogos que chegaram inteiros ficaram." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The iPhone disconnected before finishing. The games that arrived whole stayed."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El iPhone se desconectó antes de terminar. Los juegos que llegaron completos se quedaron."
+          }
+        }
+      }
+    },
     "O iPhone vira o controle: botões grandes, sempre deitado, com o menu do jogo (engrenagem) e o teclado. Os botões seguem os controles daquele jogo." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The iPhone becomes the controller: big buttons, always in landscape, with the game menu (gear) and the keyboard. The buttons follow that game's controls."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El iPhone se convierte en el control: botones grandes, siempre en horizontal, con el menú del juego (engranaje) y el teclado. Los botones siguen los controles de ese juego."
+          }
+        }
+      }
     },
     "O iPhone virou o controle" : {
       "localizations" : {
@@ -5747,6 +7007,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El juego encontró un error"
+          }
+        }
+      }
+    },
+    "O jogo não foi encontrado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The game was not found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró el juego"
           }
         }
       }
@@ -5831,17 +7107,85 @@
         }
       }
     },
+    "O jogo volta à tela de título. O que não foi salvo se perde." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The game goes back to its title screen. Anything not saved is lost."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El juego vuelve a la pantalla de título. Lo que no se guardó se pierde."
+          }
+        }
+      }
+    },
     "O Mac não respondeu." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Mac did not answer."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El Mac no respondió."
+          }
+        }
+      }
     },
     "O Mac recusou o envio" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Mac declined the transfer"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El Mac rechazó el envío"
+          }
+        }
+      }
     },
     "O Mac saiu do alcance ou o jogo fechou." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Mac went out of range or the game closed."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El Mac quedó fuera de alcance o el juego se cerró."
+          }
+        }
+      }
     },
     "O mesmo app, baixado da App Store no Mac. Não precisa estar no mesmo Wi-Fi: o iPhone acha o Mac direto, como no AirDrop." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The same app, downloaded from the App Store on the Mac. It does not need to be on the same Wi-Fi: the iPhone finds the Mac directly, as with AirDrop."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La misma app, descargada de la App Store en el Mac. No hace falta estar en la misma red Wi-Fi: el iPhone encuentra el Mac directamente, como con AirDrop."
+          }
+        }
+      }
     },
     "O perfil aparece em Ajustes › Perfis de controle e pode ser usado em outros jogos." : {
       "localizations" : {
@@ -5907,6 +7251,22 @@
         }
       }
     },
+    "O save ainda não chegou. Abrindo com o que está aqui." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The save has not arrived yet. Opening with what is here."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La partida todavía no llegó. Abriendo con lo que hay aquí."
+          }
+        }
+      }
+    },
     "O Windows não copia pastas por esse caminho: compacte a pasta do jogo num .zip antes, ou use o Wi-Fi." : {
       "localizations" : {
         "en" : {
@@ -5919,6 +7279,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Windows no copia carpetas por esta vía: comprime la carpeta del juego en un .zip antes, o usa la Wi-Fi."
+          }
+        }
+      }
+    },
+    "Ocultar o Ember" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Ember"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocultar Ember"
           }
         }
       }
@@ -5983,6 +7359,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Los archivos del juego salen del iPhone. Las partidas quedan guardadas en Ember: importa el juego de nuevo y vuelven."
+          }
+        }
+      }
+    },
+    "Os arquivos do jogo saem do Mac. Os saves ficam guardados em Backups." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The game's files leave the Mac. The saves are kept in Backups."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los archivos del juego salen del Mac. Las partidas se guardan en Backups."
           }
         }
       }
@@ -6068,7 +7460,20 @@
       }
     },
     "Os jogos vão com os saves e os estados salvos. Depois disso, os saves continuam iguais no iPhone e no Mac pelo iCloud." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The games go with their saves and save states. After that, iCloud keeps the saves the same on the iPhone and the Mac."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los juegos van con sus partidas y estados guardados. Después, iCloud mantiene las partidas iguales en el iPhone y en el Mac."
+          }
+        }
+      }
     },
     "Os mesmos arquivos do PC. A imagem é o mapa de quando o jogo salvou; saves de antes desta versão ou importados mostram a capa." : {
       "localizations" : {
@@ -6130,6 +7535,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Las partidas y estados de cada juego van a iCloud y vuelven en otro iPhone, iPad o Mac con el mismo juego. Los juegos no van. Si una partida cambia en los dos dispositivos, se queda la más reciente y la otra va a Backups."
+          }
+        }
+      }
+    },
+    "Os saves e estados de cada jogo vão para o iCloud e voltam no seu iPhone com o mesmo jogo. Os jogos não vão. Se um save mudar nos dois aparelhos, fica o mais recente e o outro vai para Backups." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Each game's saves and states go to iCloud and come back on your iPhone with the same game. The games do not go. If a save changes on both devices, the newest stays and the other goes to Backups."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las partidas y estados de cada juego van a iCloud y vuelven en tu iPhone con el mismo juego. Los juegos no van. Si una partida cambia en los dos dispositivos, queda la más reciente y la otra va a Backups."
           }
         }
       }
@@ -6439,7 +7860,20 @@
       }
     },
     "Procurando o Ember num Mac por perto…" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Looking for Ember on a Mac nearby…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscando Ember en un Mac cercano…"
+          }
+        }
+      }
     },
     "Progresso e ajustes" : {
       "localizations" : {
@@ -6569,6 +8003,54 @@
         }
       }
     },
+    "Recebendo do iPhone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Receiving from the iPhone"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recibiendo del iPhone"
+          }
+        }
+      }
+    },
+    "Receber" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Receive"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recibir"
+          }
+        }
+      }
+    },
+    "Recentes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recent"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recientes"
+          }
+        }
+      }
+    },
     "Recomendado para este jogo" : {
       "localizations" : {
         "en" : {
@@ -6586,7 +8068,36 @@
       }
     },
     "Reconectar" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reconnect"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reconectar"
+          }
+        }
+      }
+    },
+    "Recusar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Decline"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechazar"
+          }
+        }
+      }
     },
     "Registros" : {
       "localizations" : {
@@ -6600,6 +8111,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Registros"
+          }
+        }
+      }
+    },
+    "Reiniciar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reiniciar"
+          }
+        }
+      }
+    },
+    "Reiniciar o jogo?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart the game?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Reiniciar el juego?"
+          }
+        }
+      }
+    },
+    "Reiniciar o jogo…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart Game…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reiniciar el juego…"
           }
         }
       }
@@ -6893,7 +8452,20 @@
       }
     },
     "Sair do jogo no Mac?" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit the game on the Mac?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Salir del juego en el Mac?"
+          }
+        }
+      }
     },
     "Salvar" : {
       "localizations" : {
@@ -6991,6 +8563,60 @@
         }
       }
     },
+    "Save de %@ chegou: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save from %1$@ arrived: %2$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Llegó la partida de %1$@: %2$@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Save de %1$@ chegou: %2$@"
+          }
+        }
+      }
+    },
+    "Save novo chegando" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New save on the way"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partida nueva en camino"
+          }
+        }
+      }
+    },
+    "Save sincronizado: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save synced: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partida sincronizada: %@"
+          }
+        }
+      }
+    },
     "Saves" : {
       "localizations" : {
         "en" : {
@@ -7023,6 +8649,22 @@
         }
       }
     },
+    "Saves de dois aparelhos: ficou o mais recente" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saves from two devices: the newest stayed"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partidas de dos dispositivos: quedó la más reciente"
+          }
+        }
+      }
+    },
     "Saves do jogo" : {
       "localizations" : {
         "en" : {
@@ -7035,6 +8677,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Partidas del juego"
+          }
+        }
+      }
+    },
+    "Saves em dia no iCloud" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saves up to date in iCloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partidas al día en iCloud"
           }
         }
       }
@@ -7295,6 +8953,22 @@
         }
       }
     },
+    "Sincronizando saves…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Syncing saves…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sincronizando partidas…"
+          }
+        }
+      }
+    },
     "Sincronizando…" : {
       "localizations" : {
         "en" : {
@@ -7387,6 +9061,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Acerca de"
+          }
+        }
+      }
+    },
+    "Sobre o Ember" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About Ember"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acerca de Ember"
           }
         }
       }
@@ -7775,6 +9465,22 @@
         }
       }
     },
+    "Tem um save mais novo chegando" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A newer save is on the way"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hay una partida más nueva en camino"
+          }
+        }
+      }
+    },
     "Termine a batalha para salvar o estado" : {
       "localizations" : {
         "en" : {
@@ -7903,6 +9609,22 @@
         }
       }
     },
+    "Total: %@. Os saves vêm junto; jogos que já estão aqui recebem só os saves mais novos." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total: %@. The saves come along; games already here get only the newer saves."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total: %@. Las partidas vienen incluidas; los juegos que ya están aquí reciben solo las partidas más nuevas."
+          }
+        }
+      }
+    },
     "Traga seus jogos" : {
       "localizations" : {
         "en" : {
@@ -7963,6 +9685,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "TV"
+          }
+        }
+      }
+    },
+    "Último save: %@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last save: %1$@, %2$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Última partida: %1$@, %2$@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Último save: %1$@, %2$@"
           }
         }
       }
@@ -8144,7 +9888,20 @@
       }
     },
     "Use o teclado, um controle ou este iPhone: abra o jogo no Mac e toque em Controlar." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use the keyboard, a controller or this iPhone: open the game on the Mac and tap Control."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usa el teclado, un control o este iPhone: abre el juego en el Mac y toca Controlar."
+          }
+        }
+      }
     },
     "Use Salvar estado no menu, andando pelo mapa. O Ember também salva sozinho quando você sai do app." : {
       "localizations" : {
@@ -8334,6 +10091,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "View / Create"
+          }
+        }
+      }
+    },
+    "Visualizar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visualización"
           }
         }
       }
