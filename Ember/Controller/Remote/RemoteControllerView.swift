@@ -10,6 +10,10 @@ enum RemoteControllerScreen {
         while let presented = top.presentedViewController { top = presented }
         let controller = LandscapeHostingController(rootView: RemoteControllerView())
         controller.modalPresentationStyle = .fullScreen
+        // Back to how the iPhone was held before (portrait, usually) when
+        // the controller closes.
+        controller.scene = scene
+        controller.returnTo = scene.effectiveGeometry.interfaceOrientation.isLandscape ? nil : .portrait
         top.present(controller, animated: true) {
             scene.requestGeometryUpdate(.iOS(interfaceOrientations: .landscape))
         }
@@ -17,7 +21,22 @@ enum RemoteControllerScreen {
 }
 
 private final class LandscapeHostingController: UIHostingController<RemoteControllerView> {
+    weak var scene: UIWindowScene?
+    /// The orientation to go back to on closing; nil leaves it as it is.
+    var returnTo: UIInterfaceOrientationMask?
+
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask { .landscape }
+
+    /// Once gone, only the screen below decides the orientations, so
+    /// asking for portrait now works.
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        guard let scene, let returnTo else { return }
+        var top = scene.keyWindow?.rootViewController
+        while let presented = top?.presentedViewController { top = presented }
+        top?.setNeedsUpdateOfSupportedInterfaceOrientations()
+        scene.requestGeometryUpdate(.iOS(interfaceOrientations: returnTo))
+    }
     override var prefersStatusBarHidden: Bool { true }
     override var prefersHomeIndicatorAutoHidden: Bool { true }
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .all }
@@ -113,6 +132,16 @@ struct RemoteControllerView: View {
                 }
                 .font(.caption)
                 .foregroundStyle(Theme.controlLabel.opacity(0.6))
+                if let notice = client.notice {
+                    Label(notice, systemImage: "checkmark.icloud.fill")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.onHighlight)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(Capsule().fill(Theme.highlight))
+                        .transition(.scale.combined(with: .opacity))
+                        .accessibilityAddTraits(.updatesFrequently)
+                }
             case .connecting:
                 ProgressView().tint(Theme.controlLabel)
                 Text("Conectando…").font(.caption).foregroundStyle(Theme.controlLabel.opacity(0.7))
@@ -136,6 +165,7 @@ struct RemoteControllerView: View {
             .foregroundStyle(Theme.controlLabel.opacity(0.6))
         }
         .frame(maxWidth: 260)
+        .animation(.spring(response: 0.3), value: client.notice)
     }
 
     @ViewBuilder

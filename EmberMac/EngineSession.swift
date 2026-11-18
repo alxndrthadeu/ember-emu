@@ -35,6 +35,10 @@ final class EngineSession {
     /// its window is not in front (App Nap).
     private var activity: NSObjectProtocol?
     private var screenshotRequest: ((NSImage) -> Void)?
+    /// Sees the game save (pictures for the saves, and iCloud right away).
+    private let saveWatcher = SaveWatcher()
+    /// SDL's window, once it exists.
+    private weak var gameWindow: NSWindow?
 
     private init() {}
 
@@ -77,6 +81,11 @@ final class EngineSession {
             options: [.userInitiated, .latencyCritical, .idleDisplaySleepDisabled],
             reason: "Jogo rodando")
         watchForGameWindow()
+        // A save the game writes goes to iCloud as soon as it is done.
+        saveWatcher.onSaved = { game in
+            Task { await EngineSession.shared.sendToCloud(game, message: String(localized: "Save no iCloud")) }
+        }
+        saveWatcher.start(game)
         // An iPhone can be this game's controller.
         RemoteControllerServer.shared.onChange = { EngineSession.shared.showController() }
         RemoteControllerServer.shared.start(for: game)
@@ -114,6 +123,7 @@ final class EngineSession {
     }
 
     private func engineDidEnd() {
+        saveWatcher.stop()
         RemoteControllerServer.shared.stop()
         PhysicalControllerInput.shared.stop()
         historyTimer?.invalidate()
@@ -249,7 +259,20 @@ final class EngineSession {
         guard let game = currentGame else { return .noAnswer }
         let outcome = await StateStore.request(verb, slot: slot, gameID: game.id)
         GameLog.shared.note("estado \(verb == "save" ? "salvo" : "carregado") (\(slot)): \(outcome)")
+        if verb == "save", case .done = outcome {
+            // The automatic state goes up quietly.
+            let message = slot == StateStore.autoSlot ? nil : String(localized: "Estado salvo no iCloud")
+            Task { await sendToCloud(game, message: message) }
+        }
         return outcome
+    }
+
+    /// Sends what the game just saved to iCloud and tells the player, on
+    /// the game's window and on the iPhone used as controller.
+    private func sendToCloud(_ game: GameEntry, message: String?) async {
+        guard await SyncStatus.shared.uploadWhilePlaying(game), let message else { return }
+        if let gameWindow { GameWindowNotice.show(message, on: gameWindow) }
+        RemoteControllerServer.shared.notify(message)
     }
 
     // MARK: - The game window
@@ -262,6 +285,7 @@ final class EngineSession {
                 let session = EngineSession.shared
                 guard let pointer = mkxp_getGameWindow() else { return }
                 let window = Unmanaged<NSWindow>.fromOpaque(pointer).takeUnretainedValue()
+                session.gameWindow = window
                 session.windowWatcher?.invalidate()
                 session.windowWatcher = nil
                 window.title = session.currentGame?.title ?? "Ember"

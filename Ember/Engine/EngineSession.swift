@@ -87,6 +87,14 @@ final class EngineSession {
         guard state == .running, let game = currentGame else { return .noAnswer }
         let outcome = await StateStore.request(verb, slot: slot, gameID: game.id)
         GameLog.shared.note("estado \(verb == "save" ? "salvo" : "carregado") (\(slot)): \(outcome)")
+        if verb == "save", case .done = outcome {
+            // The state goes to iCloud now; the automatic one quietly.
+            Task {
+                if await SyncStatus.shared.uploadWhilePlaying(game), slot != StateStore.autoSlot {
+                    SyncStatus.shared.show(String(localized: "Estado salvo no iCloud"))
+                }
+            }
+        }
         return outcome
     }
 
@@ -160,6 +168,14 @@ final class EngineSession {
         sessionID = PlayHistory.begin(gameID: game.id, title: game.title)
         historyTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { _ in
             MainActor.assumeIsolated { EngineSession.shared.touchSession() }
+        }
+        // A save the game writes goes to iCloud as soon as it is done.
+        saveWatcher.onSaved = { game in
+            Task {
+                if await SyncStatus.shared.uploadWhilePlaying(game) {
+                    SyncStatus.shared.show(String(localized: "Save no iCloud"))
+                }
+            }
         }
         saveWatcher.start(game)
         GameLayout.shared.observeEngine()

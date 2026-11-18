@@ -77,6 +77,12 @@ final class SaveWatcher {
     private var timer: Timer?
     private var known: [String: Date]?
     private var game: GameEntry?
+    /// Saves written and not yet settled: reported once a scan finds them
+    /// unchanged (the game is done writing).
+    private var unsettled = false
+    /// The game saved (its saves have stopped changing): the moment to
+    /// send them to iCloud.
+    var onSaved: (@MainActor (GameEntry) -> Void)?
 
     func start(_ game: GameEntry) {
         stop()
@@ -93,6 +99,7 @@ final class SaveWatcher {
         timer = nil
         game = nil
         known = nil
+        unsettled = false
     }
 
     private var scanning = false
@@ -116,6 +123,10 @@ final class SaveWatcher {
             let written = saves.filter { known[$0.id] != $0.modified }
             if !written.isEmpty {
                 SaveThumbnails.request(written, gameID: game.id)
+                unsettled = true
+            } else if unsettled {
+                unsettled = false
+                onSaved?(game)
             }
         }
         known = now

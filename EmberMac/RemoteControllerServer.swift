@@ -124,7 +124,7 @@ final class RemoteControllerServer {
             mapper.releaseAll()
             mapper.profile = profile
             GameLog.shared.note("controle remoto: perfil do iPhone (\(profile.name))")
-        case .info, .ping, .pong:
+        case .info, .ping, .pong, .notice:
             break
         }
     }
@@ -161,6 +161,11 @@ final class RemoteControllerServer {
         case nil:
             break
         }
+    }
+
+    /// A short message on the iPhone's controller ("Save no iCloud").
+    func notify(_ text: String) {
+        connection?.send(content: RemoteProtocol.encode(.notice, text), completion: .contentProcessed { _ in })
     }
 
     /// Tells the iPhone which controller the game wants and its name.

@@ -82,6 +82,12 @@ final class MacLibrary {
         guard let url = link.url else { return }
         let configuration = NSWorkspace.OpenConfiguration()
         configuration.createsNewApplicationInstance = true
+        #if DEBUG
+        // The game instance uses the same stand-in for iCloud.
+        if let fake = ProcessInfo.processInfo.environment["EMBER_FAKE_CLOUD"] {
+            configuration.environment = ["EMBER_FAKE_CLOUD": fake]
+        }
+        #endif
         NSWorkspace.shared.open([url], withApplicationAt: Bundle.main.bundleURL, configuration: configuration) { _, error in
             guard let error else { return }
             Task { @MainActor in MacLibrary.shared.lastError = error.localizedDescription }

@@ -103,3 +103,19 @@ extension SyncStatus {
         return true
     }
 }
+
+extension SyncStatus {
+    /// While a game plays: sends what it just saved (or a save state) to
+    /// iCloud right away, without bringing anything down. True when
+    /// something went up; the game's iCloud state and "last save" follow.
+    @discardableResult
+    func uploadWhilePlaying(_ game: GameEntry) async -> Bool {
+        guard SaveSync.isEnabled else { return false }
+        let folders = SaveSync.GameFolders(game)
+        let report = await Task.detached(priority: .utility) { SaveSync.upload(folders) }.value
+        finished(report, titles: [game.id: game.title])
+        let sent = report.uploaded > 0
+        if sent { GameLog.shared.note("save enviado ao iCloud (\(report.uploaded) arquivo(s))") }
+        return sent
+    }
+}

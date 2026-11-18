@@ -10,7 +10,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Ember for Mac: a library made for the desk, each game in its own window, Game menu with save states, speed, screenshots and restart (⌘R), settings, the game's panel (⌘I), keyboard and game controllers with each game's controls. English and Spanish too.
 - The iPhone as the Mac's controller: open the Mac tab on the iPhone and pick the game playing on the Mac. Big buttons in landscape, the keyboard and the game menu, with the iPhone's controls for that game. Works nearby without sharing a Wi-Fi network.
 - Send games and their saves from the iPhone to the Mac, nearby.
-- Saves in iCloud between iPhone and Mac, with the last save shown on each game and a short notice when a save arrives.
+- Saves in iCloud between iPhone and Mac, sent as soon as the game saves ("Saved to iCloud" on the game, and on the iPhone used as controller), with the last save shown on each game and a short notice when a save arrives. The saves screen on the iPhone brings the latest from iCloud when it opens, and on pull to refresh.
+- The iPhone goes back to portrait when it stops being the Mac's controller, if it was in portrait before.
 - On the Mac, a missing RTP file tells you to import the RTP in Settings › RTP.
 
 ### Fixed

@@ -241,6 +241,30 @@ final class SaveSyncTests: XCTestCase {
         XCTAssertFalse(SaveSync.hasIncoming(game, root: cloud))
         XCTAssertEqual(read(local), "two")
     }
+
+    /// While a game plays: what it saved goes up, nothing comes down
+    /// under it, and the next full sync still brings what waited.
+    func testUploadOnlyNeverTouchesTheRunningGame() throws {
+        let mine = game.folder.appendingPathComponent("Save01.rvdata2")
+        let theirs = game.folder.appendingPathComponent("Save02.rvdata2")
+        try write("one", mine, age: 100)
+        try write("old", theirs, age: 100)
+        _ = SaveSync.sync([game], root: cloud)
+
+        // The game saves slot 1; another device saved slot 2 meanwhile.
+        try write("one-new", mine, age: 5)
+        try write("two-from-mac", cloud.appendingPathComponent("\(game.id)/folder/Save02.rvdata2"), age: 10)
+        var report = SaveSync.sync([game], root: cloud, uploadOnly: true)
+        XCTAssertEqual(report.uploaded, 1)
+        XCTAssertEqual(report.downloaded, 0)
+        XCTAssertEqual(read(cloud.appendingPathComponent("\(game.id)/folder/Save01.rvdata2")), "one-new")
+        XCTAssertEqual(read(theirs), "old")
+
+        // After the game: the other device's save comes down.
+        report = SaveSync.sync([game], root: cloud)
+        XCTAssertEqual(report.downloaded, 1)
+        XCTAssertEqual(read(theirs), "two-from-mac")
+    }
 }
 
 @MainActor

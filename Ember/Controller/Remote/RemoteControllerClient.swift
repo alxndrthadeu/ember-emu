@@ -68,6 +68,8 @@ final class RemoteControllerClient {
     private(set) var latency: Duration?
     /// Whether the link went over the direct, AirDrop-like path.
     private(set) var direct = false
+    /// A message from the Mac, shown for a few seconds.
+    private(set) var notice: String?
 
     private var retries = 0
     private var attempt = 0
@@ -198,6 +200,14 @@ final class RemoteControllerClient {
             lastPong = Date()
             if let sent = Double(payload) {
                 latency = .milliseconds(Int((Date().timeIntervalSince1970 - sent) * 1000))
+            }
+            return
+        }
+        if kind == .notice {
+            notice = payload
+            Task { @MainActor in
+                try? await Task.sleep(for: .seconds(3))
+                if notice == payload { notice = nil }
             }
             return
         }

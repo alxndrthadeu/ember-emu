@@ -1915,6 +1915,22 @@
         }
       }
     },
+    "Buscando saves no iCloud…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Looking for saves in iCloud…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscando partidas en iCloud…"
+          }
+        }
+      }
+    },
     "Buscar" : {
       "localizations" : {
         "en" : {
@@ -4071,6 +4087,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estado guardado"
+          }
+        }
+      }
+    },
+    "Estado salvo no iCloud" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save state in iCloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estado guardado en iCloud"
           }
         }
       }
@@ -7523,6 +7555,22 @@
         }
       }
     },
+    "Os saves deste jogo vão para o iCloud quando você salva." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This game’s saves go to iCloud when you save."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las partidas de este juego van a iCloud cuando guardas."
+          }
+        }
+      }
+    },
     "Os saves e estados de cada jogo vão para o iCloud e voltam em outro iPhone com o mesmo jogo. Os jogos não vão. Se um save mudar nos dois aparelhos, fica o mais recente e o outro vai para Backups." : {
       "localizations" : {
         "en" : {
@@ -8581,6 +8629,22 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Save de %1$@ chegou: %2$@"
+          }
+        }
+      }
+    },
+    "Save no iCloud" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved to iCloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partida en iCloud"
           }
         }
       }

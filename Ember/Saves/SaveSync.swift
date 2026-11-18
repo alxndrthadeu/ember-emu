@@ -13,7 +13,9 @@ import Foundation
 /// changed here → up; changed in iCloud → down (the copy it replaces
 /// goes to Backups); changed on both sides → the newer one wins and the
 /// other goes to Backups as a conflict. Nothing is ever deleted on
-/// either side. Runs off the main thread, never while a game plays.
+/// either side. Runs off the main thread. While a game plays, only
+/// `upload` runs: what the game just saved goes up, and nothing comes
+/// down under the running game.
 enum SaveSync {
     static let enabledKey = "settings.iCloudSaves"
 
@@ -79,15 +81,25 @@ enum SaveSync {
     }
 
     /// Against any folder standing in for iCloud (tests).
-    static func sync(_ games: [GameFolders], root: URL) -> Report {
+    static func sync(_ games: [GameFolders], root: URL, uploadOnly: Bool = false) -> Report {
         var report = Report()
         for game in games {
-            sync(game, cloud: root.appendingPathComponent(game.id, isDirectory: true), report: &report)
+            sync(game, cloud: root.appendingPathComponent(game.id, isDirectory: true),
+                 uploadOnly: uploadOnly, report: &report)
         }
         return report
     }
 
-    private static func sync(_ game: GameFolders, cloud: URL, report: inout Report) {
+    /// While the game plays: sends what changed on this device (a save
+    /// the game just wrote, a save state) and brings nothing down, so no
+    /// file changes under the running game. What iCloud has newer waits
+    /// for the next full sync.
+    static func upload(_ game: GameFolders) -> Report {
+        guard isEnabled, let root = cloudRoot() else { return Report() }
+        return sync([game], root: root, uploadOnly: true)
+    }
+
+    private static func sync(_ game: GameFolders, cloud: URL, uploadOnly: Bool, report: inout Report) {
         let before = report
         var state = SyncState.load(game.id)
         let areas: [(name: String, local: URL, files: [String])] = [
@@ -103,7 +115,8 @@ enum SaveSync {
                 let key = "\(area.name)/\(name)"
                 let local = area.local.appendingPathComponent(name)
                 let remote = cloudArea.appendingPathComponent(name)
-                syncFile(key: key, local: local, remote: remote, game: game, state: &state, report: &report)
+                syncFile(key: key, local: local, remote: remote, game: game, uploadOnly: uploadOnly,
+                         state: &state, report: &report)
             }
         }
         state.save(game.id)
@@ -163,12 +176,13 @@ enum SaveSync {
         return false
     }
 
-    private static func syncFile(key: String, local: URL, remote: URL, game: GameFolders,
+    private static func syncFile(key: String, local: URL, remote: URL, game: GameFolders, uploadOnly: Bool = false,
                                  state: inout SyncState, report: inout Report) {
         let fm = FileManager.default
         let localDate = modified(local)
         // A file iCloud knows but has not brought down yet.
         if !fm.fileExists(atPath: remote.path), fm.fileExists(atPath: placeholder(for: remote).path) {
+            if uploadOnly { return }
             try? fm.startDownloadingUbiquitousItem(at: remote)
             report.waiting += 1
             return
@@ -177,6 +191,10 @@ enum SaveSync {
         let last = state.files[key]
         let localChanged = localDate != nil && localDate != last?.local
         let remoteChanged = remoteDate != nil && remoteDate != last?.remote
+        // Uploading only: anything that would come down is left as it is
+        // (and unrecorded) for the next full sync.
+        if uploadOnly, remoteChanged,
+           !localChanged || (localDate ?? .distantPast) < (remoteDate ?? .distantPast) { return }
 
         do {
             switch (localChanged, remoteChanged) {

@@ -41,6 +41,9 @@ enum RemoteProtocol {
         /// same payload): keeps the link awake and measures its delay.
         case ping = 12
         case pong = 13
+        /// Mac → iPhone: a short message for the player holding the
+        /// iPhone ("Save no iCloud"), shown for a few seconds.
+        case notice = 14
     }
 
     enum Command: String {

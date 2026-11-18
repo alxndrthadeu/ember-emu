@@ -109,6 +109,10 @@ struct ControlsOverlay: View {
             }
         }
         .animation(.spring(response: 0.3), value: toast)
+        .onChange(of: SyncStatus.shared.toast) {
+            // "Save no iCloud" while playing.
+            if let message = SyncStatus.shared.toast { show(message) }
+        }
         .onChange(of: controllers.justConnected) {
             if let name = controllers.justConnected {
                 show(String(localized: "\(name) conectado"))
