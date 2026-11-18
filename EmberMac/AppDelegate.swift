@@ -121,6 +121,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         EngineSession.shared.quit()
     }
 
+    @objc func restartGame(_ sender: Any?) {
+        EngineSession.shared.confirmRestart()
+    }
+
     @objc func saveState(_ sender: Any?) {
         runState("save", slot: StateStore.newSlot())
     }
@@ -291,7 +295,20 @@ final class MainMenu: NSObject, NSMenuDelegate {
         menu.addItem(withTitle: String(localized: "Cheats"), action: #selector(AppDelegate.openCheats(_:)), keyEquivalent: "")
         menu.addItem(withTitle: String(localized: "Captura de tela"), action: #selector(AppDelegate.takeScreenshot(_:)), keyEquivalent: "p")
         menu.addItem(.separator())
+        menu.addItem(withTitle: String(localized: "Reiniciar o jogo…"), action: #selector(AppDelegate.restartGame(_:)), keyEquivalent: "r")
         menu.addItem(withTitle: String(localized: "Sair do jogo"), action: #selector(AppDelegate.quitGame(_:)), keyEquivalent: "w")
+    }
+
+    /// The Game menu at the middle of the game window: the controller's
+    /// menu button (the gear on the iPhone) opens it.
+    func popUpGameMenu() {
+        guard let pointer = mkxp_getGameWindow() else { return }
+        let window = Unmanaged<NSWindow>.fromOpaque(pointer).takeUnretainedValue()
+        guard let view = window.contentView else { return }
+        let menu = NSMenu(title: String(localized: "Jogo"))
+        menuNeedsUpdate(menu)
+        ControlMapper.shared.releaseAll()
+        menu.popUp(positioning: nil, at: NSPoint(x: view.bounds.midX - 100, y: view.bounds.midY + 100), in: view)
     }
 
     static func submenu(_ menu: NSMenu, title: String) -> NSMenuItem {

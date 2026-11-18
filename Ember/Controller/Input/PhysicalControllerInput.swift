@@ -4,6 +4,8 @@ import GameController
 /// Reads game controllers directly, so they follow the game's profile.
 /// The engine's own controller reading is turned off while it runs
 /// (mkxp_setGameControllerCaptureEnabled), or input would double.
+/// On the Mac the engine reads the Mac's keyboard itself (the game
+/// window has the focus), so only controllers come through here.
 @MainActor
 final class PhysicalControllerInput {
     static let shared = PhysicalControllerInput()
@@ -18,11 +20,13 @@ final class PhysicalControllerInput {
     func start() {
         mkxp_setGameControllerCaptureEnabled(false)
         GCController.controllers().forEach(bind)
+        #if os(iOS)
         bindKeyboard()
         observers.append(NotificationCenter.default.addObserver(
             forName: .GCKeyboardDidConnect, object: nil, queue: .main) { _ in
             MainActor.assumeIsolated { PhysicalControllerInput.shared.bindKeyboard() }
         })
+        #endif
         let center = NotificationCenter.default
         observers.append(center.addObserver(forName: .GCControllerDidConnect, object: nil, queue: .main) { _ in
             // Binding sets the same handlers again, so every controller is safe to rebind.
@@ -42,11 +46,14 @@ final class PhysicalControllerInput {
         for controller in GCController.controllers() {
             controller.extendedGamepad?.valueChangedHandler = nil
         }
+        #if os(iOS)
         GCKeyboard.coalesced?.keyboardInput?.keyChangedHandler = nil
+        #endif
         releaseDirections()
         ControlMapper.shared.releaseAll()
     }
 
+    #if os(iOS)
     /// A Bluetooth or USB keyboard reaches the game as a PC keyboard:
     /// GameController key codes are USB HID usages, the same numbers as
     /// the engine's (SDL) scancodes. While the player types a name, keys
@@ -61,6 +68,7 @@ final class PhysicalControllerInput {
             }
         }
     }
+    #endif
 
     private func bind(_ controller: GCController) {
         guard let pad = controller.extendedGamepad else { return }

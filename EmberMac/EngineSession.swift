@@ -80,6 +80,11 @@ final class EngineSession {
         // An iPhone can be this game's controller.
         RemoteControllerServer.shared.onChange = { EngineSession.shared.showController() }
         RemoteControllerServer.shared.start(for: game)
+        // Bluetooth and USB controllers go through the game's controls
+        // (its own mapping or profile), as on the iPhone; the engine's own
+        // controller reading is off meanwhile.
+        PhysicalControllerInput.shared.start()
+        ControlMapper.shared.onMenu = { MainMenu.shared.popUpGameMenu() }
         // A cover for the shelf every minute (the last frame when the
         // window closes by its red button).
         // The player's "game sound" once OpenAL exists.
@@ -110,6 +115,7 @@ final class EngineSession {
 
     private func engineDidEnd() {
         RemoteControllerServer.shared.stop()
+        PhysicalControllerInput.shared.stop()
         historyTimer?.invalidate()
         coverTimer?.invalidate()
         if let sessionID { PlayHistory.touch(sessionID) }
@@ -139,6 +145,32 @@ final class EngineSession {
         Timer.scheduledTimer(withTimeInterval: 0.4, repeats: false) { _ in
             mkxp_requestTerminate()
         }
+    }
+
+    /// Asks on the game window, then starts the game over from its title
+    /// screen: the engine's own reset (F12 on the PC), in this instance.
+    func confirmRestart() {
+        guard state == .running, let pointer = mkxp_getGameWindow() else { return }
+        let window = Unmanaged<NSWindow>.fromOpaque(pointer).takeUnretainedValue()
+        let alert = NSAlert()
+        alert.messageText = String(localized: "Reiniciar o jogo?")
+        alert.informativeText = String(localized: "O jogo volta à tela de título. O que não foi salvo se perde.")
+        alert.addButton(withTitle: String(localized: "Reiniciar"))
+        alert.addButton(withTitle: String(localized: "Cancelar"))
+        alert.beginSheetModal(for: window) { response in
+            guard response == .alertFirstButtonReturn else { return }
+            MainActor.assumeIsolated { EngineSession.shared.restart() }
+        }
+    }
+
+    func restart() {
+        ControlMapper.shared.releaseAll()
+        let f12 = Int32(MKXP_SCANCODE_F12)
+        mkxp_injectKeyEvent(f12, 1)
+        Timer.scheduledTimer(withTimeInterval: 0.15, repeats: false) { _ in
+            mkxp_injectKeyEvent(f12, 0)
+        }
+        GameLog.shared.note("jogo reiniciado")
     }
 
     /// "iPhone de Ana · controle" under the window title.
@@ -281,6 +313,17 @@ final class EngineSession {
         }, nil)
     }
 
+    /// What the player can do about an error: a missing stock graphic or
+    /// sound means the game counts on the RTP (Ajustes › RTP on the Mac).
+    private static func hint(for text: String) -> String? {
+        guard let file = RTPStore.missingFile(in: text), RTPStore.isRTPAsset(file) else { return nil }
+        let rgss = EngineSession.shared.currentGame.flatMap { GameFolder.rgssVersion(in: $0.folder) }
+        if let kind = rgss.flatMap(RTPStore.Kind.init(rgss:)), !RTPStore.isInstalled(kind) {
+            return String(localized: "Falta o arquivo \(file), que vem no RTP do \(kind.name). Importe o RTP uma vez em Ajustes › RTP, como pasta ou .zip, e abra o jogo de novo.")
+        }
+        return String(localized: "Falta o arquivo \(file). Confira se o jogo foi importado inteiro.")
+    }
+
     private func present(_ text: String, isError: Bool) {
         if isError { GameLog.shared.error(text) } else { GameLog.shared.note("aviso do jogo: \(text)") }
         let alert = NSAlert()
@@ -288,7 +331,12 @@ final class EngineSession {
         alert.messageText = isError
             ? String(localized: "\(currentGame?.title ?? "O jogo") encontrou um erro")
             : (currentGame?.title ?? "Ember")
-        alert.informativeText = text.count > 900 ? String(text.prefix(900)) + "…" : text
+        let shown = text.count > 900 ? String(text.prefix(900)) + "…" : text
+        if isError, let hint = Self.hint(for: text) {
+            alert.informativeText = hint + "\n\n" + shown
+        } else {
+            alert.informativeText = shown
+        }
         alert.addButton(withTitle: "OK")
         if isError { alert.addButton(withTitle: String(localized: "Copiar erro")) }
         let answer = alert.runModal()

@@ -7,6 +7,7 @@ import AppKit
 ///   enter, esc, up, down, left, right, shift  a key tap
 ///   save:<slot>, load:<slot>                   a save state
 ///   cover, shot                                cover or screenshot
+///   restart                                    the game from its title
 ///   quit                                       ends the game
 @MainActor
 enum DevelopmentScript {
@@ -40,6 +41,9 @@ enum DevelopmentScript {
             EngineSession.shared.saveCover()
         case "shot":
             EngineSession.shared.saveScreenshot { print("[ember-script] shot \($0?.path ?? "failed")") }
+        case "restart":
+            EngineSession.shared.restart()
+            print("[ember-script] restart")
         case "quit":
             EngineSession.shared.quit()
         default:
