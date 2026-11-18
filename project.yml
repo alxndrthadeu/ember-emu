@@ -195,6 +195,10 @@ targets:
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.role-playing-games
         INFOPLIST_KEY_NSPrincipalClass: NSApplication
         CODE_SIGN_ENTITLEMENTS: EmberMac/EmberMac.entitlements
+        # XcodeGen leaves the Mac target's team empty, which hides the one
+        # in Signing.local.xcconfig and signs "to run locally" (no iCloud).
+        DEVELOPMENT_TEAM: $(inherited)
+        CODE_SIGN_IDENTITY: Apple Development
         ENABLE_HARDENED_RUNTIME: YES
         SWIFT_VERSION: "6.0"
         SWIFT_OBJC_BRIDGING_HEADER: EmberMac/EmberMac-Bridging-Header.h
