@@ -4,6 +4,11 @@ What changed in each version of Ember. The newest version is on top; `Unreleased
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follow [Semantic Versioning](https://semver.org/): a new feature bumps the minor number (1.1.0), a fix the patch number (1.0.1).
 
+## [Unreleased]
+
+### Fixed
+- A background music without a valid file name (a number in its place) no longer stops some RPG Maker XP games after a battle: the map's music plays instead, and the session log tells where it came from. Resuming a save state no longer hides this error silently.
+
 ## [1.3.0] - 2026-11-17
 
 ### Fixed
