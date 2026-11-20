@@ -125,7 +125,12 @@ struct RemoteControllerView: View {
                 .foregroundStyle(Theme.controlLabel)
                 Group {
                     if let latency = client.latency {
-                        Text("Jogando no Mac · \(latency.formatted(.units(allowed: [.milliseconds], width: .narrow)))\(client.direct ? " · direto" : "")")
+                        let delay = latency.formatted(.units(allowed: [.milliseconds], width: .narrow))
+                        if client.direct {
+                            Text("Jogando no Mac · \(delay) · direto")
+                        } else {
+                            Text("Jogando no Mac · \(delay)")
+                        }
                     } else {
                         Text("Jogando no Mac")
                     }

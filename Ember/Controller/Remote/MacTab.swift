@@ -97,6 +97,10 @@ struct MacTab: View {
                 client.browse()
                 sender.browse()
             }
+            .onDisappear {
+                // Only the list needs it; a link already made stays.
+                client.stopBrowsing()
+            }
             .sheet(isPresented: $sending) { SendToMacView() }
         }
     }

@@ -5389,24 +5389,34 @@
         }
       }
     },
-    "Jogando no Mac · %@%@" : {
+    "Jogando no Mac · %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Playing on the Mac · %1$@%2$@"
+            "value" : "Playing on the Mac · %@"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jugando en el Mac · %1$@%2$@"
+            "value" : "Jugando en el Mac · %@"
+          }
+        }
+      }
+    },
+    "Jogando no Mac · %@ · direto" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playing on the Mac · %@ · direct"
           }
         },
-        "pt-BR" : {
+        "es" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Jogando no Mac · %1$@%2$@"
+            "state" : "translated",
+            "value" : "Jugando en el Mac · %@ · directo"
           }
         }
       }

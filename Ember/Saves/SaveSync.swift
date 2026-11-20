@@ -471,25 +471,45 @@ extension SaveSync {
         }
     }
 
-    /// Sends every save of this game, replacing iCloud's copy of each.
-    /// What iCloud had is kept in Backups first. Returns the files sent.
-    @discardableResult
-    static func sendAll(_ game: GameFolders) throws -> Int {
+    /// Makes iCloud's saves of this game this device's: each one replaces
+    /// iCloud's copy, and files only iCloud had are taken out of it. What
+    /// iCloud had is kept in Backups first, so files iCloud has not
+    /// brought down yet are asked for and counted in `waiting`, and
+    /// nothing changes until they are here: call again.
+    static func sendAll(_ game: GameFolders) throws -> (sent: Int, waiting: Int) {
         guard let root = cloudRoot() else { throw ManualError.noCloud }
         return try sendAll(game, root: root)
     }
 
-    @discardableResult
-    static func sendAll(_ game: GameFolders, root: URL) throws -> Int {
+    static func sendAll(_ game: GameFolders, root: URL) throws -> (sent: Int, waiting: Int) {
         let cloud = root.appendingPathComponent(game.id, isDirectory: true)
+        let mine = areas(of: game)
+        guard mine.contains(where: { !$0.files.isEmpty }) else { throw ManualError.nothingHere }
+        // Everything iCloud has must be here before any of it is replaced.
+        var waiting = 0
+        var theirs: [String: URL] = [:]
+        for area in ["folder", "userdata", "states"] {
+            let folder = cloud.appendingPathComponent(area, isDirectory: true)
+            for name in allFiles(in: folder, includingPlaceholders: true) {
+                let remote = folder.appendingPathComponent(name)
+                guard FileManager.default.fileExists(atPath: remote.path) else {
+                    try? FileManager.default.startDownloadingUbiquitousItem(at: remote)
+                    waiting += 1
+                    continue
+                }
+                theirs["\(area)/\(name)"] = remote
+            }
+        }
+        guard waiting == 0 else { return (0, waiting) }
+
         var state = SyncState.load(game.id)
         var sent = 0
-        for area in areas(of: game) {
+        for area in mine {
             for name in area.files {
                 let key = "\(area.name)/\(name)"
                 let local = area.local.appendingPathComponent(name)
                 let remote = cloud.appendingPathComponent(key)
-                if FileManager.default.fileExists(atPath: remote.path) {
+                if theirs.removeValue(forKey: key) != nil {
                     if sameContents(local, remote) {
                         state.files[key] = SyncState.File(local: modified(local), remote: modified(remote))
                         continue
@@ -501,17 +521,25 @@ extension SaveSync {
                 sent += 1
             }
         }
-        guard sent > 0 || !state.files.isEmpty else { throw ManualError.nothingHere }
+        // Only iCloud had these: out of it, kept in Backups.
+        for (key, remote) in theirs {
+            try keep(remote, of: game, reason: "iCloud substituído", name: key)
+            try remove(remote)
+            state.files[key] = nil
+            sent += 1
+        }
         state.save(game.id)
         if let data = try? JSONEncoder().encode(LastSave(device: deviceName, date: Date())) {
             try? data.write(to: cloud.appendingPathComponent("last.json"), options: .atomic)
         }
-        return sent
+        return (sent, 0)
     }
 
-    /// Brings every save of this game from iCloud, replacing this device's
-    /// copy of each (kept in Backups first). Files iCloud has not brought
-    /// down yet are asked for and counted in `waiting`: call again.
+    /// Makes this device's saves of this game iCloud's: each one replaces
+    /// this device's copy, and saves only this device had are taken out
+    /// (all kept in Backups first). Files iCloud has not brought down yet
+    /// are asked for and counted in `waiting`; until they are all here
+    /// nothing local is taken out: call again.
     static func bringAll(_ game: GameFolders) throws -> (brought: Int, waiting: Int) {
         guard let root = cloudRoot() else { throw ManualError.noCloud }
         return try bringAll(game, root: root)
@@ -523,12 +551,14 @@ extension SaveSync {
         var brought = 0
         var waiting = 0
         var found = 0
+        var cloudKeys: Set<String> = []
         let locals: [String: URL] = ["folder": game.folder, "userdata": game.userData, "states": game.states]
         for area in ["folder", "userdata", "states"] {
             let folder = cloud.appendingPathComponent(area, isDirectory: true)
             for name in allFiles(in: folder, includingPlaceholders: true) {
                 found += 1
                 let key = "\(area)/\(name)"
+                cloudKeys.insert(key)
                 let remote = folder.appendingPathComponent(name)
                 let local = locals[area]!.appendingPathComponent(name)
                 guard FileManager.default.fileExists(atPath: remote.path) else {
@@ -549,8 +579,30 @@ extension SaveSync {
             }
         }
         guard found > 0 else { throw ManualError.nothingThere }
+        if waiting == 0 {
+            // Only this device had these: out, kept in Backups.
+            for area in areas(of: game) {
+                for name in area.files where !cloudKeys.contains("\(area.name)/\(name)") {
+                    let local = area.local.appendingPathComponent(name)
+                    try keep(local, of: game, reason: "antes do iCloud", name: "\(area.name)/\(name)")
+                    try FileManager.default.removeItem(at: local)
+                    state.files["\(area.name)/\(name)"] = nil
+                    brought += 1
+                }
+            }
+        }
         state.save(game.id)
         return (brought, waiting)
+    }
+
+    /// Deletes a file in iCloud through a file coordinator.
+    private static func remove(_ url: URL) throws {
+        var coordinatorError: NSError?
+        var removeError: Error?
+        NSFileCoordinator().coordinate(writingItemAt: url, options: .forDeleting, error: &coordinatorError) { target in
+            do { try FileManager.default.removeItem(at: target) } catch { removeError = error }
+        }
+        if let error = coordinatorError ?? removeError { throw error }
     }
 
     private static func size(of url: URL) -> Int64 {

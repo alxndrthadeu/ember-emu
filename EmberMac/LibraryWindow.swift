@@ -287,7 +287,7 @@ private struct ContinueBanner: View {
             .tint(Theme.highlight)
             .foregroundStyle(Theme.onHighlight)
             .controlSize(.large)
-            .keyboardShortcut(.defaultAction)
+            // No Return shortcut: Return plays the selected game in the grid.
         }
         .padding(16)
         .background(Theme.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))

@@ -72,7 +72,8 @@ final class EngineSession {
     private func appWillResignActive() {
         touchSession()
         guard state == .running, let game = currentGame else { return }
-        let task = UIApplication.shared.beginBackgroundTask(withName: "ember.leaving")
+        let leaving = LeavingTask()
+        leaving.begin()
         let playing = !mkxp_isPaused() && !mkxp_isPauseRequested()
         if playing {
             GameLog.shared.note("o app saiu da tela")
@@ -89,7 +90,7 @@ final class EngineSession {
                 SyncStatus.shared.finished(report, titles: [game.id: game.title])
                 if report.uploaded > 0 { GameLog.shared.note("saindo da tela: \(report.uploaded) arquivo(s) enviados ao iCloud") }
             }
-            UIApplication.shared.endBackgroundTask(task)
+            leaving.end()
         }
     }
 
@@ -125,6 +126,10 @@ final class EngineSession {
         guard state == .idle else { return }
         resumeSlotForLog = resumeSlot
         state = .preparing(game.title)
+        // Looking for Macs keeps the direct Wi-Fi link awake: not while
+        // playing here.
+        RemoteControllerClient.shared.stopBrowsing()
+        GameSender.shared.stopBrowsing()
         StateStore.prepareEnvironment(gameID: game.id, resumeSlot: resumeSlot)
         // Games live in Documents/Games, which is writable: the engine
         // runs them in place (it writes a path cache next to them).
@@ -405,5 +410,25 @@ final class EngineSession {
                 self.windowWatcher = nil
             }
         }
+    }
+}
+
+/// The time iOS gives the app on its way out, ended once: when the work
+/// is done or when iOS says time is up (the first iCloud lookup can be
+/// slow). Without the expiration handler iOS kills the app.
+@MainActor
+private final class LeavingTask {
+    private var id = UIBackgroundTaskIdentifier.invalid
+
+    func begin() {
+        id = UIApplication.shared.beginBackgroundTask(withName: "ember.leaving") { [self] in
+            MainActor.assumeIsolated { self.end() }
+        }
+    }
+
+    func end() {
+        guard id != .invalid else { return }
+        UIApplication.shared.endBackgroundTask(id)
+        id = .invalid
     }
 }

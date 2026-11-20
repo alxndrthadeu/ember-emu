@@ -275,7 +275,7 @@ final class SaveSyncTests: XCTestCase {
         try write("mine-old", local, age: 100)
         try write("theirs-new", remote, age: 10)
 
-        XCTAssertEqual(try SaveSync.sendAll(game, root: cloud), 1)
+        XCTAssertEqual(try SaveSync.sendAll(game, root: cloud).sent, 1)
         XCTAssertEqual(read(remote), "mine-old")
         XCTAssertEqual(SaveSync.cloudSide(game, root: cloud).files, 1)
         var report = SaveSync.sync([game], root: cloud)
@@ -290,6 +290,34 @@ final class SaveSyncTests: XCTestCase {
 
         XCTAssertThrowsError(try SaveSync.bringAll(SaveSync.GameFolders(
             id: "Empty \(UUID())", title: "Empty", folder: root, userData: root, states: root), root: cloud))
+    }
+
+    /// By hand, the two sides end up the same: files only the other side
+    /// had are taken out (kept in Backups), and a file iCloud has not
+    /// brought down yet stops the send until it is here.
+    func testByHandBothSidesEndUpTheSame() throws {
+        let one = game.folder.appendingPathComponent("Save01.rvdata2")
+        let cloudGame = cloud.appendingPathComponent("\(game.id)/folder")
+        try write("one", one, age: 50)
+        try write("two-only-in-icloud", cloudGame.appendingPathComponent("Save02.rvdata2"), age: 40)
+
+        // A placeholder in iCloud: nothing changes yet.
+        let placeholder = cloudGame.appendingPathComponent(".Save03.rvdata2.icloud")
+        try write("", placeholder, age: 30)
+        XCTAssertEqual(try SaveSync.sendAll(game, root: cloud).waiting, 1)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: cloudGame.appendingPathComponent("Save02.rvdata2").path))
+        try FileManager.default.removeItem(at: placeholder)
+
+        XCTAssertEqual(try SaveSync.sendAll(game, root: cloud).waiting, 0)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: cloudGame.appendingPathComponent("Save02.rvdata2").path))
+        XCTAssertEqual(read(cloudGame.appendingPathComponent("Save01.rvdata2")), "one")
+
+        // Now a save only on this device: bringing takes it out.
+        let four = game.folder.appendingPathComponent("Save04.rvdata2")
+        try write("four-only-here", four, age: 20)
+        _ = try SaveSync.bringAll(game, root: cloud)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: four.path))
+        XCTAssertEqual(read(one), "one")
     }
 
     func testAGameCanSyncOnlyByHand() {

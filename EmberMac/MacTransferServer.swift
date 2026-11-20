@@ -119,6 +119,11 @@ private final class Receiver: @unchecked Sendable {
 
     func next() {
         TransferProtocol.receiveOne(on: connection) { [self] kind, data in
+            // A new file or the end of a game with the last file still
+            // short: the iPhone stopped mid-file. Nothing is installed.
+            if kind == .file || kind == .gameDone, fileRemaining > 0 {
+                return fail(String(localized: "A transferência se perdeu no meio de um arquivo."))
+            }
             switch kind {
             case .file:
                 guard let header = try? JSONDecoder().decode(TransferProtocol.FileHeader.self, from: data),

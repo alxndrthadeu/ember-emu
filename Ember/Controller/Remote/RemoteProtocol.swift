@@ -79,7 +79,8 @@ enum RemoteProtocol {
     static let minimumHold: TimeInterval = 0.09
 
     static func encode(_ kind: Kind, _ payload: String = "") -> Data {
-        let body = Data(payload.utf8)
+        // The length field holds 64 KB: a longer paste is cut, not a crash.
+        let body = Data(payload.utf8.prefix(Int(UInt16.max) - 1))
         let length = UInt16(body.count + 1)
         var data = Data([UInt8(length >> 8), UInt8(length & 0xFF), kind.rawValue])
         data.append(body)

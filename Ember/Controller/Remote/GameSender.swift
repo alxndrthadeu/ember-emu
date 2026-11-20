@@ -69,6 +69,14 @@ final class GameSender {
         state = .idle
     }
 
+    /// Waiting for the Mac or sending: the sheet offers to cancel.
+    var isBusy: Bool {
+        switch state {
+        case .waitingForMac, .sending: true
+        default: false
+        }
+    }
+
     func cancel() {
         connection?.cancel()
         connection = nil
@@ -89,14 +97,23 @@ final class GameSender {
         let connection = NWConnection(to: mac.endpoint, using: TransferProtocol.parameters)
         self.connection = connection
         connection.start(queue: queue)
+        // A Mac that went away leaves the link waiting forever: give up
+        // after 15 s without it (the send then fails and says so).
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(15))
+            if GameSender.shared.connection === connection, case .waitingForMac = GameSender.shared.state,
+               connection.state != .ready {
+                connection.cancel()
+            }
+        }
         Task.detached(priority: .userInitiated) {
             let offer = TransferProtocol.Offer(
                 device: await UIDevice.current.name,
                 games: games.map { .init(id: $0.id, title: $0.title, bytes: Self.size(of: $0)) })
             let result = await Self.run(offer, games: games, on: connection)
             await MainActor.run {
-                UIApplication.shared.isIdleTimerDisabled = false
                 guard GameSender.shared.connection === connection else { return }
+                UIApplication.shared.isIdleTimerDisabled = false
                 GameSender.shared.state = result
                 GameSender.shared.connection = nil
             }
@@ -128,10 +145,19 @@ final class GameSender {
                       let handle = try? FileHandle(forReadingFrom: file.url)
                 else { return .failed(String(localized: "O envio parou. Os jogos que chegaram inteiros ficaram no Mac.")) }
                 defer { try? handle.close() }
-                while let chunk = try? handle.read(upToCount: TransferProtocol.chunkSize), !chunk.isEmpty {
-                    guard await send(connection, TransferProtocol.encode(.chunk, chunk)) else {
+                // Exactly the size in the header: a read error or a file
+                // that changed stops the send instead of leaving the Mac
+                // with a short file.
+                var left = file.size
+                while left > 0 {
+                    guard let chunk = try? handle.read(upToCount: Int(min(Int64(TransferProtocol.chunkSize), left))),
+                          !chunk.isEmpty,
+                          await send(connection, TransferProtocol.encode(.chunk, chunk))
+                    else {
+                        connection.cancel()
                         return .failed(String(localized: "O envio parou. Os jogos que chegaram inteiros ficaram no Mac."))
                     }
+                    left -= Int64(chunk.count)
                     sent += Int64(chunk.count)
                     if Date().timeIntervalSince(lastReport) > 0.2 {
                         lastReport = Date()
@@ -247,7 +273,7 @@ struct SendToMacView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    if case .sending = sender.state {
+                    if sender.isBusy {
                         Button("Cancelar envio", role: .destructive) { sender.cancel() }
                     } else {
                         Button { dismiss() } label: { Image(systemName: "xmark") }

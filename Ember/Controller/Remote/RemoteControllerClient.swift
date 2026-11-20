@@ -140,6 +140,9 @@ final class RemoteControllerClient {
         switch new {
         case .ready:
             retries = 0
+            // A new link: the Mac went back to its own controls when the
+            // old one ended, so the iPhone's are sent again.
+            profileSentFor = nil
             state = .connected(target.name)
             send(.hello, UIDevice.current.name)
             startPinging(source)
@@ -158,6 +161,9 @@ final class RemoteControllerClient {
     /// the player tap Reconectar.
     private func dropped(_ source: NWConnection, reason: String) {
         guard source === connection, let target else { return }
+        // One loss reports twice (state and receive loop): only the first
+        // counts as a retry.
+        connection = nil
         pinger?.cancel()
         latency = nil
         #if DEBUG
@@ -225,7 +231,7 @@ final class RemoteControllerClient {
 
     /// The controls this iPhone uses for the game (its own mapping, or
     /// its profile), when the game is on this iPhone too. Sent once per
-    /// game: the Mac then plays every button the same way.
+    /// link: the Mac then plays every button the same way.
     private var profileSentFor: String?
 
     private func sendProfile(forGameID id: String) {

@@ -166,10 +166,24 @@ struct CloudSavesView: View {
         do {
             switch move {
             case .send:
-                let sent = try await Task.detached(priority: .userInitiated) { try SaveSync.sendAll(folders) }.value
-                GameLog.shared.note("saves enviados ao iCloud à mão: \(sent)")
-                message = sent == 0 ? String(localized: "O iCloud já tinha estes saves.")
-                                    : String(localized: "\(sent) arquivo(s) enviado(s) para o iCloud.")
+                // What iCloud has comes down first, to be kept in Backups:
+                // up to 30 s.
+                var sent = 0
+                var waiting = 0
+                for attempt in 0..<15 {
+                    let result = try await Task.detached(priority: .userInitiated) { try SaveSync.sendAll(folders) }.value
+                    sent = result.sent
+                    waiting = result.waiting
+                    guard waiting > 0, attempt < 14 else { break }
+                    try? await Task.sleep(for: .seconds(2))
+                }
+                GameLog.shared.note("saves enviados ao iCloud à mão: \(sent), esperando \(waiting)")
+                if waiting > 0 {
+                    message = String(localized: "\(waiting) arquivo(s) ainda não chegaram do iCloud. Tente de novo daqui a pouco.")
+                } else {
+                    message = sent == 0 ? String(localized: "O iCloud já tinha estes saves.")
+                                        : String(localized: "\(sent) arquivo(s) enviado(s) para o iCloud.")
+                }
             case .bring:
                 // iCloud may still have to bring files down: up to 30 s.
                 var total = 0
