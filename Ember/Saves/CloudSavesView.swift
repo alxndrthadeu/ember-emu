@@ -127,7 +127,10 @@ struct CloudSavesView: View {
 
     private var isPlaying: Bool {
         #if os(macOS)
+        // Another instance's game, or this instance's own: a game window
+        // opens Settings (⌘,) too, and its saves screen lists that game.
         SaveSync.isPlayingElsewhere(game.id)
+            || (EngineSession.shared.state == .running && EngineSession.shared.currentGame?.id == game.id)
         #else
         EngineSession.shared.state == .running && EngineSession.shared.currentGame?.id == game.id
         #endif

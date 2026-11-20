@@ -158,6 +158,10 @@ enum SaveSync {
     }
 
     private static func sync(_ game: GameFolders, cloud: URL, uploadOnly: Bool, report: inout Report) {
+        withGameLock(game.id) { syncLocked(game, cloud: cloud, uploadOnly: uploadOnly, report: &report) }
+    }
+
+    private static func syncLocked(_ game: GameFolders, cloud: URL, uploadOnly: Bool, report: inout Report) {
         let before = report
         var state = SyncState.load(game.id)
         for area in areas(of: game) {
@@ -482,6 +486,10 @@ extension SaveSync {
     }
 
     static func sendAll(_ game: GameFolders, root: URL) throws -> (sent: Int, waiting: Int) {
+        try withGameLock(game.id) { try sendAllLocked(game, root: root) }
+    }
+
+    private static func sendAllLocked(_ game: GameFolders, root: URL) throws -> (sent: Int, waiting: Int) {
         let cloud = root.appendingPathComponent(game.id, isDirectory: true)
         let mine = areas(of: game)
         guard mine.contains(where: { !$0.files.isEmpty }) else { throw ManualError.nothingHere }
@@ -546,6 +554,10 @@ extension SaveSync {
     }
 
     static func bringAll(_ game: GameFolders, root: URL) throws -> (brought: Int, waiting: Int) {
+        try withGameLock(game.id) { try bringAllLocked(game, root: root) }
+    }
+
+    private static func bringAllLocked(_ game: GameFolders, root: URL) throws -> (brought: Int, waiting: Int) {
         let cloud = root.appendingPathComponent(game.id, isDirectory: true)
         var state = SyncState.load(game.id)
         var brought = 0
@@ -634,6 +646,34 @@ extension SaveSync {
         guard let text = try? String(contentsOf: playingMarker(id), encoding: .utf8),
               let pid = Int32(text), pid != ProcessInfo.processInfo.processIdentifier else { return false }
         return kill(pid, 0) == 0
+    }
+}
+
+// MARK: - One sync of a game at a time
+
+extension SaveSync {
+    /// Runs `body` holding the game's lock. Syncs of the same game run
+    /// from many places (the library at launch, the saves screen, a save
+    /// going up mid-game, the buttons by hand, and on the Mac each game's
+    /// own instance as it quits): two at once read and write the same
+    /// SyncState and copy the same files twice, leaving extra copies in
+    /// Backups and conflicts that were not. A file lock (flock) holds
+    /// across threads and across the Mac's game instances alike; each
+    /// call opens its own descriptor, so two threads of one process wait
+    /// for each other too. The lock goes with the descriptor, also if the
+    /// process dies. Never call from the main thread: it waits.
+    static func withGameLock<T>(_ id: String, _ body: () throws -> T) rethrows -> T {
+        let support = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        let folder = support.appendingPathComponent("SaveSync", isDirectory: true)
+        try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        let safe = id.replacingOccurrences(of: "/", with: "_")
+        let descriptor = open(folder.appendingPathComponent("\(safe).lock").path, O_CREAT | O_RDWR | O_CLOEXEC, 0o644)
+        // No lock file (disk full, odd permissions): sync anyway, as before.
+        guard descriptor >= 0 else { return try body() }
+        defer { close(descriptor) }
+        while flock(descriptor, LOCK_EX) != 0, errno == EINTR {}
+        defer { flock(descriptor, LOCK_UN) }
+        return try body()
     }
 }
 

@@ -196,6 +196,26 @@ final class SaveSyncTests: XCTestCase {
 
     private func read(_ url: URL) -> String? { try? String(contentsOf: url, encoding: .utf8) }
 
+    /// Many syncs of one game at once (the library, a save going up, the
+    /// saves screen): one at a time, so each file goes up once and the
+    /// next run finds nothing left to do.
+    func testSyncsOfOneGameWaitForEachOther() throws {
+        for slot in 1...20 {
+            try write("save \(slot)", game.folder.appendingPathComponent(String(format: "Save%02d.rvdata2", slot)), age: 100)
+        }
+        let game = self.game!
+        let cloud = self.cloud
+        let uploads = Atomic(0)
+        DispatchQueue.concurrentPerform(iterations: 8) { _ in
+            let report = SaveSync.sync([game], root: cloud)
+            uploads.add(report.uploaded)
+            XCTAssertTrue(report.conflicts.isEmpty)
+        }
+        XCTAssertEqual(uploads.value, 20)
+        let again = SaveSync.sync([game], root: cloud)
+        XCTAssertEqual(again.uploaded + again.downloaded, 0)
+    }
+
     func testUpThenDownThenConflict() throws {
         let local = game.folder.appendingPathComponent("Save01.rvdata2")
         let remote = cloud.appendingPathComponent("\(game.id)/folder/Save01.rvdata2")
@@ -345,4 +365,13 @@ final class RubySuggestionTests: XCTestCase {
         XCTAssertNotEqual(suggestion?.version, game.rubyVersion)
         XCTAssertNil(EngineSession.rubySuggestion(for: "Unable to find file Graphics/Titles/x", game: game))
     }
+}
+
+/// A counter shared by threads in a test.
+private final class Atomic: @unchecked Sendable {
+    private let lock = NSLock()
+    private var count: Int
+    init(_ value: Int) { count = value }
+    var value: Int { lock.withLock { count } }
+    func add(_ n: Int) { lock.withLock { count += n } }
 }
