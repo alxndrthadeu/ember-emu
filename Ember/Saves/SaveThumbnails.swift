@@ -1,5 +1,4 @@
 import Foundation
-import UIKit
 
 /// Pictures of the game's own saves. The save files hold no image, so
 /// while a game runs Ember watches its save files; when one is written,
@@ -24,8 +23,12 @@ enum SaveThumbnails {
         return folder(for: gameID).appendingPathComponent("\(key(save))@\(stamp).png")
     }
 
-    static func image(for save: SaveManager.SaveFile, gameID: String) -> UIImage? {
+    static func image(for save: SaveManager.SaveFile, gameID: String) -> PlatformImage? {
+        #if canImport(UIKit)
         CoverCache.image(at: url(for: save, gameID: gameID))
+        #else
+        PlatformImage(contentsOf: url(for: save, gameID: gameID))
+        #endif
     }
 
     /// Asks the running game for pictures of these saves (just written).
@@ -74,6 +77,12 @@ final class SaveWatcher {
     private var timer: Timer?
     private var known: [String: Date]?
     private var game: GameEntry?
+    /// Saves written and not yet settled: reported once a scan finds them
+    /// unchanged (the game is done writing).
+    private var unsettled = false
+    /// The game saved (its saves have stopped changing): the moment to
+    /// send them to iCloud.
+    var onSaved: (@MainActor (GameEntry) -> Void)?
 
     func start(_ game: GameEntry) {
         stop()
@@ -90,6 +99,7 @@ final class SaveWatcher {
         timer = nil
         game = nil
         known = nil
+        unsettled = false
     }
 
     private var scanning = false
@@ -113,6 +123,10 @@ final class SaveWatcher {
             let written = saves.filter { known[$0.id] != $0.modified }
             if !written.isEmpty {
                 SaveThumbnails.request(written, gameID: game.id)
+                unsettled = true
+            } else if unsettled {
+                unsettled = false
+                onSaved?(game)
             }
         }
         known = now

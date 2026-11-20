@@ -44,6 +44,7 @@ final class LibraryStore {
     }
 
     private init() {
+        SaveSync.deviceName = UIDevice.current.name
         reload()
         importFromDocumentsRoot()
         syncSaves()
@@ -220,25 +221,36 @@ final class LibraryStore {
 
     /// Brings saves in step with iCloud (`SaveSync`), off the main
     /// thread. Never while a game runs: it reads and writes its saves.
-    func syncSaves() {
+    func syncSaves(attempt: Int = 0, announce: Bool = false) {
         guard SaveSync.isEnabled, !syncingSaves, EngineSession.shared.state != .running, !games.isEmpty else { return }
         let folders = games.map { game in
             SaveSync.GameFolders(id: game.id, title: game.title, folder: game.folder,
                                  userData: GameStorage.userDataFolder(for: game),
                                  states: StateStore.folder(for: game.id))
         }
+        let titles = Dictionary(uniqueKeysWithValues: games.map { ($0.id, $0.title) })
         syncingSaves = true
+        SyncStatus.shared.began()
         Task.detached(priority: .utility) {
             let report = SaveSync.sync(folders)
             await MainActor.run {
                 self.syncingSaves = false
                 self.lastSaveSync = (Date(), report)
+                SyncStatus.shared.finished(report, titles: titles, announceUploads: announce)
                 if report.downloaded > 0 { self.reload() }
                 if !report.conflicts.isEmpty {
                     let titles = Array(Set(report.conflicts)).sorted().joined(separator: ", ")
                     self.importNotice = Notice(
                         title: String(localized: "Saves de dois aparelhos"),
                         message: String(localized: "\(titles) teve saves mudados aqui e em outro aparelho. Ficou o mais recente; o outro está guardado em Backups."))
+                }
+                // Saves still coming down from iCloud: look again soon
+                // instead of waiting for the next time Ember opens.
+                if report.waiting > 0, attempt < 10 {
+                    Task { @MainActor in
+                        try? await Task.sleep(for: .seconds(3))
+                        self.syncSaves(attempt: attempt + 1, announce: announce)
+                    }
                 }
             }
         }

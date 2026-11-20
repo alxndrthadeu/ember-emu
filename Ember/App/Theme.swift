@@ -1,5 +1,9 @@
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#else
+import AppKit
+#endif
 
 /// The Ember identity (CLAUDE.md): the warm "Lanterna" palette on a
 /// modern Liquid Glass interface. Pixel art lives only in the app icon.
@@ -42,12 +46,19 @@ enum Theme {
     static let cardRadius: CGFloat = 22
 
     private static func dynamic(light: UInt32, dark: UInt32) -> Color {
+        #if canImport(UIKit)
         Color(uiColor: UIColor { traits in
             UIColor(hex: traits.userInterfaceStyle == .dark ? dark : light)
         })
+        #else
+        Color(nsColor: NSColor(name: nil) { appearance in
+            NSColor(hex: appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua ? dark : light)
+        })
+        #endif
     }
 }
 
+#if canImport(UIKit)
 extension Color {
     init(hex: UInt32) {
         self.init(uiColor: UIColor(hex: hex))
@@ -62,6 +73,22 @@ extension UIColor {
                   alpha: 1)
     }
 }
+#else
+extension Color {
+    init(hex: UInt32) {
+        self.init(nsColor: NSColor(hex: hex))
+    }
+}
+
+extension NSColor {
+    convenience init(hex: UInt32) {
+        self.init(srgbRed: CGFloat((hex >> 16) & 0xFF) / 255,
+                  green: CGFloat((hex >> 8) & 0xFF) / 255,
+                  blue: CGFloat(hex & 0xFF) / 255,
+                  alpha: 1)
+    }
+}
+#endif
 
 /// The Ember flame inside the app: the system symbol, brasa to âmbar.
 struct EmberFlame: View {

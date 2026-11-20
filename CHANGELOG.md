@@ -4,9 +4,12 @@ What changed in each version of Ember. The newest version is on top; `Unreleased
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follow [Semantic Versioning](https://semver.org/): a new feature bumps the minor number (1.1.0), a fix the patch number (1.0.1).
 
-## [1.3.0] - 2026-11-17
+## [Unreleased]
+
+## [1.3.0] - 2026-11-18
 
 ### Fixed
+- A background music without a valid file name (a number in its place) no longer stops some RPG Maker XP games after a battle: the map's music plays instead, and the session log tells where it came from. Resuming a save state no longer hides this error silently.
 - A backup left in Ember's folder (AirDrop, Finder, "Save to Files") was restored again every time the app came back, and two restores in the same minute could lose the copy of the saves it replaced. Each backup is now restored once and removed, and the replaced saves are always kept.
 - Restoring a backup with only the saves of a game that is not on this device no longer leaves an empty game behind; the saves wait in Backups.
 - Restoring a backup keeps the control mappings, profiles and history made on this device after the backup.
@@ -23,7 +26,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Resuming an RPG Maker VX game loads its areas.
 
 ### Added
-- Saves in iCloud: each game's saves and save states sync on their own between your iPhones (same game on each), when Ember opens and when you leave a game. Games themselves never go. If a save changed on two devices, the newest stays and the other is kept in Backups. On by default; Settings › iCloud.
+- Ember for Mac: a library made for the desk, each game in its own window, Game menu with save states, speed, screenshots and restart (⌘R), settings, the game's panel (⌘I), keyboard and game controllers with each game's controls. English and Spanish too.
+- The iPhone as the Mac's controller: open the Mac tab on the iPhone and pick the game playing on the Mac. Big buttons in landscape, the keyboard and the game menu, with the iPhone's controls for that game. Works nearby without sharing a Wi-Fi network.
+- Send games and their saves from the iPhone to the Mac, nearby.
+- Saves in iCloud: each game's saves and save states sync on their own between your iPhones and Macs (same game on each), sent as soon as the game saves ("Saved to iCloud" on the game, and on the iPhone used as controller), with the last save shown on each game and a short notice when a save arrives. The saves screen on the iPhone brings the latest from iCloud when it opens, and on pull to refresh. Games themselves never go. If a save changed on two devices, the newest stays and the other is kept in Backups. On by default; Settings › iCloud.
+- Saves in iCloud for each game, on iPhone and Mac: this device's saves and iCloud's side by side (when, by which device, how many), the newer one marked; upload to or download from iCloud by hand, replacing the other side (what is replaced is kept in Backups); and a choice of which games sync on their own. In a game's panel and in Settings › Saves for each game.
+- The iPhone goes back to portrait when it stops being the Mac's controller, if it was in portrait before.
+- On the Mac, a missing RTP file tells you to import the RTP in Settings › RTP.
 - Update a game and keep your progress: importing a new version of a game already on the shelf (same title) offers to put it in the old one's place, keeping saves, save states, cover, controls and name. The saves are also kept in Backups.
 - Siri and Shortcuts: "Continue in Ember", "Play <game> in Ember", "Send games to Ember", and the same actions in Spotlight and the Shortcuts app.
 - A game's panel shows how many sessions you played and since when.
@@ -98,7 +107,8 @@ First release on the App Store.
 - The sample game "A Última Brasa".
 - iOS 17 or later; Portuguese, English and Spanish.
 
-[1.2.1]: https://github.com/alxndrthadeu/ember-emu/compare/v1.2.0...release/1.2.1
+[1.3.0]: https://github.com/alxndrthadeu/ember-emu/compare/v1.2.1...v1.3.0
+[1.2.1]: https://github.com/alxndrthadeu/ember-emu/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/alxndrthadeu/ember-emu/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/alxndrthadeu/ember-emu/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/alxndrthadeu/ember-emu/releases/tag/v1.0.0

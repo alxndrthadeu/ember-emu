@@ -14,6 +14,8 @@ struct SavesView: View {
     @State private var deleting: SaveManager.SaveFile?
     @State private var working = false
     @State private var message: String?
+    /// Bringing this game's saves from iCloud (another iPhone, the Mac).
+    @State private var syncing = false
 
     private let columns = [GridItem(.adaptive(minimum: 150), spacing: 14)]
 
@@ -21,6 +23,7 @@ struct SavesView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
+                    cloudStatus
                     if saves.isEmpty && states.isEmpty {
                         empty
                     }
@@ -106,6 +109,8 @@ struct SavesView: View {
                 }
             }
             .onAppear(perform: reload)
+            .task { await syncFromCloud() }
+            .refreshable { await syncFromCloud() }
             .fileImporter(isPresented: $importing, allowedContentTypes: [.zip, .folder, .data],
                           allowsMultipleSelection: true) { result in
                 guard case .success(let urls) = result, !urls.isEmpty else { return }
@@ -129,6 +134,55 @@ struct SavesView: View {
                 Text(message ?? "")
             }
         }
+    }
+
+    /// Where the saves stand in iCloud: who saved last, or the search
+    /// going on now.
+    @ViewBuilder
+    private var cloudStatus: some View {
+        if !SaveSync.syncsAutomatically(game.id) {
+            Label("Sincronização automática desligada. Envie ou baixe em Saves no iCloud, no painel do jogo.", systemImage: "icloud.slash")
+                .font(.footnote)
+                .foregroundStyle(Theme.secondaryText)
+                .padding(.horizontal, 4)
+        } else {
+            HStack(spacing: 8) {
+                if syncing {
+                    ProgressView().controlSize(.small)
+                    Text("Buscando saves no iCloud…")
+                } else if let last = SyncStatus.shared.lastSave(for: game.id) {
+                    Image(systemName: "checkmark.icloud.fill").foregroundStyle(Theme.activeText)
+                    Text(last)
+                } else {
+                    Image(systemName: "icloud").foregroundStyle(Theme.secondaryText)
+                    Text("Os saves deste jogo vão para o iCloud quando você salva.")
+                }
+            }
+            .font(.footnote)
+            .foregroundStyle(Theme.secondaryText)
+            .padding(.horizontal, 4)
+            .accessibilityElement(children: .combine)
+        }
+    }
+
+    /// Brings what another device saved (the Mac, another iPhone), unless
+    /// this game is playing right now: nothing changes under a running
+    /// game. Waits a little for files iCloud is still bringing down.
+    private func syncFromCloud() async {
+        guard SaveSync.syncsAutomatically(game.id), !syncing else { return }
+        let session = EngineSession.shared
+        if session.state == .running, session.currentGame?.id == game.id { return }
+        syncing = true
+        defer { syncing = false }
+        let folders = SaveSync.GameFolders(game)
+        for attempt in 0..<6 {
+            let report = await Task.detached(priority: .userInitiated) { SaveSync.sync([folders]) }.value
+            SyncStatus.shared.finished(report, titles: [game.id: game.title])
+            if report.downloaded > 0 || report.uploaded > 0 { reload() }
+            guard report.waiting > 0, attempt < 5 else { break }
+            try? await Task.sleep(for: .seconds(2))
+        }
+        reload()
     }
 
     private var empty: some View {

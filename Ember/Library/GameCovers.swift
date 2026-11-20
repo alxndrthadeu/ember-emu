@@ -1,5 +1,4 @@
 import Foundation
-import UIKit
 
 /// Where a game's cover comes from, in order:
 ///
@@ -29,11 +28,11 @@ enum GameCovers {
     }
 
     /// Saves a paused frame as the automatic cover, off the main thread.
-    static func saveSnapshot(_ image: UIImage, forGameID id: String) {
+    static func saveSnapshot(_ image: PlatformImage, forGameID id: String) {
         write(image, to: snapshotURL(forGameID: id))
     }
 
-    static func setCustomCover(_ image: UIImage, forGameID id: String) {
+    static func setCustomCover(_ image: PlatformImage, forGameID id: String) {
         write(image, to: customURL(forGameID: id), async: false)
     }
 
@@ -56,7 +55,7 @@ enum GameCovers {
         folder.appendingPathComponent("\(id)-custom.jpg")
     }
 
-    private static func write(_ image: UIImage, to url: URL, async: Bool = true) {
+    private static func write(_ image: PlatformImage, to url: URL, async: Bool = true) {
         let work: @Sendable () -> Void = {
             guard let data = image.jpegData(compressionQuality: 0.85) else { return }
             try? FileManager.default.createDirectory(at: url.deletingLastPathComponent(),
@@ -107,16 +106,19 @@ enum PlayHistory {
     private static let sessionsKey = "history.sessions"
     private static let limit = 500
 
-    /// Decoded once: the library asks for every game's last session.
-    nonisolated(unsafe) private static var cache: [PlaySession]?
+    /// Decoded once per change: the library asks for every game's last
+    /// session. Kept with the bytes it came from, because on the Mac each
+    /// game runs in its own process and writes the same defaults: when
+    /// they differ, another process wrote and the list is read again.
+    nonisolated(unsafe) private static var cache: (data: Data?, sessions: [PlaySession])?
     private static let lock = NSLock()
 
     static var sessions: [PlaySession] {
         lock.withLock {
-            if let cache { return cache }
-            let decoded = UserDefaults.standard.data(forKey: sessionsKey)
-                .flatMap { try? JSONDecoder().decode([PlaySession].self, from: $0) } ?? []
-            cache = decoded
+            let data = UserDefaults.standard.data(forKey: sessionsKey)
+            if let cache, cache.data == data { return cache.sessions }
+            let decoded = data.flatMap { try? JSONDecoder().decode([PlaySession].self, from: $0) } ?? []
+            cache = (data, decoded)
             return decoded
         }
     }
@@ -154,16 +156,15 @@ enum PlayHistory {
     }
 
     static func clear() {
-        lock.withLock { cache = [] }
+        lock.withLock { cache = (nil, []) }
         UserDefaults.standard.removeObject(forKey: sessionsKey)
     }
 
     private static func save(_ sessions: [PlaySession]) {
         let trimmed = Array(sessions.prefix(limit))
-        lock.withLock { cache = trimmed }
-        if let data = try? JSONEncoder().encode(trimmed) {
-            UserDefaults.standard.set(data, forKey: sessionsKey)
-        }
+        guard let data = try? JSONEncoder().encode(trimmed) else { return }
+        lock.withLock { cache = (data, trimmed) }
+        UserDefaults.standard.set(data, forKey: sessionsKey)
     }
 }
 

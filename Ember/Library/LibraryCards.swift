@@ -102,6 +102,7 @@ struct GameCard: View {
                         .transition(.opacity)
                     }
                 }
+                .overlay(alignment: .topTrailing) { SyncBadge(id: game.id).padding(8) }
                 .shadow(color: .black.opacity(0.08), radius: 10, y: 4)
             Text(game.title)
                 .font(.subheadline.weight(.semibold))

@@ -159,8 +159,13 @@
 	</dict>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Para conectar controles de jogo Bluetooth.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_ember-ctl._tcp</string>
+		<string>_ember-xfer._tcp</string>
+	</array>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>Para receber jogos enviados pelo navegador de um computador no mesmo Wi-Fi.</string>
+	<string>Para receber jogos enviados pelo navegador de um computador no mesmo Wi-Fi e para usar o iPhone como controle do Mac.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Para salvar capturas de tela dos jogos em Fotos.</string>
 	<key>NSUbiquitousContainers</key>

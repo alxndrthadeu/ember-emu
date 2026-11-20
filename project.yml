@@ -5,6 +5,7 @@ options:
   developmentLanguage: pt-BR
   deploymentTarget:
     iOS: "17.0"
+    macOS: "26.0"
   createIntermediateGroups: true
 
 settings:
@@ -125,6 +126,152 @@ targets:
         script: '"$SRCROOT/scripts/embed-engine.sh"'
         basedOnDependencyAnalysis: false
 
+  # Ember for Mac (feature/mac). Phase 1: the engine on macOS, opening
+  # the demo game. Same bundle id as the iPhone app: one App Store
+  # record for both (universal purchase).
+  EmberMac:
+    type: application
+    platform: macOS
+    sources:
+      - path: EmberMac
+        excludes:
+          - Info.plist
+      # Shared with the iPhone app: the library, import, saves, iCloud,
+      # profiles, script scanners and the engine's configuration.
+      - Ember/App/AppSettings.swift
+      - Ember/App/PlatformImage.swift
+      - Ember/App/Theme.swift
+      - Ember/App/Compat.swift
+      - Ember/Backup/GameArchive.swift
+      - Ember/Backup/EmberBackup.swift
+      - Ember/App/ObservationLoop.swift
+      - Ember/Library/GameEntry.swift
+      - Ember/Library/GameCovers.swift
+      - Ember/Library/GameStorage.swift
+      - Ember/Import/GameImporter.swift
+      - Ember/Import/ArchiveExtractor.swift
+      - Ember/Import/RTPStore.swift
+      - Ember/Import/GameUpdater.swift
+      - Ember/Saves/SaveManager.swift
+      - Ember/Saves/SaveSync.swift
+      - Ember/Saves/SaveThumbnails.swift
+      - Ember/Saves/SyncStatus.swift
+      - Ember/Saves/SyncViews.swift
+      - Ember/Saves/CloudSavesView.swift
+      - Ember/Controller/ControllerType.swift
+      - Ember/Controller/Detection/GameKeyScanner.swift
+      - Ember/Controller/Detection/ScriptScanner.swift
+      - Ember/Controller/Profiles/KeyboardKey.swift
+      - Ember/Controller/Profiles/ControlProfiles.swift
+      - Ember/Controller/Remote/RemoteProtocol.swift
+      - Ember/Controller/Remote/TransferProtocol.swift
+      - Ember/Controller/Input/PhysicalControllerInput.swift
+      - Ember/Engine/EngineConfig.swift
+      - Ember/Engine/ScreenFilter.swift
+      - Ember/Engine/StateStore.swift
+      - Ember/Engine/GameSettings.swift
+      - Ember/Engine/GameKey.swift
+      - Ember/Engine/GameLog.swift
+      - Ember/Engine/CheatMenu.swift
+      # The same string catalog as the iPhone app (English, Spanish).
+      - Ember/Resources/Localizable.xcstrings
+    dependencies:
+      - package: ZIPFoundation
+    configFiles:
+      Debug: Config/Ember.xcconfig
+      Release: Config/Ember.xcconfig
+    settings:
+      base:
+        PRODUCT_NAME: Ember
+        PRODUCT_BUNDLE_IDENTIFIER: com.alexandrethadeu.ember
+        MARKETING_VERSION: "1.3.0"
+        CURRENT_PROJECT_VERSION: "6"
+        GENERATE_INFOPLIST_FILE: YES
+        # Only the ember-play:// scheme; the rest is generated.
+        INFOPLIST_FILE: EmberMac/Info.plist
+        SWIFT_EMIT_LOC_STRINGS: YES
+        LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Ember
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.role-playing-games
+        INFOPLIST_KEY_NSPrincipalClass: NSApplication
+        CODE_SIGN_ENTITLEMENTS: EmberMac/EmberMac.entitlements
+        # XcodeGen leaves the Mac target's team empty, which hides the one
+        # in Signing.local.xcconfig and signs "to run locally" (no iCloud).
+        DEVELOPMENT_TEAM: $(inherited)
+        CODE_SIGN_IDENTITY: Apple Development
+        ENABLE_HARDENED_RUNTIME: YES
+        SWIFT_VERSION: "6.0"
+        SWIFT_OBJC_BRIDGING_HEADER: EmberMac/EmberMac-Bridging-Header.h
+        CLANG_ENABLE_OBJC_ARC: YES
+        ARCHS: arm64
+        ONLY_ACTIVE_ARCH: YES
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+        DEAD_CODE_STRIPPING: YES
+        HEADER_SEARCH_PATHS: $(EMBER_ENGINE)/src $(SRCROOT)/Ember/Vendor/libarchive $(SRCROOT)/Ember/App
+        LIBRARY_SEARCH_PATHS: $(EMBER_DEPS)/lib $(EMBER_ANGLE)/lib
+        OTHER_LDFLAGS:
+          - -Wl,-force_load,$(EMBER_DEPS)/lib/libmkxpz-core.a
+          - -larchive
+          - $(EMBER_DEPS)/lib/mkxp18-merged.o
+          - $(EMBER_DEPS)/lib/mkxp19-merged.o
+          - $(EMBER_DEPS)/lib/mkxp31-merged.o
+          - -lSDL2
+          - -lSDL2_image
+          - -lSDL2_sound
+          - -lSDL2_ttf
+          - -lfreetype
+          - -lpixman-1
+          - -lpng16
+          - -logg
+          - -lvorbis
+          - -lvorbisfile
+          - -ltheora
+          - -ltheoradec
+          - -lphysfs
+          - -luchardet
+          - -lopenal
+          - -lssl
+          - -lcrypto
+          - -lz
+          - -lbz2
+          - -liconv
+          - -lc++
+          - -lfluidsynth
+          - -lANGLE_static
+          - -lEGL_static
+          - -lGLESv2_static
+          - -framework
+          - Cocoa
+          - -framework
+          - Carbon
+          - -framework
+          - IOKit
+          - -framework
+          - ForceFeedback
+          - -framework
+          - CoreVideo
+          - -framework
+          - CoreAudio
+          - -framework
+          - AudioToolbox
+          - -framework
+          - AVFoundation
+          - -framework
+          - Metal
+          - -framework
+          - QuartzCore
+          - -framework
+          - GameController
+          - -framework
+          - IOSurface
+          - -weak_framework
+          - CoreHaptics
+    postBuildScripts:
+      - name: Embed engine assets and the demo game
+        script: '"$SRCROOT/scripts/embed-engine.sh"'
+        basedOnDependencyAnalysis: false
+
   EmberTests:
     type: bundle.unit-test
     platform: iOS
@@ -152,3 +299,7 @@ schemes:
     test:
       targets:
         - EmberTests
+  EmberMac:
+    build:
+      targets:
+        EmberMac: all

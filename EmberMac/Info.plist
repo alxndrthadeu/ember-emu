@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_ember-ctl._tcp</string>
+		<string>_ember-xfer._tcp</string>
+	</array>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Para o seu iPhone virar o controle do jogo.</string>
+	<key>NSUbiquitousContainers</key>
+	<dict>
+		<key>iCloud.com.alexandrethadeu.ember</key>
+		<dict>
+			<key>NSUbiquitousContainerIsDocumentScopePublic</key>
+			<true/>
+			<key>NSUbiquitousContainerName</key>
+			<string>Ember</string>
+			<key>NSUbiquitousContainerSupportedFolderLevels</key>
+			<string>Any</string>
+		</dict>
+	</dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.alexandrethadeu.ember.play</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>ember-play</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

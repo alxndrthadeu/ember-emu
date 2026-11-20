@@ -28,6 +28,95 @@
 #
 # Must run on Ruby 1.8, 1.9 and 3.1: no modern syntax.
 
+# A music that is not a file name stops the game: Essentials builds
+# "Audio/BGM/" + bgm.name, and a number there raises TypeError (Xenoverse
+# crashed this way after a trainer battle, resuming the map music). And
+# Essentials stores the music as playing *before* it builds the path, so
+# one bad call (swallowed somewhere) leaves it there until the next
+# battle resumes it. The guard swaps such a music for the map's own (or
+# silence) and writes to the session log what it found and where.
+module EmberAudioGuard
+  @installed = false
+  @reported = {}
+
+  class << self
+    def installed?
+      @installed
+    end
+
+    # Wraps Game_System's music entry points once the game defined them.
+    def install
+      return unless defined?(Game_System) && Game_System.method_defined?(:bgm_play)
+      Game_System.class_eval do
+        unless method_defined?(:ember_unguarded_bgm_play)
+          alias_method :ember_unguarded_bgm_play, :bgm_play
+          def bgm_play(*args)
+            args[0] = EmberAudioGuard.sane(args[0], 'bgm_play') unless args.empty?
+            ember_unguarded_bgm_play(*args)
+          end
+        end
+        # Older Essentials resume the music through this one directly.
+        if method_defined?(:bgm_play_internal) && !method_defined?(:ember_unguarded_bgm_play_internal)
+          alias_method :ember_unguarded_bgm_play_internal, :bgm_play_internal
+          def bgm_play_internal(*args)
+            args[0] = EmberAudioGuard.sane(args[0], 'bgm_play_internal') unless args.empty?
+            ember_unguarded_bgm_play_internal(*args)
+          end
+        end
+      end
+      @installed = true
+    end
+
+    def broken?(audio)
+      !audio.nil? && audio.respond_to?(:name) && !audio.name.nil? && !audio.name.is_a?(String)
+    end
+
+    # The music itself when it is fine; otherwise the map's music, or nil.
+    def sane(audio, where = 'restaurar')
+      return audio unless broken?(audio)
+      report(where, audio, caller[1, 6])
+      map_music
+    end
+
+    # Every few frames: a bad music already stored as playing is fixed
+    # (and logged) before anything resumes it.
+    def watch(where = nil)
+      system = $game_system
+      return unless system
+      audio = system.instance_variable_get(:@playing_bgm)
+      return unless broken?(audio)
+      report(where || 'tocando agora', audio, nil)
+      system.instance_variable_set(:@playing_bgm, map_music)
+    rescue Exception
+    end
+
+    def check(where)
+      watch(where)
+    end
+
+    def map_music
+      map = $game_map && $game_map.instance_variable_get(:@map)
+      return nil unless map && map.respond_to?(:autoplay_bgm) && map.autoplay_bgm
+      bgm = map.respond_to?(:bgm) ? map.bgm : nil
+      bgm && bgm.respond_to?(:name) && bgm.name.is_a?(String) ? bgm : nil
+    rescue Exception
+      nil
+    end
+
+    def report(where, audio, trace)
+      key = "#{where}:#{audio.name.class}"
+      return if @reported[key]
+      @reported[key] = true
+      map = ($game_map.map_id rescue '?')
+      line = "[ember] música com nome inválido (#{where}): #{audio.class} name=#{audio.name.inspect} " \
+             "volume=#{(audio.volume rescue '?').inspect} pitch=#{(audio.pitch rescue '?').inspect} mapa #{map}"
+      puts line
+      (trace || []).each { |t| puts "[ember]   #{t}" }
+    rescue Exception
+    end
+  end
+end
+
 module EmberState
   DIR = ENV['EMBER_STATE_DIR'].to_s
   AUTO_SECONDS = ENV['EMBER_AUTOSTATE_SECONDS'].to_i
@@ -77,6 +166,8 @@ module EmberState
       begin
         install_title_hooks unless @hooked
         install_map_hook unless @map_hooked
+        EmberAudioGuard.install unless EmberAudioGuard.installed?
+        EmberAudioGuard.watch
         handle_thumbs
         handle_cheat_request
         handle_filter_request
@@ -453,8 +544,9 @@ module EmberState
       end
       begin
         $game_map.need_refresh = true if $game_map.respond_to?(:need_refresh=)
+        EmberAudioGuard.check('estado restaurado')
         if $game_system && $game_system.respond_to?(:bgm_play) && $game_system.respond_to?(:playing_bgm)
-          $game_system.bgm_play($game_system.playing_bgm)
+          $game_system.bgm_play(EmberAudioGuard.sane($game_system.playing_bgm))
         elsif $game_map.respond_to?(:autoplay)
           $game_map.autoplay
         end

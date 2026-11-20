@@ -1,0 +1,20 @@
+diff --git a/src/filesystem/filesystemImplIOS.mm b/src/filesystem/filesystemImplIOS.mm
+index c7a6236..197bb52 100644
+--- a/src/filesystem/filesystemImplIOS.mm
++++ b/src/filesystem/filesystemImplIOS.mm
+@@ -24,7 +24,14 @@
+             NSString *image = [NSFileManager.defaultManager
+                 stringWithFileSystemRepresentation:info.dli_fname
+                                             length:strlen(info.dli_fname)];
+-            bundle = [NSBundle bundleWithPath:image.stringByDeletingLastPathComponent];
++            NSString *folder = image.stringByDeletingLastPathComponent;
++            // A Mac app keeps its code in Contents/MacOS and its files in
++            // Contents/Resources: the bundle is the .app two levels up.
++            // (An iOS app is flat: the code sits at the bundle's root.)
++            if ([folder.lastPathComponent isEqualToString:@"MacOS"] &&
++                [folder.stringByDeletingLastPathComponent.lastPathComponent isEqualToString:@"Contents"])
++                folder = folder.stringByDeletingLastPathComponent.stringByDeletingLastPathComponent;
++            bundle = [NSBundle bundleWithPath:folder];
+         }
+         if (bundle == nil)
+             bundle = NSBundle.mainBundle;

@@ -196,6 +196,26 @@ final class SaveSyncTests: XCTestCase {
 
     private func read(_ url: URL) -> String? { try? String(contentsOf: url, encoding: .utf8) }
 
+    /// Many syncs of one game at once (the library, a save going up, the
+    /// saves screen): one at a time, so each file goes up once and the
+    /// next run finds nothing left to do.
+    func testSyncsOfOneGameWaitForEachOther() throws {
+        for slot in 1...20 {
+            try write("save \(slot)", game.folder.appendingPathComponent(String(format: "Save%02d.rvdata2", slot)), age: 100)
+        }
+        let game = self.game!
+        let cloud = self.cloud
+        let uploads = Atomic(0)
+        DispatchQueue.concurrentPerform(iterations: 8) { _ in
+            let report = SaveSync.sync([game], root: cloud)
+            uploads.add(report.uploaded)
+            XCTAssertTrue(report.conflicts.isEmpty)
+        }
+        XCTAssertEqual(uploads.value, 20)
+        let again = SaveSync.sync([game], root: cloud)
+        XCTAssertEqual(again.uploaded + again.downloaded, 0)
+    }
+
     func testUpThenDownThenConflict() throws {
         let local = game.folder.appendingPathComponent("Save01.rvdata2")
         let remote = cloud.appendingPathComponent("\(game.id)/folder/Save01.rvdata2")
@@ -223,6 +243,110 @@ final class SaveSyncTests: XCTestCase {
         XCTAssertEqual(read(local), "three-here")
         XCTAssertEqual(read(remote), "three-here")
     }
+
+    func testIncomingSaveAndWhoSavedLast() throws {
+        SaveSync.deviceName = "Mac de Teste"
+        let local = game.folder.appendingPathComponent("Save01.rvdata2")
+        let remote = cloud.appendingPathComponent("\(game.id)/folder/Save01.rvdata2")
+        try write("one", local, age: 100)
+        let report = SaveSync.sync([game], root: cloud)
+        XCTAssertEqual(report.games[game.id]?.uploaded, 1)
+        XCTAssertEqual(report.games[game.id]?.lastDevice, "Mac de Teste")
+        XCTAssertFalse(SaveSync.hasIncoming(game, root: cloud))
+
+        // Another device saved: something is coming until the next sync.
+        try write("two", remote, age: 10)
+        XCTAssertTrue(SaveSync.hasIncoming(game, root: cloud))
+        _ = SaveSync.sync([game], root: cloud)
+        XCTAssertFalse(SaveSync.hasIncoming(game, root: cloud))
+        XCTAssertEqual(read(local), "two")
+    }
+
+    /// While a game plays: what it saved goes up, nothing comes down
+    /// under it, and the next full sync still brings what waited.
+    func testUploadOnlyNeverTouchesTheRunningGame() throws {
+        let mine = game.folder.appendingPathComponent("Save01.rvdata2")
+        let theirs = game.folder.appendingPathComponent("Save02.rvdata2")
+        try write("one", mine, age: 100)
+        try write("old", theirs, age: 100)
+        _ = SaveSync.sync([game], root: cloud)
+
+        // The game saves slot 1; another device saved slot 2 meanwhile.
+        try write("one-new", mine, age: 5)
+        try write("two-from-mac", cloud.appendingPathComponent("\(game.id)/folder/Save02.rvdata2"), age: 10)
+        var report = SaveSync.sync([game], root: cloud, uploadOnly: true)
+        XCTAssertEqual(report.uploaded, 1)
+        XCTAssertEqual(report.downloaded, 0)
+        XCTAssertEqual(read(cloud.appendingPathComponent("\(game.id)/folder/Save01.rvdata2")), "one-new")
+        XCTAssertEqual(read(theirs), "old")
+
+        // After the game: the other device's save comes down.
+        report = SaveSync.sync([game], root: cloud)
+        XCTAssertEqual(report.downloaded, 1)
+        XCTAssertEqual(read(theirs), "two-from-mac")
+    }
+
+    /// By hand: sending replaces iCloud's copy even when iCloud's is
+    /// newer, bringing replaces this device's, and the next automatic
+    /// sync sees both sides in step.
+    func testSendAndBringByHand() throws {
+        let local = game.folder.appendingPathComponent("Save01.rvdata2")
+        let remote = cloud.appendingPathComponent("\(game.id)/folder/Save01.rvdata2")
+        try write("mine-old", local, age: 100)
+        try write("theirs-new", remote, age: 10)
+
+        XCTAssertEqual(try SaveSync.sendAll(game, root: cloud).sent, 1)
+        XCTAssertEqual(read(remote), "mine-old")
+        XCTAssertEqual(SaveSync.cloudSide(game, root: cloud).files, 1)
+        var report = SaveSync.sync([game], root: cloud)
+        XCTAssertEqual(report.uploaded + report.downloaded, 0)
+
+        try write("theirs-again", remote, age: 5)
+        let result = try SaveSync.bringAll(game, root: cloud)
+        XCTAssertEqual(result.brought, 1)
+        XCTAssertEqual(read(local), "theirs-again")
+        report = SaveSync.sync([game], root: cloud)
+        XCTAssertEqual(report.uploaded + report.downloaded, 0)
+
+        XCTAssertThrowsError(try SaveSync.bringAll(SaveSync.GameFolders(
+            id: "Empty \(UUID())", title: "Empty", folder: root, userData: root, states: root), root: cloud))
+    }
+
+    /// By hand, the two sides end up the same: files only the other side
+    /// had are taken out (kept in Backups), and a file iCloud has not
+    /// brought down yet stops the send until it is here.
+    func testByHandBothSidesEndUpTheSame() throws {
+        let one = game.folder.appendingPathComponent("Save01.rvdata2")
+        let cloudGame = cloud.appendingPathComponent("\(game.id)/folder")
+        try write("one", one, age: 50)
+        try write("two-only-in-icloud", cloudGame.appendingPathComponent("Save02.rvdata2"), age: 40)
+
+        // A placeholder in iCloud: nothing changes yet.
+        let placeholder = cloudGame.appendingPathComponent(".Save03.rvdata2.icloud")
+        try write("", placeholder, age: 30)
+        XCTAssertEqual(try SaveSync.sendAll(game, root: cloud).waiting, 1)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: cloudGame.appendingPathComponent("Save02.rvdata2").path))
+        try FileManager.default.removeItem(at: placeholder)
+
+        XCTAssertEqual(try SaveSync.sendAll(game, root: cloud).waiting, 0)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: cloudGame.appendingPathComponent("Save02.rvdata2").path))
+        XCTAssertEqual(read(cloudGame.appendingPathComponent("Save01.rvdata2")), "one")
+
+        // Now a save only on this device: bringing takes it out.
+        let four = game.folder.appendingPathComponent("Save04.rvdata2")
+        try write("four-only-here", four, age: 20)
+        _ = try SaveSync.bringAll(game, root: cloud)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: four.path))
+        XCTAssertEqual(read(one), "one")
+    }
+
+    func testAGameCanSyncOnlyByHand() {
+        XCTAssertTrue(SaveSync.syncsAutomatically(game.id))
+        SaveSync.setSyncsAutomatically(false, for: game.id)
+        XCTAssertFalse(SaveSync.syncsAutomatically(game.id))
+        SaveSync.setSyncsAutomatically(true, for: game.id)
+        XCTAssertTrue(SaveSync.syncsAutomatically(game.id))
+    }
 }
 
 @MainActor
@@ -241,4 +365,13 @@ final class RubySuggestionTests: XCTestCase {
         XCTAssertNotEqual(suggestion?.version, game.rubyVersion)
         XCTAssertNil(EngineSession.rubySuggestion(for: "Unable to find file Graphics/Titles/x", game: game))
     }
+}
+
+/// A counter shared by threads in a test.
+private final class Atomic: @unchecked Sendable {
+    private let lock = NSLock()
+    private var count: Int
+    init(_ value: Int) { count = value }
+    var value: Int { lock.withLock { count } }
+    func add(_ n: Int) { lock.withLock { count += n } }
 }

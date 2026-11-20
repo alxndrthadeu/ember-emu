@@ -65,17 +65,32 @@ final class EngineSession {
     /// Leaving the screen: save the "auto" state (the game does it at
     /// its next quiet frame), then pause. iOS may close a suspended app
     /// to free memory; "Continuar" then resumes from this state.
+    /// Then what the game saved (and that state) goes to iCloud, in the
+    /// time iOS gives an app on its way out: a save made just before
+    /// leaving does not wait for the next time Ember opens. Once in the
+    /// iCloud folder, iOS uploads it even with Ember closed.
     private func appWillResignActive() {
         touchSession()
-        guard state == .running, let game = currentGame,
-              !mkxp_isPaused(), !mkxp_isPauseRequested() else { return }
-        GameLog.shared.note("o app saiu da tela")
-        pausedForBackground = AppSettings.pauseOnBackground
-        let task = UIApplication.shared.beginBackgroundTask(withName: "ember.autostate")
+        guard state == .running, let game = currentGame else { return }
+        let leaving = LeavingTask()
+        leaving.begin()
+        let playing = !mkxp_isPaused() && !mkxp_isPauseRequested()
+        if playing {
+            GameLog.shared.note("o app saiu da tela")
+            pausedForBackground = AppSettings.pauseOnBackground
+        }
         Task { @MainActor in
-            _ = await StateStore.request("save", slot: StateStore.autoSlot, gameID: game.id, timeout: 1.5)
-            if self.pausedForBackground, self.state == .running { mkxp_requestPause() }
-            UIApplication.shared.endBackgroundTask(task)
+            if playing {
+                _ = await StateStore.request("save", slot: StateStore.autoSlot, gameID: game.id, timeout: 1.5)
+                if self.pausedForBackground, self.state == .running { mkxp_requestPause() }
+            }
+            if SaveSync.syncsAutomatically(game.id) {
+                let folders = SaveSync.GameFolders(game)
+                let report = await Task.detached(priority: .userInitiated) { SaveSync.upload(folders) }.value
+                SyncStatus.shared.finished(report, titles: [game.id: game.title])
+                if report.uploaded > 0 { GameLog.shared.note("saindo da tela: \(report.uploaded) arquivo(s) enviados ao iCloud") }
+            }
+            leaving.end()
         }
     }
 
@@ -87,6 +102,14 @@ final class EngineSession {
         guard state == .running, let game = currentGame else { return .noAnswer }
         let outcome = await StateStore.request(verb, slot: slot, gameID: game.id)
         GameLog.shared.note("estado \(verb == "save" ? "salvo" : "carregado") (\(slot)): \(outcome)")
+        if verb == "save", case .done = outcome {
+            // The state goes to iCloud now; the automatic one quietly.
+            Task {
+                if await SyncStatus.shared.uploadWhilePlaying(game), slot != StateStore.autoSlot {
+                    SyncStatus.shared.show(String(localized: "Estado salvo no iCloud"))
+                }
+            }
+        }
         return outcome
     }
 
@@ -103,6 +126,10 @@ final class EngineSession {
         guard state == .idle else { return }
         resumeSlotForLog = resumeSlot
         state = .preparing(game.title)
+        // Looking for Macs keeps the direct Wi-Fi link awake: not while
+        // playing here.
+        RemoteControllerClient.shared.stopBrowsing()
+        GameSender.shared.stopBrowsing()
         StateStore.prepareEnvironment(gameID: game.id, resumeSlot: resumeSlot)
         // Games live in Documents/Games, which is writable: the engine
         // runs them in place (it writes a path cache next to them).
@@ -161,6 +188,16 @@ final class EngineSession {
         historyTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { _ in
             MainActor.assumeIsolated { EngineSession.shared.touchSession() }
         }
+        // A save the game writes goes to iCloud as soon as it is done;
+        // iCloud gets ready now, not at the first save.
+        SaveSync.prepare()
+        saveWatcher.onSaved = { game in
+            Task {
+                if await SyncStatus.shared.uploadWhilePlaying(game) {
+                    SyncStatus.shared.show(String(localized: "Save no iCloud"))
+                }
+            }
+        }
         saveWatcher.start(game)
         GameLayout.shared.observeEngine()
         observeMessages()
@@ -202,8 +239,8 @@ final class EngineSession {
         // New cover and "Continuar".
         LibraryStore.shared.reload()
         state = .finished
-        // What the game saved goes to iCloud.
-        LibraryStore.shared.syncSaves()
+        // What the game saved goes to iCloud, and the player hears so.
+        LibraryStore.shared.syncSaves(announce: true)
         launcherWindow?.makeKeyAndVisible()
     }
 
@@ -376,17 +413,22 @@ final class EngineSession {
     }
 }
 
-/// Where a game's files live while it runs.
-enum GameStorage {
-    private static var documents: URL {
-        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+/// The time iOS gives the app on its way out, ended once: when the work
+/// is done or when iOS says time is up (the first iCloud lookup can be
+/// slow). Without the expiration handler iOS kills the app.
+@MainActor
+private final class LeavingTask {
+    private var id = UIBackgroundTaskIdentifier.invalid
+
+    func begin() {
+        id = UIApplication.shared.beginBackgroundTask(withName: "ember.leaving") { [self] in
+            MainActor.assumeIsolated { self.end() }
+        }
     }
 
-    /// Saves and settings, kept apart from the game files so a game
-    /// can be replaced without losing them.
-    static func userDataFolder(for game: GameEntry) -> URL {
-        let folder = documents.appendingPathComponent("UserData/\(game.id)")
-        try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
-        return folder
+    func end() {
+        guard id != .invalid else { return }
+        UIApplication.shared.endBackgroundTask(id)
+        id = .invalid
     }
 }

@@ -173,20 +173,20 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "To receive games sent from a computer’s browser on the same Wi-Fi."
+            "state" : "needs_review",
+            "value" : "To receive games sent from a computer’s browser on the same Wi-Fi, and to use the iPhone as the Mac’s controller."
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Para recibir juegos enviados desde el navegador de un ordenador en la misma red Wi-Fi."
+            "state" : "needs_review",
+            "value" : "Para recibir juegos enviados desde el navegador de una computadora en la misma red Wi-Fi y para usar el iPhone como control del Mac."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Para receber jogos enviados pelo navegador de um computador no mesmo Wi-Fi."
+            "value" : "Para receber jogos enviados pelo navegador de um computador no mesmo Wi-Fi e para usar o iPhone como controle do Mac."
           }
         }
       }

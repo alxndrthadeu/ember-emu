@@ -3,6 +3,7 @@ import SwiftUI
 enum AppTab: Hashable {
     case library
     case importGames
+    case mac
     case settings
 }
 
@@ -25,6 +26,7 @@ struct RootView: View {
     @Bindable private var router = AppRouter.shared
     /// Once per launch, over everything until it fades.
     @State private var showingSplash = true
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         ZStack {
@@ -32,6 +34,14 @@ struct RootView: View {
             if showingSplash {
                 SplashView { showingSplash = false }
                     .zIndex(1)
+            }
+        }
+        .onChange(of: scenePhase) {
+            // Looking for Macs keeps the direct Wi-Fi link awake: stop in
+            // the background (the Mac tab and the library start again).
+            if scenePhase == .background {
+                RemoteControllerClient.shared.stopBrowsing()
+                GameSender.shared.stopBrowsing()
             }
         }
     }
@@ -45,6 +55,9 @@ struct RootView: View {
                 }
                 Tab("Importar", systemImage: "folder.badge.plus", value: AppTab.importGames) {
                     ImportView()
+                }
+                Tab("Mac", systemImage: "macbook.and.iphone", value: AppTab.mac) {
+                    MacTab()
                 }
                 Tab("Ajustes", systemImage: "gearshape", value: AppTab.settings) {
                     SettingsView()
@@ -60,6 +73,9 @@ struct RootView: View {
                 ImportView()
                     .tabItem { Label("Importar", systemImage: "folder.badge.plus") }
                     .tag(AppTab.importGames)
+                MacTab()
+                    .tabItem { Label("Mac", systemImage: "macbook.and.iphone") }
+                    .tag(AppTab.mac)
                 SettingsView()
                     .tabItem { Label("Ajustes", systemImage: "gearshape") }
                     .tag(AppTab.settings)

@@ -1,5 +1,4 @@
 import Foundation
-import UIKit
 
 /// One log file per game session: everything the engine and the game
 /// print, plus Ember's own events and the errors shown to the player.
@@ -48,10 +47,9 @@ final class GameLog: @unchecked Sendable {
             handle = try? FileHandle(forWritingTo: url)
             written = 0
         }
-        let device = UIDevice.current
         let app = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?"
         var header = [
-            "Ember \(app) · \(device.model) · iOS \(device.systemVersion)",
+            "Ember \(app) · \(DeviceInfo.summary)",
             "Jogo: \(game.title) (\(game.id))",
         ]
         header += details
